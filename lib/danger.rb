@@ -22,7 +22,7 @@ module Danger
         help! "Could not find a Dangerfile."
       end
 
-      Dangerfile.from_ruby @dangerfile_path
+      Dangerfile.from_ruby Pathname.new(@dangerfile_path)
       puts "OK"
     end
 

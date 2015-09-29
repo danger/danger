@@ -4,23 +4,19 @@ Coming soon.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
 
 ```ruby
 gem 'danger'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install danger
-
 ## Usage
 
-TODO: Write usage instructions here
+In CI run `bundle exec danger`.  This will look at your `Dangerfile`.
+
+
+## DSL
+
 
 ## Development
 

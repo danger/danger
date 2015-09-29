@@ -1,14 +1,18 @@
 # So much was ripped direct from CocoaPods-Core - thanks!
 
 require 'danger/dangerfile_dsl'
+require 'danger/standard_error'
 
 module Danger
   class Dangerfile
 
     include Danger::Dangerfile::DSL
 
+    # the DSL includes a bunch of read only attributes
+    # make them readwrite in here
+    attr_accessor :lines_of_code
 
-    # @return [Pathname] the path where the podfile was loaded from. It is nil
+    # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the podfile was generated programmatically.
     #
     attr_accessor :defined_in_file

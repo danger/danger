@@ -3,11 +3,11 @@ module Danger
     module DSL
 
       public
-      
+
       # @!group Code
       # @return [Number] The total amount of lines of code in the diff
       #
-      attr_accessor :lines_of_code
+      attr_reader :lines_of_code
 
     end
   end

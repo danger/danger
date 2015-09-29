@@ -1,15 +1,15 @@
-module Pod
-  # Namespaces all the errors raised by Danger.
+require 'claide'
+require 'claide/informative_error'
+
+module Danger
   # Ripped direct from CocoaPods-Core - thanks!
-  #
-  class StandardError < ::StandardError; end
 
   #-------------------------------------------------------------------------#
 
   # Wraps an exception raised by a DSL file in order to show to the user the
   # contents of the line that raised the exception.
   #
-  class DSLError < Informative
+  class DSLError < StandardError
     # @return [String] the description that should be presented to the user.
     #
     attr_reader :description
@@ -66,7 +66,7 @@ module Pod
 
         m = "\n[!] "
         m << description
-        m << ". Updating Danger might fix the issue.\n"
+        m << ". Updating the Danger gem might fix the issue.\n"
         m = m.red if m.respond_to?(:red)
 
         return m unless backtrace && dsl_path && contents
