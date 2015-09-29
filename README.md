@@ -2,6 +2,8 @@
 
 Formalize your Pull Request etiquette.
 
+*Note:* Not ready for public usage yet. Still needs work to ensure Travis/CircleCI hook up correctly.
+
 ## Installation
 
 Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
@@ -12,7 +14,7 @@ gem 'danger'
 
 ## Usage
 
-In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide some feedback based on that
+In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide some feedback based on that.
 
 ## DSL
 
