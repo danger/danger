@@ -42,7 +42,7 @@ You can then create a `Dangerfile` like the following:
 # Easy checks
 warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
 
-if lines_of_code > 50 && files_modified.include? "CHANGELOG.yml"
+if lines_of_code > 50 && files_modified.include? "CHANGELOG.yml" == false
   fail("No CHANGELOG changes made")
 end
 
