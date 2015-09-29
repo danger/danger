@@ -1,5 +1,6 @@
 require "danger/version"
 require "danger/dangerfile"
+require "danger/environment_manager"
 
 require 'claide'
 require 'colored'
@@ -22,7 +23,12 @@ module Danger
         help! "Could not find a Dangerfile."
       end
 
-      Dangerfile.from_ruby Pathname.new(@dangerfile_path)
+      dm = Dangerfile.new
+      dm.env = EnvironmentManager.new(ENV)
+      dm.env.fill_environment_vars
+      dm.update_from_env
+      dm.parse Pathname.new(@dangerfile_path)
+
       puts "OK"
     end
 

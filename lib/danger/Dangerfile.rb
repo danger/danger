@@ -8,23 +8,14 @@ module Danger
 
     include Danger::Dangerfile::DSL
 
-    # the DSL includes a bunch of read only attributes
-    # make them readwrite in here
-    attr_accessor :lines_of_code
+    # the DSL includes a bunch of read only  attributes + docs
+    # we make them readwrite in here
+    attr_accessor :env, :lines_of_code
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the podfile was generated programmatically.
     #
     attr_accessor :defined_in_file
-
-    def initialize(defined_in_file = nil, internal_hash = {}, &block)
-      self.defined_in_file = defined_in_file
-      self.lines_of_code = 12
-
-      if block
-        instance_eval(&block)
-      end
-    end
 
     # @return [String] a string useful to represent the Dangerfile in a message
     #         presented to the user.
@@ -33,7 +24,9 @@ module Danger
       'Dangerfile'
     end
 
-    def self.from_ruby(path, contents = nil)
+    # Parses the file at a path, optionally takes the content of the file for DI
+    #
+    def parse(path, contents = nil)
       contents ||= File.open(path, 'r:utf-8') { |f| f.read }
 
       # Work around for Rubinius incomplete encoding in 1.9 mode
@@ -49,7 +42,8 @@ module Danger
                     'you should turn off smart quotes in your editor of choice.'.red
       end
 
-      podfile = Dangerfile.new(path) do
+      self.defined_in_file = path
+      instance_eval do
         # rubocop:disable Lint/RescueException
         begin
           # rubocop:disable Eval
@@ -61,7 +55,11 @@ module Danger
         end
         # rubocop:enable Lint/RescueException
       end
-      podfile
+
+    end
+
+    def update_from_env
+
     end
 
   end

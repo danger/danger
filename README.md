@@ -12,11 +12,20 @@ gem 'danger'
 
 ## Usage
 
-In CI run `bundle exec danger`.  This will look at your `Dangerfile`.
-
+In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide some feedback based on that
 
 ## DSL
 
+
+```
+```
+
+## Constraints
+
+* **GitHub** - Built with same-repo PRs in mind
+* **GitHub** - Built with master as the merge branch
+
+PRs welcome on these
 
 ## Development
 
