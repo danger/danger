@@ -34,6 +34,18 @@ describe Danger::GitHub do
     expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/800")
   end
 
+  it 'raises when GitHub fails' do
+    @g = Danger::GitHub.new(stub_ci)
+    response = double("response", :ok? => false, :status_code => 401, :body => fixture("pr_response"))
+    allow(REST).to receive(:get) { response }
+    # dont log out in tests
+    allow(@g).to receive(:puts).and_return("")
+
+    expect {
+      @g.get_details
+    }.to raise_error("Could not get the pull request details from GitHub.")
+  end
+
   describe "with working json" do
     before do
       @g = Danger::GitHub.new(stub_ci)

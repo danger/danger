@@ -10,7 +10,7 @@ module Danger
 
     # the DSL includes a bunch of read only  attributes + docs
     # we make them readwrite in here
-    attr_accessor :env, :lines_of_code
+    attr_accessor :env, :lines_of_code, :warnings, :failures
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the podfile was generated programmatically.
@@ -27,6 +27,8 @@ module Danger
     # Parses the file at a path, optionally takes the content of the file for DI
     #
     def parse(path, contents = nil)
+      warnings = [], failures =[]
+
       contents ||= File.open(path, 'r:utf-8') { |f| f.read }
 
       # Work around for Rubinius incomplete encoding in 1.9 mode
@@ -55,7 +57,6 @@ module Danger
         end
         # rubocop:enable Lint/RescueException
       end
-
     end
 
     def update_from_env

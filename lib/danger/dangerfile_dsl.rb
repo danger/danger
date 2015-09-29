@@ -17,6 +17,44 @@ module Danger
       #
       attr_reader :lines_of_code
 
+      # @return [Array of Strings] The list of files modified
+      #
+      attr_reader :files_modified
+
+      # @return [Array of Strings] The list of files removed
+      #
+      attr_reader :files_removed
+
+      # @return [Array of Strings] The list of files added
+      #
+      attr_reader :files_added
+
+      # @!group Pull Request Meta
+      # @return [String] The title of the PR
+      #
+      attr_reader :pr_title
+
+      # @return [String] The body of the PR
+      #
+      attr_reader :pr_body
+
+
+      # Declares a CI blocking error
+      #
+      # @param    [String] message
+      #           The message to present to the user
+      def fail(message)
+        puts "fail #{fail}"
+      end
+
+      # Specifies a problem, but not critical
+      #
+      # @param    [String] message
+      #           The message to present to the user
+      def warn(message)
+        puts "warn #{fail}"
+      end
+
     end
   end
 end

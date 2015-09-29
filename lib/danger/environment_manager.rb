@@ -17,7 +17,6 @@ module Danger
 
     def fill_environment_vars
       github.get_details
-
     end
   end
 end

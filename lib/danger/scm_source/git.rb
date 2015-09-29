@@ -1,18 +1,30 @@
-# http://docs.travis-ci.com/user/osx-ci-environment/
-# http://docs.travis-ci.com/user/environment-variables/
+# https://github.com/schacon/ruby-git
+
+require 'git'
 
 module Danger
-  class Travis
+  class GitRepo
+    attr_accessor :diff
 
-    attr_accessor :repo_slug, :pull_request_id
-
-    def self.validates?(env)
-      return env["HAS_JOSH_K_SEAL_OF_APPROVAL"] != nil
+    def diff_for_folder(folder, from = "HEAD", to = 'master')
+      g = Git.open(folder)
+      self.diff = g.diff(to, from)
     end
 
-    def initialize(env)
-      self.repo_slug = env["TRAVIS_REPO_SLUG"]
-      self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
+    def modified_files
+      @diff.stats[:files]
+    end
+
+    def lines_of_code
+      @diff.lines
+    end
+
+    def deletions
+      @diff.deletions
+    end
+
+    def insertions
+      @diff.insertions
     end
 
   end

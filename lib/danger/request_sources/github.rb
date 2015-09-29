@@ -29,5 +29,13 @@ module Danger
       self.pr_json['base']['sha']
     end
 
+    def pr_title
+      self.pr_json['title']
+    end
+
+    def pr_body
+      self.pr_json['body']
+    end
+
   end
 end

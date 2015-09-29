@@ -28,7 +28,7 @@ describe Danger::Dangerfile do
   it 'raises elegantly with bad ruby code inside the Dangerfile' do
     code = "asdas = asdasd + asdasddas"
     dm = Danger::Dangerfile.new
-    
+
     expect {
       dm.parse Pathname.new(""), code
     }.to raise_error(Danger::DSLError)
