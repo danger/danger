@@ -18,7 +18,7 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 
 ## DSL
 
-Danger :no_entry_sign:  | &nbsp; | &nbsp;
+&nbsp;  | &nbsp; | Danger :no_entry_sign:
 -------------: | ------------- | ----
 :sparkles: | `lines_of_code` | The total amount of lines of code in the diff
 :monorail: | `files_modified` |  The list of files modified
@@ -31,7 +31,7 @@ Danger :no_entry_sign:  | &nbsp; | &nbsp;
 
 You can access more detailed information  by looking through:
 
-Danger :no_entry_sign:  | &nbsp; | &nbsp;
+&nbsp;  | &nbsp; | Danger :no_entry_sign:
 -------------: | ------------- | ----
 | :sparkles: |  `env.travis` | Details on the travis integration
 | :tophat: |`env.circle` |  Details on the circle integration
