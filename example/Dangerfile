@@ -1,2 +1,2 @@
 puts "Hi"
-puts lines_of_code
+puts lines _of_code
