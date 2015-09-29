@@ -7,7 +7,7 @@ module Danger
     attr_accessor :repo_slug, :pull_request_id
 
     def self.validates?(env)
-      return env["CIRCLE"] != nil && ["CI_PULL_REQUEST"] != nil
+      return env["CIRCLE_BUILD_NUM"] != nil && ["CI_PULL_REQUEST"] != nil
     end
 
     def initialize(env)

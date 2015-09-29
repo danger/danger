@@ -15,7 +15,7 @@ describe Danger::EnvironmentManager do
   end
 
   it 'creates a circle CI attr' do
-    env = { "CIRCLE" => "true", "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
     e = Danger::EnvironmentManager.new(env)
     expect(e.circle).to be_truthy
   end

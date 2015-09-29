@@ -16,14 +16,34 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 
 ## DSL
 
+  |  Danger :no_entry_sign: | -------------------------- | ------------------------------------------------------------|
+:sparkles: |  `lines_of_code` | The total amount of lines of code in the diff
+:monorail: |`files_modified` |  The list of files modified
+:ship: | `files_added` The list of files added
+:ship: | `files_removed` The list of files removed
+:wrench: | `pr_title` | The title of the PR
+:thought_balloon: | `pr-body` | The body of the PR
 
-```
+You can access more detailed information  by looking through:
+
+|  Danger :no_entry_sign: | -------------------------- | ------------------------------------------------------------|
+:sparkles: |  `env.travis` | Details on the travis integration
+:monorail: |`env.circle` |  Details on the circle integration
+:ship: | `env.github.pr_json` The full JSON for the pull request
+:wrench: | `env.git.diff` The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+
+So you create something like:
+
+``` ruby
+warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
+fail("No CHANGELOG changes made") unless files_modified.include? "CHANGELOG.yml"
+fail("Needs testing on a Phone if change is non-trivial") if lines_of_code > 50 && pr_title.include? "📱" == false
 ```
 
 ## Constraints
 
 * **GitHub** - Built with same-repo PRs in mind
-* **GitHub** - Built with master as the merge branch
+* **Git** - Built with master as the merge branch
 
 PRs welcome on these
 
