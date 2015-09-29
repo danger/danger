@@ -22,7 +22,7 @@ describe Danger::GitRepo do
     end
   end
 
-  it 'handles deletions as expected' do
+  it 'handles code deletions as expected' do
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
         `git init`
@@ -46,7 +46,7 @@ describe Danger::GitRepo do
     end
   end
 
-  it 'handles insertions as expected' do
+  it 'handles code insertions as expected' do
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
         `git init`
@@ -68,5 +68,45 @@ describe Danger::GitRepo do
     end
   end
 
+  it 'handles added files as expected' do
+    Dir.mktmpdir do |dir|
+      Dir.chdir dir do
+        `git init`
+        `touch file`
+        `git add .`
+        `git commit -m "ok"`
+        `git checkout -b new`
+        `touch file2`
+        `echo "ok" > file2`
+        `git add .`
+        `git commit -m "another"`
+      end
+
+      g = Danger::GitRepo.new
+      d = g.diff_for_folder(dir)
+
+      expect(g.added_files).to eql(["file2"])
+    end
+  end
+
+  it 'handles removed files as expected' do
+    Dir.mktmpdir do |dir|
+      Dir.chdir dir do
+        `git init`
+        `touch file`
+        `git add .`
+        `git commit -m "ok"`
+        `git checkout -b new`
+        `rm file`
+        `git rm file`
+        `git commit -m "another"`
+      end
+
+      g = Danger::GitRepo.new
+      d = g.diff_for_folder(dir)
+
+      expect(g.removed_files).to eql(["file"])
+    end
+  end
 
 end

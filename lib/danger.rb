@@ -22,19 +22,17 @@ module Danger
       unless @dangerfile_path
         help! "Could not find a Dangerfile."
       end
+    end
 
+    def run
       dm = Dangerfile.new
       dm.env = EnvironmentManager.new(ENV)
       dm.env.fill_environment_vars
       dm.update_from_env
+      dm.env.git.diff_for_folder(".")
       dm.parse Pathname.new(@dangerfile_path)
 
-      puts "OK"
-    end
-
-
-    def run
-      puts '* Boiling water…'
+      puts "Done"
     end
 
   end

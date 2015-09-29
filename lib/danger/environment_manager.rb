@@ -17,6 +17,8 @@ module Danger
 
     def fill_environment_vars
       github.get_details
+      
+      self.git = GitRepo.new
     end
   end
 end

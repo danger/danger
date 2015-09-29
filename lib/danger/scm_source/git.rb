@@ -12,7 +12,15 @@ module Danger
     end
 
     def modified_files
-      @diff.stats[:files]
+      @diff.to_a.map { |d| d.path }
+    end
+
+    def removed_files
+      @diff.to_a.select { |d| d.type == "deleted" } .map { |d| d.path }
+    end
+
+    def added_files
+      @diff.to_a.select { |d| d.type == "new" } .map { |d| d.path }
     end
 
     def lines_of_code
