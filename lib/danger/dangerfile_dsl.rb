@@ -44,6 +44,7 @@ module Danger
       # @param    [String] message
       #           The message to present to the user
       def fail(message)
+        self.failures << message
         puts "fail #{fail}"
       end
 
@@ -52,6 +53,7 @@ module Danger
       # @param    [String] message
       #           The message to present to the user
       def warn(message)
+        self.warnings << "message"
         puts "warn #{fail}"
       end
 

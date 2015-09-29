@@ -16,7 +16,6 @@ module Danger
       super
     end
 
-
     def validate!
       super
       unless @dangerfile_path
@@ -32,7 +31,12 @@ module Danger
       dm.env.git.diff_for_folder(".")
       dm.parse Pathname.new(@dangerfile_path)
 
-      puts "Done"
+      if dm.failures
+        puts "Uh Oh failed"
+        exit(1)
+      else
+        puts "The Danger has passed. Phew."
+      end
     end
 
   end
