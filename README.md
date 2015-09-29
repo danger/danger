@@ -36,12 +36,20 @@ Danger :no_entry_sign:  | &nbsp; | &nbsp;
 | :octocat: | `env.github.pr_json` | The full JSON for the pull request
 | :ghost: | `env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 
-So you create something like:
+You can then create a `Dangerfile` like the following:
 
 ``` ruby
+# Easy checks
 warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
-fail("No CHANGELOG changes made") unless files_modified.include? "CHANGELOG.yml"
-fail("Needs testing on a Phone if change is non-trivial") if lines_of_code > 50 && pr_title.include? "📱" == false
+
+if lines_of_code > 50 && files_modified.include? "CHANGELOG.yml"
+  fail("No CHANGELOG changes made")
+end
+
+# Stop skipping some manual testing
+if lines_of_code > 50 && pr_title.include? "📱" == false
+   fail("Needs testing on a Phone if change is non-trivial")
+end
 ```
 
 ## Constraints
