@@ -26,7 +26,7 @@ module Danger
     end
 
     def latest_pr_commit_ref
-      self.pr_json
+      self.pr_json['base']['sha']
     end
 
   end
