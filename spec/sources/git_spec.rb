@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'danger/scm_source/git'
 
 describe Danger::GitRepo do
-
   it 'gets a diff between head and master' do
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
@@ -108,5 +107,4 @@ describe Danger::GitRepo do
       expect(g.removed_files).to eql(["file"])
     end
   end
-
 end

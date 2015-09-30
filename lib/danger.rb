@@ -7,7 +7,6 @@ require 'colored'
 
 module Danger
   class DangerRunner < CLAide::Command
-
     self.description = 'Run the Dangerfile.'
     self.command = 'danger'
 
@@ -38,6 +37,5 @@ module Danger
         puts "The Danger has passed. Phew."
       end
     end
-
   end
 end

@@ -3,9 +3,9 @@ require 'danger/environment_manager'
 
 describe Danger::EnvironmentManager do
   it 'raises without enough info in the ENV' do
-    expect {
+    expect do
       Danger::EnvironmentManager.new({ "KEY" => "VALUE" })
-    }.to raise_error("Could not find a CI source")
+    end.to raise_error("Could not find a CI source")
   end
 
   it 'creates a travis CI attr' do
@@ -25,5 +25,4 @@ describe Danger::EnvironmentManager do
     e = Danger::EnvironmentManager.new(env)
     expect(e.github).to be_truthy
   end
-
 end

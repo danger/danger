@@ -78,16 +78,16 @@ module Danger
 
         lines      = contents.lines
         indent     = ' #  '
-        indicator  = indent.gsub('#', '>')
+        indicator  = indent.tr('#', '>')
         first_line = (line_numer.zero?)
         last_line  = (line_numer == (lines.count - 1))
 
         m << "\n"
         m << "#{indent}from #{trace_line.gsub(/:in.*$/, '')}\n"
         m << "#{indent}-------------------------------------------\n"
-        m << "#{indent}#{    lines[line_numer - 1] }" unless first_line
-        m << "#{indicator}#{ lines[line_numer] }"
-        m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
+        m << "#{indent}#{lines[line_numer - 1]}" unless first_line
+        m << "#{indicator}#{lines[line_numer]}"
+        m << "#{indent}#{lines[line_numer + 1]}" unless last_line
         m << "\n" unless m.end_with?("\n")
         m << "#{indent}-------------------------------------------\n"
       end

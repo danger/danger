@@ -1,7 +1,6 @@
 module Danger
   class Dangerfile
     module DSL
-
       public
 
       # @!group Enviroment
@@ -38,7 +37,6 @@ module Danger
       #
       attr_reader :pr_body
 
-
       # Declares a CI blocking error
       #
       # @param    [String] message
@@ -52,11 +50,10 @@ module Danger
       #
       # @param    [String] message
       #           The message to present to the user
-      def warn(message)
+      def warn(_message)
         self.warnings << "message"
         puts "warn #{fail}"
       end
-
     end
   end
 end

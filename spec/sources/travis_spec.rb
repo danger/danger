@@ -23,5 +23,4 @@ describe Danger::Travis do
     t = Danger::Travis.new(env)
     expect(t.repo_slug).to eql("orta/danger")
   end
-
 end

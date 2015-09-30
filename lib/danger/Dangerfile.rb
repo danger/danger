@@ -5,7 +5,6 @@ require 'danger/standard_error'
 
 module Danger
   class Dangerfile
-
     include Danger::Dangerfile::DSL
 
     # The DSL includes a bunch of read only  attributes + docs
@@ -28,9 +27,7 @@ module Danger
     # Parses the file at a path, optionally takes the content of the file for DI
     #
     def parse(path, contents = nil)
-      warnings = [], failures =[]
-
-      contents ||= File.open(path, 'r:utf-8') { |f| f.read }
+      contents ||= File.open(path, 'r:utf-8', &:read)
 
       # Work around for Rubinius incomplete encoding in 1.9 mode
       if contents.respond_to?(:encoding) && contents.encoding.name != 'UTF-8'
@@ -39,7 +36,7 @@ module Danger
 
       if contents.tr!('“”‘’‛', %(""'''))
         # Changes have been made
-        puts        "Your #{path.basename} has had smart quotes sanitised. " \
+        puts "Your #{path.basename} has had smart quotes sanitised. " \
                     'To avoid issues in the future, you should not use ' \
                     'TextEdit for editing it. If you are not using TextEdit, ' \
                     'you should turn off smart quotes in your editor of choice.'.red
@@ -67,6 +64,5 @@ module Danger
       self.pr_title = env.github.pr_title
       self.pr_body = env.github.pr_body
     end
-
   end
 end

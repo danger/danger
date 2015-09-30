@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'danger/ci_source/circle'
 
 describe Danger::CircleCI do
-
   it 'validates when circle env var is found' do
     env = { "CIRCLE_BUILD_NUM" => "true" }
     expect(Danger::CircleCI.validates?(env)).to be true
@@ -19,5 +18,4 @@ describe Danger::CircleCI do
     expect(t.repo_slug).to eql("artsy/eigen")
     expect(t.pull_request_id).to eql("800")
   end
-
 end

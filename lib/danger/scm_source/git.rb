@@ -12,15 +12,15 @@ module Danger
     end
 
     def modified_files
-      @diff.to_a.map { |d| d.path }
+      @diff.to_a.map(&:path)
     end
 
     def removed_files
-      @diff.to_a.select { |d| d.type == "deleted" } .map { |d| d.path }
+      @diff.to_a.select { |d| d.type == "deleted" } .map(&:path)
     end
 
     def added_files
-      @diff.to_a.select { |d| d.type == "new" } .map { |d| d.path }
+      @diff.to_a.select { |d| d.type == "new" } .map(&:path)
     end
 
     def lines_of_code
@@ -34,6 +34,5 @@ module Danger
     def insertions
       @diff.insertions
     end
-
   end
 end

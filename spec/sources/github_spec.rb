@@ -14,7 +14,6 @@ def fixture(file)
 end
 
 describe Danger::GitHub do
-
   it 'gets the right url from travis' do
     env = {
       "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
@@ -36,34 +35,33 @@ describe Danger::GitHub do
 
   it 'raises when GitHub fails' do
     @g = Danger::GitHub.new(stub_ci)
-    response = double("response", :ok? => false, :status_code => 401, :body => fixture("pr_response"))
+    response = double("response", ok?: false, status_code: 401, body: fixture("pr_response"))
     allow(REST).to receive(:get) { response }
     # dont log out in tests
     allow(@g).to receive(:puts).and_return("")
 
-    expect {
-      @g.get_details
-    }.to raise_error("Could not get the pull request details from GitHub.")
+    expect do
+      @g.fetch_details
+    end.to raise_error("Could not get the pull request details from GitHub.")
   end
 
   describe "with working json" do
     before do
       @g = Danger::GitHub.new(stub_ci)
-      response = double("response", :ok? => true, :body => fixture("pr_response"))
+      response = double("response", ok?: true, body: fixture("pr_response"))
       allow(REST).to receive(:get) { response }
     end
 
     it 'sets its pr_json' do
-      @g.get_details
+      @g.fetch_details
       expect(@g.pr_json).to be_truthy
     end
 
     it 'sets the right commit sha' do
-      @g.get_details
+      @g.fetch_details
 
       expect(@g.pr_json['base']['sha']).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
       expect(@g.pr_json['base']['sha']).to eql(@g.latest_pr_commit_ref)
     end
   end
-
 end

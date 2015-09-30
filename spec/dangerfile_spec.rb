@@ -29,9 +29,8 @@ describe Danger::Dangerfile do
     code = "asdas = asdasd + asdasddas"
     dm = Danger::Dangerfile.new
 
-    expect {
+    expect do
       dm.parse Pathname.new(""), code
-    }.to raise_error(Danger::DSLError)
+    end.to raise_error(Danger::DSLError)
   end
-
 end
