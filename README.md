@@ -4,6 +4,18 @@ Formalize your Pull Request etiquette.
 
 *Note:* Not ready for public usage yet. Still needs work to ensure Travis/CircleCI hook up correctly.
 
+-------
+<p align="center">
+    <a href="#installation">Installation</a> &bull; 
+    <a href="#usage">Usage</a> &bull; 
+    <a href="#dsl">DSL</a> &bull; 
+    <a href="#constraints">Constraints</a> &bull; 
+    <a href="#development">Development</a> &bull; 
+    <a href="#contributing">Contributing</a>
+</p>
+
+-------
+
 ## Installation
 
 Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
