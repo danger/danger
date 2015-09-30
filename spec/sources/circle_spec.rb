@@ -3,7 +3,7 @@ require 'danger/ci_source/circle'
 
 describe Danger::CircleCI do
   it 'validates when circle env var is found' do
-    env = { "CIRCLE_BUILD_NUM" => "true" }
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => "true" }
     expect(Danger::CircleCI.validates?(env)).to be true
   end
 
