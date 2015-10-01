@@ -1,4 +1,4 @@
-require "danger/ci_source/ci"
+require "danger/ci_source/ci_source"
 require "danger/request_sources/github"
 
 module Danger
