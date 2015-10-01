@@ -8,16 +8,18 @@ describe Danger::EnvironmentManager do
     end.to raise_error("Could not find a CI source")
   end
 
-  it 'creates a travis CI attr' do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+  it 'stores travis in the source' do
+    number = 123
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_PULL_REQUEST" => number.to_s }
     e = Danger::EnvironmentManager.new(env)
-    expect(e.travis).to be_truthy
+    expect(e.ci_source.pull_request_id).to eq(number.to_s)
   end
 
-  it 'creates a circle CI attr' do
-    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
+  it 'stores circle in the source' do
+    number = 800
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/#{number}" }
     e = Danger::EnvironmentManager.new(env)
-    expect(e.circle).to be_truthy
+    expect(e.ci_source.pull_request_id).to eq(number.to_s)
   end
 
   it 'creates a GitHub attr' do
