@@ -2,7 +2,7 @@
 
 Formalize your Pull Request etiquette.
 
-*Note:* Not ready for public usage yet. Still needs work to ensure Travis/CircleCI hook up correctly.
+*Note:* Not ready for public usage yet. Work in progress
 
 -------
 <p align="center">
@@ -71,14 +71,10 @@ end
 * **GitHub** - Built with same-repo PRs in mind
 * **Git** - Built with master as the merge branch
 
-PRs welcome on these
+## Special Thanks
 
-## Development
+Thanks [@orta](https://twitter.com/orta) for starting this project and handing it over to the `fastlane` organisation
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+## License
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/orta/danger.
+> This project and all fastlane tools are in no way affiliated with Apple Inc. This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs. All fastlane tools run on your own computer or server, so your credentials or other sensitive information will never leave your own computer. You are responsible for how you use fastlane tools.
