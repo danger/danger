@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Danger::VERSION
   spec.authors       = ["Orta Therox", "Felix Krause"]
   spec.email         = ["orta.therox@gmail.com", "danger@krausefx.com"]
+  spec.license       = "MIT"
 
   spec.summary       = Danger::DESCRIPTION
   spec.description   = 'Create a Dangerfile to introspect your pull request in CI, makes it easy to enforce social conventions like changelogs and tests.'
