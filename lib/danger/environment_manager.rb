@@ -6,8 +6,6 @@ module Danger
     attr_accessor :ci_source, :github, :git
 
     def initialize(env)
-      # self.travis = CISource::Travis.new(env) if CISource::Travis.validates?(env)
-      # self.circle = CISource::CircleCI.new(env) if CircleCI.validates?(env)
       CISource.constants.each do |symb|
         c = CISource.const_get(symb)
         next unless c.kind_of?(Class)
