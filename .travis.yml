@@ -4,4 +4,4 @@ rvm:
 before_install: gem install bundler -v 1.10.6
 after_script:
   - bundle exec rake install
-  - danger
+  - ./bin/danger
