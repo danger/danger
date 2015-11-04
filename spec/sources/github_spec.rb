@@ -6,7 +6,7 @@ require 'danger/ci_source/travis'
 
 def stub_ci
   env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-  Danger::CircleCI.new(env)
+  Danger::CISource::CircleCI.new(env)
 end
 
 def fixture(file)
@@ -21,14 +21,14 @@ describe Danger::GitHub do
       "TRAVIS_REPO_SLUG" => "orta/danger"
     }
 
-    t = Danger::Travis.new(env)
+    t = Danger::CISource::Travis.new(env)
     g = Danger::GitHub.new(t)
     expect(g.api_url).to eql("https://api.github.com/repos/orta/danger/pulls/2")
   end
 
   it 'gets the right url from circle' do
     env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-    c = Danger::CircleCI.new(env)
+    c = Danger::CISource::CircleCI.new(env)
     g = Danger::GitHub.new(c)
     expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/800")
   end
