@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Orta Therox", "Felix Krause"]
   spec.email         = ["orta.therox@gmail.com", "danger@krausefx.com"]
 
-  spec.summary       = 'Ensure your pull request is up to standard with a nice DSL.'
+  spec.summary       = Danger::DESCRIPTION
   spec.description   = 'Create a Dangerfile to introspect your pull request in CI, makes it easy to enforce social conventions like changelogs and tests.'
   spec.homepage      = "http://github.com/orta/danger"
 
