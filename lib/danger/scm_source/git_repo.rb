@@ -11,15 +11,15 @@ module Danger
       self.diff = g.diff(to, from)
     end
 
-    def modified_files
+    def files_modified
       @diff.to_a.map(&:path)
     end
 
-    def removed_files
+    def files_removed
       @diff.to_a.select { |d| d.type == "deleted" }.map(&:path)
     end
 
-    def added_files
+    def files_added
       @diff.to_a.select { |d| d.type == "new" }.map(&:path)
     end
 

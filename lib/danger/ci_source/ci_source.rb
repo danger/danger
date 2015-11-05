@@ -14,4 +14,3 @@ module Danger
     end
   end
 end
-
