@@ -2,4 +2,4 @@
 $LOAD_PATH.push File.expand_path("../../lib", __FILE__)
 
 require 'danger'
-Danger::DangerRunner.run ARGV
+Danger::Runner.run ARGV

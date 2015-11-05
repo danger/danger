@@ -10,8 +10,10 @@ module Danger
         c = CISource.const_get(symb)
         next unless c.kind_of?(Class)
 
-        puts "ask: #{c}: #{c.validates?(env)}"
-        self.ci_source = c.new(env) if c.validates?(env)
+        if c.validates?(env)
+          self.ci_source = c.new(env)
+          break
+        end
       end
 
       raise "Could not find a CI source" unless ci_source
