@@ -13,7 +13,7 @@ module Danger
     attr_accessor :env, :warnings, :failures
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
-    #         if the podfile was generated programmatically.
+    #         if the Dangerfile was generated programmatically.
     #
     attr_accessor :defined_in_file
 

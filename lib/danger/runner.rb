@@ -24,6 +24,11 @@ module Danger
       dm.update_from_env
       dm.parse Pathname.new(@dangerfile_path)
 
+      post_results(dm)
+    end
+
+    def post_results(dm)
+      
       if dm.failures
         puts "Uh Oh failed"
         exit(1)
