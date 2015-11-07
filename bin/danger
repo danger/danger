@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.push File.expand_path("../../lib", __FILE__)
+
+require 'danger'
+Danger::Runner.run ARGV
