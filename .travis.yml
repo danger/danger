@@ -12,6 +12,9 @@ before_install:
   - gem install bundler
   - bundle install
   - rake install
+  # Tests use real git commands
+  - git config --global user.email "danger@example.com"
+  - git config --global user.name "Danger McShane"
 
 script:
   - bundle exec rake spec
