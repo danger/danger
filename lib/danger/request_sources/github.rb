@@ -14,7 +14,11 @@ module Danger
     end
 
     def fetch_details
-      response = REST.get api_url
+      base_api_token = Base64.strict_encode64(ENV["DANGER_API_TOKEN"])
+      response = REST.get api_url, {}, {
+        'Authorization' => "Basic #{ base_api_token }"
+        'User-Agent' => 'fastlane-danger'
+      }
       if response.ok?
         self.pr_json = JSON.parse(response.body)
       else
