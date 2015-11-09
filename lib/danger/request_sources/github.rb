@@ -1,5 +1,6 @@
 require 'rest'
 require 'json'
+require 'base64'
 
 module Danger
   class GitHub
@@ -14,9 +15,10 @@ module Danger
     end
 
     def fetch_details
-      base_api_token = Base64.strict_encode64(ENV["DANGER_API_TOKEN"])
+      token = ENV["DANGER_API_TOKEN"] || ""
+      base_api_token = Base64.strict_encode64(token)
       response = REST.get api_url, {}, {
-        'Authorization' => "Basic #{ base_api_token }"
+        'Authorization' => "Basic #{ base_api_token }",
         'User-Agent' => 'fastlane-danger'
       }
       if response.ok?
