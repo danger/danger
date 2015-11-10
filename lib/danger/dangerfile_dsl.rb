@@ -1,8 +1,6 @@
 module Danger
   class Dangerfile
     module DSL
-      public
-
       # @!group Enviroment
       # @return [EnvironmentManager] Provides access to the raw Travis/Circle/GitHub
       # objects, which you can use to pull out extra bits of information. _Warning_
@@ -37,22 +35,27 @@ module Danger
       #
       attr_reader :pr_body
 
+      def initialize
+        self.warnings = []
+        self.failures = []
+      end
+
       # Declares a CI blocking error
       #
       # @param    [String] message
       #           The message to present to the user
       def fail(message)
         self.failures << message
-        puts "fail #{fail}"
+        puts "fail #{message}"
       end
 
       # Specifies a problem, but not critical
       #
       # @param    [String] message
       #           The message to present to the user
-      def warn(_message)
-        self.warnings << "message"
-        puts "warn #{fail}"
+      def warn(message)
+        self.warnings << message
+        puts "warn #{message}"
       end
     end
   end

@@ -14,9 +14,3 @@ module Danger
     end
   end
 end
-
-# Import all the other CI classes
-Dir[File.expand_path('*.rb', File.dirname(__FILE__))].each do |file|
-  next if File.basename(file).downcase == File.basename(__FILE__).downcase
-  require file
-end

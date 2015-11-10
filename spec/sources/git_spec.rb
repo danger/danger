@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'danger/scm_source/git'
+require 'danger/scm_source/git_repo'
 
 describe Danger::GitRepo do
   it 'gets a diff between head and master' do
@@ -17,7 +17,7 @@ describe Danger::GitRepo do
 
       g = Danger::GitRepo.new
       g.diff_for_folder(dir)
-      expect(g.modified_files.count).to eql(1)
+      expect(g.files_modified.count).to eql(1)
     end
   end
 
@@ -84,7 +84,7 @@ describe Danger::GitRepo do
       g = Danger::GitRepo.new
       d = g.diff_for_folder(dir)
 
-      expect(g.added_files).to eql(["file2"])
+      expect(g.files_added).to eql(["file2"])
     end
   end
 
@@ -104,7 +104,7 @@ describe Danger::GitRepo do
       g = Danger::GitRepo.new
       d = g.diff_for_folder(dir)
 
-      expect(g.removed_files).to eql(["file"])
+      expect(g.files_removed).to eql(["file"])
     end
   end
 end
