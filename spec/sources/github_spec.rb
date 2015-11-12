@@ -26,7 +26,7 @@ describe Danger::GitHub do
     expect(g.api_url).to eql("https://api.github.com/repos/orta/danger/pulls/2")
   end
 
-  it 'gets the right url from circle' do
+  it "gets the right url from circle" do
     env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
     c = Danger::CISource::CircleCI.new(env)
     g = Danger::GitHub.new(c)
@@ -34,7 +34,8 @@ describe Danger::GitHub do
   end
 
   it 'gets the right url from buildkite' do
-    env = { "BUILDKITE_PULL_REQUEST" => "12", "BUILDKITE_REPO" => "https://github.com/artsy/eigen" }
+    env = { "BUILDKITE_PULL_REQUEST" => "12",
+            "BUILDKITE_REPO" => "https://github.com/artsy/eigen" }
     c = Danger::CISource::Buildkite.new(env)
     g = Danger::GitHub.new(c)
     expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/12")
