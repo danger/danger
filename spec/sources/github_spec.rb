@@ -33,6 +33,13 @@ describe Danger::GitHub do
     expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/800")
   end
 
+  it 'gets the right url from buildkite' do
+    env = { "BUILDKITE_PULL_REQUEST" => "12", "BUILDKITE_REPO" => "https://github.com/artsy/eigen" }
+    c = Danger::CISource::Buildkite.new(env)
+    g = Danger::GitHub.new(c)
+    expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/12")
+  end
+
   it 'raises when GitHub fails' do
     @g = Danger::GitHub.new(stub_ci)
     response = double("response", ok?: false, status_code: 401, body: fixture("pr_response"))

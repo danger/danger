@@ -22,6 +22,13 @@ describe Danger::EnvironmentManager do
     expect(e.ci_source.pull_request_id).to eq(number.to_s)
   end
 
+  it 'stores buildkite in the source' do
+    number = 765
+    env = { "BUILDKITE" => "true", "BUILDKITE_PULL_REQUEST" => number.to_s }
+    e = Danger::EnvironmentManager.new(env)
+    expect(e.ci_source.pull_request_id).to eq(number.to_s)
+  end
+
   it 'creates a GitHub attr' do
     env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
     e = Danger::EnvironmentManager.new(env)
