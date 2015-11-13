@@ -50,7 +50,7 @@ You can access more detailed information  by looking through:
 -------------: | ------------- | ----
 | :sparkles: |  `env.travis` | Details on the [Travis CI](https://travis-ci.org) integration
 | :tophat: |`env.circle` |  Details on the [Circle CI](https://circleci.com) integration
-| :buildkite: |`env.buildkite` |  Details on the [Buildkite](https://buildkite.com) integration
+| :cloud: |`env.buildkite` |  Details on the [Buildkite](https://buildkite.com) integration
 | :octocat: | `env.github.pr_json` | The full JSON for the pull request
 | :ghost: | `env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 
