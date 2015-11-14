@@ -63,6 +63,9 @@ module Danger
   class WillRobinson < Danger::Runner
     self.description = 'Super-secret easter egg that prints out The Robot'
     self.command = 'willrobinson'
+    
+    def validate!
+    end
 
     def run
       puts ASCII_ROBOT
