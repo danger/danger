@@ -15,8 +15,14 @@ module Danger
     end
 
     def run
-      example_content = 'warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"'
-      File.write("Dangerfile", example_content)
+      gem_name = "danger"
+      unless Gem::Specification.find_all_by_name(gem_name).any?
+        raise "Couldn't find gem directory for 'danger'"
+      end
+
+      dir = Gem::Specification.find_by_name(gem_name).gem_dir
+      content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
+      File.write("Dangerfile", content)
       puts "Successfully created 'Dangerfile'"
     end
   end

@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Create a Dangerfile to introspect your pull request in CI, makes it easy to enforce social conventions like changelogs and tests.'
   spec.homepage      = "http://github.com/orta/danger"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = Dir["lib/**/*"] + %w( bin/danger README.md LICENSE )
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
