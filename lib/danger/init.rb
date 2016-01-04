@@ -15,12 +15,8 @@ module Danger
     end
 
     def run
-      gem_name = "danger"
-      unless Gem::Specification.find_all_by_name(gem_name).any?
-        raise "Couldn't find gem directory for 'danger'"
-      end
+      dir = Danger.gem_path
 
-      dir = Gem::Specification.find_by_name(gem_name).gem_dir
       content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
       File.write("Dangerfile", content)
       puts "Successfully created 'Dangerfile'"

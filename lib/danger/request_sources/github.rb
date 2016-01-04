@@ -77,8 +77,8 @@ module Danger
       @warnings = warnings
       @errors = errors
       @messages = messages
-      # TODO: path
-      md_template = File.join(".", "lib/danger/comment_generators/github.md.erb")
+      
+      md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
       comment = ERB.new(File.read(md_template)).result(binding) # http://www.rrn.dk/rubys-erb-templating-system
       return comment
     end
