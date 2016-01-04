@@ -11,7 +11,7 @@ module Danger
       def initialize(env)
         repo = env["BUILDKITE_REPO"]
         unless repo.nil?
-          repo_matches = repo.match(/([\/:])([^\/]+\/[^\/.]+)(?:.git)?$/)
+          repo_matches = repo.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
           self.repo_slug = repo_matches[2] unless repo_matches.nil?
         end
 
