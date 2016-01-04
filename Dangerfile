@@ -1,14 +1,19 @@
-puts "OK"
-puts "Lines #{lines_of_code}"
-puts "Added #{files_added}"
-puts "modified: #{files_modified}"
+if ["KrauseFx", "orta"].include?(pr_author)
+  message("Trusted author @#{pr_author}")
+else
+  warn("Author @#{pr_author} is not a contributor")
+end
 
-puts "PR Body: '#{pr_body}'"
-puts "PR Title: '#{pr_title}'"
+if pr_body.include?("WIP")
+  warn("Pull Request is Work in Progress")
+end
 
-message("This pull request adds #{lines_of_code} new lines")
+if files_modified.any? { |a| a.include?("spec") }
+  message("Tests are updated / added")
+else
+  fail("There must be at least one new test or a modified test")
+end
 
-warn("Some random warning")
-fail("Orta is not really orta")
-
-warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].include?(pr_author)
+if pr_body.length < 5
+  fail "Please provide a changelog summary in the Pull Request description @#{pr_author}"
+end

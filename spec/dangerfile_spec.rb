@@ -19,7 +19,7 @@ describe Danger::Dangerfile do
   end
 
   it 'runs the ruby code inside the Dangerfile' do
-    code = "puts 'hi'"
+    code = "message('hi')"
     expect_any_instance_of(Danger::Dangerfile).to receive(:puts).and_return("")
     dm = Danger::Dangerfile.new
     dm.parse Pathname.new(""), code

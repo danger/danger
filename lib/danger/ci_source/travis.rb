@@ -10,7 +10,10 @@ module Danger
 
       def initialize(env)
         self.repo_slug = env["TRAVIS_REPO_SLUG"]
-        self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
+        # from https://docs.travis-ci.com/user/pull-requests, as otherwise it's "false"
+        if env["TRAVIS_PULL_REQUEST"].to_i > 0
+          self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
+        end
       end
     end
   end

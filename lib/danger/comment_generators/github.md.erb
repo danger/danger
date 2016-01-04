@@ -3,7 +3,8 @@
   ------------- | ------------ <% @errors.each do |error| %>
     :no_entry_sign: | <%= error %><% end %>
 <% else %>
-  :white_check_mark: No errors found
+  :white_check_mark: | No errors found
+  ------------- | ------------ 
 <% end %>
 
 <% if @warnings.count > 0 %>
@@ -11,7 +12,8 @@
   ------------- | ------------ <% @warnings.each do |warning| %>
     :warning: | <%= warning %><% end %>
 <% else %>
-  :white_check_mark: No warnings found
+  :white_check_mark: | No warnings found
+  ------------- | ------------ 
 <% end %>
 
 <% if @messages.count > 0 %>
