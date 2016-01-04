@@ -19,6 +19,7 @@ module Danger
       # The order of the following commands is *really* important
       dm = Dangerfile.new
       dm.env = EnvironmentManager.new(ENV)
+      return unless dm.env.ci_source # if it's not a PR
       dm.env.fill_environment_vars
       dm.env.git.diff_for_folder(".")
       dm.update_from_env

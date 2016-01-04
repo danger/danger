@@ -27,4 +27,10 @@ describe Danger::EnvironmentManager do
     e = Danger::EnvironmentManager.new(env)
     expect(e.github).to be_truthy
   end
+
+  it 'skips push runs and only runs for pull requests' do
+    env = { "TRAVIS_REPO_SLUG" => "orta/danger", "TRAVIS_PULL_REQUEST" => "false", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "1" }
+    e = Danger::EnvironmentManager.new(env)
+    expect(e.ci_source).to eq(nil)
+  end
 end
