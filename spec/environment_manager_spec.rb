@@ -25,7 +25,7 @@ describe Danger::EnvironmentManager do
   it 'creates a GitHub attr' do
     env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => 123.to_s }
     e = Danger::EnvironmentManager.new(env)
-    expect(e.github).to be_truthy
+    expect(e.request_source).to be_truthy
   end
 
   it 'skips push runs and only runs for pull requests' do

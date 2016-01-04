@@ -3,6 +3,7 @@ require "danger/dangerfile"
 require "danger/environment_manager"
 require "danger/runner"
 require "danger/init"
+require "danger/available_values"
 
 require "claide"
 require "colored"

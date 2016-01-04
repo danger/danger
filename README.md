@@ -79,8 +79,8 @@ You can access more detailed information by accessing the following variables
 
 &nbsp; | Danger :no_entry_sign:
 ------------- | ----
-`env.github.pr_json` | The full JSON for the pull request
-`env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+`env.request_source.pr_json` | The full JSON for the pull request
+`env.scm.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
 
 ## Special Thanks
