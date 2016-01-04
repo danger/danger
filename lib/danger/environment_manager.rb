@@ -16,7 +16,7 @@ module Danger
         end
       end
 
-      raise "Could not find a CI source" unless ci_source
+      raise "Could not find a CI source".red unless ci_source
 
       self.github = GitHub.new(ci_source)
     end
