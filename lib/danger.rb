@@ -14,7 +14,6 @@ Dir[File.expand_path('danger/*source/*.rb', File.dirname(__FILE__))].each do |fi
 end
 
 module Danger
-
   # @return [String] The path to the local gem directory
   def self.gem_path
     gem_name = "danger"
@@ -23,5 +22,4 @@ module Danger
     end
     return Gem::Specification.find_by_name(gem_name).gem_dir
   end
-
 end
