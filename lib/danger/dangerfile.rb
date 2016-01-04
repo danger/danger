@@ -10,7 +10,7 @@ module Danger
     # The DSL includes a bunch of read only  attributes + docs
     # we make them readwrite in here
     attr_accessor :files_modified, :files_removed, :files_added, :pr_title, :pr_body, :lines_of_code
-    attr_accessor :env, :warnings, :failures
+    attr_accessor :env, :warnings, :errors
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the Dangerfile was generated programmatically.

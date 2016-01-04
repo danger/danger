@@ -1,15 +1,10 @@
 puts "OK"
-puts "Lines"
-puts lines_of_code
-puts "Added"
-puts files_added
-puts "modified"
-puts files_modified
+puts "Lines #{lines_of_code}"
+puts "Added #{files_added}"
+puts "modified: #{files_modified}"
 
-puts ""
-puts pr_body
-puts ""
-puts pr_title
+puts "PR Body: '#{pr_body}'"
+puts "PR Title: '#{pr_title}'"
 
 warn("Some random warning")
 fail("Orta is not really orta")

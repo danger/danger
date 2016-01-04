@@ -35,6 +35,43 @@ module Danger
     def pr_body
       self.pr_json[:body]
     end
+
+    # Sending data to GitHub
+    # @return URL to the comment
+    def submit_comment!(warnings: nil, errors: nil)
+      body = generate_comment(warnings: warnings, errors: errors)
+      result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+
+      return result['html_url']
+    end
+
+    def submit_pull_request_status!(warnings: nil, errors: nil, details_url: nil)
+      status = (errors.count == 0 ? 'success' : 'failure')
+      client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
+        description: generate_github_description(warnings: warnings, errors: errors),
+        context: "fastlane/danger",
+        target_url: details_url
+      })
+    end
+
+    def generate_github_description(warnings: nil, errors: nil)
+      if errors.count > 0
+        "danger found errors"
+      elsif warnings.count > 0
+        "⚠️ danger found warnings, merge with caution"
+      else
+        "danger was successful"
+      end
+    end
+
+    def generate_comment(warnings: nil, errors: nil)
+      require 'erb'
+
+      @warnings = warnings
+      @errors = errors
+      md_template = File.join(".", "lib/danger/comment_generators/github.md.erb")
+      comment = ERB.new(File.read(md_template)).result(binding) # http://www.rrn.dk/rubys-erb-templating-system
+      return comment
     end
   end
 end

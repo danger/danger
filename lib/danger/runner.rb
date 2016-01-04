@@ -28,13 +28,9 @@ module Danger
     end
 
     def post_results(dm)
-      
-      if dm.failures
-        puts "Uh Oh failed"
-        exit(1)
-      else
-        puts "The Danger has passed. Phew."
-      end
+      gh = dm.env.github
+      comment_url = gh.submit_comment!(warnings: dm.warnings, errors: dm.errors)
+      gh.submit_pull_request_status!(warnings: dm.warnings, errors: dm.errors, details_url: comment_url)
     end
   end
 end
