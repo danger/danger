@@ -36,23 +36,23 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 &nbsp;  | &nbsp; | Danger :no_entry_sign:
 -------------: | ------------- | ----
 :sparkles: | `lines_of_code` | The total amount of lines of code in the diff
-:monorail: | `files_modified` |  The list of files modified
+:pencil2:  | `files_modified` |  The list of files modified
 :ship: | `files_added` | The list of files added
-:pencil2: | `files_removed` | The list of files removed
-:wrench: | `pr_title` | The title of the PR
-:thought_balloon: | `pr_body` | The body of the PR
-
+:recycle: | `files_removed` | The list of files removed
+:abc:  | `pr_title` | The title of the PR
+:book:  | `pr_body` | The body of the PR
+:busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 
 
 You can access more detailed information  by looking through:
 
-&nbsp;  | &nbsp; | Danger :no_entry_sign:
--------------: | ------------- | ----
-| :sparkles: |  `env.travis` | Details on the [Travis CI](https://travis-ci.org) integration
-| :tophat: | `env.circle` | Details on the [Circle CI](https://circleci.com) integration
-| :cloud: | `env.buildkite` | Details on the [Buildkite](https://buildkite.com) integration
-| :octocat: | `env.github.pr_json` | The full JSON for the pull request
-| :ghost: | `env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+&nbsp; | Danger :no_entry_sign:
+------------- | ----
+`env.travis` | Details on the [Travis CI](https://travis-ci.org) integration
+`env.circle` | Details on the [Circle CI](https://circleci.com) integration
+`env.buildkite` | Details on the [Buildkite](https://buildkite.com) integration
+`env.github.pr_json` | The full JSON for the pull request
+`env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 
 You can then create a `Dangerfile` like the following:
 
@@ -68,6 +68,9 @@ end
 if lines_of_code > 50 && pr_title.include? "📱" == false
    fail("Needs testing on a Phone if change is non-trivial")
 end
+
+message("This pull request adds #{lines_of_code} new lines")
+warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].include?(pr_author)
 ```
 
 ## Constraints
