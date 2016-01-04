@@ -18,7 +18,7 @@ if pr_body.include?("WIP")
   warn("Pull Request is Work in Progress")
 end
 
-if modified.any? { |a| a.include?("spec") }
+if files_modified.any? { |a| a.include?("spec") }
   message("Good, tests were actually modified")
 else
   fail("There must be at least one new test or a modified test")
