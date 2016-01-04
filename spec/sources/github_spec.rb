@@ -14,45 +14,6 @@ def fixture(file)
 end
 
 describe Danger::GitHub do
-  it 'gets the right url from travis' do
-    env = {
-      "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
-      "TRAVIS_PULL_REQUEST" => "2",
-      "TRAVIS_REPO_SLUG" => "orta/danger"
-    }
-
-    t = Danger::CISource::Travis.new(env)
-    g = Danger::GitHub.new(t)
-    expect(g.api_url).to eql("https://api.github.com/repos/orta/danger/pulls/2")
-  end
-
-  it "gets the right url from circle" do
-    env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-    c = Danger::CISource::CircleCI.new(env)
-    g = Danger::GitHub.new(c)
-    expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/800")
-  end
-
-  it 'gets the right url from buildkite' do
-    env = { "BUILDKITE_PULL_REQUEST" => "12",
-            "BUILDKITE_REPO" => "https://github.com/artsy/eigen" }
-    c = Danger::CISource::Buildkite.new(env)
-    g = Danger::GitHub.new(c)
-    expect(g.api_url).to eql("https://api.github.com/repos/artsy/eigen/pulls/12")
-  end
-
-  it 'raises when GitHub fails' do
-    @g = Danger::GitHub.new(stub_ci)
-    response = double("response", ok?: false, status_code: 401, body: fixture("pr_response"))
-    allow(REST).to receive(:get) { response }
-    # dont log out in tests
-    allow(@g).to receive(:puts).and_return("")
-
-    expect do
-      @g.fetch_details
-    end.to raise_error("Could not get the pull request details from GitHub.")
-  end
-
   describe "with working json" do
     before do
       @g = Danger::GitHub.new(stub_ci)
@@ -69,7 +30,7 @@ describe Danger::GitHub do
       @g.fetch_details
 
       expect(@g.pr_json['base']['sha']).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
-      expect(@g.pr_json['base']['sha']).to eql(@g.latest_pr_commit_ref)
+      expect(@g.pr_json['head']['sha']).to eql(@g.latest_pr_commit_ref)
     end
   end
 end

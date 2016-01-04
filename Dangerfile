@@ -1,10 +1,10 @@
-puts "OK"
-puts "Lines #{lines_of_code}"
-puts "Added #{files_added}"
-puts "modified: #{files_modified}"
+message("OK")
+message("Lines #{lines_of_code}")
+message("Added #{files_added}")
+message("modified: #{files_modified}")
 
-puts "PR Body: '#{pr_body}'"
-puts "PR Title: '#{pr_title}'"
+message("PR Body: '#{pr_body}'")
+message("PR Title: '#{pr_title}'")
 
 message("This pull request adds #{lines_of_code} new lines")
 

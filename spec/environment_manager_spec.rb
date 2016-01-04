@@ -5,7 +5,7 @@ describe Danger::EnvironmentManager do
   it 'raises without enough info in the ENV' do
     expect do
       Danger::EnvironmentManager.new({ "KEY" => "VALUE" })
-    end.to raise_error("Could not find a CI source")
+    end.to raise_error("Could not find a CI source".red)
   end
 
   it 'stores travis in the source' do
