@@ -37,12 +37,15 @@ module Danger
     end
 
     # Sending data to GitHub
-    # @return URL to the comment
-    def submit_comment!(warnings: nil, errors: nil)
-      body = generate_comment(warnings: warnings, errors: errors)
+    def update_pull_request!(warnings: nil, errors: nil, messages: nil)
+      # First, add a comment
+      body = generate_comment(warnings: warnings, errors: errors, messages: messages)
       result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
 
-      return result['html_url']
+      # Now, set the pull request status
+      submit_pull_request_status!(warnings: warnings,
+                                    errors: errors,
+                               details_url: result['html_url'])
     end
 
     def submit_pull_request_status!(warnings: nil, errors: nil, details_url: nil)
@@ -64,11 +67,13 @@ module Danger
       end
     end
 
-    def generate_comment(warnings: nil, errors: nil)
+    def generate_comment(warnings: nil, errors: nil, messages: nil)
       require 'erb'
 
       @warnings = warnings
       @errors = errors
+      @messages = messages
+      # TODO: path
       md_template = File.join(".", "lib/danger/comment_generators/github.md.erb")
       comment = ERB.new(File.read(md_template)).result(binding) # http://www.rrn.dk/rubys-erb-templating-system
       return comment

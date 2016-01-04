@@ -29,8 +29,7 @@ module Danger
 
     def post_results(dm)
       gh = dm.env.github
-      comment_url = gh.submit_comment!(warnings: dm.warnings, errors: dm.errors)
-      gh.submit_pull_request_status!(warnings: dm.warnings, errors: dm.errors, details_url: comment_url)
+      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages)
     end
   end
 end

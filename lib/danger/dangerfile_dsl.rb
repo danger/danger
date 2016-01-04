@@ -38,6 +38,7 @@ module Danger
       def initialize
         self.warnings = []
         self.errors = []
+        self.messages = []
       end
 
       # Declares a CI blocking error
@@ -46,7 +47,7 @@ module Danger
       #           The message to present to the user
       def fail(message)
         self.errors << message
-        puts "Raising error #{message}"
+        puts "Raising error '#{message}'"
       end
 
       # Specifies a problem, but not critical
@@ -55,7 +56,16 @@ module Danger
       #           The message to present to the user
       def warn(message)
         self.warnings << message
-        puts "Printing warning #{message}"
+        puts "Printing warning '#{message}'"
+      end
+
+      # Print out a generate message on the PR
+      #
+      # @param    [String] message
+      #           The message to present to the user
+      def message(message)
+        self.messages << message
+        puts "Printing message '#{message}'"
       end
     end
   end
