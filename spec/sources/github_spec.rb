@@ -17,8 +17,9 @@ describe Danger::GitHub do
   describe "valid server response" do
     before do
       @g = Danger::GitHub.new(stub_ci)
-      response = double("response", ok?: true, body: fixture("pr_response"))
-      allow(REST).to receive(:get) { response }
+
+      response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(response)
     end
 
     it 'sets its pr_json' do
@@ -29,8 +30,8 @@ describe Danger::GitHub do
     it 'sets the right commit sha' do
       @g.fetch_details
 
-      expect(@g.pr_json['base']['sha']).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
-      expect(@g.pr_json['head']['sha']).to eql(@g.latest_pr_commit_ref)
+      expect(@g.pr_json[:base][:sha]).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
+      expect(@g.pr_json[:head][:sha]).to eql(@g.latest_pr_commit_ref)
     end
 
     describe "#generate_comment" do
