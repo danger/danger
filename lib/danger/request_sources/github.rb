@@ -1,6 +1,7 @@
 require 'rest'
 require 'json'
 require 'base64'
+require 'octokit'
 
 module Danger
   class GitHub
@@ -10,36 +11,30 @@ module Danger
       self.ci_source = ci_source
     end
 
-    def api_url
-      "https://api.github.com/repos/#{ci_source.repo_slug}/pulls/#{ci_source.pull_request_id}"
+    def client
+      token = ENV["DANGER_GITHUB_API_TOKEN"]
+      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" unless token
+
+      @client ||= Octokit::Client.new(
+        access_token: token
+      )
     end
 
     def fetch_details
-      token = ENV["DANGER_API_TOKEN"] || ""
-      base_api_token = Base64.strict_encode64(token)
-      response = REST.get api_url, {}, {
-        'Authorization' => "Basic #{ base_api_token }",
-        'User-Agent' => 'fastlane-danger'
-      }
-      if response.ok?
-        self.pr_json = JSON.parse(response.body)
-      else
-        puts "Something went wrong getting GitHub details for #{api_url} - (#{response.status_code})"
-        puts response.body
-        raise "Could not get the pull request details from GitHub."
-      end
+      self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
     end
 
     def latest_pr_commit_ref
-      self.pr_json['base']['sha']
+      self.pr_json[:head][:sha]
     end
 
     def pr_title
-      self.pr_json['title']
+      self.pr_json[:title]
     end
 
     def pr_body
-      self.pr_json['body']
+      self.pr_json[:body]
+    end
     end
   end
 end
