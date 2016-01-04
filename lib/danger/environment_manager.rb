@@ -10,14 +10,13 @@ module Danger
         c = CISource.const_get(symb)
         next unless c.kind_of?(Class)
 
-        if c.validates?(env)
-          self.ci_source = c.new(env)
-          if self.ci_source.repo_slug and self.ci_source.pull_request_id
-            break
-          else
-            puts "Not a Pull Request - skipping `danger` run"
-            self.ci_source = nil
-          end
+        next unless c.validates?(env)
+        self.ci_source = c.new(env)
+        if self.ci_source.repo_slug and self.ci_source.pull_request_id
+          break
+        else
+          puts "Not a Pull Request - skipping `danger` run"
+          self.ci_source = nil
         end
       end
 
