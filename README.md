@@ -85,8 +85,8 @@ You can access more detailed information by accessing the following variables
 
 ## Special Thanks
 
-Thanks [@orta](https://twitter.com/orta) for starting this project and handing it over to the `fastlane` organisation
+Thanks [@orta](https://twitter.com/orta) for starting this project
 
 ## License
 
-> This project and all fastlane tools are in no way affiliated with Apple Inc. This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs. All fastlane tools run on your own computer or server, so your credentials or other sensitive information will never leave your own computer. You are responsible for how you use fastlane tools.
+> This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs. 

@@ -57,7 +57,7 @@ module Danger
       status = (errors.count == 0 ? 'success' : 'failure')
       client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
         description: generate_github_description(warnings: warnings, errors: errors),
-        context: "fastlane/danger",
+        context: "KrauseFx/danger",
         target_url: details_url
       })
     end
