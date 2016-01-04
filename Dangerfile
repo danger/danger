@@ -9,7 +9,11 @@ if pr_body.include?("WIP")
 end
 
 if files_modified.any? { |a| a.include?("spec") }
-  message("Good, tests were actually modified")
+  message("Tests are updated / added")
 else
   fail("There must be at least one new test or a modified test")
+end
+
+if pr_body.length < 5
+  fail "Please provide a changelog summary in the Pull Request description @#{pr_author}"
 end
