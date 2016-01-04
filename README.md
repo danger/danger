@@ -13,7 +13,7 @@ Formalize your Pull Request etiquette.
     <a href="#usage">Usage</a> &bull; 
     <a href="#dsl">DSL</a> &bull; 
     <a href="#constraints">Constraints</a> &bull; 
-    <a href="#development">Development</a> &bull; 
+    <a href="#advanced">Advanced</a> &bull; 
     <a href="#contributing">Contributing</a>
 </p>
 
@@ -25,6 +25,12 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 
 ```ruby
 gem 'danger'
+```
+
+and then run the following to set up `danger` for your repository
+
+```
+danger init
 ```
 
 ## Usage
@@ -42,17 +48,6 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 :abc:  | `pr_title` | The title of the PR
 :book:  | `pr_body` | The body of the PR
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
-
-
-You can access more detailed information  by looking through:
-
-&nbsp; | Danger :no_entry_sign:
-------------- | ----
-`env.travis` | Details on the [Travis CI](https://travis-ci.org) integration
-`env.circle` | Details on the [Circle CI](https://circleci.com) integration
-`env.buildkite` | Details on the [Buildkite](https://buildkite.com) integration
-`env.github.pr_json` | The full JSON for the pull request
-`env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 
 You can then create a `Dangerfile` like the following:
 
@@ -77,6 +72,16 @@ warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].in
 
 * **GitHub** - Built with same-repo PRs in mind
 * **Git** - Built with master as the merge branch
+
+## Advanced
+
+You can access more detailed information by accessing the following variables
+
+&nbsp; | Danger :no_entry_sign:
+------------- | ----
+`env.github.pr_json` | The full JSON for the pull request
+`env.git.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+`env.ci_source` | To get information like the repo slug or pull request ID
 
 ## Special Thanks
 
