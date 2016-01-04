@@ -1,5 +1,5 @@
 <% if @errors.count > 0 %>
-  &nbsp; | <%= @errors.count %> Error<%= "s" if @errors.count > 0 %>
+  &nbsp; | <%= @errors.count %> Error<%= "s" unless @errors.count == 1 %>
   ------------- | ------------ <% @errors.each do |error| %>
     :no_entry_sign: | <%= error %><% end %>
 <% else %>
@@ -7,7 +7,7 @@
 <% end %>
 
 <% if @warnings.count > 0 %>
-  &nbsp; | <%= @warnings.count %> Warning<%= "s" if @warnings.count > 0 %>
+  &nbsp; | <%= @warnings.count %> Warning<%= "s" unless @warnings.count == 1 %>
   ------------- | ------------ <% @warnings.each do |warning| %>
     :warning: | <%= warning %><% end %>
 <% else %>
