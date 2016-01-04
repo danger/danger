@@ -45,6 +45,7 @@ module Danger
       # First, add a comment
       body = generate_comment(warnings: warnings, errors: errors, messages: messages)
       result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+      delete_old_comment!(except: result[:id])
 
       # Now, set the pull request status
       submit_pull_request_status!(warnings: warnings,
@@ -59,6 +60,16 @@ module Danger
         context: "fastlane/danger",
         target_url: details_url
       })
+    end
+
+    # Get rid of the previously posted comment, to only have the latest one
+    def delete_old_comment!(except: nil)
+      issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+      issues.each do |issue|
+        next unless issue[:body].gsub(/\s+/, "").include?("Generatedby<ahref=")
+        next if issue[:id] == except
+        client.delete_comment(ci_source.repo_slug, issue[:id])
+      end
     end
 
     def generate_github_description(warnings: nil, errors: nil)
