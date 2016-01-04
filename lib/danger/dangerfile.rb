@@ -9,8 +9,7 @@ module Danger
 
     # The DSL includes a bunch of read only  attributes + docs
     # we make them readwrite in here
-    attr_accessor :files_modified, :files_removed, :files_added, :pr_title, :pr_body, :lines_of_code
-    attr_accessor :env, :warnings, :errors
+    attr_accessor :files_modified, :files_removed, :files_added, :pr_title, :pr_body, :pr_author, :lines_of_code
     attr_accessor :env, :warnings, :errors, :messages
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
@@ -68,6 +67,7 @@ module Danger
       # Request Source
       self.pr_title = env.github.pr_title
       self.pr_body = env.github.pr_body
+      self.pr_author = env.github.pr_author
     end
   end
 end

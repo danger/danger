@@ -36,6 +36,10 @@ module Danger
       self.pr_json[:body]
     end
 
+    def pr_author
+      self.pr_json[:user][:login]
+    end
+
     # Sending data to GitHub
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
       # First, add a comment

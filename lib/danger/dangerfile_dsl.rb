@@ -35,6 +35,9 @@ module Danger
       #
       attr_reader :pr_body
 
+      # @return [String] The author of this PR
+      attr_reader :pr_author
+
       def initialize
         self.warnings = []
         self.errors = []
