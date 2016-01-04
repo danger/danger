@@ -12,13 +12,18 @@ module Danger
 
         if c.validates?(env)
           self.ci_source = c.new(env)
-          break
+          if self.ci_source.repo_slug and self.ci_source.pull_request_id
+            break
+          else
+            puts "Not a Pull Request - skipping `danger` run"
+            self.ci_source = nil
+          end
         end
       end
 
-      raise "Could not find a CI source".red unless ci_source
+      raise "Could not find a CI source".red unless self.ci_source
 
-      self.github = GitHub.new(ci_source)
+      self.github = GitHub.new(self.ci_source)
     end
 
     def fill_environment_vars
