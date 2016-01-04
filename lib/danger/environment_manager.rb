@@ -3,7 +3,7 @@ require "danger/request_sources/github"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :github, :git
+    attr_accessor :ci_source, :request_source, :scm
 
     def initialize(env)
       CISource.constants.each do |symb|
@@ -23,13 +23,13 @@ module Danger
 
       raise "Could not find a CI source".red unless self.ci_source
 
-      self.github = GitHub.new(self.ci_source)
+      self.request_source = GitHub.new(self.ci_source) # for now
     end
 
     def fill_environment_vars
-      github.fetch_details
+      request_source.fetch_details
 
-      self.git = GitRepo.new
+      self.scm = GitRepo.new # For now
     end
   end
 end
