@@ -42,6 +42,10 @@ module Danger
                     'you should turn off smart quotes in your editor of choice.'.red
       end
 
+      if contents.include?("puts")
+        puts "You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead"
+      end
+
       self.defined_in_file = path
       instance_eval do
         # rubocop:disable Lint/RescueException
