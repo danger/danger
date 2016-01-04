@@ -41,14 +41,14 @@ describe Danger::GitHub do
       it "no warnings, no errors" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:Noerrorsfound:white_check_mark:Nowarningsfound<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
         )
       end
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:Noerrorsfound&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
         )
       end
 
