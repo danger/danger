@@ -11,7 +11,7 @@ end
 if files_modified.any? { |a| a.include?("spec") }
   message("Tests are updated / added")
 else
-  fail("There must be at least one new test or a modified test")
+  warn("Tests were not updated")
 end
 
 if pr_body.length < 5
