@@ -9,7 +9,7 @@ if pr_body.include?("WIP")
 end
 
 if files_modified.any? { |a| a.include?("spec") }
-  message("Tests are updated / added")
+  message("Tests were updated / added")
 else
   warn("Tests were not updated")
 end

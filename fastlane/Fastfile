@@ -1,4 +1,4 @@
-# update_fastlane
+update_fastlane
 
 desc "Run bundle install and tests"
 lane :test do
