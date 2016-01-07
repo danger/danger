@@ -1,4 +1,10 @@
 
+AllCops:
+  Include:
+    - 'fastlane/Fastfile'
+  Exclude:
+    - 'fastlane/actions/*'
+
 Style/ClassVars:
   Enabled: false
 
