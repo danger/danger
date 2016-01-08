@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rest'
 require 'json'
 require 'base64'
@@ -5,14 +6,15 @@ require 'octokit'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json
+    attr_accessor :ci_source, :pr_json, :environment
 
-    def initialize(ci_source)
+    def initialize(ci_source, environment)
       self.ci_source = ci_source
+      self.environment = environment
     end
 
     def client
-      token = ENV["DANGER_GITHUB_API_TOKEN"]
+      token = @environment["DANGER_GITHUB_API_TOKEN"]
       raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" unless token
 
       @client ||= Octokit::Client.new(
