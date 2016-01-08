@@ -2,9 +2,17 @@ require 'spec_helper'
 require 'danger/ci_source/circle'
 
 describe Danger::CISource::CircleCI do
-  it 'validates when circle env var is found' do
-    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => "true" }
+  legit_pr = "https://github.com/orta/thing/pulls/45"
+  not_legit_pr = "https://github.com/orta"
+
+  it 'validates when circle env var is found and it has a real PR url' do
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => legit_pr }
     expect(Danger::CISource::CircleCI.validates?(env)).to be true
+  end
+
+  it 'doesnt validate when circle env var is found and it has a bad PR url' do
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => not_legit_pr }
+    expect(Danger::CISource::CircleCI.validates?(env)).to be false
   end
 
   it 'doesnt validate when circle ci is not found' do

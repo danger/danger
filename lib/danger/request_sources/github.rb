@@ -92,9 +92,9 @@ module Danger
         "Everything is good."
       else
         message = "⚠ "
-        message += "#{errors.count} Errors. " unless errors.empty?
-        message += "#{warnings.count} Warnings. "unless warnings.empty?
-        message += "Everything is fixable."
+        message += "#{errors.count} Error#{errors.count == 1 ? "" : "s" }. " unless errors.empty?
+        message += "#{warnings.count} Warning#{warnings.count == 1 ? "" : "s" }. "unless warnings.empty?
+        message += "Don't worry, everything is fixable."
       end
     end
 
