@@ -16,7 +16,8 @@ end
 describe Danger::GitHub do
   describe "valid server response" do
     before do
-      @g = Danger::GitHub.new(stub_ci)
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
+      @g = Danger::GitHub.new(stub_ci, gh_env)
 
       response = JSON.parse(fixture("pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(response)
