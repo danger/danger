@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rest'
 require 'spec_helper'
 require 'danger/request_sources/github'
@@ -59,6 +60,21 @@ describe Danger::GitHub do
         expect(result.gsub(/\s+/, "")).to eq(
           "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
         )
+      end
+    end
+
+    describe "status message" do
+      it "Shows a success message when no errors/warnings" do
+        message = @g.generate_github_description(warnings: [], errors:[])
+        expect(message).to eq("Everything is good.")
+      end
+      it "Shows an error messages when there are errors" do
+        message = @g.generate_github_description(warnings: [1,2,3], errors:[])
+        expect(message).to eq("⚠ 3 Warnings. Everything is fixable.")
+      end
+      it "Shows an error message when errors and warnings" do
+        message = @g.generate_github_description(warnings: [1,2], errors:[1,2,3])
+        expect(message).to eq("⚠ 3 Errors. 2 Warnings. Everything is fixable.")
       end
     end
   end

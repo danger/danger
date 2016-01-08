@@ -87,12 +87,13 @@ module Danger
     end
 
     def generate_github_description(warnings: nil, errors: nil)
-      if errors.count > 0
-        "danger found errors"
-      elsif warnings.count > 0
-        "⚠️ danger found warnings, merge with caution"
+      if errors.empty? && warnings.empty?
+        "Everything is good."
       else
-        "danger was successful"
+        message = "⚠ "
+        message += "#{errors.count} Errors. " unless errors.empty?
+        message += "#{warnings.count} Warnings. "unless warnings.empty?
+        message += "Everything is fixable."
       end
     end
 
