@@ -53,7 +53,8 @@ module Danger
         delete_old_comment!
       end
 
-      # Now, set the pull request status
+      # Now, set the pull request status, note, this can
+      # terminate the entire process.
       submit_pull_request_status!(warnings: warnings,
                                     errors: errors,
                                details_url: result['html_url'])
