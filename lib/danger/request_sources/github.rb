@@ -64,6 +64,14 @@ module Danger
         context: "KrauseFx/danger",
         target_url: details_url
       })
+    rescue => ex
+      # This usually means the user has no commit access to this repo
+      # That's always the case for open source projects where you can only
+      # use a read-only GitHub account
+      if errors.count > 0
+        # We need to fail the actual build here
+        abort("danger found #{errors.count} error(s) and doesn't have write access to the PR")
+      end
     end
 
     # Get rid of the previously posted comment, to only have the latest one
