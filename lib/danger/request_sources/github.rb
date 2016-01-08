@@ -43,9 +43,13 @@ module Danger
     # Sending data to GitHub
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
       # First, add a comment
-      body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-      result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-      delete_old_comment!(except: result[:id])
+      if (warnings + errors + messages).count == 0
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+        delete_old_comment!(except: result[:id])
+      else
+        delete_old_comment!
+      end
 
       # Now, set the pull request status
       submit_pull_request_status!(warnings: warnings,
