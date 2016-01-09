@@ -70,7 +70,7 @@ module Danger
         context: "KrauseFx/danger",
         target_url: details_url
       })
-    rescue => ex
+    rescue
       # This usually means the user has no commit access to this repo
       # That's always the case for open source projects where you can only
       # use a read-only GitHub account
