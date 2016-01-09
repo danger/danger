@@ -108,13 +108,16 @@ module Danger
     def generate_comment(warnings: nil, errors: nil, messages: nil)
       require 'erb'
 
-      @warnings = warnings
-      @errors = errors
-      @messages = messages
-
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
-      comment = ERB.new(File.read(md_template)).result(binding) # http://www.rrn.dk/rubys-erb-templating-system
-      return comment
+
+      # erb: http://www.rrn.dk/rubys-erb-templating-system
+      # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
+      @tables = [
+        { :name => "Error", :emoji => "no_entry_sign", :content => errors },
+        { :name => "Warning", :emoji => "warning", :content => warnings },
+        { :name => "Message", :emoji => "book", :content => messages }
+      ]
+      return ERB.new(File.read(md_template), 0, "-").result(binding)
     end
   end
 end

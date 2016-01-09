@@ -1,3 +1,11 @@
+warn("Yep")
+warn("Yep")
+
+message("OK")
+fail("whoah")
+fail("whoah")
+fail("whoah")
+
 if ["KrauseFx", "orta"].include?(pr_author)
   message("Trusted author @#{pr_author}")
 else
