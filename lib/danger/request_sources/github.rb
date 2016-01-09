@@ -76,7 +76,7 @@ module Danger
       # use a read-only GitHub account
       if errors.count > 0
         # We need to fail the actual build here
-        abort("danger found #{errors.count} error(s) and doesn't have write access to the PR")
+        abort("\nDanger has failed this build. \nFound #{errors.count} error(s) and I don't have write access to the PR set a PR status.")
       else
         puts message
       end
