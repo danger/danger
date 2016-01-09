@@ -16,7 +16,8 @@ end
 describe Danger::GitHub do
   describe "valid server response" do
     before do
-      @g = Danger::GitHub.new(stub_ci)
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
+      @g = Danger::GitHub.new(stub_ci, gh_env)
 
       response = JSON.parse(fixture("pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(response)
@@ -42,21 +43,21 @@ describe Danger::GitHub do
       it "no warnings, no errors" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
         )
       end
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
         )
       end
 
       it "some warnings, some errors" do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\">Generatedby<ahref=\"https://github.com/KrauseFx/danger\">danger</a>on<i>#{@date}</i></p>"
+          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
         )
       end
     end

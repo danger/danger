@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rest'
 require 'json'
 require 'base64'
@@ -5,14 +6,15 @@ require 'octokit'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json
+    attr_accessor :ci_source, :pr_json, :environment
 
-    def initialize(ci_source)
+    def initialize(ci_source, environment)
       self.ci_source = ci_source
+      self.environment = environment
     end
 
     def client
-      token = ENV["DANGER_GITHUB_API_TOKEN"]
+      token = @environment["DANGER_GITHUB_API_TOKEN"]
       raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" unless token
 
       @client ||= Octokit::Client.new(
@@ -43,9 +45,13 @@ module Danger
     # Sending data to GitHub
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
       # First, add a comment
-      body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-      result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-      delete_old_comment!(except: result[:id])
+      if (warnings + errors + messages).count == 0
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+        delete_old_comment!(except: result[:id])
+      else
+        delete_old_comment!
+      end
 
       # Now, set the pull request status
       submit_pull_request_status!(warnings: warnings,
@@ -60,6 +66,14 @@ module Danger
         context: "KrauseFx/danger",
         target_url: details_url
       })
+    rescue
+      # This usually means the user has no commit access to this repo
+      # That's always the case for open source projects where you can only
+      # use a read-only GitHub account
+      if errors.count > 0
+        # We need to fail the actual build here
+        abort("danger found #{errors.count} error(s) and doesn't have write access to the PR")
+      end
     end
 
     # Get rid of the previously posted comment, to only have the latest one

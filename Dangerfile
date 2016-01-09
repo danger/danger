@@ -1,6 +1,6 @@
 is_trusted_author = ["KrauseFx", "orta"].include?(pr_author)
 
-if pr_body.include?("WIP")
+if (pr_body + pr_title).include?("WIP")
   warn("Pull Request is Work in Progress")
 end
 
