@@ -86,8 +86,7 @@ module Danger
     def delete_old_comments!(except: nil)
       issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
       issues.each do |issue|
-        puts "looking at issue #{issue[:id]}"
-        next unless issue[:body].gsub(/\s+/, "").include?("Generatedby<ahref=")
+        next unless issue[:body].include?("generated_by_danger")
         next if issue[:id] == except
         client.delete_comment(ci_source.repo_slug, issue[:id])
       end
