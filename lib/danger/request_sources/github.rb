@@ -45,19 +45,22 @@ module Danger
     # Sending data to GitHub
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
       # First, add a comment
-      if (warnings + errors + messages).count == 0
-        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-        result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-        delete_old_comment!(except: result[:id])
-      else
+      comment_result = {}
+      if (warnings + errors + messages).empty?
+        # Don't override comment_result, which is fine to nil
+        # though to the create_status API.
         delete_old_comment!
+      else
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+        delete_old_comment!(except: comment_result[:id])
       end
 
       # Now, set the pull request status, note, this can
       # terminate the entire process.
       submit_pull_request_status!(warnings: warnings,
                                     errors: errors,
-                               details_url: result['html_url'])
+                               details_url: comment_result['html_url'])
     end
 
     def submit_pull_request_status!(warnings: nil, errors: nil, details_url: nil)
