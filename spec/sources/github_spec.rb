@@ -41,17 +41,17 @@ describe Danger::GitHub do
         @date = Time.now.strftime("%Y-%m-%d")
       end
 
-      it "no warnings, no errors" do
+      it "no warnings, no errors, no messages" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
@@ -61,6 +61,12 @@ describe Danger::GitHub do
           "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
+
+      it "needs to include generated_by_danger" do
+        result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
+        expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
+      end
+
     end
 
     describe "status message" do
