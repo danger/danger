@@ -44,25 +44,29 @@ module Danger
 
     # Sending data to GitHub
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
-      # First, add a comment
-      if (warnings + errors + messages).count == 0
-        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-        result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-        delete_old_comment!(except: result[:id])
+      comment_result = {}
+
+      if (warnings + errors + messages).empty?
+        # Just remove the comment, if there's nothing to say.
+        delete_old_comments!
       else
-        delete_old_comment!
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+        delete_old_comments!(except: comment_result[:id])
       end
 
-      # Now, set the pull request status
+      # Now, set the pull request status.
+      # Note: this can terminate the entire process.
       submit_pull_request_status!(warnings: warnings,
                                     errors: errors,
-                               details_url: result['html_url'])
+                               details_url: comment_result['html_url'])
     end
 
     def submit_pull_request_status!(warnings: nil, errors: nil, details_url: nil)
       status = (errors.count == 0 ? 'success' : 'failure')
+      message = generate_github_description(warnings: warnings, errors: errors)
       client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
-        description: generate_github_description(warnings: warnings, errors: errors),
+        description: message,
         context: "KrauseFx/danger",
         target_url: details_url
       })
@@ -73,26 +77,31 @@ module Danger
       if errors.count > 0
         # We need to fail the actual build here
         abort("danger found #{errors.count} error(s) and doesn't have write access to the PR")
+      else
+        puts message
       end
     end
 
     # Get rid of the previously posted comment, to only have the latest one
-    def delete_old_comment!(except: nil)
+    def delete_old_comments!(except: nil)
       issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
       issues.each do |issue|
-        next unless issue[:body].gsub(/\s+/, "").include?("Generatedby<ahref=")
+        next unless issue[:body].include?("generated_by_danger")
         next if issue[:id] == except
         client.delete_comment(ci_source.repo_slug, issue[:id])
       end
     end
 
     def generate_github_description(warnings: nil, errors: nil)
-      if errors.count > 0
-        "danger found errors"
-      elsif warnings.count > 0
-        "⚠️ danger found warnings, merge with caution"
+      if errors.empty? && warnings.empty?
+        compliment = ["Well done.", "Congrats.", "Woo!",
+                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
+        "All green. #{compliment.sample}"
       else
-        "danger was successful"
+        message = "⚠ "
+        message += "#{errors.count} Error#{errors.count == 1 ? "" : "s" }. " unless errors.empty?
+        message += "#{warnings.count} Warning#{warnings.count == 1 ? "" : "s" }. "unless warnings.empty?
+        message += "Don't worry, everything is fixable."
       end
     end
 

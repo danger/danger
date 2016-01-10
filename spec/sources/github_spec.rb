@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rest'
 require 'spec_helper'
 require 'danger/request_sources/github'
@@ -43,23 +44,43 @@ describe Danger::GitHub do
       it "no warnings, no errors" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------:white_check_mark:|Nowarningsfound-------------|------------<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
+          ":white_check_mark:|Noerrorsfound-------------|------------&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
       it "some warnings, some errors" do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\">Generatedby:no_entry_sign:danger</p>"
+          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
+    end
+
+    describe "status message" do
+      it "Shows a success message when no errors/warnings" do
+        message = @g.generate_github_description(warnings: [], errors:[])
+        expect(message).to start_with("All green.")
+      end
+      it "Shows an error messages when there are errors" do
+        message = @g.generate_github_description(warnings: [1,2,3], errors:[])
+        expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
+      end
+      it "Shows an error message when errors and warnings" do
+        message = @g.generate_github_description(warnings: [1,2], errors:[1,2,3])
+        expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
+      end
+      it "Deals with singualars in messages when errors and warnings" do
+        message = @g.generate_github_description(warnings: [1], errors:[1])
+        expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
+      end
+
     end
   end
 end
