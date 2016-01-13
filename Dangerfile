@@ -1,17 +1,19 @@
-if ["KrauseFx", "orta"].include?(pr_author)
-  message("Trusted author @#{pr_author}")
-else
-  warn("Author @#{pr_author} is not a contributor")
-end
+is_trusted_author = ["KrauseFx", "orta"].include?(pr_author)
 
 if (pr_body + pr_title).include?("WIP")
   warn("Pull Request is Work in Progress")
 end
 
-if files_modified.any? { |a| a.include?("spec/") }
+# Verify that there have been tests?
+if files_modified.any? { |a| a.include?("spec") }
   message("Tests were updated / added")
 else
-  warn("Tests were not updated")
+  if is_trusted_author
+    # I guess we can trust us?
+    warn("Tests were not updated")
+  else
+    fail("Tests were not updated")
+  end
 end
 
 if pr_body.length < 5
