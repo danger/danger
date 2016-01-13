@@ -96,12 +96,13 @@ module Danger
       if errors.empty? && warnings.empty?
         compliment = ["Well done.", "Congrats.", "Woo!",
                       "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
-        "All green. #{compliment.sample}"
+        return "All green. #{compliment.sample}"
       else
         message = "⚠ "
         message += "#{errors.count} Error#{errors.count == 1 ? '' : 's'}. " unless errors.empty?
         message += "#{warnings.count} Warning#{warnings.count == 1 ? '' : 's'}. " unless warnings.empty?
         message += "Don't worry, everything is fixable."
+        return message
       end
     end
 
