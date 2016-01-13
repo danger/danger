@@ -99,8 +99,8 @@ module Danger
         "All green. #{compliment.sample}"
       else
         message = "⚠ "
-        message += "#{errors.count} Error#{errors.count == 1 ? "" : "s" }. " unless errors.empty?
-        message += "#{warnings.count} Warning#{warnings.count == 1 ? "" : "s" }. "unless warnings.empty?
+        message += "#{errors.count} Error#{errors.count == 1 ? '' : 's'}. " unless errors.empty?
+        message += "#{warnings.count} Warning#{warnings.count == 1 ? '' : 's'}. " unless warnings.empty?
         message += "Don't worry, everything is fixable."
       end
     end
@@ -113,9 +113,9 @@ module Danger
       # erb: http://www.rrn.dk/rubys-erb-templating-system
       # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
       @tables = [
-        { :name => "Error", :emoji => "no_entry_sign", :content => errors },
-        { :name => "Warning", :emoji => "warning", :content => warnings },
-        { :name => "Message", :emoji => "book", :content => messages }
+        { name: "Error", emoji: "no_entry_sign", content: errors },
+        { name: "Warning", emoji: "warning", content: warnings },
+        { name: "Message", emoji: "book", content: messages }
       ]
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end

@@ -6,8 +6,8 @@ module Danger
     class CircleCI < CI
       def self.validates?(env)
         return !env["CIRCLE_BUILD_NUM"].nil? &&
-               !env["CI_PULL_REQUEST"].nil?  &&
-               URI.parse(env["CI_PULL_REQUEST"]).path.split("/").count == 5
+          !env["CI_PULL_REQUEST"].nil? &&
+          URI.parse(env["CI_PULL_REQUEST"]).path.split("/").count == 5
       end
 
       def initialize(env)

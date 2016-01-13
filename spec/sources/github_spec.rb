@@ -66,27 +66,25 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
         expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
       end
-
     end
 
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
-        message = @g.generate_github_description(warnings: [], errors:[])
+        message = @g.generate_github_description(warnings: [], errors: [])
         expect(message).to start_with("All green.")
       end
       it "Shows an error messages when there are errors" do
-        message = @g.generate_github_description(warnings: [1,2,3], errors:[])
+        message = @g.generate_github_description(warnings: [1, 2, 3], errors: [])
         expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
       end
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_github_description(warnings: [1,2], errors:[1,2,3])
+        message = @g.generate_github_description(warnings: [1, 2], errors: [1, 2, 3])
         expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_github_description(warnings: [1], errors:[1])
+        message = @g.generate_github_description(warnings: [1], errors: [1])
         expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
-
     end
   end
 end
