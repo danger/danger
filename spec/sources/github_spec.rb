@@ -73,17 +73,50 @@ describe Danger::GitHub do
         message = @g.generate_github_description(warnings: [], errors: [])
         expect(message).to start_with("All green.")
       end
+
       it "Shows an error messages when there are errors" do
         message = @g.generate_github_description(warnings: [1, 2, 3], errors: [])
         expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
       end
+
       it "Shows an error message when errors and warnings" do
         message = @g.generate_github_description(warnings: [1, 2], errors: [1, 2, 3])
         expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
+
       it "Deals with singualars in messages when errors and warnings" do
         message = @g.generate_github_description(warnings: [1], errors: [1])
         expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
+      end
+    end
+
+    describe "issue creation" do
+      it "creates an issue if no danger comments exist" do
+        issues = []
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
+        expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
+
+        @g.update_pull_request!(warnings: ["hi"], errors: [], messages: [])
+      end
+
+      it "updates the issue if no danger comments exist" do
+        issues = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
+
+        @g.update_pull_request!(warnings: ["hi"], errors: [], messages: [])
+      end
+
+      it "deletes existing issues danger doesnt need to say anything" do
+        issues = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
     end
   end
