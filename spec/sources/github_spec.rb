@@ -102,7 +102,7 @@ describe Danger::GitHub do
       end
 
       it "updates the issue if no danger comments exist" do
-        issues = [{:body => "generated_by_danger", :id => "12"}]
+        issues = [{ body: "generated_by_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
@@ -112,13 +112,12 @@ describe Danger::GitHub do
       end
 
       it "deletes existing issues danger doesnt need to say anything" do
-        issues = [{:body => "generated_by_danger", :id => "12"}]
+        issues = [{ body: "generated_by_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
-
     end
   end
 end

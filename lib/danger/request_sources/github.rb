@@ -51,14 +51,14 @@ module Danger
         delete_old_comments!
       else
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue|  issue[:body].include?("generated_by_danger") == false }
+        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
         body = generate_comment(warnings: warnings, errors: errors, messages: messages)
 
         if editable_issues.empty?
           comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
         else
           original_id = editable_issues.first[:id]
-          comment_result = client.update_comment(ci_source.repo_slug, original_id ,body)
+          comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
         end
       end
 
