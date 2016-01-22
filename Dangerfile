@@ -17,3 +17,7 @@ end
 if pr_body.length < 5
   fail "Please provide a changelog summary in the Pull Request description @#{pr_author}"
 end
+
+unless files_modified.any? { |a| a.include?("CHANGELOG.md") }
+  warn("Please include a CHANGELOG entry")
+end
