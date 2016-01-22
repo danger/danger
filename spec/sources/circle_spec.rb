@@ -10,9 +10,15 @@ describe Danger::CISource::CircleCI do
     expect(Danger::CISource::CircleCI.validates?(env)).to be true
   end
 
-  it 'doesnt validate when circle env var is found and it has a bad PR url' do
+  it 'validates when circle env var is found and it has a bad PR url' do
     env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => not_legit_pr }
-    expect(Danger::CISource::CircleCI.validates?(env)).to be false
+    expect(Danger::CISource::CircleCI.validates?(env)).to be true
+  end
+
+  it 'doesnt get a PR id when it has a bad PR url' do
+    env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => not_legit_pr }
+    t = Danger::CISource::CircleCI.new(env)
+    expect(t.pull_request_id).to be nil
   end
 
   it 'doesnt validate when circle ci is not found' do
