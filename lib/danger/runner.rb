@@ -21,7 +21,7 @@ module Danger
       dm.env = EnvironmentManager.new(ENV)
       return unless dm.env.ci_source # if it's not a PR
       dm.env.fill_environment_vars
-      dm.env.scm.diff_for_folder(".")
+      dm.env.scm.diff_for_folder("." , :from => dm.env.ci_source.base_commit, :to => dm.env.ci_source.head_commit)
       dm.parse Pathname.new(@dangerfile_path)
 
       post_results(dm)
