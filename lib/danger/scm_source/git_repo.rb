@@ -8,7 +8,7 @@ module Danger
 
     def diff_for_folder(folder, from = "HEAD", to = 'master')
       g = Git.open(folder)
-      self.diff = g.diff(to, from)
+      self.diff = g.diff(from, to)
     end
 
     def files_modified
