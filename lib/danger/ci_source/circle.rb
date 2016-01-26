@@ -16,6 +16,13 @@ module Danger
           self.repo_slug = paths[1] + "/" + paths[2]
           self.pull_request_id = paths[4]
         end
+
+        if env["CIRCLE_COMPARE_URL"] && URI.parse(env["CIRCLE_COMPARE_URL"]).path.split("/").count == 5
+          commit_ref = URI.parse(env["CIRCLE_COMPARE_URL"]).path.split("/").last
+
+          self.head_commit = commit_ref.split("...").last
+          self.base_commit = commit_ref.split("...").first
+        end
       end
     end
   end

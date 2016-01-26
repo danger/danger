@@ -1,6 +1,7 @@
 ## Master
 
 * Makes the CircleCI provider validate, but not run on non-PR builds - orta
+* Take the git before...after references out of ENV vars from CI providers - orta
 
 ## 0.2.1
 

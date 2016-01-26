@@ -1,4 +1,4 @@
-# https://github.com/schacon/ruby-git
+# For more info see: https://github.com/schacon/ruby-git
 
 require 'git'
 
@@ -6,9 +6,9 @@ module Danger
   class GitRepo
     attr_accessor :diff
 
-    def diff_for_folder(folder, from = "HEAD", to = 'master')
+    def diff_for_folder(folder, from = "master", to = 'HEAD')
       g = Git.open(folder)
-      self.diff = g.diff(to, from)
+      self.diff = g.diff(from, to)
     end
 
     def files_modified
