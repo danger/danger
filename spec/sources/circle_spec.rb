@@ -26,7 +26,7 @@ describe Danger::CISource::CircleCI do
     expect(Danger::CISource::CircleCI.validates?(env)).to be false
   end
 
-  it 'gets out a repo slug and pull request number' do
+  it 'gets out a repo slug, pull request number and commit refs' do
     env = {
       "CIRCLE_BUILD_NUM" => "true",
       "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",

@@ -21,8 +21,3 @@ end
 unless files_modified.any? { |a| a.include?("CHANGELOG.md") }
   warn("Please include a CHANGELOG entry")
 end
-
-message "Insertions: #{insertions}"
-message "Added: #{files_added}"
-message "LOC: #{lines_of_code}"
-message "Mod: #{files_modified}"
