@@ -2,6 +2,7 @@
 
 * Makes the CircleCI provider validate, but not run on non-PR builds - orta
 * Take the git before...after references out of ENV vars from CI providers - orta
+* Fixes CircleCI when dealing with URLs like `https://github.com/artsy/eigen/compare/b0f6a2a9ff6f%5E...316b694875c8` - orta
 
 ## 0.2.1
 
