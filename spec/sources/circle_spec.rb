@@ -49,5 +49,4 @@ describe Danger::CISource::CircleCI do
     expect(t.base_commit).to eql("759adcbd0d8f^")
     expect(t.head_commit).to eql("13c4dc8bb61d")
   end
-
 end

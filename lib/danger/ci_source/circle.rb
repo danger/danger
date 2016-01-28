@@ -32,7 +32,6 @@ module Danger
           self.base_commit = commit_ref.split("...").first
         end
       end
-
     end
   end
 end
