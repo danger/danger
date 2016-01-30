@@ -50,7 +50,7 @@ module Danger
         # Just remove the comment, if there's nothing to say.
         delete_old_comments!
       else
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id, auto_pagination: true)
         editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
         body = generate_comment(warnings: warnings, errors: errors, messages: messages)
 
@@ -91,7 +91,7 @@ module Danger
 
     # Get rid of the previously posted comment, to only have the latest one
     def delete_old_comments!(except: nil)
-      issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+      issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id, auto_pagination: true)
       issues.each do |issue|
         next unless issue[:body].include?("generated_by_danger")
         next if issue[:id] == except
