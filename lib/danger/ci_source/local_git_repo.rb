@@ -8,11 +8,11 @@ module Danger
     class LocalGitRepo < CI
 
       # Never validate, it's not useful in production
-      def self.validates?(env)
+      def self.validates?(*)
         false
       end
 
-      def initialize(env)
+      def initialize(*)
 
         git = Git.open(".")
         if git.remote("origin")
@@ -34,8 +34,8 @@ module Danger
         if pr_merge
           # then pull out the 38, to_i
           self.pull_request_id = pr_merge.replace("Merge pull request #", "").to_i
-          self.base_commit = pr_merge.parents.[0].sha
-          self.head_commit = pr_merge.parents.[1].sha
+          self.base_commit = pr_merge.parents[0].sha
+          self.head_commit = pr_merge.parents[1].sha
         end
       end
     end
