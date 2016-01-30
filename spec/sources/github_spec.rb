@@ -93,7 +93,7 @@ describe Danger::GitHub do
     describe "issue creation" do
       it "creates an issue if no danger comments exist" do
         issues = []
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800", { :auto_pagination => true }).and_return(issues)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
@@ -103,7 +103,7 @@ describe Danger::GitHub do
 
       it "updates the issue if no danger comments exist" do
         issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800", { :auto_pagination => true }).and_return(issues)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
@@ -113,7 +113,7 @@ describe Danger::GitHub do
 
       it "deletes existing issues danger doesnt need to say anything" do
         issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800", { :auto_pagination => true }).and_return(issues)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
