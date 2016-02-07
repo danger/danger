@@ -26,20 +26,20 @@ module Danger
       puts "Danger v#{Danger::VERSION}"
       width = AvailableValues.all.map(&:to_s).map(&:length).max
       puts "DSL Attributes:"
-      puts "-" *  (width + 4)
+      puts "-" * (width + 4)
       AvailableValues.all.each do |value|
         spaces = (width - value.to_s.length)
-        puts "| #{value.to_s.blue}#{" " * spaces} | #{self.send(value)}"
+        puts "| #{value.to_s.blue}#{' ' * spaces} | #{self.send(value)}"
       end
       puts "-" * (width + 4)
 
       puts "Metadata:"
-      puts "#{"SCM".blue}      : #{env.scm.class}"
-      puts "#{"Source".blue}   : #{env.ci_source.class}"
-      puts "           #{"Base commit".blue} : #{env.ci_source.base_commit}"
-      puts "           #{"HEAD commit".blue} : #{env.ci_source.head_commit}"
+      puts "#{'SCM'.blue}      : #{env.scm.class}"
+      puts "#{'Source'.blue}   : #{env.ci_source.class}"
+      puts "           #{'Base commit'.blue} : #{env.ci_source.base_commit}"
+      puts "           #{'HEAD commit'.blue} : #{env.ci_source.head_commit}"
       puts "           git diff  #{env.ci_source.base_commit} #{env.ci_source.head_commit}".yellow
-      puts "#{"Requests".blue} : #{env.request_source.class}"
+      puts "#{'Requests'.blue} : #{env.request_source.class}"
     end
 
     # Parses the file at a path, optionally takes the content of the file for DI
