@@ -1,5 +1,8 @@
 module Danger
   class Runner < CLAide::Command
+    require 'danger/commands/init'
+    require 'danger/commands/local'
+
     self.description = 'Run the Dangerfile.'
     self.command = 'danger'
 

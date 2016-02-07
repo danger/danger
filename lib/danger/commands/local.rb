@@ -17,19 +17,25 @@ module Danger
 
     def run
       # The order of the following commands is *really* important
+      ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       dm = Dangerfile.new
       dm.env = EnvironmentManager.new(ENV)
-      dm.env.ci_source = LocalGitRepo.new
-      dm.env.fill_environment_vars
+
+      puts "Found a PR merge commit on the project"
+      puts "Creating a fake PR with the code from #{dm.env.ci_source.base_commit}..#{dm.env.ci_source.head_commit}"
+
+      gh = GitHub.new(dm.env.ci_source, ENV)
+      gh.pr_json = {
+        head: { sha: "4324234" },
+        title: "Test Pull Request",
+        body: "Body of pull request",
+        user: { login: `whoami`.strip }
+      }
+      dm.env.request_source = gh
+
+      dm.env.scm = GitRepo.new
       dm.env.scm.diff_for_folder(".", dm.env.ci_source.base_commit, dm.env.ci_source.head_commit)
       dm.parse Pathname.new(@dangerfile_path)
-
-      post_results(dm)
-    end
-
-    def post_results(dm)
-      gh = dm.env.request_source
-      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages)
     end
   end
 end

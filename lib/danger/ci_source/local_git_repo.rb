@@ -6,24 +6,21 @@ require 'uri'
 module Danger
   module CISource
     class LocalGitRepo < CI
-
-      # Never validate, it's not useful in production
-      def self.validates?(*)
-        false
+      def self.validates?(env)
+        return !env["DANGER_USE_LOCAL_GIT"].nil?
       end
 
       def initialize(*)
-
         git = Git.open(".")
         if git.remote("origin")
           url = git.remote("origin").url
           # deal with https://
-          if url.starts_with "https://github.com/"
-            self.repo_slug = url.replace("https://github.com/", "").replace(".git", '')
+          if url.start_with? "https://github.com/"
+            self.repo_slug = url.gsub("https://github.com/", "").gsub(".git", '')
 
           # deal with SSH origin
-          elsif url.starts_with "git@github.com:"
-            self.repo_slug = url.replace("git@github.com:", "").replace(".git", '')
+          elsif url.start_with? "git@github.com:"
+            self.repo_slug = url.gsub("git@github.com:", "").gsub(".git", '')
           end
         end
 
@@ -33,7 +30,7 @@ module Danger
         pr_merge = logs.detect { |log| (/Merge pull request #[0-9]* from/ =~ log.message) == 0 }
         if pr_merge
           # then pull out the 38, to_i
-          self.pull_request_id = pr_merge.replace("Merge pull request #", "").to_i
+          self.pull_request_id = pr_merge.name.gsub("Merge pull request #", "").to_i
           self.base_commit = pr_merge.parents[0].sha
           self.head_commit = pr_merge.parents[1].sha
         end
