@@ -16,13 +16,17 @@ module Danger
     end
 
     def run
-      # The order of the following commands is *really* important
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
+
       dm = Dangerfile.new
+      dm.verbose = verbose
       dm.env = EnvironmentManager.new(ENV)
 
       puts "Found a PR merge commit on the project"
       puts "Creating a fake PR with the code from #{dm.env.ci_source.base_commit}..#{dm.env.ci_source.head_commit}"
+
+      # TODO: try pinging original GitHub API ( without API key ) to get real details
+      #       if that fails, then we can use this dummy information
 
       gh = GitHub.new(dm.env.ci_source, ENV)
       gh.pr_json = {
