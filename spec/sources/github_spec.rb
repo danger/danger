@@ -41,24 +41,40 @@ describe Danger::GitHub do
         @date = Time.now.strftime("%Y-%m-%d")
       end
 
+      it "shows the base/head commit" do
+        env = {
+          "CIRCLE_BUILD_NUM" => "true",
+          "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",
+          "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
+        }
+        source = Danger::CISource::CircleCI.new(env)
+        source.base_commit = "2525245"
+        source.head_commit = "90528352"
+        @g.ci_source = source
+        result = @g.generate_comment(warnings: [], errors: [], messages: [])
+        expect(result.gsub(/\s+/, "")).to eq(
+          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"2525245\"data-head-commit=\"90528352\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+        )
+      end
+
       it "no warnings, no errors, no messages" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
       it "some warnings, some errors" do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\"meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
       end
 
