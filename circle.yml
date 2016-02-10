@@ -6,6 +6,10 @@ machine:
 dependencies:
   pre:
     - gem install bundler
+
 test:
   override:
-    - bundle exec danger
+    - git config --global user.email "danger@example.com"
+    - git config --global user.name "Danger McShane"
+    - bundle exec rake spec
+    - bundle exec danger --verbose
