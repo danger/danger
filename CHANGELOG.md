@@ -6,6 +6,11 @@
 * Ensure all comments are downloaded, previously it was capped at 30 - orta
 * Attach commit metadata to the message invisibly - orta
 
+### Dev
+
+* Moved to an org [feb 9]
+* Adds support for Circle CI on danger/danger
+
 ## 0.2.1
 
 * Edits an existing ticket rather than making a new one - orta
