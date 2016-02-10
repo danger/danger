@@ -1,0 +1,15 @@
+machine:
+  ruby:
+    version:
+      2.1.3
+
+dependencies:
+  pre:
+    - gem install bundler
+
+test:
+  override:
+    - git config --global user.email "danger@example.com"
+    - git config --global user.name "Danger McShane"
+    - bundle exec rake spec
+    - bundle exec danger --verbose

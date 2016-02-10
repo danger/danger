@@ -1,6 +1,4 @@
-if ["KrauseFx", "orta"].include?(pr_author)
-  message("Trusted author @#{pr_author}")
-else
+if ["KrauseFx", "orta"].include?(pr_author) == false
   warn("Author @#{pr_author} is not a contributor")
 end
 
@@ -15,7 +13,7 @@ else
 end
 
 if pr_body.length < 5
-  fail "Please provide a changelog summary in the Pull Request description @#{pr_author}"
+  fail "Please provide a summary in the Pull Request description"
 end
 
 unless files_modified.any? { |a| a.include?("CHANGELOG.md") }
