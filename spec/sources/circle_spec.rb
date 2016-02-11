@@ -26,7 +26,7 @@ describe Danger::CISource::CircleCI do
     expect(Danger::CISource::CircleCI.validates?(env)).to be false
   end
 
-  it 'gets out a repo slug, pull request number and commit refs' do
+  it 'gets out a repo slug and pull request number' do
     env = {
       "CIRCLE_BUILD_NUM" => "true",
       "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",
@@ -35,18 +35,5 @@ describe Danger::CISource::CircleCI do
     t = Danger::CISource::CircleCI.new(env)
     expect(t.repo_slug).to eql("artsy/eigen")
     expect(t.pull_request_id).to eql("800")
-    expect(t.base_commit).to eql("759adcbd0d8f")
-    expect(t.head_commit).to eql("13c4dc8bb61d")
-  end
-
-  it 'handles funky compare URLs' do
-    env = {
-      "CIRCLE_BUILD_NUM" => "true",
-      "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",
-      "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f^...13c4dc8bb61d"
-    }
-    t = Danger::CISource::CircleCI.new(env)
-    expect(t.base_commit).to eql("759adcbd0d8f^")
-    expect(t.head_commit).to eql("13c4dc8bb61d")
   end
 end

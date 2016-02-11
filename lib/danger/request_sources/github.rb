@@ -6,7 +6,7 @@ require 'octokit'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json, :issue_json, :environment
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
@@ -34,7 +34,11 @@ module Danger
       self.issue_json = client.get(href)
     end
 
-    def latest_pr_commit_ref
+    def base_commit
+      self.pr_json[:base][:sha]
+    end
+
+    def head_commit
       self.pr_json[:head][:sha]
     end
 

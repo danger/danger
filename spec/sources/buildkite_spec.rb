@@ -29,7 +29,5 @@ describe Danger::CISource::Buildkite do
     t = Danger::CISource::Buildkite.new(env)
     expect(t.repo_slug).to eql("KrauseFx/danger")
     expect(t.pull_request_id).to eql("14")
-    expect(t.base_commit).to eql("master")
-    expect(t.head_commit).to eql("my_branch")
   end
 end
