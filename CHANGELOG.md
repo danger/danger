@@ -1,5 +1,6 @@
 ## Master
 
+* Look inside PR JSON for the commit range (instead of getting from CI providers) - marcelofabri
 * Adds `pr_labels` to DSL - marcelofabri
 * Makes the CircleCI provider validate, but not run on non-PR builds - orta
 * Take the git before...after references out of ENV vars from CI providers - orta
