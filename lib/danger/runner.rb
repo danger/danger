@@ -17,14 +17,12 @@ module Danger
       end
     end
 
-
     def self.options
       [
         ['--base=[master|dev|stable]', 'A branch/tag/commit to use as the base of the diff'],
-        ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head'],
+        ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head']
       ].concat(super)
     end
-
 
     def run
       # The order of the following commands is *really* important

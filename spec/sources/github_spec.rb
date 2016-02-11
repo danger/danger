@@ -20,8 +20,11 @@ describe Danger::GitHub do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::GitHub.new(stub_ci, gh_env)
 
-      response = JSON.parse(fixture("pr_response"), symbolize_names: true)
-      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(response)
+      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
+
+      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
     it 'sets its pr_json' do
@@ -29,11 +32,21 @@ describe Danger::GitHub do
       expect(@g.pr_json).to be_truthy
     end
 
+    it 'sets its issue_json' do
+      @g.fetch_details
+      expect(@g.issue_json).to be_truthy
+    end
+
     it 'sets the right commit sha' do
       @g.fetch_details
 
       expect(@g.pr_json[:base][:sha]).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
       expect(@g.pr_json[:head][:sha]).to eql(@g.latest_pr_commit_ref)
+    end
+
+    it 'sets the right labels' do
+      @g.fetch_details
+      expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
     end
 
     describe "#generate_comment" do

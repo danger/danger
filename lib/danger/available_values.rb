@@ -20,7 +20,8 @@ module Danger
       [
         :pr_title,
         :pr_body,
-        :pr_author
+        :pr_author,
+        :pr_labels
       ]
     end
   end
