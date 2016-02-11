@@ -2,7 +2,7 @@ module Danger
   module APISource
     # "abstract" API class
     class API
-      attr_accessor :ci_source, :environment
+      attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit
       def initialize(ci_source, environment = nil)
           self.ci_source = ci_source
           self.environment = environment
