@@ -2,6 +2,8 @@ machine:
   ruby:
     version:
       2.1.3
+  environment:
+    DANGER_GITHUB_API_TOKEN: d64147730d40cb6501ed65aae5190a97e46f73f5
 
 dependencies:
   pre:
