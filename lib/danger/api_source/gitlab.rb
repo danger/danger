@@ -35,7 +35,7 @@ module Danger
         self.pr_json.title
       end
 
-      def generate_comment(warnings: [], errors: [], messages: [])
+      def generate_comment(warnings: [], errors: [], messages: [], empty: false)
       require 'erb'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
@@ -47,21 +47,38 @@ module Danger
         { name: "Warning", emoji: "warning", content: warnings },
         { name: "Message", emoji: "book", content: messages }
       ]
+      @tables_empty = [
+            { name: "All Good", emoji: "ship", content: ["Danger has not found anymore issues"]}
+      ]
+      if empty 
+        @tables = @tables_empty  
+      end
       return ERB.new(File.read(md_template), 0, "-").result(binding)
+      
     end
       def update_pull_request!(warnings: nil, errors: nil, messages: nil)
-        puts "update pull request"
-        puts "##################"
-        puts warnings.inspect
-        puts errors.inspect
-        puts messages.inspect
+
+        
+        comments = client.merge_request_comments(107,226)
+        already_reported = comments.reject { |issue| issue.body.include?("generated_by_danger") == false }
 
         if (warnings + errors + messages).empty?
-          #FIXME delete old comment
+          #as we cannot delete MR comments via api - we update it to a "all good state"
+          body = generate_comment(warnings: warnings, errors: errors, messages: messages, empty: true)
+          already_reported.each do | danger_comment |
+                client.edit_merge_request_comment(107,226, danger_comment.id, body)
+          end
         else
-          #FIXME update comment
           body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-          client.create_merge_request_comment(107,226, body);
+          if already_reported.length == 0
+              client.create_merge_request_comment(107,226, body);      
+          else 
+            already_reported.each do | danger_comment |
+                client.edit_merge_request_comment(107,226, danger_comment.id, body)
+            end
+          end
+
+          #client.create_merge_request_comment(107,226, body);
         end
 
       end
