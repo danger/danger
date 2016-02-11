@@ -48,6 +48,7 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 :abc:  | `pr_title` | The title of the PR
 :book:  | `pr_body` | The body of the PR
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
+:bookmark: | `pr_labels` | The labels added to the PR
 
 You can then create a `Dangerfile` like the following:
 
