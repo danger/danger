@@ -4,18 +4,20 @@ require 'gitlab'
 
 module Danger
   module APISource
-    class GitlabCI < API
+    class GitlabAPI < API
       def self.validates?(env)
-        return !env["GITLAB_CI"].nil? && !env["GITLAB_CI_PULL"].nil?
+        return !env["GITLAB_PROJECT_ID"].nil? && !env["GITLAB_MR_ID"].nil?
       end
       def fetch_details
-        # FIXME project ID + PR ID (use repo_slug and pr_id)
-        self.pr_json = client.merge_request(107, 226)
-        #fetch_issue_details(self.pr_json)
+        puts client.inspect
+       self.pr_json = client.merge_request(self.ci_source.repo_slug, self.ci_source.pull_request_id)
+       #self.pr_json = client.merge_request(107, 226)
       end
       def client 
-        # FIXME dynamic tokens via ENV
-        @client ||= Gitlab.client(endpoint: 'http://gitlab.krone.at/api/v3', private_token: 'Wypos9xJ3LdHXpzQQskq')
+        token = @environment["DANGER_GITLAB_PRIVATE_TOKEN"]
+        endpoint = @environment["DANGER_GITLAB_ENDPOINT"]
+        raise "No API given, please provide one using `DANGER_GITLAB_PRIVATE_TOKEN` and `DANGER_GITLAB_ENDPOINT`" unless (token && endpoint)
+        @client ||= Gitlab.client(endpoint: endpoint, private_token: token)
       end
       def base_commit
         self.pr_json.target_branch
@@ -67,6 +69,7 @@ module Danger
           # The first one is an extra slash, ignore it
           #self.repo_slug = "FXF/FXF-IOS"
           #self.pull_request_id = env["GITLAB_CI_PULL"];
+         
       end
     end
   end
