@@ -54,8 +54,13 @@ module Danger
         puts errors.inspect
         puts messages.inspect
 
-        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
-        client.create_merge_request_comment(107,226, body);
+        if (warnings + errors + messages).empty?
+          #FIXME delete old comment
+        else
+          #FIXME update comment
+          body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+          client.create_merge_request_comment(107,226, body);
+        end
 
       end
       def self.initialize(cisource, env = nil) 
