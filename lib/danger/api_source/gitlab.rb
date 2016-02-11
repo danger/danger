@@ -33,12 +33,30 @@ module Danger
         self.pr_json.title
       end
 
+      def generate_comment(warnings: [], errors: [], messages: [])
+      require 'erb'
+
+      md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
+
+      # erb: http://www.rrn.dk/rubys-erb-templating-system
+      # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
+      @tables = [
+        { name: "Error", emoji: "no_entry_sign", content: errors },
+        { name: "Warning", emoji: "warning", content: warnings },
+        { name: "Message", emoji: "book", content: messages }
+      ]
+      return ERB.new(File.read(md_template), 0, "-").result(binding)
+    end
       def update_pull_request!(warnings: nil, errors: nil, messages: nil)
         puts "update pull request"
         puts "##################"
         puts warnings.inspect
         puts errors.inspect
         puts messages.inspect
+
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        client.create_merge_request_comment(107,226, body);
+
       end
       def self.initialize(cisource, env = nil) 
           # The first one is an extra slash, ignore it
