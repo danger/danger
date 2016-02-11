@@ -1,4 +1,4 @@
-require "rest-client"
+require 'faraday'
 
 module Danger
   class CircleAPI
@@ -8,11 +8,15 @@ module Danger
       self.circle_token = circle_token
     end
 
+    def client
+      @client ||= Faraday.new(url: 'https://circleci.com/api/v1')
+    end
+
     def fetch_build(repo_slug, build_number)
-      url = "https://circleci.com/api/v1/project/#{repo_slug}/#{build_number}"
-      params = { :accept => :json, :'circle-token' => circle_token }
-      response = RestClient.get url, params
-      json = JSON.parse(response, symbolize_names: true)
+      url = "project/#{repo_slug}/#{build_number}"
+      params = { :'circle-token' => circle_token }
+      response = client.get url, params, accept: 'application/json'
+      json = JSON.parse(response.body, symbolize_names: true)
       json
     end
   end
