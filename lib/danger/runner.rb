@@ -31,8 +31,9 @@ module Danger
       return unless dm.env.ci_source # if it's not a PR
       dm.env.fill_environment_vars
 
-      ci_base = @base || dm.env.ci_source.base_commit
-      ci_head = @head || dm.env.ci_source.head_commit
+      gh = dm.env.request_source
+      ci_base = @base || gh.base_commit
+      ci_head = @head || gh.head_commit
 
       dm.env.scm.diff_for_folder(".", ci_base, ci_head)
       dm.parse Pathname.new(@dangerfile_path)

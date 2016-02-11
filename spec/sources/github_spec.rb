@@ -40,8 +40,8 @@ describe Danger::GitHub do
     it 'sets the right commit sha' do
       @g.fetch_details
 
-      expect(@g.pr_json[:base][:sha]).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
-      expect(@g.pr_json[:head][:sha]).to eql(@g.latest_pr_commit_ref)
+      expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
+      expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
     end
 
     it 'sets the right labels' do
@@ -61,8 +61,8 @@ describe Danger::GitHub do
           "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
         }
         source = Danger::CISource::CircleCI.new(env)
-        source.base_commit = "2525245"
-        source.head_commit = "90528352"
+        @g.base_commit = "2525245"
+        @g.head_commit = "90528352"
         @g.ci_source = source
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(

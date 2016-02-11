@@ -16,8 +16,6 @@ module Danger
         end
 
         self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
-        self.head_commit = env["BUILDKITE_BRANCH"]
-        self.base_commit = "master"
       end
     end
   end
