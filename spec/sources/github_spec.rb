@@ -43,7 +43,7 @@ describe Danger::GitHub do
       expect(@g.pr_json[:base][:sha]).to eql("704dc55988c6996f69b6873c2424be7d1de67bbe")
       expect(@g.pr_json[:head][:sha]).to eql(@g.latest_pr_commit_ref)
     end
-    
+
     it 'sets the right labels' do
       @g.fetch_details
       expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
