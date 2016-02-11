@@ -5,15 +5,15 @@
 
 Formalize your Pull Request etiquette.
 
-*Note:* Not ready for public usage yet. Work in progress
+*Note:* Not ready for public usage yet - unless you're willing to look inside the codebase. This is a Work in progress, though it is active use on [Artsy/Eigen](https://github.com/artsy/eigen/) and [fastlane/fastlane-core](https://github.com/fastlane/fastlane_core).
 
 -------
 <p align="center">
-    <a href="#installation">Installation</a> &bull; 
-    <a href="#usage">Usage</a> &bull; 
-    <a href="#dsl">DSL</a> &bull; 
-    <a href="#constraints">Constraints</a> &bull; 
-    <a href="#advanced">Advanced</a> &bull; 
+    <a href="#installation">Installation</a> &bull;
+    <a href="#usage">Usage</a> &bull;
+    <a href="#dsl">DSL</a> &bull;
+    <a href="#constraints">Constraints</a> &bull;
+    <a href="#advanced">Advanced</a> &bull;
     <a href="#contributing">Contributing</a>
 </p>
 
@@ -72,7 +72,6 @@ warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].in
 ## Constraints
 
 * **GitHub** - Built with same-repo PRs in mind
-* **Git** - Built with master as the merge branch
 
 ## Advanced
 
@@ -84,10 +83,10 @@ You can access more detailed information by accessing the following variables
 `env.scm.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
 
-## Special Thanks
+## Useful bits of knowledge ATM
 
-Thanks [@orta](https://twitter.com/orta) for starting this project
+* You can set the base branch in the command line arguments see: `bundle exec danger --help`.
 
 ## License
 
-> This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs. 
+> This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
