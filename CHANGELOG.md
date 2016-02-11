@@ -5,6 +5,7 @@
 * Fixes CircleCI when dealing with URLs like `https://github.com/artsy/eigen/compare/b0f6a2a9ff6f%5E...316b694875c8` - orta
 * Ensure all comments are downloaded, previously it was capped at 30 - orta
 * Attach commit metadata to the message invisibly - orta
+* On danger/danger we now fail if there's no changelog entry - orta
 
 ### Dev
 
