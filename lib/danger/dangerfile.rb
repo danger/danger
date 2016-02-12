@@ -36,8 +36,8 @@ module Danger
       puts "Metadata:"
       puts "#{'SCM'.blue}      : #{env.scm.class}"
       puts "#{'Source'.blue}   : #{env.ci_source.class}"
-      puts "           #{'Base commit'.blue} : #{env.ci_source.base_commit}"
-      puts "           #{'HEAD commit'.blue} : #{env.ci_source.head_commit}"
+      puts "           #{'Base commit'.blue} : #{env.ci_source.base_commit}" if env.ci_source.respond_to? :base_commit
+      puts "           #{'HEAD commit'.blue} : #{env.ci_source.head_commit}" if env.ci_source.respond_to? :head_commit
       puts "           git diff  #{env.ci_source.base_commit} #{env.ci_source.head_commit}".yellow
       puts "#{'Requests'.blue} : #{env.request_source.class}"
       puts "\n\n"
