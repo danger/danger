@@ -1,5 +1,8 @@
 ## Master
 
+
+## 0.3.0
+
 * Calling CircleCI API when `CI_PULL_REQUEST` is not set - marcelofabri
 * Look inside PR JSON for the commit range (instead of getting from CI providers) - marcelofabri
 * Adds `pr_labels` to DSL - marcelofabri
@@ -9,9 +12,6 @@
 * Ensure all comments are downloaded, previously it was capped at 30 - orta
 * Attach commit metadata to the message invisibly - orta
 * On danger/danger we now fail if there's no changelog entry - orta
-
-### Dev
-
 * Moved to an org [feb 9]
 * Adds support for Circle CI on danger/danger
 

@@ -1,4 +1,4 @@
 module Danger
-  VERSION = "0.2.1"
-  DESCRIPTION = "Ensure your pull request is up to standard with a nice DSL"
+  VERSION = "0.3.0"
+  DESCRIPTION = "Automate your PR etiquette."
 end
