@@ -40,6 +40,7 @@ module Danger
       puts "           #{'HEAD commit'.blue} : #{env.ci_source.head_commit}"
       puts "           git diff  #{env.ci_source.base_commit} #{env.ci_source.head_commit}".yellow
       puts "#{'Requests'.blue} : #{env.request_source.class}"
+      puts "\n\n"
     end
 
     # Parses the file at a path, optionally takes the content of the file for DI

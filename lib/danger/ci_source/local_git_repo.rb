@@ -6,6 +6,8 @@ require 'uri'
 module Danger
   module CISource
     class LocalGitRepo < CI
+      attr_accessor :base_commit, :head_commit
+
       def self.validates?(env)
         return !env["DANGER_USE_LOCAL_GIT"].nil?
       end
@@ -30,7 +32,7 @@ module Danger
         pr_merge = logs.detect { |log| (/Merge pull request #[0-9]* from/ =~ log.message) == 0 }
         if pr_merge
           # then pull out the 38, to_i
-          self.pull_request_id = pr_merge.name.gsub("Merge pull request #", "").to_i
+          self.pull_request_id = pr_merge.message.gsub("Merge pull request #", "").to_i
           self.base_commit = pr_merge.parents[0].sha
           self.head_commit = pr_merge.parents[1].sha
         end
