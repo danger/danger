@@ -1,8 +1,8 @@
 ## Master
 
-
 ## 0.3.0
 
+* Add a `danger local` command to test your current Dangerfile against the last PR merged on the repo - orta
 * Calling CircleCI API when `CI_PULL_REQUEST` is not set - marcelofabri
 * Look inside PR JSON for the commit range (instead of getting from CI providers) - marcelofabri
 * Adds `pr_labels` to DSL - marcelofabri

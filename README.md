@@ -83,6 +83,11 @@ You can access more detailed information by accessing the following variables
 `env.scm.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
 
+## Test locally with `danger local`
+
+Using `danger local` will look for the last merged pull request in your git history, and apply your current
+`Dangerfile` against that Pull Request. Useful when editing.
+
 ## Useful bits of knowledge ATM
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`.

@@ -42,6 +42,9 @@ module Danger
         puts "Printing message '#{message}'"
       end
 
+      # When an undefined method is called, we check to see if it's something
+      # that either the `scm` or the `request_source` can handle.
+      # This opens us up to letting those object extend themselves naturally.
       def method_missing(method_sym, *_arguments, &_block)
         unless AvailableValues.all.include?(method_sym)
           raise "Unknown method '#{method_sym}', please check out the documentation for available variables".red
