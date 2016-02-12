@@ -1,5 +1,6 @@
 ## Master
 
+* Calling CircleCI API when `CI_PULL_REQUEST` is not set - marcelofabri
 * Look inside PR JSON for the commit range (instead of getting from CI providers) - marcelofabri
 * Adds `pr_labels` to DSL - marcelofabri
 * Makes the CircleCI provider validate, but not run on non-PR builds - orta

@@ -15,6 +15,14 @@ describe Danger::CISource::CircleCI do
     expect(Danger::CISource::CircleCI.validates?(env)).to be true
   end
 
+  it 'validates when circle env var is found and it has no PR url' do
+    env = { "CIRCLE_BUILD_NUM" => "true",
+      "CIRCLE_PROJECT_USERNAME" => "orta",
+      "CIRCLE_PROJECT_REPONAME" => "thing"
+    }
+    expect(Danger::CISource::CircleCI.validates?(env)).to be true
+  end
+
   it 'doesnt get a PR id when it has a bad PR url' do
     env = { "CIRCLE_BUILD_NUM" => "true", "CI_PULL_REQUEST" => not_legit_pr }
     t = Danger::CISource::CircleCI.new(env)
@@ -35,5 +43,35 @@ describe Danger::CISource::CircleCI do
     t = Danger::CISource::CircleCI.new(env)
     expect(t.repo_slug).to eql("artsy/eigen")
     expect(t.pull_request_id).to eql("800")
+  end
+
+  it 'gets out a repo slug, pull request number and commit refs when PR url is not found' do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen",
+      "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
+    }
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500").and_return(build_response)
+
+    t = Danger::CISource::CircleCI.new(env)
+
+    expect(t.repo_slug).to eql("artsy/eigen")
+    expect(t.pull_request_id).to eql("1130")
+  end
+
+  it 'uses Circle CI API token if available' do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_CI_API_TOKEN" => "token",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen"
+    }
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500").and_return(build_response)
+
+    t = Danger::CISource::CircleCI.new(env)
+    expect(t.client.circle_token).to eql("token")
   end
 end
