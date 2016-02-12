@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'danger/ci_source/circle'
+require 'danger/ci_source/buildkite'
 
 describe Danger::CISource::Buildkite do
   it "validates when buildkite env var is found" do
