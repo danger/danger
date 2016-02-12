@@ -60,4 +60,18 @@ describe Danger::CISource::CircleCI do
     expect(t.repo_slug).to eql("artsy/eigen")
     expect(t.pull_request_id).to eql("1130")
   end
+  
+  it 'uses Circle CI API token if available' do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_CI_API_TOKEN" => "token",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen"
+    }
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500").and_return(build_response)
+    
+    t = Danger::CISource::CircleCI.new(env)
+    expect(t.client.circle_token).to eql("token")
+  end
 end

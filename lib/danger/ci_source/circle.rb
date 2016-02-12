@@ -13,7 +13,7 @@ module Danger
       end
 
       def client
-        @client ||= CircleAPI.new
+        @client ||= CircleAPI.new(@circle_token)
       end
 
       def fetch_pull_request_url(repo_slug, build_number)
@@ -33,6 +33,7 @@ module Danger
       end
 
       def initialize(env)
+        @circle_token = env["CIRCLE_CI_API_TOKEN"]
         url = pull_request_url(env)
 
         if URI.parse(url).path.split("/").count == 5
