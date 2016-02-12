@@ -91,7 +91,7 @@ private_lane :validate_repo do
 end
 
 private_lane :github_url do
-  ["KrauseFx", "danger"].join("/")
+  ["danger", "danger"].join("/")
 end
 
 desc "Get the version number of the last release"
