@@ -1,5 +1,5 @@
 module Danger
-  class Init < Danger::Runner
+  class Init < Runner
     self.description = 'Creates a Dangerfile.'
     self.command = 'init'
 

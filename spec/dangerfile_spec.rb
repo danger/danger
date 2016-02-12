@@ -33,4 +33,22 @@ describe Danger::Dangerfile do
       dm.parse Pathname.new(""), code
     end.to raise_error(Danger::DSLError)
   end
+
+  describe "verbose" do
+    it 'outputs metadata when verbose' do
+      file = make_temp_file ""
+      dm = Danger::Dangerfile.new
+      dm.verbose = true
+
+      expect(dm).to receive(:print_known_info)
+      dm.parse file.path
+    end
+    it 'does not print metadata by default' do
+      file = make_temp_file ""
+      dm = Danger::Dangerfile.new
+
+      expect(dm).to_not receive(:print_known_info)
+      dm.parse file.path
+    end
+  end
 end

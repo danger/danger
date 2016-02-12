@@ -6,18 +6,19 @@ require 'octokit'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
       self.environment = environment
+      self.support_tokenless_auth = false
 
       Octokit.auto_paginate = true
     end
 
     def client
       token = @environment["DANGER_GITHUB_API_TOKEN"]
-      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" unless token
+      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !token && !support_tokenless_auth
 
       @client ||= Octokit::Client.new(
         access_token: token
