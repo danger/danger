@@ -14,11 +14,6 @@ module Danger
         if env["TRAVIS_PULL_REQUEST"].to_i > 0
           self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
         end
-
-        if env["TRAVIS_COMMIT_RANGE"]
-          self.base_commit = env["TRAVIS_COMMIT_RANGE"].split("...").first
-          self.head_commit = env["TRAVIS_COMMIT_RANGE"].split("...").last
-        end
       end
     end
   end

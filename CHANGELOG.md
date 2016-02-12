@@ -1,10 +1,19 @@
 ## Master
 
+* Calling CircleCI API when `CI_PULL_REQUEST` is not set - marcelofabri
+* Look inside PR JSON for the commit range (instead of getting from CI providers) - marcelofabri
+* Adds `pr_labels` to DSL - marcelofabri
 * Makes the CircleCI provider validate, but not run on non-PR builds - orta
 * Take the git before...after references out of ENV vars from CI providers - orta
 * Fixes CircleCI when dealing with URLs like `https://github.com/artsy/eigen/compare/b0f6a2a9ff6f%5E...316b694875c8` - orta
 * Ensure all comments are downloaded, previously it was capped at 30 - orta
 * Attach commit metadata to the message invisibly - orta
+* On danger/danger we now fail if there's no changelog entry - orta
+
+### Dev
+
+* Moved to an org [feb 9]
+* Adds support for Circle CI on danger/danger
 
 ## 0.2.1
 

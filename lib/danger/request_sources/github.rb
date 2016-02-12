@@ -6,7 +6,7 @@ require 'octokit'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json, :environment
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
@@ -26,9 +26,19 @@ module Danger
 
     def fetch_details
       self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
+      fetch_issue_details(self.pr_json)
     end
 
-    def latest_pr_commit_ref
+    def fetch_issue_details(pr_json)
+      href = pr_json[:_links][:issue][:href]
+      self.issue_json = client.get(href)
+    end
+
+    def base_commit
+      self.pr_json[:base][:sha]
+    end
+
+    def head_commit
       self.pr_json[:head][:sha]
     end
 
@@ -42,6 +52,10 @@ module Danger
 
     def pr_author
       self.pr_json[:user][:login]
+    end
+
+    def pr_labels
+      self.issue_json[:labels].map { |l| l[:name] }
     end
 
     # Sending data to GitHub

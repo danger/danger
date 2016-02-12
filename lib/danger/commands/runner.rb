@@ -8,6 +8,8 @@ module Danger
 
     def initialize(argv)
       @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
+      @base = argv.option('base')
+      @head = argv.option('head')
       super
     end
 
@@ -18,6 +20,13 @@ module Danger
       end
     end
 
+    def self.options
+      [
+        ['--base=[master|dev|stable]', 'A branch/tag/commit to use as the base of the diff'],
+        ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head']
+      ].concat(super)
+    end
+
     def run
       # The order of the following commands is *really* important
       dm = Dangerfile.new
@@ -25,7 +34,12 @@ module Danger
       dm.env = EnvironmentManager.new(ENV)
       return unless dm.env.ci_source # if it's not a PR
       dm.env.fill_environment_vars
-      dm.env.scm.diff_for_folder(".", dm.env.ci_source.base_commit, dm.env.ci_source.head_commit)
+
+      gh = dm.env.request_source
+      ci_base = @base || gh.base_commit
+      ci_head = @head || gh.head_commit
+
+      dm.env.scm.diff_for_folder(".", ci_base, ci_head)
       dm.parse Pathname.new(@dangerfile_path)
 
       post_results(dm)

@@ -24,7 +24,7 @@ describe Danger::CISource::Travis do
     expect(t.repo_slug).to eql("orta/danger")
   end
 
-  it 'gets out a repo slug, pull request number and commit refs' do
+  it 'gets out a repo slug and pull request number' do
     env = {
       "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
       "TRAVIS_PULL_REQUEST" => "800",
@@ -34,7 +34,5 @@ describe Danger::CISource::Travis do
     t = Danger::CISource::Travis.new(env)
     expect(t.repo_slug).to eql("artsy/eigen")
     expect(t.pull_request_id).to eql("800")
-    expect(t.base_commit).to eql("759adcbd0d8f")
-    expect(t.head_commit).to eql("13c4dc8bb61d")
   end
 end
