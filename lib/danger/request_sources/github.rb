@@ -1,7 +1,4 @@
 # coding: utf-8
-require 'rest'
-require 'json'
-require 'base64'
 require 'octokit'
 
 module Danger
