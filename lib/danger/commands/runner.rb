@@ -3,7 +3,7 @@ module Danger
     require 'danger/commands/init'
     require 'danger/commands/local'
 
-    self.description = 'Run the Dangerfile.'
+    self.summary = 'Run the Dangerfile.'
     self.command = 'danger'
 
     def initialize(argv)
