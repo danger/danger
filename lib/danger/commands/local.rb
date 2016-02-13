@@ -1,6 +1,6 @@
 module Danger
   class Local < Runner
-    self.description = 'Run the Dangerfile locally.'
+    self.summary = 'Run the Dangerfile locally.'
     self.command = 'local'
 
     def initialize(argv)

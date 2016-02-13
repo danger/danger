@@ -1,6 +1,6 @@
 module Danger
   class Init < Runner
-    self.description = 'Creates a Dangerfile.'
+    self.summary = 'Creates a Dangerfile.'
     self.command = 'init'
 
     def initialize(argv)
