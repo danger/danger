@@ -1,5 +1,6 @@
 ## Master
 
+* Set CHANGELOG merge strategy to union - marcelofabri
 * Show command summary in help - marcelofabri
 * Use 100% width tables for messages - marcelofabri
 
