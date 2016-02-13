@@ -79,16 +79,30 @@ describe Danger::GitHub do
 
       it "some warnings, no errors" do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
+        # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|2Warnings-------------|------------:warning:|mywarning:warning:|secondwarning<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td><p>mywarning</p></td></tr><tr><td>:warning:</td><td><p>secondwarning</p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
+        # rubocop:enable Metrics/LineLength
+      end
+
+      it "some warnings with markdown, no errors" do
+        warnings = ["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"]
+        result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
+        # rubocop:disable Metrics/LineLength
+        expect(result.gsub(/\s+/, "")).to eq(
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td><p>amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></p></td></tr><tr><td>:warning:</td><td><p>second<strong>warning</strong></p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+        )
+        # rubocop:enable Metrics/LineLength
       end
 
       it "some warnings, some errors" do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
+        # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "&nbsp;|1Error-------------|------------:no_entry_sign:|someerror&nbsp;|1Warning-------------|------------:warning:|mywarning<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><td><p>someerror</p></td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><td><p>mywarning</p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
         )
+        # rubocop:enable Metrics/LineLength
       end
 
       it "needs to include generated_by_danger" do

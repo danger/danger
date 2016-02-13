@@ -1,5 +1,6 @@
 ## Master
 
+* Use 100% width tables for messages - marcelofabri
 
 ## 0.3.0
 
