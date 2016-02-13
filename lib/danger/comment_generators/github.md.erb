@@ -1,11 +1,21 @@
 <% @tables.each do |table| %>
   <% if table[:content].any? %>
-    &nbsp; | <%= table[:content].count %> <%= table[:name] %><%= "s" unless table[:content].count == 1 %>
-    ------------- | ------------
-    <% table[:content].each do |message| -%>
-    :<%= table[:emoji] %>: | <%= message %>
-    <% end %>
-
+    <table>
+      <thead>
+        <tr>
+          <th width="50"></th>
+          <th width="100%"><%= table[:content].count %> <%= table[:name] %><%= "s" unless table[:content].count == 1 %></th>
+         </tr>
+      </thead>
+      <tbody>
+        <% table[:content].each do |message| -%>
+        <tr>
+          <td>:<%= table[:emoji] %>:</td>
+          <td><%= message %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   <% end %>
 <% end %>
 
