@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'claide'
   spec.add_runtime_dependency 'git', "~> 1.2.9"
   spec.add_runtime_dependency 'colored'
-  spec.add_runtime_dependency 'nap'
+  spec.add_runtime_dependency 'faraday'
   spec.add_runtime_dependency 'octokit'
   spec.add_runtime_dependency 'redcarpet'
 
