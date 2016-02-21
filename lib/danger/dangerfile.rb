@@ -23,24 +23,35 @@ module Danger
 
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
-      puts "Danger v#{Danger::VERSION}"
-      width = AvailableValues.all.map(&:to_s).map(&:length).max
-      puts "DSL Attributes:"
-      puts "-" * (width + 4)
-      AvailableValues.all.each do |value|
-        spaces = (width - value.to_s.length)
-        puts "| #{value.to_s.blue}#{' ' * spaces} | #{self.send(value)}"
-      end
-      puts "-" * (width + 4)
+      rows = []
 
-      puts "Metadata:"
-      puts "#{'SCM'.blue}      : #{env.scm.class}"
-      puts "#{'Source'.blue}   : #{env.ci_source.class}"
-      puts "#{'Requests'.blue} : #{env.request_source.class}"
-      puts "           #{'Base commit'.blue} : #{env.request_source.base_commit}"
-      puts "           #{'HEAD commit'.blue} : #{env.request_source.head_commit}"
-      puts "           git diff  #{env.request_source.base_commit} #{env.request_source.head_commit}".yellow
-      puts "\n\n"
+      AvailableValues.all.each do |key|
+        next if key == :pr_body
+        value = self.send(key)
+
+        # So that we either have one value per row
+        # or we have [] for an empty array
+        value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+
+        rows << [key.to_s, value]
+      end
+
+      rows << ["---", "---"]
+      rows << ["SCM", env.scm.class]
+      rows << ["Source", env.ci_source.class]
+      rows << ["Requests", env.request_source.class]
+      rows << ["Base Commit", env.request_source.base_commit]
+      rows << ["Head Commit", env.request_source.head_commit]
+
+      params = {}
+      params[:rows] = rows.each { |current| current[0] = current[0].yellow }
+      params[:title] = "Danger v#{Danger::VERSION}\nDSL Attributes".green
+
+      puts ""
+      puts Terminal::Table.new(params)
+      puts "PR Body:"
+      puts self.pr_body.cyan
+      puts ""
     end
 
     # Parses the file at a path, optionally takes the content of the file for DI
