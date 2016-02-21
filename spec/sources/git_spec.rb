@@ -35,7 +35,7 @@ describe Danger::GitRepo do
 
           `git checkout -b new`
           `rm file`
-          `git add .`
+          `git add . --all`
           `git commit -m "another"`
         end
 
