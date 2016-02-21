@@ -42,6 +42,24 @@ module Danger
         puts "Printing message '#{message}'"
       end
 
+      # Protect a file from being changed. This can
+      # be used in combination with some kind of
+      # permission check if a user is inside the org
+      def protect_files(path: nil, message: nil, fail_build: true)
+        broken_rule = false
+        Dir.glob(path) do |current|
+          broken_rule = true if self.env.scm.files_modified.include?(current)
+        end
+
+        return unless broken_rule
+
+        if fail_build
+          self.errors << message
+        else
+          self.messages << message
+        end
+      end
+
       # When an undefined method is called, we check to see if it's something
       # that either the `scm` or the `request_source` can handle.
       # This opens us up to letting those object extend themselves naturally.
