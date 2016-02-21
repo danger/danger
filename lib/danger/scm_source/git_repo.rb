@@ -11,12 +11,15 @@ module Danger
       self.diff = repo.diff(from, to)
     end
 
+    # TODO: metaprogram `files_x` to be anything that rugged supports as a status?
+    # https://github.com/libgit2/rugged/blob/master/lib/rugged/diff/delta.rb#L16-L46
+
     def files_modified
-      @diff.deltas.select(&:modified?).map(&:new_file).map(&:path)
+      @diff.deltas.select(&:modified?).map(&:new_file).map { |hash| hash[:path] }
     end
 
-    def files_removed
-      @diff.deltas.select(&:added?).map(&:new_file).map { |hash| hash[:path] }
+    def files_deleted
+      @diff.deltas.select(&:deleted?).map(&:new_file).map { |hash| hash[:path] }
     end
 
     def files_added
@@ -28,11 +31,11 @@ module Danger
     end
 
     def deletions
-      @diff.patches.map(&:additions).inject(0, :+)
+      @diff.patches.map(&:deletions).inject(0, :+)
     end
 
     def insertions
-      @diff.patches.map(&:deletions).inject(0, :+)
+      @diff.patches.map(&:additions).inject(0, :+)
     end
   end
 end
