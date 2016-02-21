@@ -13,6 +13,13 @@ module Danger
         self.warnings = []
         self.errors = []
         self.messages = []
+        load_plugins
+      end
+
+      def load_plugins
+        Dir['./lib/danger/plugins/*.rb'].each do |file|
+          require file
+        end
       end
 
       # Declares a CI blocking error
@@ -42,32 +49,10 @@ module Danger
         puts "Printing message '#{message}'"
       end
 
-      # Protect a file from being changed. This can
-      # be used in combination with some kind of
-      # permission check if a user is inside the org
-      def protect_files(path: nil, message: nil, fail_build: true)
-        broken_rule = false
-        Dir.glob(path) do |current|
-          broken_rule = true if self.env.scm.files_modified.include?(current)
-        end
-
-        return unless broken_rule
-
-        if fail_build
-          self.errors << message
-        else
-          self.messages << message
-        end
-      end
-
       # When an undefined method is called, we check to see if it's something
       # that either the `scm` or the `request_source` can handle.
       # This opens us up to letting those object extend themselves naturally.
       def method_missing(method_sym, *_arguments, &_block)
-        unless AvailableValues.all.include?(method_sym)
-          raise "Unknown method '#{method_sym}', please check out the documentation for available variables".red
-        end
-
         if AvailableValues.scm.include?(method_sym)
           # SCM Source
           return env.scm.send(method_sym)
@@ -77,6 +62,8 @@ module Danger
           # Request Source
           return env.request_source.send(method_sym)
         end
+
+        raise "Unknown method '#{method_sym}', please check out the documentation for available variables".red
       end
     end
   end
