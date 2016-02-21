@@ -1,38 +1,36 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'git'
+require 'rugged'
 
 module Danger
   class GitRepo
     attr_accessor :diff
 
-    def diff_for_folder(folder, from = "master", to = 'HEAD')
-      g = Git.open(folder)
-      self.diff = g.diff(from, to)
+    def diff_for_folder(folder, from: "master", to: 'HEAD')
+      repo = Rugged::Repository.new folder
+      self.diff = repo.diff(from, to)
     end
 
-    def files_modified
-      @diff.to_a.map(&:path)
-    end
+    # Create files_added? methods from rugged's git API
+    # https://github.com/libgit2/rugged/blob/master/lib/rugged/diff/delta.rb#L16-L46
 
-    def files_removed
-      @diff.to_a.select { |d| d.type == "deleted" }.map(&:path)
-    end
-
-    def files_added
-      @diff.to_a.select { |d| d.type == "new" }.map(&:path)
+    [:added, :deleted, :modified, :renamed, :copied, :ignored, :untracked, :typechange].each do |symbol|
+      question_symbol = (symbol.to_s + "?").to_sym
+      define_method("files_#{symbol}") do
+        @diff.deltas.select(&question_symbol).map(&:new_file).map { |hash| hash[:path] }
+      end
     end
 
     def lines_of_code
-      @diff.lines
+      @diff.patches.map(&:hunks).flatten.map(&:lines).map(&:count).inject(0, :+)
     end
 
     def deletions
-      @diff.deletions
+      @diff.patches.map(&:deletions).inject(0, :+)
     end
 
     def insertions
-      @diff.insertions
+      @diff.patches.map(&:additions).inject(0, :+)
     end
   end
 end

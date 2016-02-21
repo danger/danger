@@ -9,7 +9,7 @@ module Danger
       [
         :lines_of_code,
         :files_modified,
-        :files_removed,
+        :files_deleted,
         :files_added,
         :deletions,
         :insertions
