@@ -11,19 +11,14 @@ module Danger
       self.diff = repo.diff(from, to)
     end
 
-    # TODO: metaprogram `files_x` to be anything that rugged supports as a status?
+    # Create files_added? methods from rugged's git API
     # https://github.com/libgit2/rugged/blob/master/lib/rugged/diff/delta.rb#L16-L46
 
-    def files_modified
-      @diff.deltas.select(&:modified?).map(&:new_file).map { |hash| hash[:path] }
-    end
-
-    def files_deleted
-      @diff.deltas.select(&:deleted?).map(&:new_file).map { |hash| hash[:path] }
-    end
-
-    def files_added
-      @diff.deltas.select(&:added?).map(&:new_file).map { |hash| hash[:path] }
+    [:added, :deleted, :modified, :renamed, :copied, :ignored, :untracked, :typechange].each do |symbol|
+      question_symbol = (symbol.to_s + "?").to_sym
+      define_method("files_#{symbol}") do
+        @diff.deltas.select(&question_symbol).map(&:new_file).map { |hash| hash[:path] }
+      end
     end
 
     def lines_of_code
