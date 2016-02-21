@@ -7,6 +7,7 @@ require "danger/available_values"
 require "claide"
 require "colored"
 require "pathname"
+require "terminal-table"
 
 # Import all the Sources (CI, Request and SCM)
 Dir[File.expand_path('danger/*source/*.rb', File.dirname(__FILE__))].each do |file|
