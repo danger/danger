@@ -45,7 +45,8 @@ module Danger
       dm.env.request_source = gh
 
       dm.env.scm = GitRepo.new
-      dm.env.scm.diff_for_folder(".", dm.env.ci_source.base_commit, dm.env.ci_source.head_commit)
+
+      dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
       dm.parse Pathname.new(@dangerfile_path)
     end
   end
