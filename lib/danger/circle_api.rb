@@ -14,7 +14,7 @@ module Danger
 
     def fetch_build(repo_slug, build_number)
       url = "project/#{repo_slug}/#{build_number}"
-      params = { :'circle-token' => circle_token }
+      params = { 'circle-token' => circle_token }
       response = client.get url, params, accept: 'application/json'
       json = JSON.parse(response.body, symbolize_names: true)
       json
