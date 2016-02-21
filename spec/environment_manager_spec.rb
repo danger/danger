@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'danger/environment_manager'
 
 describe Danger::EnvironmentManager do

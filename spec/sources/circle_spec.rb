@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'danger/ci_source/circle'
 
 describe Danger::CISource::CircleCI do
