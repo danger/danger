@@ -88,7 +88,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.insertions).to eql(3)
+        expect(g.insertions).to eql(4)
       end
     end
 
@@ -110,7 +110,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.deletions).to eql(1)
+        expect(g.deletions).to eql(2)
       end
     end
   end

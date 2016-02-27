@@ -1,6 +1,6 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'rugged'
+require 'grit'
 require 'uri'
 
 module Danger
@@ -13,7 +13,7 @@ module Danger
       end
 
       def initialize(*)
-        git = Rugged::Repository.new "."
+        git = Grit::Repository.new "."
         if git.remote("origin")
           url = git.remote("origin").url
           # deal with https://
