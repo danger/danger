@@ -27,15 +27,15 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-and then run the following, which will help walk you through getting set up:
-
-```
-bundle exec danger init
-```
+and then run the following, which will help walk you through getting set up: `bundle exec danger init`.
 
 ## Usage on CI
 
 In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide feedback. While you are setting up, you may want to use: `--verbose`.
+
+## What happens?
+
+Danger is ran at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request that is being ran. You can use these variables in ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
 
 ## DSL
 
@@ -50,7 +50,7 @@ In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide 
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
-The `Dangerfile` is a ruby file, so really, you can do anything. I'll give some examples:
+The `Dangerfile` is a ruby file, so really, you can do anything. However, at this stage you need selling on the idea a bit more, so lets take some real examples:
 
 #### Dealing with WIP pull requests
 
@@ -79,6 +79,20 @@ if made_analytics_changes
     message('Analytics dict changed, double check for ?: `@""` on new entries')
     message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
 end
+```
+
+#### Pinging people when a specific file has changed
+
+``` ruby
+message("@orta something changed in elan!") if files_modified.include? "/components/lib/variables/colors.json"
+```
+
+#### Exposing aspects of CI logs into the PR discussion
+
+``` ruby
+build_log = File.read( File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log") )
+snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.html})
+fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
 
 ## Constraints
