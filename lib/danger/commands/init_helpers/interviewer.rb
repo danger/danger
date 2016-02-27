@@ -20,6 +20,12 @@ module Danger
       puts output
     end
 
+    def pause(time)
+      sleep(time)
+    end
+
+    def wait
+
     def run_command(command, output_command = nil)
       output_command ||= command
       puts "  " + output_command.magenta
