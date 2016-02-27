@@ -19,7 +19,7 @@ Formalize your Pull Request etiquette.
 
 -------
 
-## Installation
+## Getting Started
 
 Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
 
@@ -27,15 +27,15 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-and then run the following to set up `danger` for your repository
+and then run the following, which will help walk you through getting set up:
 
 ```
-danger init
+bundle exec danger init
 ```
 
-## Usage
+## Usage on CI
 
-In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide some feedback based on that.
+In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide feedback. While you are setting up, you may want to use: `--verbose`.
 
 ## DSL
 
@@ -50,23 +50,35 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
-You can then create a `Dangerfile` like the following:
+The `Dangerfile` is a ruby file, so really, you can do anything. I'll give some examples:
+
+#### Dealing with WIP pull requests
 
 ``` ruby
-# Easy checks
+# Sometimes its a README fix, or something like that - which isn't relevant for
+# including in a CHANGELOG for example
+declared_trivial = pr_title.include? "#trivial"
+
+# Just to let people know
 warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
+```
 
-if lines_of_code > 50 && files_modified.include?("CHANGELOG.yml") == false
-  fail("No CHANGELOG changes made")
+#### Being cautious around specific files
+
+``` ruby
+# Devs shouldn't ship changes to this file
+fail("Developer Specific file shouldn't be changed") if files_modified.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
+
+# Did you make analytics changes? Well you should also include a change to our analytics spec
+made_analytics_changes = files_modified.include?("/Artsy/App/ARAppDelegate+Analytics.m")
+made_analytics_specs_changes = files_modified.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
+if made_analytics_changes
+    fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
+
+    # And pay extra attention anyway
+    message('Analytics dict changed, double check for ?: `@""` on new entries')
+    message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
 end
-
-# Stop skipping some manual testing
-if lines_of_code > 50 && pr_title.include?("📱") == false
-   fail("Needs testing on a Phone if change is non-trivial")
-end
-
-message("This pull request adds #{lines_of_code} new lines")
-warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].include?(pr_author)
 ```
 
 ## Constraints
