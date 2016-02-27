@@ -35,7 +35,7 @@ In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide 
 
 ## What happens?
 
-Danger is ran at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request that is being ran. You can use these variables in ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
+Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
 
 ## DSL
 

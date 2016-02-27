@@ -15,11 +15,14 @@ module Danger
     end
 
     def run
-      dir = Danger.gem_path
+      write_template_to_current_dir
+      puts "Successfully created 'Dangerfile'"
+    end
 
+    def write_template_to_current_dir
+      dir = Danger.gem_path
       content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
       File.write("Dangerfile", content)
-      puts "Successfully created 'Dangerfile'"
     end
   end
 end
