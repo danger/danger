@@ -16,6 +16,10 @@ module Danger
       "! ".red
     end
 
+    def say(output)
+      puts output
+    end
+
     def run_command(command, output_command = nil)
       output_command ||= command
       puts "  " + output_command.magenta

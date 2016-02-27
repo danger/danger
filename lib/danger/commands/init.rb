@@ -1,3 +1,5 @@
+require 'danger/commands/init_helpers/interviewer'
+
 module Danger
   class Init < Runner
     self.summary = 'Helps you set up Danger.'
@@ -9,13 +11,17 @@ module Danger
     end
 
     def validate!
-      if @dangerfile_path
-        help! "Found an existing Dangerfile."
-      end
+      # if @dangerfile_path
+      #   help! "Found an existing Dangerfile."
+      # end
+      true
     end
 
     def run
-      write_template_to_current_dir
+      ui = Interviewer.new
+      ui.say "OK"
+
+      # write_template_to_current_dir
       puts "Successfully created 'Dangerfile'"
     end
 
