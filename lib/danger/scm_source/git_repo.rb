@@ -1,36 +1,38 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'rugged'
+require 'grit'
 
 module Danger
   class GitRepo
     attr_accessor :diff
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
-      repo = Rugged::Repository.new folder
+      repo = Grit::Repo.new folder
       self.diff = repo.diff(from, to)
     end
 
-    # Create files_added? methods from rugged's git API
-    # https://github.com/libgit2/rugged/blob/master/lib/rugged/diff/delta.rb#L16-L46
+    def files_added
+      @diff.select(&:new_file).map(&:b_path)
+    end
 
-    [:added, :deleted, :modified, :renamed, :copied, :ignored, :untracked, :typechange].each do |symbol|
-      question_symbol = (symbol.to_s + "?").to_sym
-      define_method("files_#{symbol}") do
-        @diff.deltas.select(&question_symbol).map(&:new_file).map { |hash| hash[:path] }
-      end
+    def files_deleted
+      @diff.select(&:deleted_file).map(&:a_path)
+    end
+
+    def files_modified
+      @diff.reject(&:deleted_file).reject(&:new_file).map(&:a_path)
     end
 
     def lines_of_code
-      @diff.patches.map(&:hunks).flatten.map(&:lines).map(&:count).inject(0, :+)
+      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("+") || l.start_with?("-") }
     end
 
     def deletions
-      @diff.patches.map(&:deletions).inject(0, :+)
+      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("-") }
     end
 
     def insertions
-      @diff.patches.map(&:additions).inject(0, :+)
+      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("+") }
     end
   end
 end

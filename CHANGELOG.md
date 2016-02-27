@@ -2,6 +2,7 @@
 
 * Breaking: `files_removed` to `files_deleted` ( to be more consistent with git's terminology. ) - orta
 * Revised underlying git tooling for generating file/diff metadata - orta
+* re-revise underlying git tooling to not use something based on libgit2 - orta
 * Set CHANGELOG merge strategy to union - marcelofabri
 * Remove `nap` dependency - marcelofabri
 * Show command summary in help - marcelofabri
