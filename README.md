@@ -91,7 +91,7 @@ Using `danger local` will look for the last merged pull request in your git hist
 ## Useful bits of knowledge ATM
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`.
-* Currently master doesn't work on a Mac without `brew install cmake` bering ran before the installation, it's on my TODO to work around this sometime before the next release.
+* Currently master doesn't work on a Mac without running `brew install cmake` before the installation, it's on my TODO to work around this sometime before the next release.
 
 
 ## License
