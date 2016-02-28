@@ -109,10 +109,15 @@ You can access more detailed information by accessing the following variables
 Using `danger local` will look for the last merged pull request in your git history, and apply your current
 `Dangerfile` against that Pull Request. Useful when editing.
 
-## Useful bits of knowledge ATM
+## Useful bits of knowledge
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
+* Appending `--verbose` to `bundle exec danger` will expose all of the variables that Danger provides, and their values in the shell.
 
-## License
+## License, Contributor's Guidelines and Code of Conduct
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
+
+> This project subscribes to the [Moya Contributors Guidelines](https://github.com/Moya/contributors) which TLDR: means we give out push access easily and often.
+
+> Contributors subscribe to the [Contributor Code of Conduct](http://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](http://contributor-covenant.org) version 1.3.0.
