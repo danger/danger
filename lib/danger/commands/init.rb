@@ -1,4 +1,5 @@
 require 'danger/commands/init_helpers/interviewer'
+require 'danger/ci_source/local_git_repo'
 require 'yaml'
 
 module Danger
@@ -131,6 +132,11 @@ module Danger
       @is_open_source == "open"
     end
 
+    def current_repo_slug
+      @repo ||= Danger::CISource::LocalGitRepo.new
+      @repo.repo_slug || "[Your/Repo]"
+    end
+
     def setup_danger_ci
       ui.header 'Step 4: Add Danger for your CI'
 
@@ -198,13 +204,8 @@ module Danger
 
     def travis_token
       # https://travis-ci.org/artsy/eigen/settings
-
-      # git = LocalGitRepo.new
-      # repo_slug = git.repo_slug
-
-      repo_slug = "artsy/eigen"
       ui.say "In order to add an environment variable, go to:"
-      ui.link "https://travis-ci.org/#{repo_slug}/settings"
+      ui.link "https://travis-ci.org/#{current_repo_slug}/settings"
       ui.say "\nThe name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
       if @is_open_source
         ui.say "Make sure to have \"Display value in build log\" enabled."
@@ -213,9 +214,6 @@ module Danger
 
     def circle_token
       # https://circleci.com/gh/artsy/eigen/edit#env-vars
-
-      repo_slug = "artsy/eigen"
-
       if considered_an_oss_repo?
         ui.say "Before we start, it's important to be up-front. Circle CI only really has one option to support running Danger"
         ui.say "for forks on OSS repos. It is quite a drastic option, and I want to let you know the best place to understand"
@@ -227,7 +225,7 @@ module Danger
 
         ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
-        ui.link "https://circleci.com/gh/#{repo_slug}/edit#experimental\n"
+        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#experimental\n"
         ui.say "I'll hold…"
         ui.wait_for_return
       end
