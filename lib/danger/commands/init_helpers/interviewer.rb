@@ -1,7 +1,9 @@
 module Danger
   class Interviewer
+    attr_accessor :no_delay, :no_waiting
+
     def show_prompt
-      print " > ".green
+      print "> ".bold.green
     end
 
     def yellow_bang
@@ -20,11 +22,25 @@ module Danger
       puts output
     end
 
-    def pause(time)
-      sleep(time)
+    def header(title)
+      say title.yellow
+      say ''
+      pause 0.6
     end
 
-    def wait
+    def link(url)
+      say " -> " + url.underline + "\n"
+    end
+
+    def pause(time)
+      sleep(time) unless @no_waiting
+    end
+
+    def wait_for_return
+      STDOUT.flush
+      STDIN.gets unless @no_delay
+      puts ""
+    end
 
     def run_command(command, output_command = nil)
       output_command ||= command
@@ -38,7 +54,7 @@ module Danger
         puts "\n#{question}?"
 
         show_prompt
-        answer = gets.chomp
+        answer = STDIN.gets.chomp
 
         break if answer.length > 0
 
@@ -64,7 +80,7 @@ module Danger
 
       loop do
         show_prompt
-        answer = gets.downcase.chomp
+        answer = @no_waiting ? possible_answers[0].downcase : STDIN.gets.downcase.chomp
 
         answer = "yes" if answer == "y"
         answer = "no" if answer == "n"
@@ -72,7 +88,7 @@ module Danger
         # default to first answer
         if answer == ""
           answer = possible_answers[0].downcase
-          print answer.yellow
+          puts "Using: " + answer.yellow
         end
 
         break if possible_answers.map(&:downcase).include? answer
