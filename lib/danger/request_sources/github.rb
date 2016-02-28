@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'octokit'
+require 'redcarpet'
 
 module Danger
   class GitHub
@@ -20,6 +21,10 @@ module Danger
       @client ||= Octokit::Client.new(
         access_token: token
       )
+    end
+
+    def markdown_parser
+      @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     end
 
     def fetch_details
@@ -129,19 +134,24 @@ module Danger
 
     def generate_comment(warnings: [], errors: [], messages: [])
       require 'erb'
-      require 'redcarpet'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
-      markdown_parser = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
 
       # erb: http://www.rrn.dk/rubys-erb-templating-system
       # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
       @tables = [
-        { name: "Error", emoji: "no_entry_sign", content: errors.map { |s| markdown_parser.render(s) } },
-        { name: "Warning", emoji: "warning", content: warnings.map { |s| markdown_parser.render(s) } },
-        { name: "Message", emoji: "book", content: messages.map { |s| markdown_parser.render(s) } }
+        { name: "Error", emoji: "no_entry_sign", content: errors.map { |s| process_markdown(s) } },
+        { name: "Warning", emoji: "warning", content: warnings.map { |s| process_markdown(s) } },
+        { name: "Message", emoji: "book", content: messages.map { |s| process_markdown(s) } }
       ]
       return ERB.new(File.read(md_template), 0, "-").result(binding)
+    end
+
+    def process_markdown(string)
+      html = markdown_parser.render(string)
+      match = html.match(%r{^<p>(.*)</p>$})
+      return match.captures.first unless match.nil?
+      html
     end
   end
 end
