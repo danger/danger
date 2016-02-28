@@ -65,14 +65,14 @@ describe Danger::GitHub do
         @g.ci_source = source
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"2525245\"data-head-commit=\"90528352\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"2525245\"data-head-commit=\"90528352\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
       end
 
       it "no warnings, no errors, no messages" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
       end
 
@@ -80,7 +80,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td><p>mywarning</p></td></tr><tr><td>:warning:</td><td><p>secondwarning</p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td>mywarning</td></tr><tr><td>:warning:</td><td>secondwarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -90,7 +90,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td><p>amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></p></td></tr><tr><td>:warning:</td><td><p>second<strong>warning</strong></p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td>amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></td></tr><tr><td>:warning:</td><td>second<strong>warning</strong></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -99,7 +99,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><td><p>someerror</p></td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><td><p>mywarning</p></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/KrauseFx/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><td>someerror</td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><td>mywarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
