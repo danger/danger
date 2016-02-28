@@ -5,9 +5,8 @@
 
 Formalize your Pull Request etiquette.
 
-*Note:* Not ready for public usage yet - unless you're willing to look inside the codebase. This is a Work in progress, though it is active use on [Artsy/Eigen](https://github.com/artsy/eigen/) and [fastlane/fastlane-core](https://github.com/fastlane/fastlane_core).
-
 -------
+
 <p align="center">
     <a href="#installation">Installation</a> &bull;
     <a href="#usage">Usage</a> &bull;
@@ -19,7 +18,7 @@ Formalize your Pull Request etiquette.
 
 -------
 
-## Installation
+## Getting Started
 
 Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
 
@@ -27,15 +26,15 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-and then run the following to set up `danger` for your repository
+and then run the following, which will help walk you through getting set up: `bundle exec danger init`.
 
-```
-danger init
-```
+## Usage on CI
 
-## Usage
+In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide feedback. While you are setting up, you may want to use: `--verbose`.
 
-In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide some feedback based on that.
+## What happens?
+
+Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in Ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
 
 ## DSL
 
@@ -50,28 +49,50 @@ In CI run `bundle exec danger`.  This will look at your `Dangerfile` and provide
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
-You can then create a `Dangerfile` like the following:
+The `Dangerfile` is a ruby file, so really, you can do anything. However, at this stage you might need selling on the idea a bit more, so lets take some real examples:
+
+#### Dealing with WIP pull requests
 
 ``` ruby
-# Easy checks
+# Sometimes its a README fix, or something like that - which isn't relevant for
+# including in a CHANGELOG for example
+declared_trivial = pr_title.include? "#trivial"
+
+# Just to let people know
 warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
-
-if lines_of_code > 50 && files_modified.include?("CHANGELOG.yml") == false
-  fail("No CHANGELOG changes made")
-end
-
-# Stop skipping some manual testing
-if lines_of_code > 50 && pr_title.include?("📱") == false
-   fail("Needs testing on a Phone if change is non-trivial")
-end
-
-message("This pull request adds #{lines_of_code} new lines")
-warn("Author @#{pr_author} is not a contributor") unless ["KrauseFx", "orta"].include?(pr_author)
 ```
 
-## Constraints
+#### Being cautious around specific files
 
-* **GitHub** - Built with same-repo PRs in mind
+``` ruby
+# Devs shouldn't ship changes to this file
+fail("Developer Specific file shouldn't be changed") if files_modified.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
+
+# Did you make analytics changes? Well you should also include a change to our analytics spec
+made_analytics_changes = files_modified.include?("/Artsy/App/ARAppDelegate+Analytics.m")
+made_analytics_specs_changes = files_modified.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
+if made_analytics_changes
+    fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
+
+    # And pay extra attention anyway
+    message('Analytics dict changed, double check for ?: `@""` on new entries')
+    message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
+end
+```
+
+#### Pinging people when a specific file has changed
+
+``` ruby
+message("@orta something changed in elan!") if files_modified.include? "/components/lib/variables/colors.json"
+```
+
+#### Exposing aspects of CI logs into the PR discussion
+
+``` ruby
+build_log = File.read( File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log") )
+snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.html})
+fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
+```
 
 ## Advanced
 
@@ -80,7 +101,7 @@ You can access more detailed information by accessing the following variables
 &nbsp; | Danger :no_entry_sign:
 ------------- | ----
 `env.request_source.pr_json` | The full JSON for the pull request
-`env.scm.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+`env.scm.diff` | The full [Diff](https://github.com/mojombo/grit/blob/master/lib/grit/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
 
 ## Test locally with `danger local`
@@ -88,12 +109,15 @@ You can access more detailed information by accessing the following variables
 Using `danger local` will look for the last merged pull request in your git history, and apply your current
 `Dangerfile` against that Pull Request. Useful when editing.
 
-## Useful bits of knowledge ATM
+## Useful bits of knowledge
 
-* You can set the base branch in the command line arguments see: `bundle exec danger --help`.
-* Currently master doesn't work on a Mac without running `brew install cmake` before the installation, it's on my TODO to work around this sometime before the next release.
+* You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
+* Appending `--verbose` to `bundle exec danger` will expose all of the variables that Danger provides, and their values in the shell.
 
-
-## License
+## License, Contributor's Guidelines and Code of Conduct
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
+
+> This project subscribes to the [Moya Contributors Guidelines](https://github.com/Moya/contributors) which TLDR: means we give out push access easily and often.
+
+> Contributors subscribe to the [Contributor Code of Conduct](http://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](http://contributor-covenant.org) version 1.3.0.
