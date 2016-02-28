@@ -6,6 +6,7 @@
 * Remove `nap` dependency - marcelofabri
 * Show command summary in help - marcelofabri
 * Use 100% width tables for messages - marcelofabri
+* Converted `danger init` into a wizard for setting up Danger, walking you though tokens/ci - orta
 
 ## 0.3.0
 

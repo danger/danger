@@ -5,9 +5,8 @@
 
 Formalize your Pull Request etiquette.
 
-*Note:* Not ready for public usage yet - unless you're willing to look inside the codebase. This is a Work in progress, though it is active use on [Artsy/Eigen](https://github.com/artsy/eigen/) and [fastlane/fastlane-core](https://github.com/fastlane/fastlane_core).
-
 -------
+
 <p align="center">
     <a href="#installation">Installation</a> &bull;
     <a href="#usage">Usage</a> &bull;
@@ -35,7 +34,7 @@ In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide 
 
 ## What happens?
 
-Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
+Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in Ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
 
 ## DSL
 
@@ -50,7 +49,7 @@ Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
-The `Dangerfile` is a ruby file, so really, you can do anything. However, at this stage you need selling on the idea a bit more, so lets take some real examples:
+The `Dangerfile` is a ruby file, so really, you can do anything. However, at this stage you might need selling on the idea a bit more, so lets take some real examples:
 
 #### Dealing with WIP pull requests
 
@@ -95,10 +94,6 @@ snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.h
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
 
-## Constraints
-
-* **GitHub** - Built with same-repo PRs in mind
-
 ## Advanced
 
 You can access more detailed information by accessing the following variables
@@ -106,7 +101,7 @@ You can access more detailed information by accessing the following variables
 &nbsp; | Danger :no_entry_sign:
 ------------- | ----
 `env.request_source.pr_json` | The full JSON for the pull request
-`env.scm.diff` | The full [GitDiff](https://github.com/schacon/ruby-git/blob/master/lib/git/diff.rb) file for the diff.
+`env.scm.diff` | The full [Diff](https://github.com/mojombo/grit/blob/master/lib/grit/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
 
 ## Test locally with `danger local`
@@ -116,9 +111,7 @@ Using `danger local` will look for the last merged pull request in your git hist
 
 ## Useful bits of knowledge ATM
 
-* You can set the base branch in the command line arguments see: `bundle exec danger --help`.
-* Currently master doesn't work on a Mac without running `brew install cmake` before the installation, it's on my TODO to work around this sometime before the next release.
-
+* You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
 
 ## License
 
