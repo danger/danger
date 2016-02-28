@@ -4,17 +4,17 @@ require 'danger/ci_source/local_git_repo'
 def run_in_repo
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
-      `git init`
-      `touch file1`
-      `git add .`
-      `git commit -m "adding file1"`
-      `git checkout -b new-branch`
-      `touch file2`
-      `git add .`
-      `git commit -m "adding file2"`
-      `git checkout master`
-      `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
-      
+      git init
+      touch file1
+      git add .
+      git commit -m "adding file1"
+      git checkout -b new-branch
+      touch file2
+      git add .
+      git commit -m "adding file2"
+      git checkout master
+      git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"
+
       yield
     end
   end
@@ -30,7 +30,7 @@ describe Danger::CISource::LocalGitRepo do
     env = { "HAS_ANDREW_W_K_SEAL_OF_APPROVAL" => "true" }
     expect(Danger::CISource::LocalGitRepo.validates?(env)).to be false
   end
-  
+
   it 'gets the pull request ID' do
     run_in_repo do
       env = { "DANGER_USE_LOCAL_GIT" => "true" }
@@ -56,9 +56,9 @@ describe Danger::CISource::LocalGitRepo do
         t = Danger::CISource::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("orta/danger")
       end
-    end    
+    end
   end
-  
+
   describe 'non-github repos' do
 
     it 'does not set a repo_slug' do
@@ -69,7 +69,7 @@ describe Danger::CISource::LocalGitRepo do
         expect(t.repo_slug).to be_nil
       end
     end
-    
+
   end
 
   # it 'gets out a repo slug and pull request number' do
