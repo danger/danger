@@ -4,16 +4,16 @@ require 'danger/ci_source/local_git_repo'
 def run_in_repo
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
-      git init
-      touch file1
-      git add .
-      git commit -m "adding file1"
-      git checkout -b new-branch
-      touch file2
-      git add .
-      git commit -m "adding file2"
-      git checkout master
-      git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"
+      `git init`
+      `touch file1`
+      `git add .`
+      `git commit -m "adding file1"`
+      `git checkout -b new-branch`
+      `touch file2`
+      `git add .`
+      `git commit -m "adding file2"`
+      `git checkout master`
+      `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
 
       yield
     end
