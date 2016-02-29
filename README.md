@@ -26,7 +26,7 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-and then run the following, which will help walk you through getting set up: `bundle exec danger init`.
+and then run `bundle exec danger init`, which will help walk you through getting set up.
 
 ## Usage on CI
 
@@ -94,6 +94,10 @@ snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.h
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
 
+## Support
+
+Danger currently is supported on Travis CI, Circle CI, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
+
 ## Advanced
 
 You can access more detailed information by accessing the following variables
@@ -103,6 +107,9 @@ You can access more detailed information by accessing the following variables
 `env.request_source.pr_json` | The full JSON for the pull request
 `env.scm.diff` | The full [Diff](https://github.com/mojombo/grit/blob/master/lib/grit/diff.rb) file for the diff.
 `env.ci_source` | To get information like the repo slug or pull request ID
+
+These are considered implementation details though, and may be subject to change in future releases. We're very
+open to turning useful bits into the official API.
 
 ## Test locally with `danger local`
 
