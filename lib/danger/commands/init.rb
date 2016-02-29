@@ -75,7 +75,7 @@ module Danger
       ui.say "that come up in day to day programming. It can be difficult to try and see those from day 1."
 
       ui.say "\nIf you'd like to investigate the file, and make some changes - I'll wait here,"
-      ui.say "press return when you're ready to move on…"
+      ui.say "press return when you're ready to move on..."
       ui.wait_for_return
     end
 
@@ -96,7 +96,7 @@ module Danger
       ui.say ""
       note_about_clicking_links
       ui.pause 1
-      ui.say "\nCool, please press return when you have your account ready (and you've verified the email…)"
+      ui.say "\nCool, please press return when you have your account ready (and you've verified the email...)"
       ui.wait_for_return
     end
 
@@ -124,7 +124,7 @@ module Danger
         ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos. Make a new one for those repos with just " + "public_info".yellow + "."
       end
 
-      ui.say "\n👍, please press return when you have your token set up…"
+      ui.say "\n👍, please press return when you have your token set up..."
       ui.wait_for_return
     end
 
@@ -144,7 +144,7 @@ module Danger
       uses_circle if File.exist? "circle.yml"
       unsure_ci unless File.exist?(".travis.yml") || File.exist?(".circle.yml")
 
-      ui.say "\nOK, I'll give you a moment to do this…"
+      ui.say "\nOK, I'll give you a moment to do this..."
       ui.wait_for_return
 
       ui.say "Final step: exposing the GitHub token as a environment build variable."
@@ -160,7 +160,7 @@ module Danger
       unsure_token unless File.exist?(".travis.yml") || File.exist?(".circle.yml")
 
       ui.pause 0.6
-      ui.say "This is the last step, I can give you a second…"
+      ui.say "This is the last step, I can give you a second..."
       ui.wait_for_return
     end
 
@@ -220,13 +220,13 @@ module Danger
         ui.say "the ramnifications for turning on a setting I'm about to advise.\n"
         ui.link "https://circleci.com/docs/fork-pr-builds"
         ui.say "TLDR: If you have anything other than Danger config settings in CircleCI, then you should not turn on the setting."
-        ui.say "I'll give you a minute to read it…"
+        ui.say "I'll give you a minute to read it..."
         ui.wait_for_return
 
         ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
         ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#experimental\n"
-        ui.say "I'll hold…"
+        ui.say "I'll hold..."
         ui.wait_for_return
       end
 
