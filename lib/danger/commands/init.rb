@@ -75,7 +75,7 @@ module Danger
       ui.say "that come up in day to day programming. It can be difficult to try and see those from day 1."
 
       ui.say "\nIf you'd like to investigate the file, and make some changes - I'll wait here,"
-      ui.say "press return when you're ready to move on…"
+      ui.say "press return when you're ready to move on..."
       ui.wait_for_return
     end
 
