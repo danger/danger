@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'danger/scm_source/git_repo'
 
 describe Danger::GitRepo do

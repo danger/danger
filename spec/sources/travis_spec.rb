@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'danger/ci_source/travis'
 
 describe Danger::CISource::Travis do

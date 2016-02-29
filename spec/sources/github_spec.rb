@@ -1,5 +1,4 @@
 # coding: utf-8
-require 'spec_helper'
 require 'danger/request_sources/github'
 require 'danger/ci_source/circle'
 require 'danger/ci_source/travis'
