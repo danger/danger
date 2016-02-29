@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'pathname'
 require 'tempfile'
 require 'danger/dangerfile'
