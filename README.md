@@ -30,7 +30,11 @@ and then run `bundle exec danger init`, which will help walk you through getting
 
 ## Usage on CI
 
-In CI run `bundle exec danger`. This will look at your `Dangerfile` and provide feedback. While you are setting up, you may want to use: `--verbose`.
+```
+bundle exec danger
+```
+
+This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information. 
 
 ## What happens?
 
