@@ -121,6 +121,8 @@ Using `danger local` will look for the last merged pull request in your git hist
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
 * Appending `--verbose` to `bundle exec danger` will expose all of the variables that Danger provides, and their values in the shell.
 
+Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eigen/blob/master/Dangerfile), [danger/danger](https://github.com/danger/danger/blob/master/Dangerfile), [artsy/elan](https://github.com/artsy/elan/blob/master/Dangerfile) and more!
+
 ## License, Contributor's Guidelines and Code of Conduct
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
