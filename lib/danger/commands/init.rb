@@ -262,7 +262,7 @@ module Danger
       ui.pause 0.6
 
       ui.say "And you're set. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
-      ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@krausefx".yellow + " on twitter."
+      ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
       ui.say "If you don't like it, help us improve it! xxx"
     end
   end
