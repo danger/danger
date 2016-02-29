@@ -26,7 +26,11 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-and then run `bundle exec danger init`, which will help walk you through getting set up.
+To get up and running quickly, just run
+
+```
+bundle exec danger init
+```
 
 ## Usage on CI
 
