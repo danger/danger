@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Fixes for `danger init` - krausefx
+
 ## 0.5.0
 
 * New: Converted `danger init` into a wizard for setting up Danger, walking you though tokens/ci - orta
