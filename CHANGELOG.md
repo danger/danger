@@ -4,6 +4,8 @@
 * Remove `nap` dependency - marcelofabri
 * Show command summary in help - marcelofabri
 * Use 100% width tables for messages - marcelofabri
+* Added plugin system - KrauseFx
+* Refactored unit tests - KrauseFx
 
 ## 0.3.0
 
