@@ -53,7 +53,7 @@ The `Dangerfile` is a ruby file, so really, you can do anything. However, at thi
 
 #### Dealing with WIP pull requests
 
-``` ruby
+```ruby
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
 declared_trivial = pr_title.include? "#trivial"
@@ -72,24 +72,24 @@ fail("Developer Specific file shouldn't be changed") if files_modified.include?(
 made_analytics_changes = files_modified.include?("/Artsy/App/ARAppDelegate+Analytics.m")
 made_analytics_specs_changes = files_modified.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
 if made_analytics_changes
-    fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
+  fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
 
-    # And pay extra attention anyway
-    message('Analytics dict changed, double check for ?: `@""` on new entries')
-    message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
+  # And pay extra attention anyway
+  message('Analytics dict changed, double check for ?: `@""` on new entries')
+  message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
 end
 ```
 
 #### Pinging people when a specific file has changed
 
-``` ruby
+```ruby
 message("@orta something changed in elan!") if files_modified.include? "/components/lib/variables/colors.json"
 ```
 
 #### Exposing aspects of CI logs into the PR discussion
 
-``` ruby
-build_log = File.read( File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log") )
+```ruby
+build_log = File.read(File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log"))
 snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.html})
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
