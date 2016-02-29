@@ -1,3 +1,7 @@
+## 0.5.2
+
+* Typo fixes for `danger init` - lumaxis 
+
 ## 0.5.1
 
 * Fixes for `danger init` - krausefx
