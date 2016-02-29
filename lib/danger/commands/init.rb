@@ -82,11 +82,11 @@ module Danger
     def setup_github_account
       ui.header 'Step 2: Creating a GitHub account'
 
-      ui.say "In order to get the most out of Danger, I'd recommend given her the ability to post in"
+      ui.say "In order to get the most out of Danger, I'd recommend giving her the ability to post in"
       ui.say "the code-review comment section.\n\n"
       ui.pause 1
 
-      ui.say "IMO, it's best do this by using the private mode of your browser. Create an account like"
+      ui.say "IMO, it's best to do this by using the private mode of your browser. Create an account like"
       ui.say "#{@bot_name}, and don't forget a cool robot avatar.\n\n"
       ui.pause 1
       ui.say 'Here are great resources for creative commons images of robots:'
@@ -103,7 +103,7 @@ module Danger
     def setup_access_token
       ui.header 'Step 3: Configuring a GitHub Personal Access Token'
 
-      ui.say "Here's the link, you should open this in your private session with the new GitHub account"
+      ui.say "Here's the link, you should open this in the private session where you just created the new GitHub account"
       ui.link "https://github.com/settings/tokens/new"
       ui.pause 1
 
@@ -114,14 +114,15 @@ module Danger
         ui.say "This means only providing access to " + "public_info".yellow + " in the token.\n\n"
         ui.pause 1
         ui.say "This token limits Danger's abilities to just to writing comments on OSS projects. I recommend"
-        ui.say "this because the token can be quite easily be extracted from the environment via pull requests."
-        ui.say "#{@bot_name} does not need admin access to your repo. So it's ability to cause chaos is minimalized.\n"
+        ui.say "this because the token can quite easily be extracted from the environment via pull requests."
+        ui.say "#{@bot_name} does not need admin access to your repo. So its ability to cause chaos is minimalized.\n"
 
       elsif @is_open_source == "closed"
         ui.say "For Closed Source projects, I'd recommend giving the token access to the whole repo scope."
-        ui.say "This means only providing access to " + "repo".yellow + ", and it's children in the token.\n\n"
+        ui.say "This means only providing access to " + "repo".yellow + ", and its children in the token.\n\n"
         ui.pause 1
-        ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos. Make a new one for those repos with just " + "public_info".yellow + "."
+        ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos."
+        ui.say "Make a new one for those repos with just " + "public_info".yellow + "."
       end
 
       ui.say "\n👍, please press return when you have your token set up…"
@@ -147,11 +148,11 @@ module Danger
       ui.say "\nOK, I'll give you a moment to do this…"
       ui.wait_for_return
 
-      ui.say "Final step: exposing the GitHub token as a environment build variable."
+      ui.say "Final step: exposing the GitHub token as an environment build variable."
       ui.pause 0.4
       if considered_an_oss_repo?
         ui.say "As you have an Open Source repo, this token should be considered public, otherwise you cannot"
-        ui.say "run Danger on pull requests from forks, limiting it's use.\n"
+        ui.say "run Danger on pull requests from forks, limiting its use.\n"
         ui.pause 1
       end
 
@@ -197,8 +198,8 @@ module Danger
 
     def unsure_ci
       danger = "bundle exec danger".yellow
-      ui.say "As I'm not sure what CI you want to run Danger on base on the files in your repo, I'll just offer some generic"
-      ui.say "advice. You want to run " + danger + " after your tests have finished running, it should be during the testing"
+      ui.say "As I'm not sure what CI you want to run Danger on based on the files in your repo, I'll just offer some generic"
+      ui.say "advice. You want to run " + danger + " after your tests have finished running, it should still be during the testing"
       ui.say "process so the build can fail."
     end
 
@@ -215,9 +216,9 @@ module Danger
     def circle_token
       # https://circleci.com/gh/artsy/eigen/edit#env-vars
       if considered_an_oss_repo?
-        ui.say "Before we start, it's important to be up-front. Circle CI only really has one option to support running Danger"
+        ui.say "Before we start, it's important to be up-front. CircleCI only really has one option to support running Danger"
         ui.say "for forks on OSS repos. It is quite a drastic option, and I want to let you know the best place to understand"
-        ui.say "the ramnifications for turning on a setting I'm about to advise.\n"
+        ui.say "the ramifications of turning on a setting I'm about to advise.\n"
         ui.link "https://circleci.com/docs/fork-pr-builds"
         ui.say "TLDR: If you have anything other than Danger config settings in CircleCI, then you should not turn on the setting."
         ui.say "I'll give you a minute to read it…"
@@ -248,7 +249,7 @@ module Danger
       ui.header "Useful info"
       ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger local".yellow + "."
       ui.pause 0.6
-      ui.say "- You can have Danger output all of it's variables to the console via the " + "--verbose".yellow + "option."
+      ui.say "- You can have Danger output all of its variables to the console via the " + "--verbose".yellow + "option."
       ui.pause 0.6
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
