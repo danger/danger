@@ -19,3 +19,4 @@ script:
   - git config --global user.name "Danger McShane"
   - bundle exec rake spec
   - bundle exec danger --verbose
+  - bundle exec danger init --mousey --impatient
