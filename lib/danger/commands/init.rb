@@ -231,7 +231,7 @@ module Danger
       end
 
       ui.say "In order to expose an environment variable, go to:"
-      ui.link "https://circleci.com/gh/#{repo_slug}/edit#env-vars"
+      ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#env-vars"
       ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
     end
 
