@@ -111,7 +111,7 @@ module Danger
 
       if considered_an_oss_repo?
         ui.say "For Open Source projects, I'd recommend giving the token the smallest scope possible."
-        ui.say "This means only providing access to " + "public_info".yellow + " in the token.\n\n"
+        ui.say "This means only providing access to " + "public_repo".yellow + " in the token.\n\n"
         ui.pause 1
         ui.say "This token limits Danger's abilities to just to writing comments on OSS projects. I recommend"
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
@@ -122,7 +122,7 @@ module Danger
         ui.say "This means only providing access to " + "repo".yellow + ", and its children in the token.\n\n"
         ui.pause 1
         ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos."
-        ui.say "Make a new one for those repos with just " + "public_info".yellow + "."
+        ui.say "Make a new one for those repos with just " + "public_repo".yellow + "."
       end
 
       ui.say "\n👍, please press return when you have your token set up..."
@@ -179,7 +179,7 @@ module Danger
     end
 
     def uses_circle
-      danger = "bundle exec danger".yellow
+      danger = "- bundle exec danger".yellow
       config = YAML.load(File.read("circle.yml"))
 
       if config["test"]
@@ -192,7 +192,7 @@ module Danger
         ui.say "Add this to the bottom of your circle.yml file:"
         ui.say "test:".green
         ui.say "  post:".green
-        ui.say "    - bundle exec danger".green
+        ui.say "    #{danger}".green
       end
     end
 
