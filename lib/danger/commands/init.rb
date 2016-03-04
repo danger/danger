@@ -179,7 +179,7 @@ module Danger
     end
 
     def uses_circle
-      danger = "bundle exec danger".yellow
+      danger = "- bundle exec danger".yellow
       config = YAML.load(File.read("circle.yml"))
 
       if config["test"]
@@ -192,7 +192,7 @@ module Danger
         ui.say "Add this to the bottom of your circle.yml file:"
         ui.say "test:".green
         ui.say "  post:".green
-        ui.say "    - bundle exec danger".green
+        ui.say "    #{danger}".green
       end
     end
 
