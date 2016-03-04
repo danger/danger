@@ -1,3 +1,8 @@
+## Master
+
+* Added internal plugin system - KrauseFx
+* Refactored unit tests - KrauseFx
+
 ## 0.5.2
 
 * Typo fixes for `danger init` - lumaxis 
@@ -17,8 +22,6 @@
 * Remove `nap` dependency - marcelofabri
 * Show command summary in help - marcelofabri
 * Use 100% width tables for messages - marcelofabri
-* Added plugin system - KrauseFx
-* Refactored unit tests - KrauseFx
 
 ## 0.3.0
 
