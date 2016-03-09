@@ -3,6 +3,7 @@
 * Added internal plugin system - KrauseFx
 * Refactored unit tests - KrauseFx
 * Fixed issue when PR Title or PR body is nil - KrauseFx
+* Added support for `git://`-prefixed url as remote - jeroenvisser101
 
 ## 0.5.2
 
