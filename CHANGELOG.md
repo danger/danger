@@ -2,6 +2,7 @@
 
 * Added internal plugin system - KrauseFx
 * Refactored unit tests - KrauseFx
+* Fixed issue when PR Title or PR body is nil - KrauseFx
 
 ## 0.5.2
 

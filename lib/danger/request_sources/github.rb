@@ -46,15 +46,15 @@ module Danger
     end
 
     def pr_title
-      self.pr_json[:title]
+      self.pr_json[:title].to_s
     end
 
     def pr_body
-      self.pr_json[:body]
+      self.pr_json[:body].to_s
     end
 
     def pr_author
-      self.pr_json[:user][:login]
+      self.pr_json[:user][:login].to_s
     end
 
     def pr_labels
