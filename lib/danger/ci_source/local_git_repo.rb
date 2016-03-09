@@ -28,11 +28,11 @@ module Danger
           url = remote[0].strip
           # deal with https://
           if url.start_with? "https://github.com/"
-            self.repo_slug = url.gsub("https://github.com/", "").gsub(".git", '')
+            self.repo_slug = url.gsub("https://github.com/", "").gsub(/.git$/, '')
 
           # deal with SSH origin
           elsif url.start_with? "git@github.com:"
-            self.repo_slug = url.gsub("git@github.com:", "").gsub(".git", '')
+            self.repo_slug = url.gsub("git@github.com:", "").gsub(/.git$/, '')
           else
             puts "Danger local requires a repository hosted on github."
           end
