@@ -57,6 +57,15 @@ describe Danger::CISource::LocalGitRepo do
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
+
+    it 'gets the repo address when it contains .git' do
+      run_in_repo do
+        `git remote add origin git@github.com:artsy/artsy.github.com.git`
+        env = { "DANGER_USE_LOCAL_GIT" => "true" }
+        t = Danger::CISource::LocalGitRepo.new(env)
+        expect(t.repo_slug).to eql("artsy/artsy.github.com")
+      end
+    end
   end
 
   describe 'non-github repos' do
