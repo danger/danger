@@ -14,7 +14,7 @@ describe Danger::Dangerfile do
     file = make_temp_file ""
     dm = Danger::Dangerfile.new
     dm.parse file.path
-    expect(dm.defined_in_file).to be file.path
+    expect(dm.defined_in_file).to eq file.path
   end
 
   it 'runs the ruby code inside the Dangerfile' do
