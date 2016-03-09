@@ -27,7 +27,7 @@ module Danger
         exit 0
       end
 
-      puts "Running your Dangerfile against this PR - https://github.com/#{source.repo_slug}/pulls/#{source.pull_request_id}"
+      puts "Running your Dangerfile against this PR - https://github.com/#{source.repo_slug}/pull/#{source.pull_request_id}"
 
       if verbose != true
         puts "Turning on --verbose"
