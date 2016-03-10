@@ -34,10 +34,10 @@ describe Danger::Dangerfile do
   end
 
   it 'respects ignored violations' do
-    code = "message 'A message'\n" +
-           "warn 'An ignored warning'\n" +
-           "warn 'A warning'\n" +
-           "fail 'An ignored error'\n" +
+    code = "message 'A message'\n" \
+           "warn 'An ignored warning'\n" \
+           "warn 'A warning'\n" \
+           "fail 'An ignored error'\n" \
            "fail 'An error'\n"
 
     dm = Danger::Dangerfile.new
