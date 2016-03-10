@@ -33,6 +33,31 @@ describe Danger::Dangerfile do
     end.to raise_error(Danger::DSLError)
   end
 
+  it 'respects ignored violations' do
+    code = "message 'A message'\n" +
+           "warn 'An ignored warning'\n" +
+           "warn 'A warning'\n" +
+           "fail 'An ignored error'\n" +
+           "fail 'An error'\n"
+
+    dm = Danger::Dangerfile.new
+    env = {
+      "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+      "TRAVIS_PULL_REQUEST" => "800",
+      "TRAVIS_REPO_SLUG" => "artsy/eigen",
+      "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d"
+    }
+    dm.env = Danger::EnvironmentManager.new(env)
+    dm.env.scm = Danger::GitRepo.new
+    dm.env.request_source.ignored_violations = ['A message', 'An ignored warning', 'An ignored error']
+
+    dm.parse Pathname.new(""), code
+
+    expect(dm.messages).to eql(['A message'])
+    expect(dm.warnings).to eql(['A warning'])
+    expect(dm.errors).to eql(['An error'])
+  end
+
   describe "verbose" do
     it 'outputs metadata when verbose' do
       file = make_temp_file ""
