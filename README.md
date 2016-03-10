@@ -124,6 +124,14 @@ open to turning useful bits into the official API.
 Using `danger local` will look for the last merged pull request in your git history, and apply your current
 `Dangerfile` against that Pull Request. Useful when editing.
 
+## Suppress Violations
+
+You can tell Danger to ignore a specific warning or error by commenting on the PR body:
+
+```
+> Danger: Ignore "Developer Specific file shouldn't be changed"
+```
+
 ## Useful bits of knowledge
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.

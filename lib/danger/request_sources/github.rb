@@ -4,7 +4,7 @@ require 'redcarpet'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth, :ignored_violations
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
@@ -30,6 +30,13 @@ module Danger
     def fetch_details
       self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
       fetch_issue_details(self.pr_json)
+      self.ignored_violations = ignored_violations_from_pr(self.pr_json)
+    end
+
+    def ignored_violations_from_pr(pr_json)
+      pr_body = pr_json[:body]
+      return [] if pr_body.nil?
+      pr_body.chomp.scan(/>\s*danger\s*:\s*ignore\s*"(.*)"/i).flatten
     end
 
     def fetch_issue_details(pr_json)
