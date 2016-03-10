@@ -22,8 +22,8 @@ module Danger
       dm.env = EnvironmentManager.new(ENV)
 
       source = dm.env.ci_source
-      unless source.repo_slug
-        puts "danger local".red " failed because it only works with GitHub projects at the moment. Sorry."
+      if source.nil? or source.repo_slug.empty?
+        puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
         exit 0
       end
 
