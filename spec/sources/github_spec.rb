@@ -47,6 +47,12 @@ describe Danger::GitHub do
       expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
     end
 
+    it 'sets the ignored violations' do
+      @g.fetch_details
+      expect(@g.ignored_violations).to eql(["Developer Specific file shouldn't be changed",
+                                            "Some warning"])
+    end
+
     describe "#generate_comment" do
       before do
         @date = Time.now.strftime("%Y-%m-%d")

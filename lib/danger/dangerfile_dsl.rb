@@ -22,11 +22,16 @@ module Danger
         end
       end
 
+      def should_ignore_violation(message)
+        env.request_source.ignored_violations.include? message
+      end
+
       # Declares a CI blocking error
       #
       # @param    [String] message
       #           The message to present to the user
       def fail(message)
+        return if should_ignore_violation(message)
         self.errors << message
         puts "Raising error '#{message}'"
       end
@@ -36,6 +41,7 @@ module Danger
       # @param    [String] message
       #           The message to present to the user
       def warn(message)
+        return if should_ignore_violation(message)
         self.warnings << message
         puts "Printing warning '#{message}'"
       end
