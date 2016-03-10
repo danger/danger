@@ -25,14 +25,9 @@ module Danger
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
         if remote
-          url = remote[0].strip
-          # deal with https://
-          if url.start_with? "https://github.com/"
-            self.repo_slug = url.gsub("https://github.com/", "").gsub(/.git$/, '')
-
-          # deal with SSH origin
-          elsif url.start_with? "git@github.com:"
-            self.repo_slug = url.gsub("git@github.com:", "").gsub(/.git$/, '')
+          remote_url_matches = remote.first.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+          if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
+            self.repo_slug = remote_url_matches["repo_slug"]
           else
             puts "Danger local requires a repository hosted on github."
           end
