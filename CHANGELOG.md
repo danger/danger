@@ -1,5 +1,9 @@
 ## Master
 
+* Nothing yet, erase me - orta
+
+## 0.6.0
+
 * Added internal plugin system - KrauseFx
 * Refactored unit tests - KrauseFx
 * Fixed issue when PR Title or PR body is nil - KrauseFx
