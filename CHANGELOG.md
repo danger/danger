@@ -4,6 +4,7 @@
 * Refactored unit tests - KrauseFx
 * Fixed issue when PR Title or PR body is nil - KrauseFx
 * Added support for `git://`-prefixed url as remote - jeroenvisser101
+* Added comment based violation suppression - marcelofabri
 
 ## 0.5.2
 
