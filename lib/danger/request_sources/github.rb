@@ -45,11 +45,11 @@ module Danger
     end
 
     def base_commit
-      self.pr_json[:base][:sha]
+      self.pr_json[:base][:ref]
     end
 
     def head_commit
-      self.pr_json[:head][:sha]
+      self.pr_json[:head][:ref]
     end
 
     def pr_title

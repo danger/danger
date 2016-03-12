@@ -38,8 +38,8 @@ describe Danger::GitHub do
     it 'sets the right commit sha' do
       @g.fetch_details
 
-      expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
-      expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
+      expect(@g.pr_json[:base][:ref]).to eql(@g.base_commit)
+      expect(@g.pr_json[:head][:ref]).to eql(@g.head_commit)
     end
 
     it 'sets the right labels' do
