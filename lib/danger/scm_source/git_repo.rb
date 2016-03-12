@@ -6,6 +6,10 @@ module Danger
   class GitRepo
     attr_accessor :diff
 
+    def perform_git_operation(string)
+      `git #{string}`
+    end
+
     def diff_for_folder(folder, from: "master", to: 'HEAD')
       repo = Grit::Repo.new folder
       self.diff = repo.diff(from, to)

@@ -38,12 +38,11 @@ module Danger
       gh = dm.env.request_source
       ci = dm.env.ci_source
 
-      # Offer the chance for a user to specify a branch
-      # then the ci service, then finally fall back to github
-      # GH-based sha diffs can be unreliable, see #88
+      dm.env.ensure_danger_branches_are_setup
 
-      ci_base = @base || ci.base_ref || gh.base_ref
-      ci_head = @head || ci.head_ref || gh.head_ref
+      # Offer the chance for a user to specify a branch
+      ci_base = @base || dm.env.danger_head_branch
+      ci_head = @head || dm.env.danger_base_branch
 
       dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 

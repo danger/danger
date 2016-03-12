@@ -2,7 +2,7 @@ module Danger
   module CISource
     # "abstract" CI class
     class CI
-      attr_accessor :repo_slug, :pull_request_id, :base_ref, :head_ref
+      attr_accessor :repo_slug, :pull_request_id
 
       def self.validates?(_env)
         false
