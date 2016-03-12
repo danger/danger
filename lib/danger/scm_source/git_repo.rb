@@ -12,7 +12,7 @@ module Danger
     end
 
     def exec(string)
-      `git #{string}`
+      `git #{string}`.strip
     end
 
     def files_added
