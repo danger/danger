@@ -7,10 +7,12 @@ module Danger
     attr_accessor :diff
 
     def perform_git_operation(string)
-      system "git #{string}"
+       `git #{string}`
+       puts "git #{string}"
     end
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
+      puts "From: #{from} to #{to}"
       repo = Grit::Repo.new folder
       self.diff = repo.diff(from, to)
     end
