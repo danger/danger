@@ -14,9 +14,6 @@ module Danger
         if env["TRAVIS_PULL_REQUEST"].to_i > 0
           self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
         end
-
-        self.base_ref = "master"
-        self.head_ref = "HEAD"
       end
     end
   end

@@ -24,22 +24,22 @@ module Danger
       raise "Could not find a CI source".red unless self.ci_source
 
       # only GitHub for now, open for PRs adding more!
-      request_source = GitHub.new(self.ci_source, ENV)
+      self.request_source = GitHub.new(self.ci_source, ENV)
     end
 
     def fill_environment_vars
       request_source.fetch_details
 
-      scm = GitRepo.new # For now
+      self.scm = GitRepo.new # For now
     end
 
     def ensure_danger_branches_are_setup
       # As this currently just works with GitHub, we can use a github specific feature here:
       pull_id = ci_source.pull_request_id
-      test_branch = ci_source.base_branch_for_merge
+      test_branch = request_source.branch_for_merge
 
       # Next, we want to ensure that we have a version of the current branch that at a know location
-      scm.perform_git_operation "branch #{} #{danger_base_branch}"
+      scm.perform_git_operation "branch #{test_branch} #{danger_base_branch}"
 
       # OK, so we want to ensure that we have a known head branch, this will always represent
       # the head ( e.g. the most recent commit that will be merged. )

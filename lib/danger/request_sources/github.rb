@@ -52,7 +52,7 @@ module Danger
       self.pr_json[:head][:sha]
     end
 
-    def base_branch_for_merge
+    def branch_for_merge
       self.pr_json[:head][:ref]
     end
 
