@@ -26,6 +26,6 @@ if !files_modified.include?("CHANGELOG.md") && !declared_trivial
 end
 
 
-if files_modified.empty? && files_added.empty? && files_removed.empty?
+if files_modified.empty? && files_added.empty? && files_deleted.empty?
   fail "This PR has no changes at all, this is likely a developer issue."
 end
