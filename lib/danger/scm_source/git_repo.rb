@@ -1,43 +1,42 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'grit'
+require 'git'
 
 module Danger
   class GitRepo
     attr_accessor :diff
 
-    def perform_git_operation(string)
-      `git #{string}`
-    end
-
     def diff_for_folder(folder, from: "master", to: 'HEAD')
-      puts "From: #{from} to #{to}"
-      repo = Grit::Repo.new folder
+      repo = Git.open folder
       self.diff = repo.diff(from, to)
     end
 
+    def exec(string)
+      `git #{string}`
+    end
+
     def files_added
-      @diff.select(&:new_file).map(&:b_path)
+      @diff.select{ |diff| diff.type == "new" }.map(&:path)
     end
 
     def files_deleted
-      @diff.select(&:deleted_file).map(&:a_path)
+      @diff.select{ |diff| diff.type == "deleted" }.map(&:path)
     end
 
     def files_modified
-      @diff.reject(&:deleted_file).reject(&:new_file).map(&:a_path)
+      @diff.stats[:files].keys
     end
 
     def lines_of_code
-      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("+") || l.start_with?("-") }
+      @diff.lines
     end
 
     def deletions
-      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("-") }
+      @diff.deletions
     end
 
     def insertions
-      @diff.map(&:diff).map(&:lines).flatten.count { |l| l.start_with?("+") }
+      @diff.insertions
     end
   end
 end

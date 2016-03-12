@@ -1,6 +1,6 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'grit'
+require 'git'
 require 'uri'
 
 module Danger
@@ -13,7 +13,7 @@ module Danger
       end
 
       def git
-        @git ||= Grit::Git.new(".")
+        @git ||= Git.open('.')
       end
 
       def run_git(command)
@@ -24,6 +24,7 @@ module Danger
       def initialize(*)
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
+        remotes = git.branches.remote.map(&:remote).map(&:url).uniq
         if remote
           remote_url_matches = remote.first.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]

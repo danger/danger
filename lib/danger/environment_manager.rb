@@ -39,11 +39,11 @@ module Danger
       test_branch = request_source.branch_for_merge
 
       # Next, we want to ensure that we have a version of the current branch that at a know location
-      scm.perform_git_operation "branch #{danger_base_branch} #{test_branch}"
+      scm.exec "branch #{danger_base_branch} #{test_branch}"
 
       # OK, so we want to ensure that we have a known head branch, this will always represent
       # the head ( e.g. the most recent commit that will be merged. )
-      scm.perform_git_operation "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
+      scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
     end
 
     def danger_head_branch
