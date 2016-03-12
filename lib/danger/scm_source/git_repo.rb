@@ -7,7 +7,7 @@ module Danger
     attr_accessor :diff
 
     def perform_git_operation(string)
-      `git #{string}`
+      system "git #{string}"
     end
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
