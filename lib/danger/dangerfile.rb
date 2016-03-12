@@ -40,8 +40,8 @@ module Danger
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
       rows << ["Requests", env.request_source.class]
-      rows << ["Base Commit", env.request_source.base_commit]
-      rows << ["Head Commit", env.request_source.head_commit]
+      rows << ["Base Ref", env.ci_source.base_ref]
+      rows << ["Head Ref", env.ci_source.head_ref]
 
       params = {}
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }

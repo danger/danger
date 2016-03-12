@@ -36,8 +36,10 @@ module Danger
       dm.env.fill_environment_vars
 
       gh = dm.env.request_source
-      ci_base = @base || gh.base_commit
-      ci_head = @head || gh.head_commit
+      ci = dm.env.ci_source
+
+      ci_base = @base || ci.base_ref
+      ci_head = @head || ci.head_ref
 
       dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
