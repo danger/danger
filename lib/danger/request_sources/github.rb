@@ -44,13 +44,13 @@ module Danger
       self.issue_json = client.get(href)
     end
 
-    # def base_commit
-    #   self.pr_json[:base][:ref]
-    # end
-    #
-    # def head_commit
-    #   self.pr_json[:head][:ref]
-    # end
+    def base_commit
+      self.pr_json[:base][:sha]
+    end
+
+    def head_commit
+      self.pr_json[:head][:sha]
+    end
 
     def pr_title
       self.pr_json[:title].to_s

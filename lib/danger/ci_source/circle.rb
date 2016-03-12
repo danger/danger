@@ -42,6 +42,8 @@ module Danger
           self.repo_slug = paths[1] + "/" + paths[2]
           self.pull_request_id = paths[4]
         end
+
+        head_ref = env["CIRCLE_BRANCH"]
       end
     end
   end
