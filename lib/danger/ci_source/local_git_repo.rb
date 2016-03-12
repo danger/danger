@@ -13,20 +13,18 @@ module Danger
       end
 
       def git
-        @git ||= Git.open('.')
+        @git ||= GitRepo.new
       end
 
       def run_git(command)
-        binary = Grit::Git.git_binary
-        git.sh "#{binary} #{command}"
+        git.exec command
       end
 
       def initialize(*)
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
-        remotes = git.branches.remote.map(&:remote).map(&:url).uniq
         if remote
-          remote_url_matches = remote.first.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+          remote_url_matches = remote.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
             self.repo_slug = remote_url_matches["repo_slug"]
           else
@@ -36,7 +34,7 @@ module Danger
 
         # get the most recent PR merge
         logs = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
-        pr_merge = logs[0].strip
+        pr_merge = logs.strip
         if pr_merge
           self.pull_request_id = pr_merge.match("#[0-9]*")[0].delete("#")
           sha = pr_merge.split(" ")[0]

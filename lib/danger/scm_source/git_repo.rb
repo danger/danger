@@ -16,11 +16,11 @@ module Danger
     end
 
     def files_added
-      @diff.select{ |diff| diff.type == "new" }.map(&:path)
+      @diff.select { |diff| diff.type == "new" }.map(&:path)
     end
 
     def files_deleted
-      @diff.select{ |diff| diff.type == "deleted" }.map(&:path)
+      @diff.select { |diff| diff.type == "deleted" }.map(&:path)
     end
 
     def files_modified
