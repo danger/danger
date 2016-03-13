@@ -1,5 +1,3 @@
-require 'octokit'
-
 module Danger
   class Local < Runner
     self.summary = 'Run the Dangerfile locally.'

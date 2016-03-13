@@ -1,6 +1,5 @@
 ## Master
 
-* Nothing yet, erase me - orta
 * Enterprise GitHub support - dbgrandi
 * Use branches for comparison, not commits - orta
 
