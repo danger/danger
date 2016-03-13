@@ -13,7 +13,6 @@ def fixture(file)
 end
 
 describe Danger::GitHub do
-
   describe "the github host" do
     it 'sets a default GitHub host' do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
@@ -33,7 +32,6 @@ describe Danger::GitHub do
       g = Danger::GitHub.new(stub_ci, gh_env)
       expect(Octokit.api_endpoint).to eql(api_endpoint)
     end
-
   end
 
   describe "valid server response" do
