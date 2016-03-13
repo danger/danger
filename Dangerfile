@@ -1,8 +1,8 @@
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
 
-has_app_changes = !files_modified.grep(/lib/).empty?
-has_test_changes = !files_modified.grep(/spec/).empty?
+has_app_changes = !modified_files.grep(/lib/).empty?
+has_test_changes = !modified_files.grep(/spec/).empty?
 
 if ["KrauseFx", "orta"].include?(pr_author) == false
   warn "Author @#{pr_author} is not a contributor"
@@ -21,7 +21,7 @@ if pr_body.length < 5
 end
 
 declared_trivial = pr_title.include?("#trivial") || !has_app_changes
-if !files_modified.include?("CHANGELOG.md") && !declared_trivial
+if !modified_files.include?("CHANGELOG.md") && !declared_trivial
   fail "Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md)."
 end
 
@@ -29,7 +29,7 @@ end
 ### So, you can ignore these, if you're looking at the Dangerfile to get ideas.
 
 # If these are all empty something has gone wrong, better to raise it in a comment
-if files_modified.empty? && files_added.empty? && files_deleted.empty?
+if modified_files.empty? && added_files.empty? && deleted_files.empty?
   fail "This PR has no changes at all, this is likely a developer issue."
 end
 

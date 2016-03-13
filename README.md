@@ -49,9 +49,9 @@ Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file
 &nbsp;  | &nbsp; | Danger :no_entry_sign:
 -------------: | ------------- | ----
 :sparkles: | `lines_of_code` | The total amount of lines of code in the diff
-:pencil2:  | `files_modified` |  The list of files modified
-:ship: | `files_added` | The list of files added
-:recycle: | `files_deleted` | The list of files removed
+:pencil2:  | `modified_files` |  The list of modified files
+:ship: | `added_files` | The list of added files
+:recycle: | `deleted_files` | The list of removed files
 :abc:  | `pr_title` | The title of the PR
 :book:  | `pr_body` | The body of the PR
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
@@ -74,11 +74,11 @@ warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
 
 ``` ruby
 # Devs shouldn't ship changes to this file
-fail("Developer Specific file shouldn't be changed") if files_modified.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
+fail("Developer Specific file shouldn't be changed") if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
 
 # Did you make analytics changes? Well you should also include a change to our analytics spec
-made_analytics_changes = files_modified.include?("/Artsy/App/ARAppDelegate+Analytics.m")
-made_analytics_specs_changes = files_modified.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
+made_analytics_changes = modified_files.include?("/Artsy/App/ARAppDelegate+Analytics.m")
+made_analytics_specs_changes = modified_files.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
 if made_analytics_changes
   fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
 
@@ -91,7 +91,7 @@ end
 #### Pinging people when a specific file has changed
 
 ```ruby
-message("@orta something changed in elan!") if files_modified.include? "/components/lib/variables/colors.json"
+message("@orta something changed in elan!") if modified_files.include? "/components/lib/variables/colors.json"
 ```
 
 #### Exposing aspects of CI logs into the PR discussion

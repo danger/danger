@@ -8,9 +8,9 @@ module Danger
     def self.scm
       [
         :lines_of_code,
-        :files_modified,
-        :files_deleted,
-        :files_added,
+        :modified_files,
+        :deleted_files,
+        :added_files,
         :deletions,
         :insertions
       ]
