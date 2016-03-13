@@ -20,7 +20,7 @@ module Danger
         git.exec command
       end
 
-      def initialize(env)
+      def initialize(env = {})
         github_host = env["DANGER_GITHUB_HOST"] || "github.com"
 
         # get the remote URL
