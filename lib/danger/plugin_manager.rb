@@ -64,11 +64,11 @@ module Danger
       # @param  [Object] context
       #         The context object which should be passed to the blocks.
       #
-      # @param  [Hash<String, Hash>] whitelisted_plugins
+      # @param  [Hash<Symbol, Hash>] whitelisted_plugins
       #         The plugins that should be run, in the form of a hash keyed by
       #         plugin name, where the values are the custom options that should
       #         be passed to the plugin's block if it supports taking a second
-      #         argument.
+      #         argument. Keys are always symbols.
       #
       def run(context, whitelisted_plugins = nil)
         raise ArgumentError, 'Missing options' unless context
@@ -80,9 +80,16 @@ module Danger
             puts "- #{plugin.name} from `#{plugin.block.source_location.first}`"
             block = plugin.block
             user_options = whitelisted_plugins ? whitelisted_plugins[plugin.name] : {}
-            block.call(context, user_options)
+            block.call(context, symbolize_hash(user_options))
           end
         end
+      end
+
+      # http://stackoverflow.com/questions/800122/best-way-to-convert-strings-to-symbols-in-hash#800498
+      def symbolize_hash(obj)
+        new_hash = {}
+        obj.each { |k, v| new_hash[k.to_sym] = v }
+        new_hash
       end
     end
   end
