@@ -1,5 +1,6 @@
 ## Master
 
+* Support for plugin gems for Danger - orta/dbgrandi
 * Enterprise GitHub support - dbgrandi
 * Use branches for comparison, not commits - orta
 * Breaking: DSL change `files_*` to `*_files` for readability - jeroenvisser101
