@@ -36,8 +36,8 @@ module Danger
         rows << [key.to_s, value]
       end
 
-      pr_copy = pr_body[0..80]
-      pr_copy += "..." if pr_body.length == 81
+      pr_copy = pr_body[0..79]
+      pr_copy += "..." if pr_copy.length == 80
       rows << ["PR Body", pr_copy]
 
       rows << ["---", "---"]
