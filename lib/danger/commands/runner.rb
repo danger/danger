@@ -45,6 +45,8 @@ module Danger
       dm.parse Pathname.new(@dangerfile_path)
 
       post_results(dm)
+
+      dm.env.clean_up
     end
 
     def post_results(dm)

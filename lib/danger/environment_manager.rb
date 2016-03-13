@@ -46,6 +46,20 @@ module Danger
       scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
     end
 
+    def clean_up
+      [danger_base_branch, danger_base_branch].each do |branch|
+        scm.exec "branch -d #{branch}"
+      end
+    end
+
+    def meta_info_for_base
+      scm.exec("--no-pager log #{danger_base_branch} -n1")
+    end
+
+    def meta_info_for_head
+      scm.exec("--no-pager log #{danger_head_branch} -n1")
+    end
+
     def danger_head_branch
       "danger_head"
     end

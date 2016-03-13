@@ -44,8 +44,8 @@ module Danger
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
       rows << ["Requests", env.request_source.class]
-      rows << ["Base Commit", env.scm.exec("--no-pager log #{env.danger_base_branch} -n1")]
-      rows << ["Head Commit", env.scm.exec("--no-pager log #{env.danger_head_branch} -n1")]
+      rows << ["Base Commit", env.meta_info_for_base]
+      rows << ["Head Commit", env.meta_info_for_head]
 
       params = {}
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
