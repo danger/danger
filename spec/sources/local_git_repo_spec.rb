@@ -21,6 +21,18 @@ def run_in_repo
 end
 
 describe Danger::CISource::LocalGitRepo do
+  
+  # describe "initialization" do
+  #   it "uses the default github host" do
+  #     run_in_repo do
+  #       t = Danger:CISource::LocalGitRepo({})
+  #       `git remote`
+  #     end
+  #   end
+  #
+  #   it "uses a custom github host if one is present in environment"
+  # end
+  
   it 'validates when run by danger local' do
     env = { "DANGER_USE_LOCAL_GIT" => "true" }
     expect(Danger::CISource::LocalGitRepo.validates?(env)).to be true
@@ -86,7 +98,7 @@ describe Danger::CISource::LocalGitRepo do
     end
   end
 
-  describe 'non-github repos' do
+  describe 'enterprise github repos' do
     it 'does not set a repo_slug' do
       run_in_repo do
         `git remote add origin git@git.evilcorp.com:tyrell/danger.git`

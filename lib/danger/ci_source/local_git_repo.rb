@@ -21,20 +21,27 @@ module Danger
         git.sh "#{binary} #{command}"
       end
 
-      def initialize(*)
+      def initialize(env)
+        github_host = env["DANGER_GITHUB_HOST"] || "github.com"
+        
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
+        remote = remote.first.strip
         if remote
-          remote_url_matches = remote.first.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+          remote_url_matches = remote.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
             self.repo_slug = remote_url_matches["repo_slug"]
+          elsif remote.start_with? "https://#{github_host}/"
+            self.repo_slug = remote.gsub("https://#{github_host}/", "").gsub(".git", '')
+          elsif remote.start_with? "git@#{github_host}:"
+            self.repo_slug = remote.gsub("git@#{github_host}:", "").gsub(".git", '')
           else
-            puts "Danger local requires a repository hosted on github."
+            puts "Danger local requires a repository hosted on GitHub or Enterprise GitHub."
           end
         end
 
         # get the most recent PR merge
-        logs = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
+        logs = run_git "log --since='4 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
         pr_merge = logs[0].strip
         if pr_merge
           self.pull_request_id = pr_merge.match("#[0-9]*")[0].delete("#")

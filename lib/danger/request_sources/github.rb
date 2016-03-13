@@ -4,7 +4,7 @@ require 'redcarpet'
 
 module Danger
   class GitHub
-    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth, :ignored_violations
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth, :ignored_violations, :github_host
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
@@ -12,14 +12,18 @@ module Danger
       self.support_tokenless_auth = false
 
       Octokit.auto_paginate = true
+      @token = @environment["DANGER_GITHUB_API_TOKEN"]
+      self.github_host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      if @environment["DANGER_GITHUB_API_HOST"]
+        Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
+      end
+      
+      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
     end
 
     def client
-      token = @environment["DANGER_GITHUB_API_TOKEN"]
-      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !token && !support_tokenless_auth
-
       @client ||= Octokit::Client.new(
-        access_token: token
+        access_token: @token
       )
     end
 
