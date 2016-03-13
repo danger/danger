@@ -34,6 +34,16 @@ describe Danger::PluginManager do
         end.to_not raise_error
       end
 
+      it 'runs when block has arity 1' do
+        @manager.register('plugin') do |_options|
+          expect("yer a plugin harry").to eq("yer a wizard harry")
+        end
+
+        expect do
+          @manager.run(Object.new, 'plugin' => { key: 'value' })
+        end.to raise_error
+      end
+
       it 'only runs hooks from the allowed plugins' do
         @manager.register('plugin') do |_options|
           raise 'Should not be called'

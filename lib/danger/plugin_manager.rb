@@ -79,8 +79,13 @@ module Danger
             next if whitelisted_plugins && !whitelisted_plugins.key?(plugin.name)
             puts "- #{plugin.name} from `#{plugin.block.source_location.first}`"
             block = plugin.block
-            user_options = whitelisted_plugins ? whitelisted_plugins[plugin.name] : {}
-            block.call(context, symbolize_hash(user_options))
+
+            if block.arity > 1
+              user_options = whitelisted_plugins ? whitelisted_plugins[plugin.name] : {}
+              block.call(context, symbolize_hash(user_options))
+            else
+              block.call(context)
+            end
           end
         end
       end
