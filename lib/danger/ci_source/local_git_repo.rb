@@ -20,15 +20,21 @@ module Danger
         git.exec command
       end
 
-      def initialize(*)
+      def initialize(env = {})
+        github_host = env["DANGER_GITHUB_HOST"] || "github.com"
+
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
         if remote
-          remote_url_matches = remote.chomp.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+          remote_url_matches = remote.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
             self.repo_slug = remote_url_matches["repo_slug"]
+          elsif remote.start_with? "https://#{github_host}/"
+            self.repo_slug = remote.gsub("https://#{github_host}/", "").gsub(".git", '')
+          elsif remote.start_with? "git@#{github_host}:"
+            self.repo_slug = remote.gsub("git@#{github_host}:", "").gsub(".git", '')
           else
-            puts "Danger local requires a repository hosted on github."
+            puts "Danger local requires a repository hosted on GitHub or Enterprise GitHub."
           end
         end
 

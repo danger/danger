@@ -27,7 +27,9 @@ module Danger
         exit 0
       end
 
-      puts "Running your Dangerfile against this PR - https://github.com/#{source.repo_slug}/pull/#{source.pull_request_id}"
+      gh = dm.env.request_source
+
+      puts "Running your Dangerfile against this PR - https://#{gh.github_host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
 
       if verbose != true
         puts "Turning on --verbose"
@@ -36,7 +38,6 @@ module Danger
 
       puts ""
 
-      gh = GitHub.new(dm.env.ci_source, ENV)
       # We can use tokenless here, as it's running on someone's computer
       # and is IP locked, as opposed  to on the CI.
       gh.support_tokenless_auth = true
