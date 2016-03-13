@@ -26,8 +26,8 @@ module Danger
       rows = []
 
       AvailableValues.all.each do |key|
-        next if key == :pr_body
         value = self.send(key)
+        value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
 
         # So that we either have one value per row
         # or we have [] for an empty array
@@ -35,10 +35,6 @@ module Danger
 
         rows << [key.to_s, value]
       end
-
-      pr_copy = pr_body[0..79]
-      pr_copy += "..." if pr_copy.length == 80
-      rows << ["PR Body", pr_copy]
 
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
