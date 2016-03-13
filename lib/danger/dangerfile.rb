@@ -36,7 +36,7 @@ module Danger
         rows << [key.to_s, value]
       end
 
-      rows << ["PR Body", pr_body.scan(/.{,80}/).to_a.each(&:strip!).join("\n")]
+      rows << ["pr_body", pr_body.scan(/.{,80}/).to_a.each(&:strip!).join("\n")]
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
