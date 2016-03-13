@@ -21,16 +21,6 @@ def run_in_repo
 end
 
 describe Danger::CISource::LocalGitRepo do
-  # describe "initialization" do
-  #   it "uses the default github host" do
-  #     run_in_repo do
-  #       t = Danger:CISource::LocalGitRepo({})
-  #       `git remote`
-  #     end
-  #   end
-  #
-  #   it "uses a custom github host if one is present in environment"
-  # end
 
   it 'validates when run by danger local' do
     env = { "DANGER_USE_LOCAL_GIT" => "true" }
@@ -95,10 +85,8 @@ describe Danger::CISource::LocalGitRepo do
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
-  end
-
-  describe 'enterprise github repos' do
-    it 'does not set a repo_slug' do
+    
+    it 'does not set a repo_slug if the repo has a non-gh remote' do
       run_in_repo do
         `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
@@ -107,4 +95,26 @@ describe Danger::CISource::LocalGitRepo do
       end
     end
   end
+
+  describe 'enterprise github repos' do    
+    it 'does set a repo_slug if provided with a github_host' do
+      run_in_repo do
+        `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
+        env = { "DANGER_USE_LOCAL_GIT" => "true" , "DANGER_GITHUB_HOST" => "git.evilcorp.com"}
+        t = Danger::CISource::LocalGitRepo.new(env)
+        expect(t.repo_slug).to eql("tyrell/danger")
+      end
+    end
+    
+    it 'does not set a repo_slug if provided with a github_host that is different from the remote' do
+      run_in_repo do
+        `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
+        env = { "DANGER_USE_LOCAL_GIT" => "true" , "DANGER_GITHUB_HOST" => "git.robot.com"}
+        t = Danger::CISource::LocalGitRepo.new(env)
+        expect(t.repo_slug).to be_nil
+      end
+    end
+    
+  end
+  
 end
