@@ -33,17 +33,20 @@ module Danger
       dm.verbose = verbose
       dm.env = EnvironmentManager.new(ENV)
       return unless dm.env.ci_source # if it's not a PR
+
       dm.env.fill_environment_vars
+      dm.env.ensure_danger_branches_are_setup
 
-      gh = dm.env.request_source
-      ci_base = @base || gh.base_commit
-      ci_head = @head || gh.head_commit
-
+      # Offer the chance for a user to specify a branch through the command line
+      ci_base = @base || dm.env.danger_head_branch
+      ci_head = @head || dm.env.danger_base_branch
       dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
       dm.parse Pathname.new(@dangerfile_path)
 
       post_results(dm)
+
+      dm.env.clean_up
     end
 
     def post_results(dm)
