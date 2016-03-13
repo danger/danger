@@ -26,27 +26,22 @@ module Danger
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
         if remote
-          remote_url_matches = remote.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+          remote_url_matches = remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
             self.repo_slug = remote_url_matches["repo_slug"]
-          elsif remote.start_with? "https://#{github_host}/"
-            self.repo_slug = remote.gsub("https://#{github_host}/", "").gsub(".git", '')
-          elsif remote.start_with? "git@#{github_host}:"
-            self.repo_slug = remote.gsub("git@#{github_host}:", "").gsub(".git", '')
           else
-            puts "Danger local requires a repository hosted on GitHub or Enterprise GitHub."
+            puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise."
           end
         end
 
         # get the most recent PR merge
-        logs = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
-        pr_merge = logs.strip
+        pr_merge = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1".strip
         if pr_merge
-          self.pull_request_id = pr_merge.match("#[0-9]*")[0].delete("#")
+          self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
           sha = pr_merge.split(" ")[0]
-          parents = run_git "rev-list --parents -n 1 #{sha}"
-          self.base_commit = parents.strip.split(" ")[0]
-          self.head_commit = parents.strip.split(" ")[1]
+          parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
+          self.base_commit = parents[0]
+          self.head_commit = parents[1]
         end
       end
     end
