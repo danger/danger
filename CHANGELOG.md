@@ -1,6 +1,7 @@
 ## Master
 
 * Use branches for comparison, not commits - orta
+* Breaking: DSL change `files_*` to `*_files` for readability - jeroenvisser101
 
 ## 0.6.0
 
