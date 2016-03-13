@@ -36,10 +36,7 @@ module Danger
         rows << [key.to_s, value]
       end
 
-      pr_copy = pr_body[0..79]
-      pr_copy += "..." if pr_copy.length == 80
-      rows << ["PR Body", pr_copy]
-
+      rows << ["PR Body", pr_body.scan(/.{,80}/).to_a.each(&:strip!).join("\n")]
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
