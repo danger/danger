@@ -2,6 +2,7 @@
 
 * Nothing yet, erase me - orta
 * Enterprise GitHub support - dbgrandi
+* Use branches for comparison, not commits - orta
 
 ## 0.6.0
 
@@ -13,7 +14,7 @@
 
 ## 0.5.2
 
-* Typo fixes for `danger init` - lumaxis 
+* Typo fixes for `danger init` - lumaxis
 
 ## 0.5.1
 

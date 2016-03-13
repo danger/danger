@@ -1,6 +1,6 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'grit'
+require 'git'
 require 'uri'
 
 module Danger
@@ -13,12 +13,11 @@ module Danger
       end
 
       def git
-        @git ||= Grit::Git.new(".")
+        @git ||= GitRepo.new
       end
 
       def run_git(command)
-        binary = Grit::Git.git_binary
-        git.sh "#{binary} #{command}"
+        git.exec command
       end
 
       def initialize(env)
@@ -26,7 +25,6 @@ module Danger
 
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
-        remote = remote.first.strip
         if remote
           remote_url_matches = remote.match(%r{github\.com(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
@@ -41,8 +39,8 @@ module Danger
         end
 
         # get the most recent PR merge
-        logs = run_git "log --since='4 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
-        pr_merge = logs[0].strip
+        logs = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1"
+        pr_merge = logs.strip
         if pr_merge
           self.pull_request_id = pr_merge.match("#[0-9]*")[0].delete("#")
           sha = pr_merge.split(" ")[0]

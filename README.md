@@ -38,7 +38,7 @@ bundle exec danger init
 bundle exec danger
 ```
 
-This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information. 
+This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information.
 
 ## What happens?
 
@@ -51,7 +51,7 @@ Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file
 :sparkles: | `lines_of_code` | The total amount of lines of code in the diff
 :pencil2:  | `files_modified` |  The list of files modified
 :ship: | `files_added` | The list of files added
-:recycle: | `files_removed` | The list of files removed
+:recycle: | `files_deleted` | The list of files removed
 :abc:  | `pr_title` | The title of the PR
 :book:  | `pr_body` | The body of the PR
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR

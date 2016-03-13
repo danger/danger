@@ -36,12 +36,16 @@ module Danger
         rows << [key.to_s, value]
       end
 
+      pr_copy = pr_body[0..79]
+      pr_copy += "..." if pr_copy.length == 80
+      rows << ["PR Body", pr_copy]
+
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
       rows << ["Requests", env.request_source.class]
-      rows << ["Base Commit", env.request_source.base_commit]
-      rows << ["Head Commit", env.request_source.head_commit]
+      rows << ["Base Commit", env.meta_info_for_base]
+      rows << ["Head Commit", env.meta_info_for_head]
 
       params = {}
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
@@ -49,8 +53,6 @@ module Danger
 
       puts ""
       puts Terminal::Table.new(params)
-      puts "PR Body:"
-      puts self.pr_body.cyan
       puts ""
     end
 

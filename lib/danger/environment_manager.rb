@@ -32,5 +32,40 @@ module Danger
 
       self.scm = GitRepo.new # For now
     end
+
+    def ensure_danger_branches_are_setup
+      # As this currently just works with GitHub, we can use a github specific feature here:
+      pull_id = ci_source.pull_request_id
+      test_branch = request_source.base_commit
+
+      # Next, we want to ensure that we have a version of the current branch that at a know location
+      scm.exec "branch #{danger_base_branch} #{test_branch}"
+
+      # OK, so we want to ensure that we have a known head branch, this will always represent
+      # the head ( e.g. the most recent commit that will be merged. )
+      scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
+    end
+
+    def clean_up
+      [danger_base_branch, danger_base_branch].each do |branch|
+        scm.exec "branch -d #{branch}"
+      end
+    end
+
+    def meta_info_for_base
+      scm.exec("--no-pager log #{danger_base_branch} -n1")
+    end
+
+    def meta_info_for_head
+      scm.exec("--no-pager log #{danger_head_branch} -n1")
+    end
+
+    def danger_head_branch
+      "danger_head"
+    end
+
+    def danger_base_branch
+      "danger_base"
+    end
   end
 end

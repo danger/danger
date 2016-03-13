@@ -24,3 +24,12 @@ declared_trivial = pr_title.include?("#trivial") || !has_app_changes
 if !files_modified.include?("CHANGELOG.md") && !declared_trivial
   fail "Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md)."
 end
+
+### Oddly enough, it's quite possible to do some testing of Danger, inside Danger
+### So, you can ignore these, if you're looking at the Dangerfile to get ideas.
+
+# If these are all empty something has gone wrong, better to raise it in a comment
+if files_modified.empty? && files_added.empty? && files_deleted.empty?
+  fail "This PR has no changes at all, this is likely a developer issue."
+end
+

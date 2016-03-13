@@ -12,4 +12,4 @@ test:
     - git config --global user.email "danger@example.com"
     - git config --global user.name "Danger McShane"
     - bundle exec rake spec
-    - if [ -z "$DANGER_GITHUB_API_TOKEN" ]; then echo "skipping fork of danger on CI"; else bundle exec danger; fi
+    - if [ -z "$DANGER_GITHUB_API_TOKEN" ]; then echo "skipping fork of danger on CI"; else bundle exec danger --verbose; fi
