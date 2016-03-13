@@ -15,15 +15,15 @@ module Danger
       `git #{string}`.strip
     end
 
-    def files_added
+    def added_files
       @diff.select { |diff| diff.type == "new" }.map(&:path)
     end
 
-    def files_deleted
+    def deleted_files
       @diff.select { |diff| diff.type == "deleted" }.map(&:path)
     end
 
-    def files_modified
+    def modified_files
       @diff.stats[:files].keys
     end
 

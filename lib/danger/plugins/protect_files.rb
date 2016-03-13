@@ -7,7 +7,7 @@ module Danger
       def protect_files(path: nil, message: nil, fail_build: true)
         broken_rule = false
         Dir.glob(path) do |current|
-          broken_rule = true if self.env.scm.files_modified.include?(current)
+          broken_rule = true if self.env.scm.modified_files.include?(current)
         end
 
         return unless broken_rule
