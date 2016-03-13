@@ -45,8 +45,8 @@ module Danger
           self.pull_request_id = pr_merge.match("#[0-9]*")[0].delete("#")
           sha = pr_merge.split(" ")[0]
           parents = run_git "rev-list --parents -n 1 #{sha}"
-          self.base_commit = parents[0].strip.split(" ")[0]
-          self.head_commit = parents[0].strip.split(" ")[1]
+          self.base_commit = parents.strip.split(" ")[0]
+          self.head_commit = parents.strip.split(" ")[1]
         end
       end
     end
