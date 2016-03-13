@@ -23,7 +23,7 @@ module Danger
 
       def initialize(env)
         github_host = env["DANGER_GITHUB_HOST"] || "github.com"
-        
+
         # get the remote URL
         remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
         remote = remote.first.strip

@@ -21,7 +21,6 @@ def run_in_repo
 end
 
 describe Danger::CISource::LocalGitRepo do
-  
   # describe "initialization" do
   #   it "uses the default github host" do
   #     run_in_repo do
@@ -32,7 +31,7 @@ describe Danger::CISource::LocalGitRepo do
   #
   #   it "uses a custom github host if one is present in environment"
   # end
-  
+
   it 'validates when run by danger local' do
     env = { "DANGER_USE_LOCAL_GIT" => "true" }
     expect(Danger::CISource::LocalGitRepo.validates?(env)).to be true

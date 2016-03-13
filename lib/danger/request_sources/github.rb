@@ -17,11 +17,11 @@ module Danger
       if @environment["DANGER_GITHUB_API_HOST"]
         Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
       end
-      
-      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
     end
 
     def client
+      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
+
       @client ||= Octokit::Client.new(
         access_token: @token
       )

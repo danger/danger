@@ -1,6 +1,7 @@
 ## Master
 
 * Nothing yet, erase me - orta
+* Enterprise GitHub support - dbgrandi
 
 ## 0.6.0
 
