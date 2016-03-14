@@ -6,6 +6,10 @@ has_test_changes = !modified_files.grep(/spec/).empty?
 
 if ["KrauseFx", "orta"].include?(pr_author) == false
   warn "Author @#{pr_author} is not a contributor"
+  
+  if modified_files.grep(/.gemspec/)
+    warn "External contributors should not modify gemspec files"
+  end
 end
 
 if (pr_body + pr_title).include?("WIP")
