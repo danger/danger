@@ -141,6 +141,8 @@ Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eig
 
 ## License, Contributor's Guidelines and Code of Conduct
 
+[Join our Slack Group](https://danger-slack.herokuapp.com/)
+
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 
 > This project subscribes to the [Moya Contributors Guidelines](https://github.com/Moya/contributors) which TLDR: means we give out push access easily and often.
