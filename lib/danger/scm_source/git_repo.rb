@@ -16,15 +16,15 @@ module Danger
     end
 
     def added_files
-      @diff.select { |diff| diff.type == "new" }.map(&:path)
+      Danger::FileList.new(@diff.select { |diff| diff.type == "new" }.map(&:path))
     end
 
     def deleted_files
-      @diff.select { |diff| diff.type == "deleted" }.map(&:path)
+      Danger::FileList.new(@diff.select { |diff| diff.type == "deleted" }.map(&:path))
     end
 
     def modified_files
-      @diff.stats[:files].keys
+      Danger::FileList.new(@diff.stats[:files].keys)
     end
 
     def lines_of_code

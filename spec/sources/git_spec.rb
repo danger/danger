@@ -1,6 +1,37 @@
 require 'danger/scm_source/git_repo'
 
 describe Danger::GitRepo do
+  describe "Return Types" do
+    before do
+      @tmp_dir = Dir.mktmpdir
+      Dir.chdir(@tmp_dir) do
+        `git init`
+        `touch file`
+        `git add .`
+        `git commit -m "ok"`
+        `git checkout -b new`
+        `touch file2`
+        `git add .`
+        `git commit -m "another"`
+      end
+
+      @g = Danger::GitRepo.new
+      @g.diff_for_folder(@tmp_dir, from: "master", to: "new")
+    end
+
+    it "#modified_files returns a FileList object" do
+      expect(@g.modified_files.class).to eql(Danger::FileList)
+    end
+
+    it "#added_files returns a FileList object" do
+      expect(@g.added_files.class).to eql(Danger::FileList)
+    end
+
+    it "#deleted_files returns a FileList object" do
+      expect(@g.deleted_files.class).to eql(Danger::FileList)
+    end
+  end
+
   describe "with files" do
     it 'handles adding a new file to a git repo' do
       Dir.mktmpdir do |dir|
