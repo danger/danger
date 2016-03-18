@@ -1,6 +1,6 @@
 ## Master
 
-* Nothing yet, delete me - orta
+* Added new `modified_files.include?("rakelib/*_stats.rake") file globbing support - KrauseFx
 
 ## 0.6.5
 
