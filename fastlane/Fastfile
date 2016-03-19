@@ -31,7 +31,7 @@ lane :release do |options|
   # Preparing GitHub Release
   #
   github_release = get_github_release(url: github_url, version: version)
-  if (github_release || {}).fetch('body', '').length == 0
+  if (github_release || {}).fetch('body', '').empty?
     `open https://github.com/#{github_url}/compare/#{old_version}...master`
 
     title = prompt(text: 'Title: ')
