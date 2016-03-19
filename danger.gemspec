@@ -33,5 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "fastlane", ">= 1.49.0"
-  spec.add_development_dependency "rubocop", "~> 0.35.1"
+  spec.add_development_dependency "rubocop", "~> 0.38.0"
 end
