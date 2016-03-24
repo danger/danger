@@ -1,5 +1,8 @@
 ## Master
 
+* Added support for local plugins
+* Added support for remote plugins
+* Added new `danger new_plugin` command to create plugins in the fastlane
 * Added new `modified_files.include?("rakelib/*_stats.rake") file globbing support - KrauseFx
 
 ## 0.6.5
