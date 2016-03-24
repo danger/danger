@@ -13,11 +13,13 @@ module Danger
         self.warnings = []
         self.errors = []
         self.messages = []
-        load_plugins
+        load_default_plugins
       end
 
-      def load_plugins
-        Dir['./lib/danger/plugins/*.rb'].each do |file|
+      def import(path)
+        raise "`import` requires a string" unless path.kind_of?(String)
+        path += ".rb" unless path.end_with?(".rb")
+        Dir[path].each do |file|
           require file
         end
       end
@@ -70,6 +72,13 @@ module Danger
         end
 
         raise "Unknown method '#{method_sym}', please check out the documentation for available variables".red
+      end
+
+      private
+      def load_default_plugins
+        Dir['./lib/danger/plugins/*.rb'].each do |file|
+          require file
+        end
       end
     end
   end

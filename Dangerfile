@@ -1,3 +1,5 @@
+import "./danger_plugins/work_in_progress_warning"
+
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
 
@@ -12,9 +14,7 @@ if ["KrauseFx", "orta"].include?(pr_author) == false
   end
 end
 
-if (pr_body + pr_title).include?("WIP")
-  warn "Pull Request is Work in Progress"
-end
+work_in_progress_warning
 
 if has_app_changes && !has_test_changes
   warn "Tests were not updated"
