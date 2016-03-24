@@ -1,4 +1,5 @@
-import "./danger_plugins/work_in_progress_warning"
+# import "./danger_plugins/work_in_progress_warning"
+import "https://raw.githubusercontent.com/danger/danger/remote-plugins/danger_plugins/work_in_progress_warning.rb"
 
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
