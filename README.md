@@ -102,6 +102,32 @@ snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.h
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
 
+## Plugins
+
+Danger was built with a platform in mind: It can be used with any kind of software project and allows you to write your own action to have structured source code.
+
+In your `Dangerfile` you can import local or remote actions using
+
+```ruby
+import "./danger_plugins/work_in_progress_warning"
+import "https://raw.githubusercontent.com/danger/danger/master/danger_plugins/work_in_progress_warning.rb"
+
+# Call those actions using
+work_in_progress_warning
+
+custom_plugin(variable: "value")
+```
+
+To create a new plugin run
+
+```
+danger new_plugin
+```
+
+This will generate a new Ruby file which you can modify to fit your needs. 
+
+If you think your new plugin is useful for other developers too, feel free to submit a PR to danger by copying the action to `lib/danger/plugins`. 
+
 ## Support
 
 Danger currently is supported on Travis CI, Circle CI, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
