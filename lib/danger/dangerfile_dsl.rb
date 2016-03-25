@@ -28,7 +28,7 @@ module Danger
       end
 
       # Download a remote plugin and use it locally
-      # 
+      #
       # @param    [String] url
       #           https URL to the Ruby file to use
       def import_url(url)
@@ -45,7 +45,7 @@ module Danger
       end
 
       # Import one or more local plugins
-      # 
+      #
       # @param    [String] path
       #           The path to the file to import
       #           Can also be a pattern (./**/*plugin.rb)
@@ -106,6 +106,7 @@ module Danger
       end
 
       private
+
       def load_default_plugins
         Dir['./lib/danger/plugins/*.rb'].each do |file|
           require file

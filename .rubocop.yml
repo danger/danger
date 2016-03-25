@@ -121,6 +121,8 @@ Style/DotPosition:
 Style/GuardClause:
   Enabled: false
 
-
 Style/Documentation:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
   Enabled: false
