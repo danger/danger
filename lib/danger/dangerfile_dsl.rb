@@ -91,18 +91,26 @@ module Danger
       # When an undefined method is called, we check to see if it's something
       # that either the `scm` or the `request_source` can handle.
       # This opens us up to letting those object extend themselves naturally.
-      def method_missing(method_sym, *_arguments, &_block)
+      # This will also look for plugins
+      def method_missing(method_sym, *arguments, &_block)
+        # SCM Source
         if AvailableValues.scm.include?(method_sym)
-          # SCM Source
           return env.scm.send(method_sym)
         end
 
+        # Request Source
         if AvailableValues.request_source.include?(method_sym)
-          # Request Source
           return env.request_source.send(method_sym)
         end
 
-        raise "Unknown method '#{method_sym}', please check out the documentation for available variables".red
+        # Plugins
+        class_name = method_sym.to_s.danger_class
+        plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
+        if plugin_ref
+          plugin_ref.new(self).run(*arguments)
+        else
+          raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red
+        end
       end
 
       private
