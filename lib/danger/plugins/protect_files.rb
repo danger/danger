@@ -8,7 +8,6 @@ module Danger
 
           broken_rule = false
 
-          # TODO: This is currently broken: no access to env variables here
           Dir.glob(path) do |current|
             broken_rule = true if self.env.scm.modified_files.include?(current)
           end
