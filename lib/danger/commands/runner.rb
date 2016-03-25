@@ -47,6 +47,8 @@ module Danger
       post_results(dm)
 
       dm.env.clean_up
+
+      dm.print_results
     end
 
     def post_results(dm)

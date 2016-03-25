@@ -4,6 +4,7 @@
 * Added support for remote plugins
 * Added new `danger new_plugin` command to create plugins in the fastlane
 * Added new `modified_files.include?("rakelib/*_stats.rake") file globbing support - KrauseFx
+* Added printing of table summaries after running danger
 
 ## 0.6.5
 

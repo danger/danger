@@ -89,6 +89,28 @@ module Danger
         end
         # rubocop:enable Lint/RescueException
       end
+
+      def print_results
+        puts "danger results:".blue
+
+        [:errors, :warnings, :messages].each do |current|
+          params = {}
+          params[:rows] = self.send(current).collect { |a| [a] }
+          next unless params[:rows].count > 0
+          params[:title] = case current
+            when :errors
+              current.to_s.capitalize.red
+            when :warnings
+              current.to_s.capitalize.yellow
+            else
+              current.to_s.capitalize
+            end
+
+          puts ""
+          puts Terminal::Table.new(params)
+          puts ""
+        end
+      end
     end
   end
 end
