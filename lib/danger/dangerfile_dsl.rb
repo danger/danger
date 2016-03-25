@@ -51,7 +51,7 @@ module Danger
       #           Can also be a pattern (./**/*plugin.rb)
       def import_local(path)
         Dir[path].each do |file|
-          require file
+          require File.expand_path(file) # without the expand_path it would fail if the path doesn't start with ./
         end
       end
 
