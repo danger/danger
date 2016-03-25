@@ -38,7 +38,7 @@ module Danger
         require 'faraday'
         content = Faraday.get(url)
         Dir.mktmpdir do |dir|
-          path = File.join(dir, "remote_action.rb")
+          path = File.join(dir, "temporary_remote_action.rb")
           File.write(path, content.body)
           import_local(path)
         end
@@ -105,8 +105,8 @@ module Danger
 
         # Plugins
         class_name = method_sym.to_s.danger_class
-        plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
-        if plugin_ref
+        if Danger::Dangerfile::DSL.const_defined?(class_name)
+          plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
           plugin_ref.new(self).run(*arguments)
         else
           raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red

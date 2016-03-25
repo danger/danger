@@ -1,13 +1,5 @@
 require 'pathname'
 require 'tempfile'
-require 'danger/dangerfile'
-require 'danger/standard_error'
-
-def make_temp_file(contents)
-  file = Tempfile.new('dangefile_tests')
-  file.write contents
-  file
-end
 
 describe Danger::Dangerfile do
   it 'keeps track of the original Dangerfile' do
