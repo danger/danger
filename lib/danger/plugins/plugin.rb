@@ -11,8 +11,6 @@ module Danger
         def method_missing(method_sym, *arguments, &_block)
           return @dsl.send(method_sym, *arguments) if @dsl.respond_to?(method_sym)
           return @dsl.method_missing(method_sym, *arguments)
-
-          raise "Could not find method '#{method_sym}' with args '#{arguments.shift}'"
         end
       end
     end
