@@ -116,8 +116,12 @@ module Danger
       private
 
       def load_default_plugins
-        Dir['./lib/danger/plugins/*.rb'].each do |file|
-          require file
+        Dir["./lib/danger/plugins/*.rb"].each do |file|
+          require File.expand_path(file)
+        end
+
+        Dir["./danger_plugins/*.rb"].each do |file|
+          require File.expand_path(file)
         end
       end
     end
