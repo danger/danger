@@ -8,10 +8,10 @@
      </tr>
   </thead>
   <tbody>
-    <% table[:content].each do |message| -%>
+    <% table[:content].each do |violation| -%>
     <tr>
       <td>:<%= table[:emoji] %>:</td>
-      <td><%= message %></td>
+      <td data-sticky="<%= violation.sticky %>"><%= violation.message %></td>
     </tr>
     <% end %>
   </tbody>

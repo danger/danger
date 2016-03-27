@@ -108,7 +108,7 @@ module Danger
       message = generate_github_description(warnings: warnings, errors: errors)
       client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
         description: message,
-        context: "KrauseFx/danger",
+        context: "danger/danger",
         target_url: details_url
       })
     rescue
@@ -155,18 +155,18 @@ module Danger
       # erb: http://www.rrn.dk/rubys-erb-templating-system
       # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
       @tables = [
-        { name: "Error", emoji: "no_entry_sign", content: errors.map { |s| process_markdown(s) } },
-        { name: "Warning", emoji: "warning", content: warnings.map { |s| process_markdown(s) } },
-        { name: "Message", emoji: "book", content: messages.map { |s| process_markdown(s) } }
+        { name: "Error", emoji: "no_entry_sign", content: errors.map { |v| process_markdown(v) } },
+        { name: "Warning", emoji: "warning", content: warnings.map { |v| process_markdown(v) } },
+        { name: "Message", emoji: "book", content: messages.map { |v| process_markdown(v) } }
       ]
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end
 
-    def process_markdown(string)
-      html = markdown_parser.render(string)
+    def process_markdown(violation)
+      html = markdown_parser.render(violation.message)
       match = html.match(%r{^<p>(.*)</p>$})
-      return match.captures.first unless match.nil?
-      html
+      message = match.nil? ? html : match.captures.first
+      Violation.new(message, violation.sticky)
     end
   end
 end
