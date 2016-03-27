@@ -144,6 +144,18 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
         expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
       end
+
+      it "sets data-sticky to true when a violation is sticky" do
+        sticky_warning = Danger::Violation.new("my warning", true)
+        result = @g.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
+        expect(result.gsub(/\s+/, "")).to include("tddata-sticky=\"true\"")
+      end
+
+      it "sets data-sticky to false when a violation is not sticky" do
+        non_sticky_warning = Danger::Violation.new("my warning", false)
+        result = @g.generate_comment(warnings: [non_sticky_warning], errors: [], messages: [])
+        expect(result.gsub(/\s+/, "")).to include("tddata-sticky=\"false\"")
+      end
     end
 
     describe "status message" do
