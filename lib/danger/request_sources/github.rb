@@ -178,8 +178,8 @@ module Danger
     end
 
     def violations_from_table(table)
-      regex = %r{<td data-sticky="true">(<strike>)?(.*?)(</strike>)?</td>}im
-      table.scan(regex).flatten.compact.map(&:strip)
+      regex = %r{<td data-sticky="true">(<strike>)?(.*?)(</strike>)?\s*</td>}im
+      table.scan(regex).map { |a| a[1] }.map(&:strip)
     end
 
     def table_kind_from_title(title)

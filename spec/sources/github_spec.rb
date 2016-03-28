@@ -215,10 +215,43 @@ describe Danger::GitHub do
     end
 
     describe "comment parsing" do
-      it "parses a comment with errors" do
+      it "detects the warning kind" do
+        expect(@g.table_kind_from_title('1 Warning')).to eq(:warning)
+        expect(@g.table_kind_from_title('2 Warnings')).to eq(:warning)
+      end
+
+      it "detects the error kind" do
+        expect(@g.table_kind_from_title('1 Error')).to eq(:error)
+        expect(@g.table_kind_from_title('2 Errors')).to eq(:error)
+      end
+
+      it "detects the warning kind" do
+        expect(@g.table_kind_from_title('1 Message')).to eq(:message)
+        expect(@g.table_kind_from_title('2 Messages')).to eq(:message)
+      end
+
+      it "parses a comment with error" do
         comment = comment_fixture('comment_with_error')
         violations = @g.parse_comment(comment)
         expect(violations).to eq({ error: ['Some error'] })
+      end
+
+      it "parses a comment with error and warnings" do
+        comment = comment_fixture('comment_with_error_and_warnings')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: ['Some error'], warning: ['First warning', 'Second warning'] })
+      end
+
+      it "ignores non-sticky violations when parsing a comment" do
+        comment = comment_fixture('comment_with_non_sticky')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: [], warning: ['First warning'] })
+      end
+
+      it "parses a comment with error and warnings removing strike tag" do
+        comment = comment_fixture('comment_with_resolved_violation')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: ['Some error'], warning: ['First warning', 'Second warning'] })
       end
     end
   end
