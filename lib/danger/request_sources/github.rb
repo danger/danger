@@ -174,7 +174,8 @@ module Danger
       content = violations.map { |v| process_markdown(v) }
       kind = table_kind_from_title(name)
       previous_violations = all_previous_violations[kind] || []
-      resolved_violations = previous_violations.reject { |s| content.include? s }
+      messages = content.map(&:message)
+      resolved_violations = previous_violations.reject { |s| messages.include? s }
       { name: name, emoji: emoji, content: content, resolved: resolved_violations }
     end
 
