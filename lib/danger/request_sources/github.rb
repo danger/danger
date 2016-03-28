@@ -80,13 +80,21 @@ module Danger
     def update_pull_request!(warnings: nil, errors: nil, messages: nil)
       comment_result = {}
 
-      if (warnings + errors + messages).empty?
+      issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+      editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
+
+      if editable_issues.empty?
+        previous_violations = {}
+      else
+        comment = editable_issues.first[:body]
+        previous_violations = parse_comment(comment)
+      end
+
+      if previous_violations.empty? && (warnings + errors + messages).empty?
         # Just remove the comment, if there's nothing to say.
         delete_old_comments!
       else
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
-        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        body = generate_comment(warnings: warnings, errors: errors, messages: messages, previous_violations: previous_violations)
 
         if editable_issues.empty?
           comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
@@ -147,7 +155,7 @@ module Danger
       end
     end
 
-    def generate_comment(warnings: [], errors: [], messages: [])
+    def generate_comment(warnings: [], errors: [], messages: [], previous_violations: {})
       require 'erb'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
@@ -155,11 +163,19 @@ module Danger
       # erb: http://www.rrn.dk/rubys-erb-templating-system
       # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
       @tables = [
-        { name: "Error", emoji: "no_entry_sign", content: errors.map { |v| process_markdown(v) } },
-        { name: "Warning", emoji: "warning", content: warnings.map { |v| process_markdown(v) } },
-        { name: "Message", emoji: "book", content: messages.map { |v| process_markdown(v) } }
+        table("Error", "no_entry_sign", errors, previous_violations),
+        table("Warning", "warning", warnings, previous_violations),
+        table("Message", "book", messages, previous_violations)
       ]
       return ERB.new(File.read(md_template), 0, "-").result(binding)
+    end
+
+    def table(name, emoji, violations, all_previous_violations)
+      content = violations.map { |v| process_markdown(v) }
+      kind = table_kind_from_title(name)
+      previous_violations = all_previous_violations[kind] || []
+      resolved_violations = previous_violations.reject { |s| content.include? s }
+      { name: name, emoji: emoji, content: content, resolved: resolved_violations }
     end
 
     def parse_comment(comment)
@@ -174,7 +190,7 @@ module Danger
         violations[kind] = violations_from_table(table)
       end
 
-      violations
+      violations.reject { |k, v| v.empty? }
     end
 
     def violations_from_table(table)

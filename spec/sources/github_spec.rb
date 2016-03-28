@@ -245,7 +245,7 @@ describe Danger::GitHub do
       it "ignores non-sticky violations when parsing a comment" do
         comment = comment_fixture('comment_with_non_sticky')
         violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: [], warning: ['First warning'] })
+        expect(violations).to eq({ warning: ['First warning'] })
       end
 
       it "parses a comment with error and warnings removing strike tag" do

@@ -14,6 +14,12 @@
       <td data-sticky="<%= violation.sticky %>"><%= violation.message %></td>
     </tr>
     <% end %>
+    <% table[:resolved].each do |violation| -%>
+      <tr>
+        <td>:white_check_mark:</td>
+        <td data-sticky="<%= violation.sticky %>"><strike><%= violation.message %></strike></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
   <% end %>
