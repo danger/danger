@@ -144,6 +144,30 @@ describe Danger::GitHub do
         # rubocop:enable Metrics/LineLength
       end
 
+      it "crosses resolved violations and changes the title" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
+        expect(result.gsub(/\s+/, "")).to include("<thwidth=\"100%\"data-kind=\"Error\">:white_check_mark:")
+        expect(result.gsub(/\s+/, "")).to include("<td>:white_check_mark:</td><tddata-sticky=\"true\"><del>anerror</del></td>")
+      end
+
+      it "uncrosses violations that were on the list and happened again" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: violations(['an error']), messages: [], previous_violations: previous_violations)
+        # rubocop:disable Metrics/LineLength
+        expect(result.gsub(/\s+/, "")).to eq(
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">anerror</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+        )
+        # rubocop:enable Metrics/LineLength
+      end
+
+      it "counts only unresolved violations on the title" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: violations(['another error']),
+                                     messages: [], previous_violations: previous_violations)
+        expect(result.gsub(/\s+/, "")).to include("<thwidth=\"100%\"data-kind=\"Error\">1Error</th>")
+      end
+
       it "needs to include generated_by_danger" do
         result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
         expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
@@ -210,6 +234,15 @@ describe Danger::GitHub do
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+
+      it "updates the issue if danger doesnt need to say anything but there are sticky violations" do
+        issues = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g).to receive(:parse_comment).and_return({ errors: ['an error'] })
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
     end
