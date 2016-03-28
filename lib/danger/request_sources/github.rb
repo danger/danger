@@ -176,7 +176,8 @@ module Danger
       previous_violations = all_previous_violations[kind] || []
       messages = content.map(&:message)
       resolved_violations = previous_violations.reject { |s| messages.include? s }
-      { name: name, emoji: emoji, content: content, resolved: resolved_violations }
+      count = content.count + content.count
+      { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
     end
 
     def parse_comment(comment)
