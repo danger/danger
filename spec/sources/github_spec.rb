@@ -13,6 +13,11 @@ def fixture(file)
   File.read("spec/fixtures/#{file}.json")
 end
 
+def comment_fixture(file)
+  File.read("spec/fixtures/#{file}.html")
+end
+
+
 def violation(message)
   Danger::Violation.new(message, false)
 end
@@ -207,6 +212,14 @@ describe Danger::GitHub do
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+    end
+
+    describe "comment parsing" do
+      it "parses a comment with errors" do
+        comment = comment_fixture('comment_with_error')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({:error => ['Some error']})
       end
     end
   end

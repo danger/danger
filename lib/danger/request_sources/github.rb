@@ -162,6 +162,43 @@ module Danger
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end
 
+    def parse_comment(comment)
+      tables = parse_tables_from_comment(comment)
+      violations = {}
+      tables.each do |table|
+        if table =~ /<th width="100%">(.*?)<\/th>/im
+          title = $1
+          kind = table_kind_from_title(title)
+          next unless kind
+
+          violations[kind] = violations_from_table(table)
+        end
+      end
+
+      violations
+    end
+
+    def violations_from_table(table)
+      regex = /<td data-sticky="true">(<strike>)?(.*?)(<\/strike>)?<\/td>/im
+      table.scan(regex).flatten.compact.map(&:strip)
+    end
+
+    def table_kind_from_title(title)
+      if title =~ /error/i
+        :error
+      elsif title =~ /warning/i
+        :warning
+      elsif title =~ /message/i
+        :message
+      else
+        nil
+      end
+    end
+
+    def parse_tables_from_comment(comment)
+      comment.split('</table>')
+    end
+
     def process_markdown(violation)
       html = markdown_parser.render(violation.message)
       match = html.match(%r{^<p>(.*)</p>$})
