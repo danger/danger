@@ -192,12 +192,12 @@ module Danger
         violations[kind] = violations_from_table(table)
       end
 
-      violations.reject { |k, v| v.empty? }
+      violations.reject { |_, v| v.empty? }
     end
 
     def violations_from_table(table)
-      regex = %r{<td data-sticky="true">(<del>)?(.*?)(</del>)?\s*</td>}im
-      table.scan(regex).map { |a| a[1] }.map(&:strip)
+      regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
+      table.scan(regex).flatten.map(&:strip)
     end
 
     def table_kind_from_title(title)
