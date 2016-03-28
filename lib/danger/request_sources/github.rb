@@ -176,7 +176,7 @@ module Danger
       previous_violations = all_previous_violations[kind] || []
       messages = content.map(&:message)
       resolved_violations = previous_violations.reject { |s| messages.include? s }
-      count = content.count + content.count
+      count = content.count + resolved_violations.count
       { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
     end
 
