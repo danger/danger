@@ -166,20 +166,19 @@ module Danger
       tables = parse_tables_from_comment(comment)
       violations = {}
       tables.each do |table|
-        if table =~ /<th width="100%">(.*?)<\/th>/im
-          title = $1
-          kind = table_kind_from_title(title)
-          next unless kind
+        next unless table =~ %r{<th width="100%">(.*?)</th>}im
+        title = Regexp.last_match(1)
+        kind = table_kind_from_title(title)
+        next unless kind
 
-          violations[kind] = violations_from_table(table)
-        end
+        violations[kind] = violations_from_table(table)
       end
 
       violations
     end
 
     def violations_from_table(table)
-      regex = /<td data-sticky="true">(<strike>)?(.*?)(<\/strike>)?<\/td>/im
+      regex = %r{<td data-sticky="true">(<strike>)?(.*?)(</strike>)?</td>}im
       table.scan(regex).flatten.compact.map(&:strip)
     end
 
@@ -190,8 +189,6 @@ module Danger
         :warning
       elsif title =~ /message/i
         :message
-      else
-        nil
       end
     end
 
