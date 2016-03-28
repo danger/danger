@@ -141,11 +141,15 @@ module Danger
       end
     end
 
+    def random_compliment
+      compliment = ["Well done.", "Congrats.", "Woo!",
+                    "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
+      compliment.sample
+    end
+
     def generate_github_description(warnings: nil, errors: nil)
       if errors.empty? && warnings.empty?
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
-        return "All green. #{compliment.sample}"
+        return "All green. #{random_compliment}"
       else
         message = "⚠ "
         message += "#{errors.count} Error#{errors.count == 1 ? '' : 's'}. " unless errors.empty?
@@ -176,7 +180,7 @@ module Danger
       previous_violations = all_previous_violations[kind] || []
       messages = content.map(&:message)
       resolved_violations = previous_violations.reject { |s| messages.include? s }
-      count = content.count + resolved_violations.count
+      count = content.count
       { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
     end
 
@@ -184,7 +188,7 @@ module Danger
       tables = parse_tables_from_comment(comment)
       violations = {}
       tables.each do |table|
-        next unless table =~ %r{<th width="100%">(.*?)</th>}im
+        next unless table =~ %r{<th width="100%"(.*?)</th>}im
         title = Regexp.last_match(1)
         kind = table_kind_from_title(title)
         next unless kind
