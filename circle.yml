@@ -5,6 +5,7 @@ machine:
 
 dependencies:
   pre:
+    - gem install rubygems-bundler
     - gem install bundler
 
 test:
