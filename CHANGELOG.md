@@ -1,6 +1,7 @@
 ## Master
 
 * Added new `modified_files.include?("rakelib/*_stats.rake") file globbing support - KrauseFx
+* Resolved issues are now crossed out by Danger - marcelofabri
 
 ## 0.6.5
 

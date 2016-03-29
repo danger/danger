@@ -2,6 +2,7 @@
 require 'danger/request_sources/github'
 require 'danger/ci_source/circle'
 require 'danger/ci_source/travis'
+require 'danger/violation'
 
 def stub_ci
   env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
@@ -10,6 +11,18 @@ end
 
 def fixture(file)
   File.read("spec/fixtures/#{file}.json")
+end
+
+def comment_fixture(file)
+  File.read("spec/fixtures/#{file}.html")
+end
+
+def violation(message)
+  Danger::Violation.new(message, false)
+end
+
+def violations(messages)
+  messages.map { |s| violation(s) }
 end
 
 describe Danger::GitHub do
@@ -104,36 +117,72 @@ describe Danger::GitHub do
       end
 
       it "some warnings, no errors" do
-        result = @g.generate_comment(warnings: ["my warning", "second warning"], errors: [], messages: [])
+        result = @g.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td>mywarning</td></tr><tr><td>:warning:</td><td>secondwarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">secondwarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
 
       it "some warnings with markdown, no errors" do
-        warnings = ["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"]
+        warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"])
         result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><td>amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></td></tr><tr><td>:warning:</td><td>second<strong>warning</strong></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">second<strong>warning</strong></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
 
       it "some warnings, some errors" do
-        result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
+        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><td>someerror</td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><td>mywarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">someerror</td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
 
+      it "crosses resolved violations and changes the title" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
+        expect(result.gsub(/\s+/, "")).to include("<thwidth=\"100%\"data-kind=\"Error\">:white_check_mark:")
+        expect(result.gsub(/\s+/, "")).to include("<td>:white_check_mark:</td><tddata-sticky=\"true\"><del>anerror</del></td>")
+      end
+
+      it "uncrosses violations that were on the list and happened again" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: violations(['an error']), messages: [], previous_violations: previous_violations)
+        # rubocop:disable Metrics/LineLength
+        expect(result.gsub(/\s+/, "")).to eq(
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">anerror</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+        )
+        # rubocop:enable Metrics/LineLength
+      end
+
+      it "counts only unresolved violations on the title" do
+        previous_violations = { error: ['an error'] }
+        result = @g.generate_comment(warnings: [], errors: violations(['another error']),
+                                     messages: [], previous_violations: previous_violations)
+        expect(result.gsub(/\s+/, "")).to include("<thwidth=\"100%\"data-kind=\"Error\">1Error</th>")
+      end
+
       it "needs to include generated_by_danger" do
-        result = @g.generate_comment(warnings: ["my warning"], errors: ["some error"], messages: [])
+        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
         expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
+      end
+
+      it "sets data-sticky to true when a violation is sticky" do
+        sticky_warning = Danger::Violation.new("my warning", true)
+        result = @g.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
+        expect(result.gsub(/\s+/, "")).to include("tddata-sticky=\"true\"")
+      end
+
+      it "sets data-sticky to false when a violation is not sticky" do
+        non_sticky_warning = Danger::Violation.new("my warning", false)
+        result = @g.generate_comment(warnings: [non_sticky_warning], errors: [], messages: [])
+        expect(result.gsub(/\s+/, "")).to include("tddata-sticky=\"false\"")
       end
     end
 
@@ -144,17 +193,17 @@ describe Danger::GitHub do
       end
 
       it "Shows an error messages when there are errors" do
-        message = @g.generate_github_description(warnings: [1, 2, 3], errors: [])
+        message = @g.generate_github_description(warnings: violations([1, 2, 3]), errors: [])
         expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_github_description(warnings: [1, 2], errors: [1, 2, 3])
+        message = @g.generate_github_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
         expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_github_description(warnings: [1], errors: [1])
+        message = @g.generate_github_description(warnings: violations([1]), errors: violations([1]))
         expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
     end
@@ -164,20 +213,20 @@ describe Danger::GitHub do
         issues = []
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
-        body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
 
-        @g.update_pull_request!(warnings: ["hi"], errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
       end
 
       it "updates the issue if no danger comments exist" do
         issues = [{ body: "generated_by_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
-        body = @g.generate_comment(warnings: ["hi"], errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
 
-        @g.update_pull_request!(warnings: ["hi"], errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
       end
 
       it "deletes existing issues danger doesnt need to say anything" do
@@ -186,6 +235,56 @@ describe Danger::GitHub do
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+
+      it "updates the issue if danger doesnt need to say anything but there are sticky violations" do
+        issues = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g).to receive(:parse_comment).and_return({ errors: ['an error'] })
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+    end
+
+    describe "comment parsing" do
+      it "detects the warning kind" do
+        expect(@g.table_kind_from_title('1 Warning')).to eq(:warning)
+        expect(@g.table_kind_from_title('2 Warnings')).to eq(:warning)
+      end
+
+      it "detects the error kind" do
+        expect(@g.table_kind_from_title('1 Error')).to eq(:error)
+        expect(@g.table_kind_from_title('2 Errors')).to eq(:error)
+      end
+
+      it "detects the warning kind" do
+        expect(@g.table_kind_from_title('1 Message')).to eq(:message)
+        expect(@g.table_kind_from_title('2 Messages')).to eq(:message)
+      end
+
+      it "parses a comment with error" do
+        comment = comment_fixture('comment_with_error')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: ['Some error'] })
+      end
+
+      it "parses a comment with error and warnings" do
+        comment = comment_fixture('comment_with_error_and_warnings')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: ['Some error'], warning: ['First warning', 'Second warning'] })
+      end
+
+      it "ignores non-sticky violations when parsing a comment" do
+        comment = comment_fixture('comment_with_non_sticky')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ warning: ['First warning'] })
+      end
+
+      it "parses a comment with error and warnings removing strike tag" do
+        comment = comment_fixture('comment_with_resolved_violation')
+        violations = @g.parse_comment(comment)
+        expect(violations).to eq({ error: ['Some error'], warning: ['First warning', 'Second warning'] })
       end
     end
   end
