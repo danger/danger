@@ -20,7 +20,7 @@ module Danger
       name = STDIN.gets.strip
 
       dir = Danger.gem_path
-      content = File.read(File.join(dir, "lib", "assets", "ActionTemplate.rb"))
+      content = File.read(File.join(dir, "lib", "assets", "PluginTemplate.rb.template"))
       content.gsub!("[[CLASS_NAME]]", name.danger_class)
 
       plugins_path = "danger_plugins"

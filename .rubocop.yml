@@ -4,7 +4,7 @@ AllCops:
     - 'fastlane/Fastfile'
   Exclude:
     - 'fastlane/actions/*'
-    - 'lib/assets/ActionTemplate.rb'
+    - 'lib/assets/PluginTemplate.rb.template'
 
 Style/ClassVars:
   Enabled: false
