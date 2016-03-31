@@ -126,8 +126,6 @@ danger new_plugin
 
 This will generate a new Ruby file which you can modify to fit your needs. 
 
-If you think your new plugin is useful for other developers too, feel free to submit a PR to danger by copying the action to `lib/danger/plugins`. 
-
 ## Support
 
 Danger currently is supported on Travis CI, Circle CI, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
