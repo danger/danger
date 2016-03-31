@@ -37,8 +37,6 @@ module Danger
       puts "import \"#{output_path.gsub('.rb', '')}\"".blue
       puts "#{name}(parameter1: 123, parameter2: \"Club Mate\")".blue
       puts ""
-      puts "If you think this plugin is helpful for other developers"
-      puts "please submit a PR to the danger repository"
       puts "Enjoy ✨"
     end
   end
