@@ -1,3 +1,5 @@
+require 'danger/violation'
+
 module Danger
   class Dangerfile
     module DSL
@@ -63,9 +65,11 @@ module Danger
       #
       # @param    [String] message
       #           The message to present to the user
-      def fail(message)
+      # @param    [Boolean] sticky
+      #           Whether the message should be kept after it was fixed
+      def fail(message, sticky: true)
         return if should_ignore_violation(message)
-        self.errors << message
+        self.errors << Violation.new(message, sticky)
         puts "Raising error '#{message}'"
       end
 
@@ -73,9 +77,11 @@ module Danger
       #
       # @param    [String] message
       #           The message to present to the user
-      def warn(message)
+      # @param    [Boolean] sticky
+      #           Whether the message should be kept after it was fixed
+      def warn(message, sticky: true)
         return if should_ignore_violation(message)
-        self.warnings << message
+        self.warnings << Violation.new(message, sticky)
         puts "Printing warning '#{message}'"
       end
 
@@ -83,8 +89,10 @@ module Danger
       #
       # @param    [String] message
       #           The message to present to the user
-      def message(message)
-        self.messages << message
+      # @param    [Boolean] sticky
+      #           Whether the message should be kept after it was fixed
+      def message(message, sticky: true)
+        self.messages << Violation.new(message, sticky)
         puts "Printing message '#{message}'"
       end
 

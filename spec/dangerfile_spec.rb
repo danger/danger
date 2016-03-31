@@ -45,9 +45,9 @@ describe Danger::Dangerfile do
 
     dm.parse Pathname.new(""), code
 
-    expect(dm.messages).to eql(['A message'])
-    expect(dm.warnings).to eql(['A warning'])
-    expect(dm.errors).to eql(['An error'])
+    expect(dm.messages.map(&:message)).to eql(['A message'])
+    expect(dm.warnings.map(&:message)).to eql(['A warning'])
+    expect(dm.errors.map(&:message)).to eql(['An error'])
   end
 
   describe "verbose" do

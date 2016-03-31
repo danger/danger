@@ -67,14 +67,14 @@ The `Dangerfile` is a ruby file, so really, you can do anything. However, at thi
 declared_trivial = pr_title.include? "#trivial"
 
 # Just to let people know
-warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
+warn("PR is classed as Work in Progress", sticky: false) if pr_title.include? "[WIP]"
 ```
 
 #### Being cautious around specific files
 
 ``` ruby
 # Devs shouldn't ship changes to this file
-fail("Developer Specific file shouldn't be changed") if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
+fail("Developer Specific file shouldn't be changed", sticky: false) if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
 
 # Did you make analytics changes? Well you should also include a change to our analytics spec
 made_analytics_changes = modified_files.include?("/Artsy/App/ARAppDelegate+Analytics.m")
@@ -154,6 +154,15 @@ You can tell Danger to ignore a specific warning or error by commenting on the P
 
 ```
 > Danger: Ignore "Developer Specific file shouldn't be changed"
+```
+
+## Sticky
+
+Danger can keep its history if a warning/error/message is marked as *sticky*. When the violation is resolved,
+Danger will update the comment to cross it out. If you don't want this behavior, just use `sticky: false`.
+
+```ruby
+fail("PR needs labels", sticky: false) if pr_labels.empty?
 ```
 
 ## Useful bits of knowledge

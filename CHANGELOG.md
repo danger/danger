@@ -7,6 +7,7 @@
 * Added printing of table summaries after running danger
 * Refactored all plugins to be classes instead of methods
 * Added auto-import of local plugins
+* Resolved issues are now crossed out by Danger - marcelofabri
 
 ## 0.6.5
 
