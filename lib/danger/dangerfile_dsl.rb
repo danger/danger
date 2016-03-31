@@ -107,7 +107,11 @@ module Danger
         class_name = method_sym.to_s.danger_class
         if Danger::Dangerfile::DSL.const_defined?(class_name)
           plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
-          plugin_ref.new(self).run(*arguments)
+          if plugin_ref < Plugin
+            plugin_ref.new(self).run(*arguments)
+          else
+            raise "'#{method_sym}' is not a valid danger plugin".red
+          end
         else
           raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red
         end

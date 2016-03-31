@@ -26,6 +26,16 @@ describe Danger::Dangerfile::DSL do
 
         expect(@dm.example_globbing).to eq("Hi there globbing 🎉")
       end
+
+      it "raises an error when calling a plugin that's not a subclass of action" do
+        plugin_name = "ExampleBroken"
+        expect(@dm.import("spec/fixtures/plugins/example_broken.rb")).to eq(["spec/fixtures/plugins/example_broken.rb"])
+        expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleBroken)
+
+        expect do
+          @dm.example_broken
+        end.to raise_error("'example_broken' is not a valid danger plugin".red)
+      end
     end
 
     describe "#import_url" do
