@@ -15,7 +15,7 @@ module Danger
         self.warnings = []
         self.errors = []
         self.messages = []
-        self.markdown = []
+        self.markdowns = []
         load_plugins
       end
 
@@ -69,7 +69,7 @@ module Danger
       # @param    [String] message
       #           The markdown based message to be printed below the table
       def markdown(message)
-        self.markdown << message
+        self.markdowns << message
         puts "Printing markdown #{message}"
       end
 

@@ -77,7 +77,7 @@ module Danger
     end
 
     # Sending data to GitHub
-    def update_pull_request!(warnings: [], errors: [], messages: [], markdown: [])
+    def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [])
       comment_result = {}
 
       issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
@@ -90,14 +90,14 @@ module Danger
         previous_violations = parse_comment(comment)
       end
 
-      if previous_violations.empty? && (warnings + errors + messages + markdown).empty?
+      if previous_violations.empty? && (warnings + errors + messages + markdowns).empty?
         # Just remove the comment, if there's nothing to say.
         delete_old_comments!
       else
         body = generate_comment(warnings: warnings,
                                   errors: errors,
                                 messages: messages,
-                                markdown: markdown,
+                               markdowns: markdowns,
                      previous_violations: previous_violations)
 
         if editable_issues.empty?
@@ -163,7 +163,7 @@ module Danger
       end
     end
 
-    def generate_comment(warnings: [], errors: [], messages: [], markdown: [], previous_violations: {})
+    def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {})
       require 'erb'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
@@ -175,7 +175,7 @@ module Danger
         table("Warning", "warning", warnings, previous_violations),
         table("Message", "book", messages, previous_violations)
       ]
-      @markdown = markdown
+      @markdowns = markdowns
 
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end

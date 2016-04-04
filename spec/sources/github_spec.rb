@@ -117,7 +117,7 @@ describe Danger::GitHub do
       end
 
       it "supports markdown code below the summary table" do
-        result = @g.generate_comment(warnings: violations(["ups"]), markdown: ['### h3'])
+        result = @g.generate_comment(warnings: violations(["ups"]), markdowns: ['### h3'])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
           "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">ups</td></tr></tbody></table>###h3<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
@@ -126,7 +126,7 @@ describe Danger::GitHub do
       end
 
       it "supports markdown only without a table" do
-        result = @g.generate_comment(markdown: ['### h3'])
+        result = @g.generate_comment(markdowns: ['### h3'])
         expect(result.gsub(/\s+/, "")).to eq(
           "###h3<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
