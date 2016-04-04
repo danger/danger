@@ -1,5 +1,5 @@
-message("Hi test")
-
 markdown('### markdown')
 
-markdown('[https://krausefx.com](https://krausefx.com)')
+markdown('[KrauseFx](https://krausefx.com)')
+
+markdown(":rocket:")
