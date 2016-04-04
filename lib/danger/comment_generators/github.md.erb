@@ -32,7 +32,8 @@
 <% end %>
 
 <% @markdown.each do |current| %>
-<%= current # this has to be aligned far to the left, otherwise markdown can break easily %>
+<%= current %>
+<%# the previous line has to be aligned far to the left, otherwise markdown can break easily %>
 <% end %>
 
 <p align="right" data-meta="generated_by_danger" data-base-commit="<%= @base_commit %>" data-head-commit="<%= @head_commit %>" >
