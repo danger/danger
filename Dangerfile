@@ -1,3 +1,5 @@
 message("Hi test")
 
-message('### markdown')
+markdown('### markdown')
+
+markdown('[https://krausefx.com](https://krausefx.com)')

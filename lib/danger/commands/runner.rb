@@ -51,7 +51,7 @@ module Danger
 
     def post_results(dm)
       gh = dm.env.request_source
-      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages)
+      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages, markdown: dm.markdown)
     end
   end
 end

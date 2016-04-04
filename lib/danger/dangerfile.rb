@@ -7,7 +7,7 @@ module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL
 
-    attr_accessor :env, :warnings, :errors, :messages, :verbose
+    attr_accessor :env, :warnings, :errors, :messages, :markdown, :verbose
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the Dangerfile was generated programmatically.
