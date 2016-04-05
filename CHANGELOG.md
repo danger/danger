@@ -2,6 +2,7 @@
 
 * Added new `modified_files.include?("rakelib/*_stats.rake") file globbing support - KrauseFx
 * Resolved issues are now crossed out by Danger - marcelofabri
+* Added new `markdown` command to Danger DSL - KrauseFx
 
 ## 0.6.5
 

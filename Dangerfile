@@ -36,4 +36,3 @@ end
 if modified_files.empty? && added_files.empty? && deleted_files.empty?
   fail "This PR has no changes at all, this is likely a developer issue."
 end
-
