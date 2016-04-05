@@ -92,11 +92,13 @@ module Danger
     end
 
     def print_results
-      puts "danger results:".blue
+      return if (self.errors + self.warnings + self.messages + self.markdowns).count == 0
 
+      puts ""
+      puts "danger results:"
       [:errors, :warnings, :messages].each do |current|
         params = {}
-        params[:rows] = self.send(current).collect { |a| [a] }
+        params[:rows] = self.send(current).collect { |a| [a.message] }
         next unless params[:rows].count > 0
         params[:title] = case current
                          when :errors

@@ -119,6 +119,7 @@ In your `Dangerfile` you can import local or remote actions using
 
 ```ruby
 import "./danger_plugins/work_in_progress_warning"
+# or
 import "https://raw.githubusercontent.com/danger/danger/master/danger_plugins/work_in_progress_warning.rb"
 
 # Call those actions using
