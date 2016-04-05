@@ -113,6 +113,11 @@ module Danger
         puts Terminal::Table.new(params)
         puts ""
       end
+
+      puts "Markdown: ".green if self.markdowns.count > 0
+      self.markdowns.each do |current_markdown|
+        puts current_markdown
+      end
     end
   end
 end
