@@ -28,7 +28,7 @@ module Danger
     end
 
     def markdown_parser
-      @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+      @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
     end
 
     def fetch_details
