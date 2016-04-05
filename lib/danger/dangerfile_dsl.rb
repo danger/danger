@@ -15,6 +15,8 @@ module Danger
         self.warnings = []
         self.errors = []
         self.messages = []
+        self.markdowns = []
+
         load_default_plugins
       end
 
@@ -94,6 +96,15 @@ module Danger
       def message(message, sticky: true)
         self.messages << Violation.new(message, sticky)
         puts "Printing message '#{message}'"
+      end
+
+      # Print markdown to below the table
+      #
+      # @param    [String] message
+      #           The markdown based message to be printed below the table
+      def markdown(message)
+        self.markdowns << message
+        puts "Printing markdown #{message}"
       end
 
       # When an undefined method is called, we check to see if it's something

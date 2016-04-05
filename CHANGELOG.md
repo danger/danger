@@ -8,6 +8,7 @@
 * Refactored all plugins to be classes instead of methods
 * Added auto-import of local plugins
 * Resolved issues are now crossed out by Danger - marcelofabri
+* Added new `markdown` command to Danger DSL - KrauseFx
 
 ## 0.6.5
 

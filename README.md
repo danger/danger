@@ -102,6 +102,15 @@ snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.h
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
 
+#### Available commands
+
+Command | Description
+------------- | ----
+`fail` | Causes the PR to fail and print out the error on the PR
+`warn` | Prints out a warning to the PR, but still enables the merge button
+`message` | Show neutral messages on the PR
+`markdown` | Print raw markdown below the summary tables on the PR
+
 ## Plugins
 
 Danger was built with a platform in mind: It can be used with any kind of software project and allows you to write your own action to have structured source code.
