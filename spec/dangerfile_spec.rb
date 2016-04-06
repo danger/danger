@@ -1,13 +1,5 @@
 require 'pathname'
 require 'tempfile'
-require 'danger/dangerfile'
-require 'danger/standard_error'
-
-def make_temp_file(contents)
-  file = Tempfile.new('dangefile_tests')
-  file.write contents
-  file
-end
 
 describe Danger::Dangerfile do
   it 'keeps track of the original Dangerfile' do
@@ -56,6 +48,42 @@ describe Danger::Dangerfile do
     expect(dm.messages.map(&:message)).to eql(['A message'])
     expect(dm.warnings.map(&:message)).to eql(['A warning'])
     expect(dm.errors.map(&:message)).to eql(['An error'])
+  end
+
+  describe "#print_results" do
+    it "Prints out 3 tables" do
+      code = "message 'A message'\n" \
+             "warn 'Another warning'\n" \
+             "warn 'A warning'\n" \
+             "fail 'Another error'\n" \
+             "fail 'An error'\n"
+      dm = Danger::Dangerfile.new
+      env = {
+        "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+        "TRAVIS_PULL_REQUEST" => "800",
+        "TRAVIS_REPO_SLUG" => "artsy/eigen",
+        "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d"
+      }
+      dm.env = Danger::EnvironmentManager.new(env)
+      dm.env.scm = Danger::GitRepo.new
+      dm.env.request_source.ignored_violations = ['A message', 'An ignored warning', 'An ignored error']
+
+      dm.parse Pathname.new(""), code
+
+      expect(Terminal::Table).to receive(:new).with({
+        rows: [["Another error"], ["An error"]],
+        title: "Errors".red
+      })
+      expect(Terminal::Table).to receive(:new).with({
+        rows: [["Another warning"], ["A warning"]],
+        title: "Warnings".yellow
+      })
+      expect(Terminal::Table).to receive(:new).with({
+        rows: [["A message"]],
+        title: "Messages"
+      })
+      dm.print_results
+    end
   end
 
   describe "verbose" do
