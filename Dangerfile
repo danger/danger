@@ -12,9 +12,7 @@ if ["KrauseFx", "orta"].include?(pr_author) == false
   end
 end
 
-if (pr_body + pr_title).include?("WIP")
-  warn "Pull Request is Work in Progress"
-end
+work_in_progress_warning
 
 if has_app_changes && !has_test_changes
   warn "Tests were not updated"
@@ -36,3 +34,7 @@ end
 if modified_files.empty? && added_files.empty? && deleted_files.empty?
   fail "This PR has no changes at all, this is likely a developer issue."
 end
+
+protect_files(path: "danger.gemspec",
+           message: ".gemspec modified",
+        fail_build: false)
