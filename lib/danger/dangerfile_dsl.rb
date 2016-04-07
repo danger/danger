@@ -51,7 +51,6 @@ module Danger
         Dir.mktmpdir do |dir|
           path = File.join(dir, "temporary_remote_action.rb")
           File.write(path, content.body)
-          puts content.body
           import_local(path)
         end
       end
