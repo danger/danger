@@ -40,7 +40,14 @@ module Danger
 
         require 'tmpdir'
         require 'faraday'
-        content = Faraday.get(url)
+        require 'faraday_middleware'
+
+        @http_client ||= Faraday.new do |b|
+          b.use FaradayMiddleware::FollowRedirects
+          b.adapter :net_http
+        end
+        content = @http_client.get(url)
+
         Dir.mktmpdir do |dir|
           path = File.join(dir, "temporary_remote_action.rb")
           File.write(path, content.body)
