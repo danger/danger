@@ -34,7 +34,6 @@ module Danger
       puts "Successfully created new plugin at path '#{output_path}'".green
       puts "Add this to your `Dangerfile` to use it:"
       puts ""
-      puts "import \"#{output_path.gsub('.rb', '')}\"".blue
       puts "#{name}(parameter1: 123, parameter2: \"Club Mate\")".blue
       puts ""
       puts "Enjoy ✨"
