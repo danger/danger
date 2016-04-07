@@ -1,14 +1,18 @@
 ## Master
 
-* Added support for local plugins
-* Added support for remote plugins
-* Added new `danger new_plugin` command to create plugins in the fastlane
-* Added new `modified_files.include?("rakelib/*_stats.rake")` file globbing support - KrauseFx
-* Added printing of table summaries after running danger
-* Refactored all plugins to be classes instead of methods
-* Added auto-import of local plugins
+* Delete me - KrauseFx
+
+## 0.7.0
+
+* Added support for local plugins - KrauseFx
+* Added support for remote plugins - KrauseFx
+* Added new `danger new_plugin` command to create plugins in the fastlane - KrauseFx
+* Added printing of table summaries after running danger - KrauseFx
+* Refactored all plugins to be classes instead of methods - KrauseFx
+* Added auto-import of local plugins - KrauseFx
 * Resolved issues are now crossed out by Danger - marcelofabri
 * Added new `markdown` command to Danger DSL - KrauseFx
+* Added new `modified_files.include?("rakelib/*_stats.rake")` file globbing support - KrauseFx
 
 ## 0.6.5
 
