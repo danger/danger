@@ -24,7 +24,7 @@ module Danger
       content.gsub!("[[CLASS_NAME]]", name.danger_class)
 
       plugins_path = "danger_plugins"
-      FileUtils.mkdir_p("plugins_path") unless File.directory?(plugins_path)
+      FileUtils.mkdir_p(plugins_path) unless File.directory?(plugins_path)
 
       output_path = File.join(plugins_path, "#{name}.rb")
       raise "File '#{output_path}' already exists!" if File.exist?(output_path)
