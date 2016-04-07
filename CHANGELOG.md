@@ -2,6 +2,10 @@
 
 * Delete me - KrauseFx
 
+## 0.7.1
+
+* Hotfix: import of plugins didn't work depending on alphabetical order - KrauseFx
+
 ## 0.7.0
 
 * Added support for local plugins - KrauseFx
