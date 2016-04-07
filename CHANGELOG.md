@@ -1,6 +1,6 @@
 ## Master
 
-* Delete me - KrauseFx
+* Auto follow of remote plugin URL redirects - KrauseFx
 
 ## 0.7.1
 
