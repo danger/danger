@@ -21,5 +21,4 @@ describe Danger::CISource::XcodeServer do
     expect(t.repo_slug).to eql("danger/danger")
     expect(t.pull_request_id).to eql("17")
   end
-
 end
