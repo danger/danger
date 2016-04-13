@@ -24,7 +24,8 @@ module Danger
     end
 
     def modified_files
-      Danger::FileList.new(@diff.stats[:files].keys)
+      files = @diff.stats[:files].keys.map(&method(:extract_new_file))
+      Danger::FileList.new(files)
     end
 
     def lines_of_code
@@ -37,6 +38,12 @@ module Danger
 
     def insertions
       @diff.insertions
+    end
+
+    private
+
+    def extract_new_file(git_file)
+      git_file.gsub(/(.*) => (.*)/, "\\2")
     end
   end
 end
