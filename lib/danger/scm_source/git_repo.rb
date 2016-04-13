@@ -43,7 +43,7 @@ module Danger
     private
 
     def extract_new_file(git_file)
-      git_file.gsub(/(.*) => (.*)/, "\\2")
+      git_file.gsub(/{?(.*) => (.*)}?/, "\\2")
     end
   end
 end
