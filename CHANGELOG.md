@@ -1,5 +1,9 @@
 ## Master
 
+* Remove me - jeroenvisser101
+
+## 0.7.2
+
 * Auto follow of remote plugin URL redirects - KrauseFx
 * Adding XcodeServer provider - antondomashnev
 
