@@ -1,6 +1,7 @@
 ## Master
 
 * Auto follow of remote plugin URL redirects - KrauseFx
+* Adding XcodeServer provider - antondomashnev
 
 ## 0.7.1
 
