@@ -1,6 +1,6 @@
 ## Master
 
-* Remove me - jeroenvisser101
+* Minor `danger init` typo fixes - orta + danger
 
 ## 0.7.2
 
