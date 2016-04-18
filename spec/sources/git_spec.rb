@@ -76,6 +76,27 @@ describe Danger::GitRepo do
       end
     end
 
+    it 'handles moved as expected' do
+      Dir.mktmpdir do |dir|
+        Dir.chdir dir do
+          `git init`
+          `touch oldFile`
+          `git add .`
+          `git commit -m "ok"`
+
+          `git checkout -b new`
+          `mv oldFile newFile`
+          `git add .`
+          `git commit -m "another"`
+        end
+
+        g = Danger::GitRepo.new
+        g.diff_for_folder(dir, from: "master", to: "new")
+
+        expect(g.modified_files).to eql(["newFile"])
+      end
+    end
+
     it 'handles modified as expected' do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
