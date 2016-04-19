@@ -1,6 +1,7 @@
 ## Master
 
 * Minor `danger init` typo fixes - orta + danger
+* Added support for CLAide-based plugins - segiddins
 
 ## 0.7.2
 
