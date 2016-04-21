@@ -3,6 +3,10 @@ class String
     split('_').collect!(&:capitalize).join
   end
 
+  def danger_pluralize(count)
+    "#{count} #{self}#{'s' unless count == 1}"
+  end
+
   def danger_underscore
     self.gsub(/::/, '/').
       gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
