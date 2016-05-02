@@ -40,6 +40,20 @@ bundle exec danger
 
 This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information.
 
+**Supported CIs**: Travis CI, CircleCI, Jenkins, Xcode Server and Buildkite.
+
+### Making your own
+If the CI server you're using isn't available yet, you can build it yourself:
+
+Take a look at some of the [already existing integrations](https://github.com/danger/danger/tree/master/lib/danger/ci_source). The class has 2 mandatory methods:
+
+- `self.validates?` which should detect if the CI is active (detecting via ENV variables, mostly)
+- `initialize` which should set 2 variables:
+  - `self.repo_slug` the repo slug, in `org/repo` or `user/repo` format.
+  - `self.pull_request_id` the number of the pull request that the CI is testing (often available in ENV variables)
+
+We'd love to see pull requests for new integrations!
+
 ## What happens?
 
 Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in Ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
@@ -134,7 +148,7 @@ To create a new plugin run
 danger new_plugin
 ```
 
-This will generate a new Ruby file which you can modify to fit your needs. 
+This will generate a new Ruby file which you can modify to fit your needs.
 
 ## Support
 
