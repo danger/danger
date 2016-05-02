@@ -20,7 +20,7 @@ module Danger
     end
 
     def client
-      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
+      raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
 
       @client ||= Octokit::Client.new(
         access_token: @token
@@ -28,7 +28,7 @@ module Danger
     end
 
     def markdown_parser
-      @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+      @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
     end
 
     def fetch_details
@@ -77,16 +77,28 @@ module Danger
     end
 
     # Sending data to GitHub
-    def update_pull_request!(warnings: nil, errors: nil, messages: nil)
+    def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [])
       comment_result = {}
 
-      if (warnings + errors + messages).empty?
+      issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+      editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
+
+      if editable_issues.empty?
+        previous_violations = {}
+      else
+        comment = editable_issues.first[:body]
+        previous_violations = parse_comment(comment)
+      end
+
+      if previous_violations.empty? && (warnings + errors + messages + markdowns).empty?
         # Just remove the comment, if there's nothing to say.
         delete_old_comments!
       else
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
-        body = generate_comment(warnings: warnings, errors: errors, messages: messages)
+        body = generate_comment(warnings: warnings,
+                                  errors: errors,
+                                messages: messages,
+                               markdowns: markdowns,
+                     previous_violations: previous_violations)
 
         if editable_issues.empty?
           comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
@@ -108,7 +120,7 @@ module Danger
       message = generate_github_description(warnings: warnings, errors: errors)
       client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
         description: message,
-        context: "KrauseFx/danger",
+        context: "danger/danger",
         target_url: details_url
       })
     rescue
@@ -117,7 +129,7 @@ module Danger
       # use a read-only GitHub account
       if errors.count > 0
         # We need to fail the actual build here
-        abort("\nDanger has failed this build. \nFound #{errors.count} error(s) and I don't have write access to the PR set a PR status.")
+        abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
       else
         puts message
       end
@@ -133,21 +145,25 @@ module Danger
       end
     end
 
+    def random_compliment
+      compliment = ["Well done.", "Congrats.", "Woo!",
+                    "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
+      compliment.sample
+    end
+
     def generate_github_description(warnings: nil, errors: nil)
       if errors.empty? && warnings.empty?
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
-        return "All green. #{compliment.sample}"
+        return "All green. #{random_compliment}"
       else
         message = "⚠ "
-        message += "#{errors.count} Error#{errors.count == 1 ? '' : 's'}. " unless errors.empty?
-        message += "#{warnings.count} Warning#{warnings.count == 1 ? '' : 's'}. " unless warnings.empty?
+        message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
+        message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
         message += "Don't worry, everything is fixable."
         return message
       end
     end
 
-    def generate_comment(warnings: [], errors: [], messages: [])
+    def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {})
       require 'erb'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
@@ -155,18 +171,64 @@ module Danger
       # erb: http://www.rrn.dk/rubys-erb-templating-system
       # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
       @tables = [
-        { name: "Error", emoji: "no_entry_sign", content: errors.map { |s| process_markdown(s) } },
-        { name: "Warning", emoji: "warning", content: warnings.map { |s| process_markdown(s) } },
-        { name: "Message", emoji: "book", content: messages.map { |s| process_markdown(s) } }
+        table("Error", "no_entry_sign", errors, previous_violations),
+        table("Warning", "warning", warnings, previous_violations),
+        table("Message", "book", messages, previous_violations)
       ]
+      @markdowns = markdowns
+
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end
 
-    def process_markdown(string)
-      html = markdown_parser.render(string)
+    def table(name, emoji, violations, all_previous_violations)
+      content = violations.map { |v| process_markdown(v) }
+      kind = table_kind_from_title(name)
+      previous_violations = all_previous_violations[kind] || []
+      messages = content.map(&:message)
+      resolved_violations = previous_violations.reject { |s| messages.include? s }
+      count = content.count
+      { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
+    end
+
+    def parse_comment(comment)
+      tables = parse_tables_from_comment(comment)
+      violations = {}
+      tables.each do |table|
+        next unless table =~ %r{<th width="100%"(.*?)</th>}im
+        title = Regexp.last_match(1)
+        kind = table_kind_from_title(title)
+        next unless kind
+
+        violations[kind] = violations_from_table(table)
+      end
+
+      violations.reject { |_, v| v.empty? }
+    end
+
+    def violations_from_table(table)
+      regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
+      table.scan(regex).flatten.map(&:strip)
+    end
+
+    def table_kind_from_title(title)
+      if title =~ /error/i
+        :error
+      elsif title =~ /warning/i
+        :warning
+      elsif title =~ /message/i
+        :message
+      end
+    end
+
+    def parse_tables_from_comment(comment)
+      comment.split('</table>')
+    end
+
+    def process_markdown(violation)
+      html = markdown_parser.render(violation.message)
       match = html.match(%r{^<p>(.*)</p>$})
-      return match.captures.first unless match.nil?
-      html
+      message = match.nil? ? html : match.captures.first
+      Violation.new(message, violation.sticky)
     end
   end
 end

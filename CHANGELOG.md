@@ -1,5 +1,35 @@
 ## Master
 
+* Remove me - jeroenvisser101
+
+## 0.7.3
+
+* Minor `danger init` typo fixes - orta + danger
+* Add `commits` for the Git SCM source - segiddins
+
+## 0.7.2
+
+* Auto follow of remote plugin URL redirects - KrauseFx
+* Adding XcodeServer provider - antondomashnev
+
+## 0.7.1
+
+* Hotfix: import of plugins didn't work depending on alphabetical order - KrauseFx
+
+## 0.7.0
+
+* Added support for local plugins - KrauseFx
+* Added support for remote plugins - KrauseFx
+* Added new `danger new_plugin` command to create plugins in the fastlane - KrauseFx
+* Added printing of table summaries after running danger - KrauseFx
+* Refactored all plugins to be classes instead of methods - KrauseFx
+* Added auto-import of local plugins - KrauseFx
+* Resolved issues are now crossed out by Danger - marcelofabri
+* Added new `markdown` command to Danger DSL - KrauseFx
+* Added new `modified_files.include?("rakelib/*_stats.rake")` file globbing support - KrauseFx
+
+## 0.6.5
+
 * Enterprise GitHub support - dbgrandi
 * Use branches for comparison, not commits - orta
 * Breaking: DSL change `files_*` to `*_files` for readability - jeroenvisser101

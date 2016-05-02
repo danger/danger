@@ -23,7 +23,7 @@ module Danger
 
     def run
       ui = Interviewer.new
-      ui.say "\nOK, thanks #{ENV['LOGNAME']}, grab a seat and we'll get you started.\n".yellow
+      ui.say "\nOK, thanks #{ENV['LOGNAME']}, have a seat and we'll get you started.\n".yellow
       ui.pause 1
 
       show_todo_state
@@ -43,11 +43,11 @@ module Danger
     end
 
     def show_todo_state
-      ui.say "We need to do the following steps:\n"
+      ui.say "We need to do the following:\n"
       ui.pause 0.6
       ui.say " - [ ] Create a Dangerfile and add a few simple rules."
       ui.pause 0.6
-      ui.say " - [#{@account_created ? 'x' : ' '}] Create a GitHub account for Danger use for messaging."
+      ui.say " - [#{@account_created ? 'x' : ' '}] Create a GitHub account for Danger to use, for messaging."
       ui.pause 0.6
       ui.say " - [ ] Set up an access token for Danger."
       ui.pause 0.6
@@ -71,7 +71,7 @@ module Danger
       ui.pause 2
 
       ui.say "There's a collection of small, simple ideas in here, but Danger is about being able to easily"
-      ui.say "iterate. The power comes from you have the ability to codify fixes to some of the problems"
+      ui.say "iterate. The power comes from you having the ability to codify fixes for some of the problems"
       ui.say "that come up in day to day programming. It can be difficult to try and see those from day 1."
 
       ui.say "\nIf you'd like to investigate the file, and make some changes - I'll wait here,"
@@ -113,7 +113,7 @@ module Danger
         ui.say "For Open Source projects, I'd recommend giving the token the smallest scope possible."
         ui.say "This means only providing access to " + "public_repo".yellow + " in the token.\n\n"
         ui.pause 1
-        ui.say "This token limits Danger's abilities to just to writing comments on OSS projects. I recommend"
+        ui.say "This token limits Danger's abilities to just writing comments on OSS projects. I recommend"
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
         ui.say "#{@bot_name} does not need admin access to your repo. So its ability to cause chaos is minimalized.\n"
 
@@ -148,7 +148,7 @@ module Danger
       ui.say "\nOK, I'll give you a moment to do this..."
       ui.wait_for_return
 
-      ui.say "Final step: exposing the GitHub token as an environment build variable."
+      ui.header "Final step: exposing the GitHub token as an environment build variable."
       ui.pause 0.4
       if considered_an_oss_repo?
         ui.say "As you have an Open Source repo, this token should be considered public, otherwise you cannot"
@@ -207,7 +207,7 @@ module Danger
       # https://travis-ci.org/artsy/eigen/settings
       ui.say "In order to add an environment variable, go to:"
       ui.link "https://travis-ci.org/#{current_repo_slug}/settings"
-      ui.say "\nThe name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "\nThe name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
       if @is_open_source
         ui.say "Make sure to have \"Display value in build log\" enabled."
       end
@@ -262,7 +262,7 @@ module Danger
       ui.say "\n\n🎉"
       ui.pause 0.6
 
-      ui.say "And you're set. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
+      ui.say "And you're good to go. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
       ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
       ui.say "If you don't like it, help us improve it! xxx"
     end

@@ -7,7 +7,7 @@ module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL
 
-    attr_accessor :env, :warnings, :errors, :messages, :verbose
+    attr_accessor :env, :warnings, :errors, :messages, :markdowns, :verbose
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the Dangerfile was generated programmatically.
@@ -26,8 +26,8 @@ module Danger
       rows = []
 
       AvailableValues.all.each do |key|
-        next if key == :pr_body
         value = self.send(key)
+        value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
 
         # So that we either have one value per row
         # or we have [] for an empty array
@@ -35,10 +35,6 @@ module Danger
 
         rows << [key.to_s, value]
       end
-
-      pr_copy = pr_body[0..79]
-      pr_copy += "..." if pr_copy.length == 80
-      rows << ["PR Body", pr_copy]
 
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
@@ -92,6 +88,35 @@ module Danger
           raise DSLError.new(message, path, e.backtrace, contents)
         end
         # rubocop:enable Lint/RescueException
+      end
+    end
+
+    def print_results
+      return if (self.errors + self.warnings + self.messages + self.markdowns).count == 0
+
+      puts ""
+      puts "danger results:"
+      [:errors, :warnings, :messages].each do |current|
+        params = {}
+        params[:rows] = self.send(current).collect { |a| [a.message] }
+        next unless params[:rows].count > 0
+        params[:title] = case current
+                         when :errors
+                           current.to_s.capitalize.red
+                         when :warnings
+                           current.to_s.capitalize.yellow
+                         else
+                           current.to_s.capitalize
+                         end
+
+        puts ""
+        puts Terminal::Table.new(params)
+        puts ""
+      end
+
+      puts "Markdown: ".green if self.markdowns.count > 0
+      self.markdowns.each do |current_markdown|
+        puts current_markdown
       end
     end
   end

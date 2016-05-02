@@ -4,6 +4,7 @@ AllCops:
     - 'fastlane/Fastfile'
   Exclude:
     - 'fastlane/actions/*'
+    - 'lib/assets/PluginTemplate.rb.template'
 
 Style/ClassVars:
   Enabled: false
@@ -121,6 +122,8 @@ Style/DotPosition:
 Style/GuardClause:
   Enabled: false
 
-
 Style/Documentation:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
   Enabled: false

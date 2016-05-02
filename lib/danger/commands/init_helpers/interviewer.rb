@@ -56,7 +56,7 @@ module Danger
         show_prompt
         answer = STDIN.gets.chomp
 
-        break if answer.length > 0
+        break if answer.empty?
 
         print "\nYou need to provide an answer."
       end

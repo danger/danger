@@ -1,4 +1,4 @@
 module Danger
-  VERSION = "0.6.0"
-  DESCRIPTION = "Automate your PR etiquette."
+  VERSION = "0.7.3".freeze
+  DESCRIPTION = "Automate your PR etiquette.".freeze
 end
