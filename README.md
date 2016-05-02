@@ -67,14 +67,14 @@ The `Dangerfile` is a ruby file, so really, you can do anything. However, at thi
 declared_trivial = pr_title.include? "#trivial"
 
 # Just to let people know
-warn("PR is classed as Work in Progress") if pr_title.include? "[WIP]"
+warn("PR is classed as Work in Progress", sticky: false) if pr_title.include? "[WIP]"
 ```
 
 #### Being cautious around specific files
 
 ``` ruby
 # Devs shouldn't ship changes to this file
-fail("Developer Specific file shouldn't be changed") if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
+fail("Developer Specific file shouldn't be changed", sticky: false) if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
 
 # Did you make analytics changes? Well you should also include a change to our analytics spec
 made_analytics_changes = modified_files.include?("/Artsy/App/ARAppDelegate+Analytics.m")
@@ -101,6 +101,40 @@ build_log = File.read(File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log"))
 snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.html})
 fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
 ```
+
+#### Available commands
+
+Command | Description
+------------- | ----
+`fail` | Causes the PR to fail and print out the error on the PR
+`warn` | Prints out a warning to the PR, but still enables the merge button
+`message` | Show neutral messages on the PR
+`markdown` | Print raw markdown below the summary tables on the PR
+
+## Plugins
+
+Danger was built with a platform in mind: It can be used with any kind of software project and allows you to write your own action to have structured source code.
+
+In your `Dangerfile` you can import local or remote actions using
+
+```ruby
+import "./danger_plugins/work_in_progress_warning"
+# or
+import "https://raw.githubusercontent.com/danger/danger/master/danger_plugins/work_in_progress_warning.rb"
+
+# Call those actions using
+work_in_progress_warning
+
+custom_plugin(variable: "value")
+```
+
+To create a new plugin run
+
+```
+danger new_plugin
+```
+
+This will generate a new Ruby file which you can modify to fit your needs. 
 
 ## Support
 
@@ -132,6 +166,15 @@ You can tell Danger to ignore a specific warning or error by commenting on the P
 > Danger: Ignore "Developer Specific file shouldn't be changed"
 ```
 
+## Sticky
+
+Danger can keep its history if a warning/error/message is marked as *sticky*. When the violation is resolved,
+Danger will update the comment to cross it out. If you don't want this behavior, just use `sticky: false`.
+
+```ruby
+fail("PR needs labels", sticky: false) if pr_labels.empty?
+```
+
 ## Useful bits of knowledge
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
@@ -140,6 +183,8 @@ You can tell Danger to ignore a specific warning or error by commenting on the P
 Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eigen/blob/master/Dangerfile), [danger/danger](https://github.com/danger/danger/blob/master/Dangerfile), [artsy/elan](https://github.com/artsy/elan/blob/master/Dangerfile) and more!
 
 ## License, Contributor's Guidelines and Code of Conduct
+
+[Join our Slack Group](https://danger-slack.herokuapp.com/)
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 

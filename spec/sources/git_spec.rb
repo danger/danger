@@ -1,6 +1,37 @@
 require 'danger/scm_source/git_repo'
 
 describe Danger::GitRepo do
+  describe "Return Types" do
+    before do
+      @tmp_dir = Dir.mktmpdir
+      Dir.chdir(@tmp_dir) do
+        `git init`
+        `touch file`
+        `git add .`
+        `git commit -m "ok"`
+        `git checkout -b new`
+        `touch file2`
+        `git add .`
+        `git commit -m "another"`
+      end
+
+      @g = Danger::GitRepo.new
+      @g.diff_for_folder(@tmp_dir, from: "master", to: "new")
+    end
+
+    it "#modified_files returns a FileList object" do
+      expect(@g.modified_files.class).to eql(Danger::FileList)
+    end
+
+    it "#added_files returns a FileList object" do
+      expect(@g.added_files.class).to eql(Danger::FileList)
+    end
+
+    it "#deleted_files returns a FileList object" do
+      expect(@g.deleted_files.class).to eql(Danger::FileList)
+    end
+  end
+
   describe "with files" do
     it 'handles adding a new file to a git repo' do
       Dir.mktmpdir do |dir|
@@ -110,6 +141,31 @@ describe Danger::GitRepo do
         g.diff_for_folder(dir, from: "master", to: "new")
 
         expect(g.deletions).to eql(1)
+      end
+    end
+
+    describe '#commits' do
+      it "returns the commits" do
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            `touch file`
+            `echo "hi\n\nfb\nasdasd" > file`
+            `git add .`
+            `git commit -m "ok"`
+
+            `git checkout -b new`
+            `echo "hi\n\najsdha" >> file`
+            `git add .`
+            `git commit -m "another"`
+          end
+
+          g = Danger::GitRepo.new
+          g.diff_for_folder(dir, from: "master", to: "new")
+
+          messages = g.commits.map(&:message)
+          expect(messages).to eq(['another'])
+        end
       end
     end
   end

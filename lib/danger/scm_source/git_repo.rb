@@ -5,10 +5,12 @@ require 'git'
 module Danger
   class GitRepo
     attr_accessor :diff
+    attr_accessor :log
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
       repo = Git.open folder
       self.diff = repo.diff(from, to)
+      self.log = repo.log.between(from, to)
     end
 
     def exec(string)
@@ -16,15 +18,15 @@ module Danger
     end
 
     def added_files
-      @diff.select { |diff| diff.type == "new" }.map(&:path)
+      Danger::FileList.new(@diff.select { |diff| diff.type == "new" }.map(&:path))
     end
 
     def deleted_files
-      @diff.select { |diff| diff.type == "deleted" }.map(&:path)
+      Danger::FileList.new(@diff.select { |diff| diff.type == "deleted" }.map(&:path))
     end
 
     def modified_files
-      @diff.stats[:files].keys
+      Danger::FileList.new(@diff.stats[:files].keys)
     end
 
     def lines_of_code
@@ -37,6 +39,10 @@ module Danger
 
     def insertions
       @diff.insertions
+    end
+
+    def commits
+      log.to_a
     end
   end
 end

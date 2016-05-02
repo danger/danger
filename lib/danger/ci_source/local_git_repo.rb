@@ -36,13 +36,15 @@ module Danger
 
         # get the most recent PR merge
         pr_merge = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1".strip
-        if pr_merge
-          self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
-          sha = pr_merge.split(" ")[0]
-          parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
-          self.base_commit = parents[0]
-          self.head_commit = parents[1]
+        if pr_merge.to_s.empty?
+          raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode"
         end
+
+        self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
+        sha = pr_merge.split(" ")[0]
+        parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
+        self.base_commit = parents[0]
+        self.head_commit = parents[1]
       end
     end
   end
