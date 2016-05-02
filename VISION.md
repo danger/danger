@@ -10,15 +10,15 @@ While we initially envisioned that she would work best at providing an API for l
 
 The core concept is that the Danger project itself creates a system that is extremely easy to build upon. The codebase for Danger should resolve specifically around systems for CI, communication with Peer Review tools and providing APIs to Source Control changes. For example: `Travis CI` - `GitHub` - `git`.
 
-These abstractions allow an individual to think about writing a `Dangerfile` as it's own DSL sub-set of the ruby programming langauge.
+These abstractions allow an individual to think about writing a `Dangerfile` as it's own DSL sub-set of the ruby programming language.
 
 This means that decisions on new code integrated into Danger should ask "is this valid for every CI provider, every review system and source control type?" by making this domain so big, we can keep the core of Danger small.
 
 ### General Aim
 
-Danger should provide a small core, but be as open as possible for others to build upon. This means two major advantages; Danger's maintainers can spend their time on the kernel of Danger, others will have first party access to build tools that the maintainers could never have concieved of. By being conservative for the core, we can provide a solid, dependenable framework to work from.
+Danger should provide a small core, but be as open as possible for others to build upon. This means two major advantages; Danger's maintainers can spend their time on the kernel of Danger, others will have first party access to build tools that the maintainers could never have conceived of. By being conservative for the core, we can provide a solid, dependable framework to work from.
 
-We want to provide different tools for people to build on Danger via plugins. A plugin can be a gem installed via rubygems or bundler, wherein it will be considered part of the community of Dange plugins. Or it can be a single ruby file which can be accessed via https or git, which make great one-off projects.
+We want to provide different tools for people to build on Danger via plugins. A plugin can be a gem installed via rubygems or bundler, wherein it will be considered part of the community of Danger plugins. Or it can be a single ruby file which can be accessed via https or git, which make great one-off projects.
 
 ### Plugins
 
@@ -40,6 +40,6 @@ One way in which we're trying to improve on this is by conforming to the [Moya's
 
 With a lot of these things though, they're about scale.
 
-### Contrbutions
+### Contributions
 
 The Danger project should aim to devote a lot of time to making plugin contributors feel like an important part of the team. Examples of where this has worked well is the [jQuery project](https://plugins.jquery.com). We should strive to provide a place for anyone to be able to own a context for working with Danger ( e.g. blogging with Jekyll ) and the aim of the core team should be to work on ways to showcase that to encourage adoption and show off great work. An example of where this worked is the [CocoaPods Quality Index](http://blog.cocoapods.org/CocoaPods.org-Two-point-Five/).
