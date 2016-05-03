@@ -20,7 +20,7 @@ module Danger
     end
 
     def client
-      raise "No API given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
+      raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
 
       @client ||= Octokit::Client.new(
         access_token: @token
@@ -129,7 +129,7 @@ module Danger
       # use a read-only GitHub account
       if errors.count > 0
         # We need to fail the actual build here
-        abort("\nDanger has failed this build. \nFound #{errors.count} error(s) and I don't have write access to the PR set a PR status.")
+        abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
       else
         puts message
       end
@@ -156,8 +156,8 @@ module Danger
         return "All green. #{random_compliment}"
       else
         message = "⚠ "
-        message += "#{errors.count} Error#{errors.count == 1 ? '' : 's'}. " unless errors.empty?
-        message += "#{warnings.count} Warning#{warnings.count == 1 ? '' : 's'}. " unless warnings.empty?
+        message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
+        message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
         message += "Don't worry, everything is fixable."
         return message
       end
