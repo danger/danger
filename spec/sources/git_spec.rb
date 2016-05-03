@@ -143,5 +143,30 @@ describe Danger::GitRepo do
         expect(g.deletions).to eql(1)
       end
     end
+
+    describe '#commits' do
+      it "returns the commits" do
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            `touch file`
+            `echo "hi\n\nfb\nasdasd" > file`
+            `git add .`
+            `git commit -m "ok"`
+
+            `git checkout -b new`
+            `echo "hi\n\najsdha" >> file`
+            `git add .`
+            `git commit -m "another"`
+          end
+
+          g = Danger::GitRepo.new
+          g.diff_for_folder(dir, from: "master", to: "new")
+
+          messages = g.commits.map(&:message)
+          expect(messages).to eq(['another'])
+        end
+      end
+    end
   end
 end
