@@ -169,8 +169,11 @@ open to turning useful bits into the official API.
 
 ## Test locally with `danger local`
 
-Using `danger local` will look for the last merged pull request in your git history, and apply your current
-`Dangerfile` against that Pull Request. Useful when editing.
+You can use `danger local` to run Danger in an environment similar to how it will be ran on CI. By default Danger will look
+at the most recently merged PR, then run your `Dangerfile` against that Pull Request. This is really useful when making changes.
+
+If you have a specific PR in mind that you'd like to work against, make sure you have it merged in your current git
+history, then append `--use-merged-pr=[id]` to the command.
 
 ## Suppress Violations
 

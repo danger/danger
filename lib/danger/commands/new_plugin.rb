@@ -3,14 +3,6 @@ module Danger
     self.summary = 'Generate a new danger plugin.'
     self.command = 'new_plugin'
 
-    def initialize(argv)
-      super
-    end
-
-    def validate!
-      super
-    end
-
     def run
       require 'fileutils'
 

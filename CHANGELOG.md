@@ -1,6 +1,7 @@
-## Master
+## 0.7.4
 
-* Remove me - jeroenvisser101
+* Adds the ability to specify a PR number in `danger local` - orta
+* Ensures local branches are set up with  `danger local` - orta
 * Add `commits` for the Git SCM source - segiddins
 
 ## 0.7.3
