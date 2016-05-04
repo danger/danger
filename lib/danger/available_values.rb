@@ -12,7 +12,8 @@ module Danger
         :deleted_files,
         :added_files,
         :deletions,
-        :insertions
+        :insertions,
+        :commits
       ]
     end
 
