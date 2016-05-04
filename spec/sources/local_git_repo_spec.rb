@@ -14,7 +14,6 @@ def run_in_repo
       `git commit -m "adding file2"`
       `git checkout master`
       `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
-
       yield
     end
   end
@@ -111,6 +110,38 @@ describe Danger::CISource::LocalGitRepo do
         env = { "DANGER_USE_LOCAL_GIT" => "true", "DANGER_GITHUB_HOST" => "git.robot.com" }
         t = Danger::CISource::LocalGitRepo.new(env)
         expect(t.repo_slug).to be_nil
+      end
+    end
+  end
+
+  describe 'Support looking for a specific PR' do
+    def add_another_pr
+      # Add a new PR merge commit
+      `git checkout -b new-branch2`
+      `touch file3`
+      `git add .`
+      `git commit -m "adding file2"`
+      `git checkout master`
+      `git merge new-branch2 --no-ff -m "Merge pull request #1235 from new-branch"`
+    end
+
+    it 'handles finding the resulting PR' do
+      run_in_repo do
+        add_another_pr
+
+        env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1234" }
+        t = Danger::CISource::LocalGitRepo.new(env)
+        expect(t.pull_request_id).to eql("1234")
+      end
+    end
+
+    it 'handles not finding the resulting PR' do
+      run_in_repo do
+        add_another_pr
+
+        env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1238" }
+
+        expect { Danger::CISource::LocalGitRepo.new(env) }.to raise_error
       end
     end
   end
