@@ -5,7 +5,14 @@ module Danger
 
     def initialize(argv)
       @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
+      @pr_num = argv.option('use-merged-pr')
       super
+    end
+
+    def self.options
+      [
+        ['--use-merged-pr=[#id]', 'The ID of an alreadty merged PR inside your history to use as a reference for the local run.']
+      ].concat(super)
     end
 
     def validate!
@@ -17,6 +24,7 @@ module Danger
 
     def run
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
+      ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
 
       dm = Dangerfile.new
       dm.env = EnvironmentManager.new(ENV)
@@ -47,6 +55,7 @@ module Danger
 
       dm.env.scm = GitRepo.new
 
+      dm.env.ensure_danger_branches_are_setup
       dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
       dm.parse(Pathname.new(@dangerfile_path))
       dm.print_results
