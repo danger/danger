@@ -1,3 +1,7 @@
+## Master
+
+* Add yourself here - orta
+
 ## 0.7.4
 
 * Adds the ability to specify a PR number in `danger local` - orta
