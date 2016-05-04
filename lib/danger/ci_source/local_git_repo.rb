@@ -42,7 +42,7 @@ module Danger
         pr_merge = run_git pr_command.strip
 
         if pr_merge.to_s.empty?
-          if has_specific_pr
+          if specific_pr
             raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
           else
             raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
