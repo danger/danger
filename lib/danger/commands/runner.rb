@@ -7,6 +7,8 @@ module Danger
     self.summary = 'Run the Dangerfile.'
     self.command = 'danger'
 
+    self.plugin_prefixes = %w(claide danger)
+
     def initialize(argv)
       @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
       @base = argv.option('base')
