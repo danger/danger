@@ -5,6 +5,7 @@
 ## 0.7.3
 
 * Minor `danger init` typo fixes - orta + danger
+* Added support for CLAide-based plugins - segiddins
 * Add `commits` for the Git SCM source - segiddins
 
 ## 0.7.2
