@@ -40,7 +40,9 @@ bundle exec danger
 
 This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information.
 
-**Supported CIs**: Travis CI, CircleCI, Jenkins, Xcode Server and Buildkite.
+## CI Support
+
+Danger currently is supported on Travis CI, Circle CI, Xcode Bots via Buildasaur, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
 
 ### Making your own
 If the CI server you're using isn't available yet, you can build it yourself:
@@ -149,10 +151,6 @@ danger new_plugin
 ```
 
 This will generate a new Ruby file which you can modify to fit your needs.
-
-## Support
-
-Danger currently is supported on Travis CI, Circle CI, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
 
 ## Advanced
 
