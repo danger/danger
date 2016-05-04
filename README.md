@@ -8,12 +8,11 @@ Formalize your Pull Request etiquette.
 -------
 
 <p align="center">
-    <a href="#installation">Installation</a> &bull;
-    <a href="#usage">Usage</a> &bull;
+    <a href="#getting-started">Getting Started</a> &bull;
+    <a href="#usage-on-ci">Usage</a> &bull;
     <a href="#dsl">DSL</a> &bull;
-    <a href="#constraints">Constraints</a> &bull;
-    <a href="#advanced">Advanced</a> &bull;
-    <a href="#contributing">Contributing</a>
+    <a href="#plugins">Plugins</a> &bull;
+    <a href="#local">Local</a>
 </p>
 
 -------
