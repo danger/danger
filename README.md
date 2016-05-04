@@ -42,7 +42,7 @@ This will look at your `Dangerfile` and update the pull request accordingly. Whi
 
 ## CI Support
 
-Danger currently is supported on Travis CI, Circle CI, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
+Danger currently is supported on Travis CI, Circle CI, Xcode Bots via Buildasaur, BuildKite and Jenkins. These work via environment variables, so it's easy to extend to include your own.
 
 ### Making your own
 If the CI server you're using isn't available yet, you can build it yourself:
