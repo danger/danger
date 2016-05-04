@@ -1,6 +1,7 @@
 ## Master
 
-* Remove me - jeroenvisser101
+* Adds the ability to specify a PR number in `danger local` - orta
+* Ensures local branches are set up with  `danger local` - orta
 
 ## 0.7.3
 

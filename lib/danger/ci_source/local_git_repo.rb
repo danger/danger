@@ -34,10 +34,19 @@ module Danger
           end
         end
 
+        specific_pr = env["LOCAL_GIT_PR_ID"]
+        pr_ref = specific_pr ? "##{specific_pr}" : ''
+        pr_command = "log --merges --oneline | grep \"Merge pull request #{pr_ref}\" | head -n 1"
+
         # get the most recent PR merge
-        pr_merge = run_git "log --since='2 weeks ago' --merges --oneline | grep \"Merge pull request\" | head -n 1".strip
+        pr_merge = run_git pr_command.strip
+
         if pr_merge.to_s.empty?
-          raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode"
+          if has_specific_pr
+            raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
+          else
+            raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
+          end
         end
 
         self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
