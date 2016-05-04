@@ -38,17 +38,17 @@ module Danger
       pull_id = ci_source.pull_request_id
       test_branch = request_source.base_commit
 
-      # Next, we want to ensure that we have a version of the current branch that at a know location
+      # Next, we want to ensure that we have a version of the current branch at a known location
       scm.exec "branch #{danger_base_branch} #{test_branch}"
 
       # OK, so we want to ensure that we have a known head branch, this will always represent
-      # the head ( e.g. the most recent commit that will be merged. )
+      # the head of the PR ( e.g. the most recent commit that will be merged. )
       scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
     end
 
     def clean_up
       [danger_base_branch, danger_base_branch].each do |branch|
-        scm.exec "branch -d #{branch}"
+        scm.exec "branch -D #{branch}"
       end
     end
 
