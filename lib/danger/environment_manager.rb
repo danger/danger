@@ -3,9 +3,11 @@ require "danger/request_sources/github"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :request_source, :scm
+    attr_accessor :ci_source, :request_source, :scm, :verbose
 
-    def initialize(env)
+    def initialize(env, verbose:verbose = false)
+      self.verbose = verbose
+
       CISource.constants.each do |symb|
         c = CISource.const_get(symb)
         next unless c.kind_of?(Class)
@@ -31,6 +33,7 @@ module Danger
       request_source.fetch_details
 
       self.scm = GitRepo.new # For now
+      self.scm.verbose = verbose
     end
 
     def ensure_danger_branches_are_setup

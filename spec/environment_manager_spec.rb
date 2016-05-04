@@ -22,7 +22,7 @@ describe Danger::EnvironmentManager do
   end
 
   it 'creates a GitHub attr' do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => 123.to_s }
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "123" }
     e = Danger::EnvironmentManager.new(env)
     expect(e.request_source).to be_truthy
   end
@@ -31,5 +31,14 @@ describe Danger::EnvironmentManager do
     env = { "TRAVIS_REPO_SLUG" => "orta/danger", "TRAVIS_PULL_REQUEST" => "false", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "1" }
     e = Danger::EnvironmentManager.new(env)
     expect(e.ci_source).to eq(nil)
+  end
+
+  it 'passes verbose down to the SCM object' do
+    env = { "DANGER_GITHUB_API_TOKEN" => "123", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "123" }
+    e = Danger::EnvironmentManager.new(env, verbose: true)
+    allow(e.request_source).to receive(:fetch_details) { "" }
+
+    e.fill_environment_vars
+    expect(e.scm.verbose).to eq(true)
   end
 end

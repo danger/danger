@@ -1,6 +1,6 @@
 ## Master
 
-* Add yourself here - orta
+* Verbose mode will include all of the git commands in the output - orta
 
 ## 0.7.4
 
