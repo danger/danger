@@ -12,7 +12,7 @@ Formalize your Pull Request etiquette.
     <a href="#usage-on-ci">Usage</a> &bull;
     <a href="#dsl">DSL</a> &bull;
     <a href="#plugins">Plugins</a> &bull;
-    <a href="#local">Local</a>
+    <a href="#test-locally-with-danger-local">Local</a>
 </p>
 
 -------
