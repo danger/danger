@@ -69,28 +69,31 @@ describe Danger::GitHub do
       expect(@g.issue_json).to be_truthy
     end
 
-    it 'sets the right commit sha' do
-      @g.fetch_details
-
-      expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
-      expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
-      expect(@g.pr_json[:base][:ref]).to eql(@g.branch_for_merge)
-    end
-
-    it 'sets the right labels' do
-      @g.fetch_details
-      expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
-    end
-
     it 'sets the ignored violations' do
       @g.fetch_details
       expect(@g.ignored_violations).to eql(["Developer Specific file shouldn't be changed",
                                             "Some warning"])
     end
 
+    describe "DSL Attributes" do
+      it 'sets the right commit sha' do
+        @g.fetch_details
+
+        expect(@g.pr_json[:base][:sha]).to eql(@g.dsl.base_commit)
+        expect(@g.pr_json[:head][:sha]).to eql(@g.dsl.head_commit)
+        expect(@g.pr_json[:base][:ref]).to eql(@g.dsl.branch_for_merge)
+      end
+
+      it 'sets the right labels' do
+        @g.fetch_details
+        expect(@g.dsl.pr_labels).to eql(["D:2", "Maintenance Work"])
+      end
+    end
+
     describe "#generate_comment" do
       before do
         @date = Time.now.strftime("%Y-%m-%d")
+        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
       end
 
       it "shows the base/head commit" do
@@ -100,9 +103,13 @@ describe Danger::GitHub do
           "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
         }
         source = Danger::CISource::CircleCI.new(env)
-        @g.base_commit = "2525245"
-        @g.head_commit = "90528352"
+
         @g.ci_source = source
+        @g.pr_json = {
+          base: { sha: "2525245" },
+          head: { sha: "90528352" }
+        }
+
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
           "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"2525245\"data-head-commit=\"90528352\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
@@ -225,6 +232,10 @@ describe Danger::GitHub do
     end
 
     describe "issue creation" do
+      before do
+        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+      end
+
       it "creates an issue if no danger comments exist" do
         issues = []
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)

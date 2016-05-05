@@ -3,13 +3,50 @@ require 'octokit'
 require 'redcarpet'
 
 module Danger
+  ### The Request Source API exposed to the Dangerfile DSL.
+
+  class GitHubDSL
+    def initialize(github)
+      @github = github
+    end
+
+    def base_commit
+      @github.pr_json[:base][:sha]
+    end
+
+    def head_commit
+      @github.pr_json[:head][:sha]
+    end
+
+    def branch_for_merge
+      @github.pr_json[:base][:ref]
+    end
+
+    def pr_title
+      @github.pr_json[:title].to_s
+    end
+
+    def pr_body
+      @github.pr_json[:body].to_s
+    end
+
+    def pr_author
+      @github.pr_json[:user][:login].to_s
+    end
+
+    def pr_labels
+      @github.issue_json[:labels].map { |l| l[:name] }
+    end
+  end
+
   class GitHub
-    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :base_commit, :head_commit, :support_tokenless_auth, :ignored_violations, :github_host
+    attr_accessor :dsl, :ci_source, :pr_json, :issue_json, :environment, :support_tokenless_auth, :ignored_violations, :github_host
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
       self.environment = environment
       self.support_tokenless_auth = false
+      self.dsl = GitHubDSL.new(self)
 
       Octokit.auto_paginate = true
       @token = @environment["DANGER_GITHUB_API_TOKEN"]
@@ -21,10 +58,7 @@ module Danger
 
     def client
       raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
-
-      @client ||= Octokit::Client.new(
-        access_token: @token
-      )
+      @client ||= Octokit::Client.new(access_token: @token)
     end
 
     def markdown_parser
@@ -46,34 +80,6 @@ module Danger
     def fetch_issue_details(pr_json)
       href = pr_json[:_links][:issue][:href]
       self.issue_json = client.get(href)
-    end
-
-    def base_commit
-      self.pr_json[:base][:sha]
-    end
-
-    def head_commit
-      self.pr_json[:head][:sha]
-    end
-
-    def branch_for_merge
-      self.pr_json[:base][:ref]
-    end
-
-    def pr_title
-      self.pr_json[:title].to_s
-    end
-
-    def pr_body
-      self.pr_json[:body].to_s
-    end
-
-    def pr_author
-      self.pr_json[:user][:login].to_s
-    end
-
-    def pr_labels
-      self.issue_json[:labels].map { |l| l[:name] }
     end
 
     # Sending data to GitHub

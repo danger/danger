@@ -17,6 +17,10 @@ module Danger
       `git #{string}`.strip
     end
 
+    # def dsl_attributes
+    #   [:added_files, :deleted_files, :modified_files, :lines_of_code, :deletions, :insertions, :commits]
+    # end
+
     def added_files
       Danger::FileList.new(@diff.select { |diff| diff.type == "new" }.map(&:path))
     end

@@ -6,7 +6,7 @@ module Danger
       # @!group Enviroment
       # @return [EnvironmentManager] Provides access to the raw Travis/Circle/Buildkite/GitHub
       # objects, which you can use to pull out extra bits of information. _Warning_
-      # the api of these objects is **not** considered a part of the Dangerfile public
+      # the interfaces of these objects is **not** considered a part of the Dangerfile public
       # API, and is viable to change occasionally on the whims of developers.
 
       attr_reader :env
@@ -124,9 +124,13 @@ module Danger
           return env.scm.send(method_sym)
         end
 
-        # Request Source
-        if AvailableValues.request_source.include?(method_sym)
-          return env.request_source.send(method_sym)
+        # # Request Source
+        # if AvailableValues.request_source.include?(method_sym)
+        #   return env.request_source.send(method_sym)
+        # end
+
+        if env.request_source.dsl.public_methods.include?(method_sym)
+          return env.request_source.dsl.send(method_sym)
         end
 
         # Plugins
