@@ -2,7 +2,6 @@ require "danger/version"
 require "danger/danger_core/dangerfile"
 require "danger/danger_core/environment_manager"
 require "danger/commands/runner"
-require "danger/danger_core/available_values"
 require "danger/plugin_support/plugin"
 require "danger/core_ext/string"
 
