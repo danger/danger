@@ -20,15 +20,15 @@ describe Danger::GitRepo do
     end
 
     it "#modified_files returns a FileList object" do
-      expect(@g.modified_files.class).to eql(Danger::FileList)
+      expect(@g.dsl.modified_files.class).to eql(Danger::FileList)
     end
 
     it "#added_files returns a FileList object" do
-      expect(@g.added_files.class).to eql(Danger::FileList)
+      expect(@g.dsl.added_files.class).to eql(Danger::FileList)
     end
 
     it "#deleted_files returns a FileList object" do
-      expect(@g.deleted_files.class).to eql(Danger::FileList)
+      expect(@g.dsl.deleted_files.class).to eql(Danger::FileList)
     end
   end
 
@@ -50,7 +50,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.added_files).to eql(["file2"])
+        expect(g.dsl.added_files).to eql(["file2"])
       end
     end
 
@@ -72,7 +72,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.deleted_files).to eql(["file"])
+        expect(g.dsl.deleted_files).to eql(["file"])
       end
     end
 
@@ -94,7 +94,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.modified_files).to eql(["file"])
+        expect(g.dsl.modified_files).to eql(["file"])
       end
     end
   end
@@ -118,7 +118,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.insertions).to eql(3)
+        expect(g.dsl.insertions).to eql(3)
       end
     end
 
@@ -140,7 +140,7 @@ describe Danger::GitRepo do
         g = Danger::GitRepo.new
         g.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.deletions).to eql(1)
+        expect(g.dsl.deletions).to eql(1)
       end
     end
 
@@ -163,7 +163,7 @@ describe Danger::GitRepo do
           g = Danger::GitRepo.new
           g.diff_for_folder(dir, from: "master", to: "new")
 
-          messages = g.commits.map(&:message)
+          messages = g.dsl.commits.map(&:message)
           expect(messages).to eq(['another'])
         end
       end

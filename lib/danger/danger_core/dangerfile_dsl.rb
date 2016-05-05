@@ -123,14 +123,12 @@ module Danger
         if AvailableValues.scm.include?(method_sym)
           return env.scm.send(method_sym)
         end
+        dsl_objects = [env.request_source.dsl]
 
-        # # Request Source
-        # if AvailableValues.request_source.include?(method_sym)
-        #   return env.request_source.send(method_sym)
-        # end
-
-        if env.request_source.dsl.public_methods.include?(method_sym)
-          return env.request_source.dsl.send(method_sym)
+        dsl_objects.each do |dsl|
+          if dsl.public_methods.include?(method_sym)
+            return dsl.send(method_sym)
+          end
         end
 
         # Plugins
