@@ -25,12 +25,12 @@ module Danger
 
       # only GitHub for now, open for PRs adding more!
       self.request_source = GitHub.new(self.ci_source, ENV)
+      # Also Git only for now, also open for PRs adding more!
+      self.scm = GitRepo.new # For now
     end
 
     def fill_environment_vars
       request_source.fetch_details
-
-      self.scm = GitRepo.new # For now
     end
 
     def ensure_danger_branches_are_setup

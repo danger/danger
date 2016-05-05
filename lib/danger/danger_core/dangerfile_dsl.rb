@@ -114,18 +114,14 @@ module Danger
         puts "Printing markdown #{message}"
       end
 
-      # When an undefined method is called, we check to see if it's something
-      # that either the `scm` or the `request_source` can handle.
-      # This opens us up to letting those object extend themselves naturally.
-      # This will also look for plugins
-      def method_missing(method_sym, *arguments, &_block)
-        # SCM Source
-        if AvailableValues.scm.include?(method_sym)
-          return env.scm.send(method_sym)
-        end
-        dsl_objects = [env.request_source.dsl]
+      def core_dsls
+        [env.request_source.dsl, env.scm.dsl]
+      end
 
-        dsl_objects.each do |dsl|
+      # When an undefined method is called, we check to see if it's something
+      # that the DSLs have, then starts looking at plugins support.
+      def method_missing(method_sym, *arguments, &_block)
+        core_dsls.each do |dsl|
           if dsl.public_methods.include?(method_sym)
             return dsl.send(method_sym)
           end
