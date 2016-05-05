@@ -1,4 +1,4 @@
-require 'danger/violation'
+require 'danger/danger_core/violation'
 
 module Danger
   class Dangerfile

@@ -1,6 +1,6 @@
 # https://circleci.com/docs/environment-variables
 require 'uri'
-require 'danger/circle_api'
+require 'danger/ci_source/circle_api'
 
 module Danger
   module CISource

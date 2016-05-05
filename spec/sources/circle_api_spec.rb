@@ -1,4 +1,4 @@
-require 'danger/circle_api'
+require 'danger/ci_source/circle_api'
 
 describe Danger::CircleAPI do
   api_path = "project/artsy/eigen/1500"

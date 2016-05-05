@@ -1,4 +1,4 @@
-require 'danger/environment_manager'
+require 'danger/danger_core/environment_manager'
 
 describe Danger::EnvironmentManager do
   it 'raises without enough info in the ENV' do
