@@ -45,3 +45,4 @@ build/
 .rvmrc
 fastlane/report.xml
 .keys
+.idea

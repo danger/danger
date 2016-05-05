@@ -1,3 +1,5 @@
+require 'danger/core_ext/file_list'
+
 describe Danger::FileList do
   describe '#include?' do
     before do

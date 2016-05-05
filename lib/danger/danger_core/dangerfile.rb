@@ -1,7 +1,7 @@
 # So much was ripped direct from CocoaPods-Core - thanks!
 
-require 'danger/dangerfile_dsl'
-require 'danger/standard_error'
+require 'danger/danger_core/dangerfile_dsl'
+require 'danger/danger_core/standard_error'
 
 module Danger
   class Dangerfile

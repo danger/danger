@@ -2,7 +2,7 @@
 require 'danger/request_sources/github'
 require 'danger/ci_source/circle'
 require 'danger/ci_source/travis'
-require 'danger/violation'
+require 'danger/danger_core/violation'
 
 def stub_ci
   env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
