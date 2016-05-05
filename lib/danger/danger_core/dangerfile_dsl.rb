@@ -2,6 +2,9 @@ require 'danger/danger_core/violation'
 
 module Danger
   class Dangerfile
+    # Anything inside this module is considered public API, and in the future
+    # documentation will be generated from it via rdoc.
+
     module DSL
       # @!group Enviroment
       # @return [EnvironmentManager] Provides access to the raw Travis/Circle/Buildkite/GitHub
@@ -20,6 +23,11 @@ module Danger
         load_default_plugins
       end
 
+      # Download a local or remote plugin and use it locally
+      #
+      # @param    [String] path
+      #           a local path or a https URL to the Ruby file to import
+      #           a danger plugin from.
       def import(path)
         raise "`import` requires a string" unless path.kind_of?(String)
         path += ".rb" unless path.end_with?(".rb")
@@ -66,16 +74,13 @@ module Danger
         end
       end
 
-      def should_ignore_violation(message)
-        env.request_source.ignored_violations.include? message
-      end
-
       # Declares a CI blocking error
       #
       # @param    [String] message
       #           The message to present to the user
       # @param    [Boolean] sticky
-      #           Whether the message should be kept after it was fixed
+      #           Whether the message should be kept after it was fixed,
+      #           defaults to `true`.
       def fail(message, sticky: true)
         return if should_ignore_violation(message)
         self.errors << Violation.new(message, sticky)
@@ -87,7 +92,8 @@ module Danger
       # @param    [String] message
       #           The message to present to the user
       # @param    [Boolean] sticky
-      #           Whether the message should be kept after it was fixed
+      #           Whether the message should be kept after it was fixed,
+      #           defaults to `true`.
       def warn(message, sticky: true)
         return if should_ignore_violation(message)
         self.warnings << Violation.new(message, sticky)
@@ -99,7 +105,8 @@ module Danger
       # @param    [String] message
       #           The message to present to the user
       # @param    [Boolean] sticky
-      #           Whether the message should be kept after it was fixed
+      #           Whether the message should be kept after it was fixed,
+      #           defaults to `true`.
       def message(message, sticky: true)
         self.messages << Violation.new(message, sticky)
         puts "Printing message '#{message}'"
@@ -114,8 +121,10 @@ module Danger
         puts "Printing markdown #{message}"
       end
 
-      def core_dsls
-        [env.request_source.dsl, env.scm.dsl]
+      private
+
+      def should_ignore_violation(message)
+        env.request_source.ignored_violations.include? message
       end
 
       # When an undefined method is called, we check to see if it's something
@@ -140,8 +149,6 @@ module Danger
           raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red
         end
       end
-
-      private
 
       def load_default_plugins
         Dir["./lib/danger/plugins/*.rb"].each do |file|
