@@ -23,10 +23,5 @@ describe Danger::FileList do
     it 'returns false if nothing was found' do
       expect(@filelist.include?("notFound")).to eq(false)
     end
-
-    pending 'returns a FileList instead of an Array in the map function' do
-      mapped = @filelist.map { |f| "" }
-      expect(mapped.class).to eq Danger::FileList
-    end
   end
 end

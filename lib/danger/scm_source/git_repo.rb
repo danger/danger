@@ -3,9 +3,46 @@
 require 'git'
 
 module Danger
+  class GitRepoDSL
+    def initialize(git)
+      @git = git
+    end
+
+    def added_files
+      Danger::FileList.new(@git.diff.select { |diff| diff.type == "new" }.map(&:path))
+    end
+
+    def deleted_files
+      Danger::FileList.new(@git.diff.select { |diff| diff.type == "deleted" }.map(&:path))
+    end
+
+    def modified_files
+      Danger::FileList.new(@git.diff.stats[:files].keys)
+    end
+
+    def lines_of_code
+      @git.diff.lines
+    end
+
+    def deletions
+      @git.diff.deletions
+    end
+
+    def insertions
+      @git.diff.insertions
+    end
+
+    def commits
+      @git.log.to_a
+    end
+  end
+
   class GitRepo
-    attr_accessor :diff
-    attr_accessor :log
+    attr_accessor :dsl, :diff, :log
+
+    def initialize
+      self.dsl = GitRepoDSL.new(self)
+    end
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
       repo = Git.open folder
@@ -15,38 +52,6 @@ module Danger
 
     def exec(string)
       `git #{string}`.strip
-    end
-
-    # def dsl_attributes
-    #   [:added_files, :deleted_files, :modified_files, :lines_of_code, :deletions, :insertions, :commits]
-    # end
-
-    def added_files
-      Danger::FileList.new(@diff.select { |diff| diff.type == "new" }.map(&:path))
-    end
-
-    def deleted_files
-      Danger::FileList.new(@diff.select { |diff| diff.type == "deleted" }.map(&:path))
-    end
-
-    def modified_files
-      Danger::FileList.new(@diff.stats[:files].keys)
-    end
-
-    def lines_of_code
-      @diff.lines
-    end
-
-    def deletions
-      @diff.deletions
-    end
-
-    def insertions
-      @diff.insertions
-    end
-
-    def commits
-      log.to_a
     end
   end
 end
