@@ -2,6 +2,9 @@ require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 require 'rubocop/rake_task'
 
+# Adds :doc & :spec_docs
+require_relative 'rake/dsl_generator'
+
 RSpec::Core::RakeTask.new(:specs)
 
 task default: :spec
@@ -9,6 +12,7 @@ task default: :spec
 task :spec do
   Rake::Task['specs'].invoke
   Rake::Task['rubocop'].invoke
+  Rake::Task['spec_docs'].invoke
 end
 
 desc 'Run RuboCop on the lib/specs directory'
