@@ -5,7 +5,7 @@ module Danger
   class EnvironmentManager
     attr_accessor :ci_source, :request_source, :scm, :verbose
 
-    def initialize(env, verbose:verbose = false)
+    def initialize(env, verbose = false)
       self.verbose = verbose
 
       CISource.constants.each do |symb|
