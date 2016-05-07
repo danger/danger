@@ -196,6 +196,11 @@ fail("PR needs labels", sticky: false) if pr_labels.empty?
 
 Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eigen/blob/master/Dangerfile), [danger/danger](https://github.com/danger/danger/blob/master/Dangerfile), [artsy/elan](https://github.com/artsy/elan/blob/master/Dangerfile) and more!
 
+## Usage with GitHub Enterprise
+Danger allows usage with GitHub Enterprise by setting 2 environment variables:
+- `DANGER_GITHUB_HOST` to the host that GitHub is running on
+- `DANGER_GITHUB_API_HOST` to the host that the GitHub Enterprise API is reachable on.
+
 ## License, Contributor's Guidelines and Code of Conduct
 
 [Join our Slack Group](https://danger-slack.herokuapp.com/)
