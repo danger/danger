@@ -52,7 +52,7 @@ module Danger
       dm.env.clean_up
 
       dm.print_results
-    
+
     # If an unknown fail occurs, add recommendations from GitHub issues
     rescue Object => error
       require 'inspector'

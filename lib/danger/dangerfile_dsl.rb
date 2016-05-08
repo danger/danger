@@ -40,10 +40,8 @@ module Danger
 
         require 'tmpdir'
         require 'faraday'
-        require 'faraday_middleware'
 
         @http_client ||= Faraday.new do |b|
-          b.use FaradayMiddleware::FollowRedirects
           b.adapter :net_http
         end
         content = @http_client.get(url)
