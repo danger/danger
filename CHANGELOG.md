@@ -1,6 +1,6 @@
 ## Master
 
-* Add yourself here - orta
+* Add support for showing related issues when an unexpected error occurs during the `danger` command - orta
 
 ## 0.7.4
 

@@ -52,6 +52,12 @@ module Danger
       dm.env.clean_up
 
       dm.print_results
+    
+    # If an unknown fail occurs, add recommendations from GitHub issues
+    rescue Object => error
+      require 'inspector'
+      inspector = Inspector::Inspector.new 'danger', 'danger'
+      inspector.search_exception error
     end
 
     def post_results(dm)
