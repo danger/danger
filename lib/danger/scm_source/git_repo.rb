@@ -4,8 +4,7 @@ require 'git'
 
 module Danger
   class GitRepo
-    attr_accessor :diff
-    attr_accessor :log
+    attr_accessor :diff, :log, :verbose
 
     def diff_for_folder(folder, from: "master", to: 'HEAD')
       repo = Git.open folder
@@ -14,6 +13,7 @@ module Danger
     end
 
     def exec(string)
+      puts "> git #{string}".yellow if verbose
       `git #{string}`.strip
     end
 

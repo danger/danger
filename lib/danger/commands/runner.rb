@@ -34,7 +34,7 @@ module Danger
       # The order of the following commands is *really* important
       dm = Dangerfile.new
       dm.verbose = verbose
-      dm.env = EnvironmentManager.new(ENV)
+      dm.env = EnvironmentManager.new(ENV, verbose: verbose)
       return unless dm.env.ci_source # if it's not a PR
 
       dm.env.fill_environment_vars
