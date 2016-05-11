@@ -128,7 +128,7 @@ Command | Description
 
 ## Plugins
 
-Danger was built with a platform in mind: It can be used with any kind of software project and allows you to write your own action to have structured source code.
+Danger was built with a platform in mind: she can be used with any kind of software project and allows you to write your own action to have structured source code.
 
 In your `Dangerfile` you can import local or remote actions using
 
@@ -166,7 +166,7 @@ open to turning useful bits into the official API.
 
 ## Test locally with `danger local`
 
-You can use `danger local` to run Danger in an environment similar to how it will be ran on CI. By default Danger will look
+You can use `danger local` to run Danger in an environment similar to how she will be ran on CI. By default Danger will look
 at the most recently merged PR, then run your `Dangerfile` against that Pull Request. This is really useful when making changes.
 
 If you have a specific PR in mind that you'd like to work against, make sure you have it merged in your current git
