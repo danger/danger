@@ -1,9 +1,10 @@
 require "danger/ci_source/ci_source"
+require "danger/api_source/api_source"
 require "danger/request_sources/github"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :request_source, :scm
+    attr_accessor :ci_source, :request_source, :scm, :api_source
 
     def initialize(env)
       CISource.constants.each do |symb|
@@ -24,7 +25,19 @@ module Danger
       raise "Could not find a CI source".red unless self.ci_source
 
       # only GitHub for now, open for PRs adding more!
-      self.request_source = GitHub.new(self.ci_source, ENV)
+
+      APISource.constants.each do |symb|
+        c = APISource.const_get(symb)
+        next unless c.kind_of?(Class)
+        next unless c.validates?(env)
+        self.api_source = c
+      end
+      # just to be safe the PR doesnt modify too much
+      unless self.api_source
+        self.api_source = GitHub;
+      end
+
+      self.request_source = self.api_source.new(self.ci_source, ENV)
     end
 
     def fill_environment_vars
