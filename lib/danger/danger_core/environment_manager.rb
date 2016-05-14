@@ -1,5 +1,5 @@
 require "danger/ci_source/ci_source"
-require "danger/request_sources/github"
+require "danger/request_source/github"
 
 module Danger
   class EnvironmentManager

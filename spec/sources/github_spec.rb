@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'danger/request_sources/github'
+require 'danger/request_source/github'
 require 'danger/ci_source/circle'
 require 'danger/ci_source/travis'
 require 'danger/danger_core/violation'
@@ -99,23 +99,21 @@ describe Danger::GitHub do
       it "no warnings, no errors, no messages" do
         result = @g.generate_comment(warnings: [], errors: [], messages: [])
         expect(result.gsub(/\s+/, "")).to eq(
-          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
       end
 
       it "supports markdown code below the summary table" do
         result = @g.generate_comment(warnings: violations(["ups"]), markdowns: ['### h3'])
-        # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">ups</td></tr></tbody></table>###h3<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">ups</td></tr></tbody></table>###h3<palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
-        # rubocop:enable Metrics/LineLength
       end
 
       it "supports markdown only without a table" do
         result = @g.generate_comment(markdowns: ['### h3'])
         expect(result.gsub(/\s+/, "")).to eq(
-          "###h3<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "###h3<palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
       end
 
@@ -123,7 +121,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">secondwarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">secondwarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -133,7 +131,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">second<strong>warning</strong></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">amarkdown<ahref=\"https://github.com/danger/danger\">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky=\"false\">second<strong>warning</strong></td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -142,7 +140,7 @@ describe Danger::GitHub do
         result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">someerror</td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">someerror</td></tr></tbody></table><table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Warning\">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky=\"false\">mywarning</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -157,11 +155,9 @@ describe Danger::GitHub do
       it "uncrosses violations that were on the list and happened again" do
         previous_violations = { error: ['an error'] }
         result = @g.generate_comment(warnings: [], errors: violations(['an error']), messages: [], previous_violations: previous_violations)
-        # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">anerror</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"\"data-head-commit=\"\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
+          "<table><thead><tr><thwidth=\"50\"></th><thwidth=\"100%\"data-kind=\"Error\">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky=\"false\">anerror</td></tr></tbody></table><palign=\"right\"data-meta=\"generated_by_danger\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
         )
-        # rubocop:enable Metrics/LineLength
       end
 
       it "counts only unresolved violations on the title" do
