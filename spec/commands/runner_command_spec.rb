@@ -29,7 +29,7 @@ module Command
       issue_comments_response = JSON.parse(fixture("issue_comments"), symbolize_names: true)
       allow(octokit_mock).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issue_comments_response)
 
-      Octokit::Client.stub(:new).and_return octokit_mock
+      allow(Octokit::Client).to receive(:new).and_return octokit_mock
     end
 
     it 'runtime errors when no Dangerfile found' do

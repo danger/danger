@@ -1,6 +1,7 @@
 # For more info see: https://github.com/schacon/ruby-git
 
 require 'git'
+require 'danger/core_ext/file_list'
 
 module Danger
   class GitRepoDSL

@@ -25,7 +25,7 @@ module Danger
     def print_known_info
       rows = []
 
-      attributes = core_dsls.map(&:public_methods).flatten
+      attributes = core_dsls.map { |dsl| dsl.public_methods(false) }.flatten
       attributes.each do |key|
         value = self.send(key)
         value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
