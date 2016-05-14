@@ -54,19 +54,6 @@ module Danger
       dm.print_results
     end
 
-    def self.report_error(exception)
-      case exception
-      when Interrupt
-        puts '[!] Cancelled'.red
-        Config.instance.verbose? ? raise : exit(1)
-      when SystemExit
-        raise
-      else
-        # puts UI::ErrorReport.report(exception)
-        exit 1
-      end
-    end
-
     def post_results(dm)
       gh = dm.env.request_source
       gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages, markdowns: dm.markdowns)
