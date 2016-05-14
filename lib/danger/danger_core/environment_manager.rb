@@ -36,7 +36,7 @@ module Danger
     def ensure_danger_branches_are_setup
       # As this currently just works with GitHub, we can use a github specific feature here:
       pull_id = ci_source.pull_request_id
-      test_branch = request_source.base_commit
+      test_branch = request_source.dsl.base_commit
 
       # Next, we want to ensure that we have a version of the current branch at a known location
       scm.exec "branch #{danger_base_branch} #{test_branch}"
