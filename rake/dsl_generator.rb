@@ -9,7 +9,7 @@ end
 desc 'Test that our public DSL is entirely documented'
 task :spec_docs do
   dsls = get_public_api_methods
-  docless = dsls.select {|method| method.docstring.empty? }
+  docless = dsls.select { |method| method.docstring.empty? }
   raise "Found methods without documentation : #{docless.join ', '}" if docless.any?
 end
 
@@ -22,9 +22,9 @@ def get_public_api_methods
   ]
   docs = YARD::Registry.load(files, true)
 
-  danger_dsl = docs.at("Danger::Dangerfile::DSL").meths(:visibility => :public)
-  github_dsls = docs.at("Danger::GitHubDSL").meths(:visibility => :public)
-  git_dsls = docs.at("Danger::GitRepoDSL").meths(:visibility => :public)
+  danger_dsl = docs.at("Danger::Dangerfile::DSL").meths(visibility: :public)
+  github_dsls = docs.at("Danger::GitHubDSL").meths(visibility: :public)
+  git_dsls = docs.at("Danger::GitRepoDSL").meths(visibility: :public)
 
   # Remove init functions
   (danger_dsl + git_dsls + github_dsls).reject { |m| m.name == :initialize }

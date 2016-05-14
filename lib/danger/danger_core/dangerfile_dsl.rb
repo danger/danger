@@ -131,6 +131,12 @@ module Danger
         env.request_source.ignored_violations.include? message
       end
 
+      # The objects exposed by core for method_missing? in order to generate
+      # the Danger DSL.
+      def core_dsls
+        [env.request_source.dsl, env.scm.dsl]
+      end
+
       # When an undefined method is called, we check to see if it's something
       # that the DSLs have, then starts looking at plugins support.
       def method_missing(method_sym, *arguments, &_block)
