@@ -141,7 +141,7 @@ module Danger
       # that the DSLs have, then starts looking at plugins support.
       def method_missing(method_sym, *arguments, &_block)
         core_dsls.each do |dsl|
-          if dsl.public_methods.include?(method_sym)
+          if dsl.public_methods(false).include?(method_sym)
             return dsl.send(method_sym)
           end
         end
