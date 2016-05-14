@@ -6,7 +6,6 @@ module Danger
     # documentation will be generated from it via rdoc.
 
     module DSL
-
       # @!group Core
       # Print markdown to below the table
       #

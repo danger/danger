@@ -75,7 +75,7 @@ describe Danger::GitHub do
                                             "Some warning"])
     end
 
-    describe "DSL Attributes" do
+    fdescribe "DSL Attributes" do
       it 'sets the right commit sha' do
         @g.fetch_details
 
@@ -94,26 +94,6 @@ describe Danger::GitHub do
       before do
         @date = Time.now.strftime("%Y-%m-%d")
         @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
-      end
-
-      it "shows the base/head commit" do
-        env = {
-          "CIRCLE_BUILD_NUM" => "true",
-          "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",
-          "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
-        }
-        source = Danger::CISource::CircleCI.new(env)
-
-        @g.ci_source = source
-        @g.pr_json = {
-          base: { sha: "2525245" },
-          head: { sha: "90528352" }
-        }
-
-        result = @g.generate_comment(warnings: [], errors: [], messages: [])
-        expect(result.gsub(/\s+/, "")).to eq(
-          "<palign=\"right\"data-meta=\"generated_by_danger\"data-base-commit=\"2525245\"data-head-commit=\"90528352\">Generatedby:no_entry_sign:<ahref=\"https://github.com/danger/danger/\">danger</a></p>"
-        )
       end
 
       it "no warnings, no errors, no messages" do
