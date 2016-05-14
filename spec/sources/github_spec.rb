@@ -4,27 +4,6 @@ require 'danger/ci_source/circle'
 require 'danger/ci_source/travis'
 require 'danger/danger_core/violation'
 
-def stub_ci
-  env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-  Danger::CISource::CircleCI.new(env)
-end
-
-def fixture(file)
-  File.read("spec/fixtures/#{file}.json")
-end
-
-def comment_fixture(file)
-  File.read("spec/fixtures/#{file}.html")
-end
-
-def violation(message)
-  Danger::Violation.new(message, false)
-end
-
-def violations(messages)
-  messages.map { |s| violation(s) }
-end
-
 describe Danger::GitHub do
   describe "the github host" do
     it 'sets a default GitHub host' do

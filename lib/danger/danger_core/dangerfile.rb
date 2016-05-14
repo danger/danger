@@ -21,17 +21,11 @@ module Danger
       'Dangerfile'
     end
 
-    # The objects exposed by core for method_missing? in order to generate
-    # the Danger DSL.
-    def core_dsls
-      [env.request_source.dsl, env.scm.dsl]
-    end
-
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
       rows = []
 
-      attributes = core_dsl.map(&:public_methods).flatten
+      attributes = core_dsls.map(&:public_methods).flatten
       attributes.each do |key|
         value = self.send(key)
         value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
