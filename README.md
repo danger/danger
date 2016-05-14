@@ -128,7 +128,7 @@ Command | Description
 
 ## Plugins
 
-Danger was built with a platform in mind: It can be used with any kind of software project and allows you to write your own action to have structured source code.
+Danger was built with a platform in mind: she can be used with any kind of software project and allows you to write your own action to have structured source code.
 
 In your `Dangerfile` you can import local or remote actions using
 
@@ -166,7 +166,7 @@ open to turning useful bits into the official API.
 
 ## Test locally with `danger local`
 
-You can use `danger local` to run Danger in an environment similar to how it will be ran on CI. By default Danger will look
+You can use `danger local` to run Danger in an environment similar to how she will be ran on CI. By default Danger will look
 at the most recently merged PR, then run your `Dangerfile` against that Pull Request. This is really useful when making changes.
 
 If you have a specific PR in mind that you'd like to work against, make sure you have it merged in your current git
@@ -195,6 +195,11 @@ fail("PR needs labels", sticky: false) if pr_labels.empty?
 * Appending `--verbose` to `bundle exec danger` will expose all of the variables that Danger provides, and their values in the shell.
 
 Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eigen/blob/master/Dangerfile), [danger/danger](https://github.com/danger/danger/blob/master/Dangerfile), [artsy/elan](https://github.com/artsy/elan/blob/master/Dangerfile) and more!
+
+## Usage with GitHub Enterprise
+Danger allows usage with GitHub Enterprise by setting 2 environment variables:
+- `DANGER_GITHUB_HOST` to the host that GitHub is running on
+- `DANGER_GITHUB_API_HOST` to the host that the GitHub Enterprise API is reachable on.
 
 ## License, Contributor's Guidelines and Code of Conduct
 
