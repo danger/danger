@@ -1,11 +1,10 @@
+require 'danger/core_ext/file_list'
+
 describe Danger::FileList do
   describe '#include?' do
     before do
-      @filelist = Danger::FileList.new([
-                                         "path1/file_name.txt",
-                                         "path1/file_name1.txt",
-                                         "path2/subfolder/example.json"
-                                       ])
+      paths = ["path1/file_name.txt", "path1/file_name1.txt", "path2/subfolder/example.json"]
+      @filelist = Danger::FileList.new(paths)
     end
 
     it 'supports exact matches' do

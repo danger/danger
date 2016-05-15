@@ -1,8 +1,11 @@
+require 'danger/danger_core/environment_manager'
+
 describe Danger::Dangerfile::DSL do
   describe "#import" do
     before do
       file = make_temp_file("")
       @dm = Danger::Dangerfile.new
+      @dm.env = Danger::EnvironmentManager.new({ "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "12" })
       @dm.parse(file.path)
     end
 

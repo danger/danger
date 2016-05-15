@@ -1,7 +1,7 @@
 # So much was ripped direct from CocoaPods-Core - thanks!
 
-require 'danger/dangerfile_dsl'
-require 'danger/standard_error'
+require 'danger/danger_core/dangerfile_dsl'
+require 'danger/danger_core/standard_error'
 
 module Danger
   class Dangerfile
@@ -25,7 +25,8 @@ module Danger
     def print_known_info
       rows = []
 
-      AvailableValues.all.each do |key|
+      attributes = core_dsls.map { |dsl| dsl.public_methods(false) }.flatten
+      attributes.each do |key|
         value = self.send(key)
         value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
 
