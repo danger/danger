@@ -2,7 +2,7 @@ require 'claide'
 require 'claide/informative_error'
 
 module Danger
-  # Ripped direct from CocoaPods-Core - thanks!
+  # From below here - this entire file was taken verbatim for CocoaPods-Core.
 
   #-------------------------------------------------------------------------#
 

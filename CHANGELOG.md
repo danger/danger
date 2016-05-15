@@ -1,6 +1,6 @@
 ## Master
 
-* Add yourself here - orta
+* Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
 
 ## 0.7.4
 

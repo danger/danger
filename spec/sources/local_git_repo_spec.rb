@@ -141,7 +141,7 @@ describe Danger::CISource::LocalGitRepo do
 
         env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1238" }
 
-        expect { Danger::CISource::LocalGitRepo.new(env) }.to raise_error
+        expect { Danger::CISource::LocalGitRepo.new(env) }.to raise_error RuntimeError
       end
     end
   end

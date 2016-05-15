@@ -1,5 +1,5 @@
 require "danger/ci_source/ci_source"
-require "danger/request_sources/github"
+require "danger/request_source/github"
 
 module Danger
   class EnvironmentManager
@@ -25,18 +25,18 @@ module Danger
 
       # only GitHub for now, open for PRs adding more!
       self.request_source = GitHub.new(self.ci_source, ENV)
+      # Also Git only for now, also open for PRs adding more!
+      self.scm = GitRepo.new # For now
     end
 
     def fill_environment_vars
       request_source.fetch_details
-
-      self.scm = GitRepo.new # For now
     end
 
     def ensure_danger_branches_are_setup
       # As this currently just works with GitHub, we can use a github specific feature here:
       pull_id = ci_source.pull_request_id
-      test_branch = request_source.base_commit
+      test_branch = request_source.dsl.base_commit
 
       # Next, we want to ensure that we have a version of the current branch at a known location
       scm.exec "branch #{danger_base_branch} #{test_branch}"
