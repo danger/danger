@@ -5,6 +5,6 @@ This is **not** the [fastlane](https://github.com/KrauseFx/fastlane) source code
 
 For more information:
 
-- [Project Page](https://github.com/KrauseFx/fastlane)
-- [Documentation](https://github.com/KrauseFx/fastlane/tree/master/docs)
-- [fastlane source](https://github.com/KrauseFx/fastlane/tree/master/lib)
+- [Project Page](https://github.com/fastlane/fastlane/tree/master/fastlane)
+- [Documentation](https://github.com/fastlane/fastlane/tree/master/fastlane/docs)
+- [fastlane source](https://github.com/fastlane/fastlane/tree/master/fastlane/lib)
