@@ -1,6 +1,7 @@
 ## Master
 
 * Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
+* Add support for Drone CI = gabro
 
 ## 0.7.4
 
