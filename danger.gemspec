@@ -36,4 +36,7 @@ Gem::Specification.new do |spec|
   # spec.add_development_dependency "fastlane", ">= 1.49.0"
   spec.add_development_dependency "rubocop", "~> 0.38.0"
   spec.add_development_dependency "yard"
+
+  # spec.add_development_dependency "guard"
+  # spec.add_development_dependency "guard-rspec"
 end

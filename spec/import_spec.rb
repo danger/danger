@@ -1,66 +1,57 @@
 require 'danger/danger_core/environment_manager'
 
-# describe Danger::Dangerfile::DSL do
-#   describe "#import" do
-#     before do
-#       file = make_temp_file("")
-#       @dm = Danger::Dangerfile.new
-#       @dm.env = Danger::EnvironmentManager.new({ "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "12" })
-#       @dm.parse(file.path)
-#     end
+describe Danger::Dangerfile::DSL do
+  describe "#import" do
+    before do
+      file = make_temp_file("")
+      @dm = Danger::Dangerfile.new
+      @dm.env = Danger::EnvironmentManager.new({ "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "12" })
+      @dm.parse(file.path)
+    end
 
-#     describe "#import_local" do
-#       it "supports exact paths" do
-#         plugin_name = "ExampleExactPath"
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(false)
-#         expect(@dm.import("spec/fixtures/plugins/example_exact_path.rb")).to eq(["spec/fixtures/plugins/example_exact_path.rb"])
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
-#         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleExactPath)
+    describe "#import_local" do
+      it "supports exact paths" do
+        @dm.import("spec/fixtures/plugins/example_exact_path.rb")
 
-#         expect(@dm.example_exact_path).to eq("Hi there exact")
-#       end
+        expect { @dm.example_exact_path }.to_not raise_error
+        expect(@dm.example_exact_path.echo).to eq("Hi there exact")
+      end
 
-#       it "supports file globbing" do
-#         plugin_name = "ExampleGlobbing"
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(false)
-#         expect(@dm.import("spec/fixtures/plugins/*globbing*.rb")).to eq(["spec/fixtures/plugins/example_globbing.rb"])
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
-#         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleGlobbing)
+      it "supports file globbing" do
+        @dm.import("spec/fixtures/plugins/*globbing*.rb")
 
-#         expect(@dm.example_globbing).to eq("Hi there globbing")
-#       end
+        expect(@dm.example_globbing.echo).to eq("Hi there globbing")
+      end
 
-#       it "raises an error when calling a plugin that's not a subclass of action" do
-#         plugin_name = "ExampleBroken"
-#         expect(@dm.import("spec/fixtures/plugins/example_broken.rb")).to eq(["spec/fixtures/plugins/example_broken.rb"])
-#         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleBroken)
+      # This is going to become a lot more complicated in the future, so I'm
+      # happy to have it pending for now.
+      xit "raises an error when calling a plugin that's not a subclass of Plugin" do
+        @dm.import("spec/fixtures/plugins/example_broken.rb")
 
-#         expect do
-#           @dm.example_broken
-#         end.to raise_error("'example_broken' is not a valid danger plugin".red)
-#       end
-#     end
+        expect do
+          @dm.example_broken
+        end.to raise_error("'example_broken' is not a valid danger plugin".red)
+      end
+    end
 
-#     describe "#import_url" do
-#       it "downloads a remote .rb file" do
-#         url = "https://krausefx.com/example_remote"
-#         stub_request(:get, "https://krausefx.com/example_remote.rb").
-#           to_return(status: 200, body: File.read("spec/fixtures/plugins/example_remote.rb"))
+    describe "#import_url" do
+      it "downloads a remote .rb file" do
+        expect { @dm.example_remote.echo }.to raise_error NoMethodError
 
-#         plugin_name = "ExampleRemote"
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(false)
-#         expect(@dm.import(url).last).to end_with("/temporary_remote_action.rb") # fixed name when downloading
-#         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
-#         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleRemote)
+        url = "https://krausefx.com/example_remote"
+        stub_request(:get, "https://krausefx.com/example_remote.rb").
+          to_return(status: 200, body: File.read("spec/fixtures/plugins/example_remote.rb"))
 
-#         expect(@dm.example_remote).to eq("Hi there remote")
-#       end
+        @dm.import(url)
 
-#       it "rejects unencrypted plugins" do
-#         expect do
-#           @dm.import("http://unecnrypted.org")
-#         end.to raise_error("URL is not https, for security reasons `danger` only supports encrypted requests")
-#       end
-#     end
-#   end
-# end
+        expect(@dm.example_remote.echo).to eq("Hi there remote 🎉")
+      end
+
+      it "rejects unencrypted plugins" do
+        expect do
+          @dm.import("http://unecnrypted.org")
+        end.to raise_error("URL is not https, for security reasons `danger` only supports encrypted requests")
+      end
+    end
+  end
+end

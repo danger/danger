@@ -4,6 +4,7 @@
 * Fix for `danger local` crash due to ^ - dbgrandi
 * Add support for Drone CI = gabro
 * [BREAKING] Add initial support for more expressive and documented plugins. Breaks all existing plugins. - dbgrandi/orta
+* [BREAKING] Brings back protected_files, though now it's scoped in file. So to migrate, use `file.protect_files(...)` in your Dangerfile. - orta
 
 ## 0.7.4
 

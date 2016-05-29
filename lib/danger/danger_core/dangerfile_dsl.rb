@@ -104,6 +104,7 @@ module Danger
       def import_local(path)
         Dir[path].each do |file|
           require File.expand_path(file) # without the expand_path it would fail if the path doesn't start with ./
+          refresh_plugins
         end
       end
 
