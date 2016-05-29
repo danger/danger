@@ -50,5 +50,9 @@ module Command
         end
       end
     end
+
+    it 'has the correct version' do
+      expect(Danger::Runner.version).to eq(Danger::VERSION)
+    end
   end
 end

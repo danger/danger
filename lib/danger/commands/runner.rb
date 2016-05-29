@@ -6,6 +6,7 @@ module Danger
 
     self.summary = 'Run the Dangerfile.'
     self.command = 'danger'
+    self.version = Danger::VERSION
 
     self.plugin_prefixes = %w(claide danger)
 
