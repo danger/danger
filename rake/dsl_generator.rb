@@ -2,18 +2,18 @@ desc 'Generate documentation'
 task :doc do
   puts "## Danger\n\n"
 
-  dsls = get_public_api_methods
+  dsls = public_api_methods
   loop_group(dsls)
 end
 
 desc 'Test that our public DSL is entirely documented'
 task :spec_docs do
-  dsls = get_public_api_methods
+  dsls = public_api_methods
   docless = dsls.select { |method| method.docstring.empty? }
   raise "Found methods without documentation : #{docless.join ', '}" if docless.any?
 end
 
-def get_public_api_methods
+def public_api_methods
   require 'yard'
   files = [
     "lib/danger/danger_core/dangerfile_dsl.rb",
