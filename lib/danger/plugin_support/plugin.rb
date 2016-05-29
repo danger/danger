@@ -1,25 +1,17 @@
 module Danger
-  class Dangerfile
-    module DSL
-      class Plugin
-        def initialize(dsl)
-          @dsl = dsl
-        end
+  class Plugin
+    def initialize(dangerfile)
+      @dangerfile = dangerfile
+    end
 
-        # Since we have a reference to the DSL containing all the information
-        # We need to redirect the self calls to the DSL
-        def method_missing(method_sym, *arguments, &_block)
-          @dsl.send(method_sym, *arguments)
-        end
+    def self.instance_name
+      self.to_s.gsub("Danger", "").danger_underscore.split('/').last
+    end
 
-        def run
-          raise "run method must be implemented"
-        end
-
-        def self.description
-          "Add plugin description here"
-        end
-      end
+    # Since we have a reference to the Dangerfile containing all the information
+    # We need to redirect the self calls to the Dangerfile
+    def method_missing(method_sym, *arguments, &_block)
+      @dangerfile.send(method_sym, *arguments)
     end
   end
 end

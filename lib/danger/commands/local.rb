@@ -27,6 +27,7 @@ module Danger
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
 
       dm = Dangerfile.new
+      dm.init_plugins
       dm.env = EnvironmentManager.new(ENV)
 
       source = dm.env.ci_source

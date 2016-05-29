@@ -2,6 +2,7 @@
 
 * Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
 * Add support for Drone CI = gabro
+* [BREAKING] Add initial support for more expressive and documented plugins. Breaks all existing plugins. - dbgrandi/orta
 
 ## 0.7.4
 
