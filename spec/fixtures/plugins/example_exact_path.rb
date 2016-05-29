@@ -3,7 +3,7 @@ module Danger
     module DSL
       class ExampleExactPath < Plugin
         def run
-          return "Hi there exact 🎉"
+          return "Hi there exact"
         end
 
         def self.description

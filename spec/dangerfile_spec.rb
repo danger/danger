@@ -103,4 +103,27 @@ describe Danger::Dangerfile do
       dm.parse file.path
     end
   end
+
+  describe 'initializing plugins' do
+    it 'should add a plugin to the @plugins array' do
+      class DangerTestPlugin < Danger::Plugin; end
+      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
+      dm = Danger::Dangerfile.new
+      allow(dm).to receive(:core_dsls).and_return([])
+      dm.init_plugins
+
+      expect(dm.instance_variable_get('@plugins').length).to eq(1)
+    end
+
+    it 'should add an instance variable to the dangerfile' do
+      class DangerTestPlugin < Danger::Plugin; end
+      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
+      dm = Danger::Dangerfile.new
+      allow(dm).to receive(:core_dsls).and_return([])
+      dm.init_plugins
+
+      expect { dm.test_plugin }.to_not raise_error
+      expect(dm.test_plugin.class).to eq(DangerTestPlugin)
+    end
+  end
 end

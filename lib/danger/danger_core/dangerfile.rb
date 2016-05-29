@@ -21,6 +21,21 @@ module Danger
       'Dangerfile'
     end
 
+    # Iterate through available plugin classes and initialize them with
+    # a reference to this Dangerfile
+    def init_plugins
+      plugin_classes = ObjectSpace.each_object(Class).select { |klass| klass < Danger::Plugin }
+      @plugins = plugin_classes.map do |klass|
+        plugin = klass.new(self)
+        next if plugin.nil?
+
+        name = plugin.class.instance_name
+        self.singleton_class.instance_eval { attr_reader name.to_sym }
+        instance_variable_set("@#{name}", plugin)
+        plugin
+      end
+    end
+
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
       rows = []

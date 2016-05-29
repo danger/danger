@@ -139,25 +139,25 @@ module Danger
 
       # When an undefined method is called, we check to see if it's something
       # that the DSLs have, then starts looking at plugins support.
-      def method_missing(method_sym, *arguments, &_block)
+      def method_missing(method_sym, *_arguments, &_block)
         core_dsls.each do |dsl|
           if dsl.public_methods(false).include?(method_sym)
             return dsl.send(method_sym)
           end
         end
 
-        # Plugins
-        class_name = method_sym.to_s.danger_class
-        if Danger::Dangerfile::DSL.const_defined?(class_name)
-          plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
-          if plugin_ref < Plugin
-            plugin_ref.new(self).run(*arguments)
-          else
-            raise "'#{method_sym}' is not a valid danger plugin".red
-          end
-        else
-          raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red
-        end
+        # # Plugins
+        # class_name = method_sym.to_s.danger_class
+        # if Danger::Dangerfile::DSL.const_defined?(class_name)
+        #   plugin_ref = Danger::Dangerfile::DSL.const_get(class_name)
+        #   if plugin_ref < Plugin
+        #     plugin_ref.new(self).run(*arguments)
+        #   else
+        #     raise "'#{method_sym}' is not a valid danger plugin".red
+        #   end
+        # else
+        #   raise "Unknown method '#{method_sym}', please check out the documentation for available plugins".red
+        # end
       end
 
       def load_default_plugins

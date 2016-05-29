@@ -3,7 +3,7 @@ module Danger
     module DSL
       class ExampleGlobbing < Plugin
         def run
-          return "Hi there globbing 🎉"
+          return "Hi there globbing"
         end
 
         def self.description
