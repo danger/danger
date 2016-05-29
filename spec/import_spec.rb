@@ -17,7 +17,7 @@ require 'danger/danger_core/environment_manager'
 #         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
 #         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleExactPath)
 
-#         expect(@dm.example_exact_path).to eq("Hi there exact 🎉")
+#         expect(@dm.example_exact_path).to eq("Hi there exact")
 #       end
 
 #       it "supports file globbing" do
@@ -27,7 +27,7 @@ require 'danger/danger_core/environment_manager'
 #         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
 #         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleGlobbing)
 
-#         expect(@dm.example_globbing).to eq("Hi there globbing 🎉")
+#         expect(@dm.example_globbing).to eq("Hi there globbing")
 #       end
 
 #       it "raises an error when calling a plugin that's not a subclass of action" do
@@ -53,7 +53,7 @@ require 'danger/danger_core/environment_manager'
 #         expect(Danger::Dangerfile::DSL.const_defined?(plugin_name)).to eq(true)
 #         expect(Danger::Dangerfile::DSL.const_get(plugin_name)).to eq(Danger::Dangerfile::DSL::ExampleRemote)
 
-#         expect(@dm.example_remote).to eq("Hi there remote 🎉")
+#         expect(@dm.example_remote).to eq("Hi there remote")
 #       end
 
 #       it "rejects unencrypted plugins" do
