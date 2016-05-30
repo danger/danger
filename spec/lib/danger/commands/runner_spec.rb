@@ -50,7 +50,8 @@ module Command
         { "rev-parse --quiet --verify danger_base" => "OK" },
         { "rev-parse --quiet --verify danger_head" => "OK" },
         { "branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe" => "" },
-        { "fetch origin +refs/pull/800/merge:danger_head" => "" }
+        { "fetch origin +refs/pull/800/merge:danger_head" => "" },
+        { "branch -D danger_base" => "" }
       ]
 
       git_commands.each do |command|

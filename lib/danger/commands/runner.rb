@@ -59,7 +59,7 @@ module Danger
 
     def post_results(dm)
       gh = dm.env.request_source
-      violations =  dm.violation_report
+      violations = dm.violation_report
       status = dm.status_report
 
       gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns])

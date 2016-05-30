@@ -74,7 +74,7 @@ module Danger
       {
         errors: @errors.clone.freeze,
         warnings: @warnings.clone.freeze,
-        messages: @messages.clone.freeze,
+        messages: @messages.clone.freeze
       }
     end
 

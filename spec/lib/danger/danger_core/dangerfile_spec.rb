@@ -149,6 +149,7 @@ describe Danger::Dangerfile do
         :pr_labels,
         :pr_title,
         :status_report,
+        :violation_report,
         :warn
       ]
     end
@@ -218,7 +219,8 @@ describe Danger::Dangerfile do
         ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
         ["pr_labels", "D:2\nMaintenance Work"],
         ["pr_title", "[CI] Use Xcode 7 for Circle CI"],
-        ["status_report", { errors: [], warnings: [], messages: [], markdowns: [] }]
+        ["status_report", { errors: [], warnings: [], messages: [], markdowns: [] }],
+        ["violation_report", { errors: [], warnings: [], messages: [] }]
       ]
     end
 
