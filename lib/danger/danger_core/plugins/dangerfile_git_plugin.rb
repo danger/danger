@@ -5,7 +5,7 @@ module Danger
   class DangerfileGitPlugin < Plugin
     def initialize(dangerfile)
       super(dangerfile)
-      return nil unless dangerfile.env.scm.class == Danger::GitRepo
+      raise  unless dangerfile.env.scm.class == Danger::GitRepo
 
       @git = dangerfile.env.scm
     end
