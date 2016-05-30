@@ -80,7 +80,7 @@ module Danger
         next if plugin.nil? || @plugins[klass]
 
         name = plugin.class.instance_name
-        self.singleton_class.instance_eval { attr_reader name.to_sym }
+        self.class.send(:attr_reader, name)
         instance_variable_set("@#{name}", plugin)
 
         @plugins[klass] = plugin
