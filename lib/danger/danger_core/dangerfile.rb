@@ -37,8 +37,11 @@ module Danger
       ]
     end
 
+    # Both of these methods exist on all objects
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-fail
+    # However, as we're using using them in the DSL, they won't
+    # get method_missing called.
 
     def warn(message)
       method_missing(:warn, message)
@@ -86,11 +89,12 @@ module Danger
     end
     alias init_plugins refresh_plugins
 
+    # TODO: Needs tests
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
       rows = []
 
-      attributes = core_dsls.map { |dsl| dsl.public_methods(false) }.flatten
+      attributes = public_methods(false)
       attributes.each do |key|
         value = self.send(key)
         value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
