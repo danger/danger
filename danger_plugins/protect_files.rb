@@ -6,7 +6,7 @@ module Danger
       broken_rule = false
 
       Dir.glob(path) do |current|
-        broken_rule = true if self.env.scm.dsl.modified_files.include?(current)
+        broken_rule = true if modified_files.include?(current)
       end
 
       return unless broken_rule
