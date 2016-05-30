@@ -15,10 +15,12 @@ module Danger
     # get method_missing called.
 
     def warn(message)
+      puts "Danger warn"
       @dangerfile.warn(message)
     end
 
     def fail(message)
+      puts "Danger fail"
       @dangerfile.fail(message)
     end
 

@@ -70,6 +70,14 @@ module Danger
       }
     end
 
+    def violation_report
+      {
+        errors: @errors.clone.freeze,
+        warnings: @warnings.clone.freeze,
+        messages: @messages.clone.freeze,
+      }
+    end
+
     private
 
     def should_ignore_violation(message)
