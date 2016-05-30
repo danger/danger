@@ -53,7 +53,7 @@ module Danger
 
     def clean_up
       [danger_base_branch, danger_base_branch].each do |branch|
-        scm.exec("branch -D #{branch}") if scm.exec("rev-parse --quiet --verify #{branch}").empty?
+        scm.exec("branch -D #{branch}") unless scm.exec("rev-parse --quiet --verify #{branch}").empty?
       end
     end
 

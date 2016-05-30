@@ -15,11 +15,11 @@ module Danger
     # get method_missing called.
 
     def warn(message)
-      method_missing(:warn, message)
+      @dangerfile.warn(message)
     end
 
     def fail(message)
-      method_missing(:fail, message)
+      @dangerfile.fail(message)
     end
 
     # Since we have a reference to the Dangerfile containing all the information
