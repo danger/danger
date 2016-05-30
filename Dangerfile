@@ -4,7 +4,7 @@
 has_app_changes = !modified_files.grep(/lib/).empty?
 has_test_changes = !modified_files.grep(/spec/).empty?
 
-if ["KrauseFx", "orta"].include?(pr_author) == false
+if ["KrauseFx", "orta", "dbgrandi"].include?(pr_author) == false
   warn "Author @#{pr_author} is not a contributor"
 
   if modified_files.include?("*.gemspec")
