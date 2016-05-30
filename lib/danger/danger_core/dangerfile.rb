@@ -89,17 +89,16 @@ module Danger
     end
     alias init_plugins refresh_plugins
 
-
     def core_dsl_attributes
-      @core_plugins.map { |plugin| { :plugin => plugin, :methods => plugin.public_methods(false) } }
+      @core_plugins.map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
     end
 
     def external_dsl_attributes
-      plugins.values.reject { |plugin| @core_plugins.include? plugin } .map { |plugin| { :plugin => plugin, :methods => plugin.public_methods(false) } }
+      plugins.values.reject { |plugin| @core_plugins.include? plugin } .map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
     end
 
     def method_values_for_plugin_hashes(plugin_hashes)
-      plugin_hashes.map do |plugin_hash|
+      plugin_hashes.flat_map do |plugin_hash|
         plugin = plugin_hash[:plugin]
         methods = plugin_hash[:methods].reject { |name| plugin.method(name).arity != 0 }
 
@@ -112,14 +111,15 @@ module Danger
           value = value.join("\n") if value.kind_of?(Array) && value.count > 0
           [method.to_s, value]
         end
-      end.flatten(1)
+      end
     end
 
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
-      rows << method_values_for_plugin_hashes(core_dsl_attributes)
+      rows = []
+      rows += method_values_for_plugin_hashes(core_dsl_attributes)
       rows << ["---", "---"]
-      rows << method_values_for_plugin_hashes(external_dsl_attributes)
+      rows += method_values_for_plugin_hashes(external_dsl_attributes)
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]

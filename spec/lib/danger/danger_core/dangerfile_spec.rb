@@ -90,7 +90,6 @@ describe Danger::Dangerfile do
       dm.parse file.path
     end
 
-
     it 'does not print metadata by default' do
       file = make_temp_file ""
       dm = testing_dangerfile
@@ -123,7 +122,6 @@ describe Danger::Dangerfile do
     end
   end
 
-
   describe 'printing verbose metadata' do
     it "exposes core attributes" do
       dm = testing_dangerfile
@@ -151,7 +149,7 @@ describe Danger::Dangerfile do
         :pr_labels,
         :pr_title,
         :status_report,
-        :warn,
+        :warn
       ]
     end
 
@@ -171,6 +169,16 @@ describe Danger::Dangerfile do
       expect(methods).to eq [:my_thing]
     end
 
+    def sort_data(data)
+      data.sort do |a, b|
+        if a.first < b.first
+          -1
+        else
+          (a.first > b.first ? 1 : (a.first <=> b.first))
+        end
+      end
+    end
+
     it "creates a table from a selection of core DSL attributes info" do
       dm = testing_dangerfile
       dm.env.request_source.support_tokenless_auth = true
@@ -188,8 +196,9 @@ describe Danger::Dangerfile do
 
       # Check out the method hashes of all plugin info
       data = dm.method_values_for_plugin_hashes(dm.core_dsl_attributes)
+
       # Ensure consistent ordering
-      data = data.sort { |a ,b| a.first < b.first ? -1 : (a.first > b.first ? 1 : (a.first <=> b.first)) }
+      data = sort_data(data)
 
       expect(data).to eq [
         ["added_files", []],
@@ -206,11 +215,11 @@ describe Danger::Dangerfile do
         ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
         ["pr_labels", "D:2\nMaintenance Work"],
         ["pr_title", "[CI] Use Xcode 7 for Circle CI"],
-        ["status_report", {:errors=>[], :warnings=>[], :messages=>[], :markdowns=>[]}]
-       ]
+        ["status_report", { errors: [], warnings: [], messages: [], markdowns: [] }]
+      ]
     end
 
-     it "creates a table from a selection of external plugins DSL attributes info" do
+    it "creates a table from a selection of external plugins DSL attributes info" do
       class DangerCustomAttributeTwoPlugin < Danger::Plugin
         def something
           "value_for_something"
@@ -221,12 +230,12 @@ describe Danger::Dangerfile do
 
       data = dm.method_values_for_plugin_hashes(dm.external_dsl_attributes)
       # Ensure consistent ordering
-      data = data.sort { |a, b| a.first < b.first ? -1 : (a.first > b.first ? 1 : (a.first <=> b.first)) }
+      data = sort_data(data)
 
       expect(data).to eq [
         ["my_thing", nil],
         ["something", "value_for_something"]
       ]
-     end
+    end
   end
 end
