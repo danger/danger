@@ -26,9 +26,9 @@ module Danger
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
 
-      dm = Dangerfile.new
+      env = EnvironmentManager.new(ENV)
+      dm = Dangerfile.new(env)
       dm.init_plugins
-      dm.env = EnvironmentManager.new(ENV)
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?

@@ -33,8 +33,8 @@ module Danger
 
     def run
       # The order of the following commands is *really* important
-      dm = Dangerfile.new
-      dm.env = EnvironmentManager.new(ENV)
+      env = EnvironmentManager.new(ENV)
+      dm = Dangerfile.new(env)
       dm.verbose = verbose
       dm.init_plugins
       return unless dm.env.ci_source # if it's not a PR
