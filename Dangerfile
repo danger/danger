@@ -4,15 +4,15 @@
 has_app_changes = !modified_files.grep(/lib/).empty?
 has_test_changes = !modified_files.grep(/spec/).empty?
 
-if ["KrauseFx", "orta", "dbgrandi"].include?(pr_author) == false
-  warn "Author @#{pr_author} is not a contributor"
+# Make a note about contributors not in the organization
+octo_client = env.request_source.client
+unless octo_client.organization_member?('danger', pr_author)
+  message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
 
   if modified_files.include?("*.gemspec")
-    warn "External contributors should not modify gemspec files"
+    warn "External contributor has edited the Gemspec"
   end
 end
-
-# work_in_progress_warning
 
 if has_app_changes && !has_test_changes
   warn "Tests were not updated"
