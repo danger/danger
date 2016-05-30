@@ -66,7 +66,7 @@ module Danger
         errors: @errors.map(&:message).clone.freeze,
         warnings: @warnings.map(&:message).clone.freeze,
         messages: @messages.map(&:message).clone.freeze,
-        markdowns: @markdowns.map(&:message).clone.freeze
+        markdowns: @markdowns.map.clone.freeze
       }
     end
 
