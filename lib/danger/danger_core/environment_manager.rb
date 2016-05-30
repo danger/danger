@@ -23,10 +23,7 @@ module Danger
 
       raise "Could not find a CI source".red unless self.ci_source
 
-      # only GitHub for now, open for PRs adding more!
-      self.request_source = GitHub.new(self.ci_source, ENV)
-      # Also Git only for now, also open for PRs adding more!
-      self.scm = GitRepo.new # For now
+      self.scm = self.request_source.scm
     end
 
     def fill_environment_vars
