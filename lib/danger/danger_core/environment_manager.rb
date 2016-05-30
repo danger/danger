@@ -1,5 +1,5 @@
 require "danger/ci_source/ci_source"
-require "danger/request_source/github"
+require "danger/request_source/request_source"
 
 module Danger
   class EnvironmentManager
@@ -21,7 +21,18 @@ module Danger
         end
       end
 
+      RequestSources.constants.each do |symb|
+        c = RequestSources.const_get(symb)
+        next unless c.kind_of?(Class)
+        next unless self.ci_source.supports?(c)
+
+        request_source = c.new(self.request_source, ENV)
+        next unless request_source.validates?
+        self.request_source = request_source
+      end
+
       raise "Could not find a CI source".red unless self.ci_source
+      raise "Could not find a Request Source".red unless self.request_source
 
       self.scm = self.request_source.scm
     end
