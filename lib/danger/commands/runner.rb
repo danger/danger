@@ -35,11 +35,11 @@ module Danger
       env = EnvironmentManager.new(ENV)
       dm = Dangerfile.new(env)
 
-      dm.verbose = verbose
-      dm.init_plugins
-
       # if it's not a PR
       return unless dm.env.ci_source
+
+      dm.verbose = verbose
+      dm.init_plugins
 
       dm.env.fill_environment_vars
       dm.env.ensure_danger_branches_are_setup
