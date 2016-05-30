@@ -90,6 +90,7 @@ describe Danger::Dangerfile do
       dm.parse file.path
     end
 
+
     it 'does not print metadata by default' do
       file = make_temp_file ""
       dm = testing_dangerfile
@@ -120,5 +121,112 @@ describe Danger::Dangerfile do
       expect { dm.test_plugin }.to_not raise_error
       expect(dm.test_plugin.class).to eq(DangerTestPlugin)
     end
+  end
+
+
+  describe 'printing verbose metadata' do
+    it "exposes core attributes" do
+      dm = testing_dangerfile
+      methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
+
+      expect(methods).to eq [
+        :added_files,
+        :base_commit,
+        :branch_for_merge,
+        :commits,
+        :deleted_files,
+        :deletions,
+        :fail,
+        :head_commit,
+        :import,
+        :import_local,
+        :import_url,
+        :insertions,
+        :lines_of_code,
+        :markdown,
+        :message,
+        :modified_files,
+        :pr_author,
+        :pr_body,
+        :pr_labels,
+        :pr_title,
+        :status_report,
+        :warn,
+      ]
+    end
+
+    it "exposes no external attributes by default" do
+      dm = testing_dangerfile
+      methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
+      expect(methods).to eq []
+    end
+
+    it "exposes plugin external attributes by default" do
+      class DangerCustomAttributePlugin < Danger::Plugin
+        attr_reader :my_thing
+      end
+
+      dm = testing_dangerfile
+      methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
+      expect(methods).to eq [:my_thing]
+    end
+
+    it "creates a table from a selection of core DSL attributes info" do
+      dm = testing_dangerfile
+      dm.env.request_source.support_tokenless_auth = true
+
+      # Stub out the GitHub stuff
+      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      allow(dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
+      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      allow(dm.env.request_source.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
+
+      # Use a diff from Danger's history:
+      # https://github.com/danger/danger/compare/98c4f7760bb16300d1292bb791917d8e4990fd9a...9a424ecd5ad7404fa71cf2c99627d2882f0f02ce
+      dm.env.fill_environment_vars
+      dm.env.scm.diff_for_folder(".", from: "9a424ecd5ad7404fa71cf2c99627d2882f0f02ce", to: "98c4f7760bb16300d1292bb791917d8e4990fd9a")
+
+      # Check out the method hashes of all plugin info
+      data = dm.method_values_for_plugin_hashes(dm.core_dsl_attributes)
+      # Ensure consistent ordering
+      data = data.sort { |a ,b| a.first < b.first ? -1 : (a.first > b.first ? 1 : (a.first <=> b.first)) }
+
+      expect(data).to eq [
+        ["added_files", []],
+        ["base_commit", "704dc55988c6996f69b6873c2424be7d1de67bbe"],
+        ["branch_for_merge", "master"],
+        ["commits", []],
+        ["deleted_files", []],
+        ["deletions", 60],
+        ["head_commit", "561827e46167077b5e53515b4b7349b8ae04610b"],
+        ["insertions", 15],
+        ["lines_of_code", 75],
+        ["modified_files", "CHANGELOG.md\nlib/danger/ci_source/local_git_repo.rb\nlib/danger/commands/local.rb\nlib/danger/commands/new_plugin.rb\nlib/danger/commands/runner.rb\nlib/danger/environment_manager.rb\nspec/sources/local_git_repo_spec.rb"],
+        ["pr_author", "orta"],
+        ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
+        ["pr_labels", "D:2\nMaintenance Work"],
+        ["pr_title", "[CI] Use Xcode 7 for Circle CI"],
+        ["status_report", {:errors=>[], :warnings=>[], :messages=>[], :markdowns=>[]}]
+       ]
+    end
+
+     it "creates a table from a selection of external plugins DSL attributes info" do
+      class DangerCustomAttributeTwoPlugin < Danger::Plugin
+        def something
+          "value_for_something"
+        end
+      end
+
+      dm = testing_dangerfile
+
+      data = dm.method_values_for_plugin_hashes(dm.external_dsl_attributes)
+      # Ensure consistent ordering
+      data = data.sort { |a, b| a.first < b.first ? -1 : (a.first > b.first ? 1 : (a.first <=> b.first)) }
+
+      expect(data).to eq [
+        ["my_thing", nil],
+        ["something", "value_for_something"]
+      ]
+     end
   end
 end

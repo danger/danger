@@ -28,7 +28,7 @@ module Danger
 
     # These are the classes that are allowed to also use method_missing
     # in order to provide broader plugin support
-    def core_plugins_classes
+    def core_plugin_classes
       [
         Danger::DangerfileMessagingPlugin,
         Danger::DangerfileImportPlugin,
@@ -84,28 +84,42 @@ module Danger
         instance_variable_set("@#{name}", plugin)
 
         @plugins[klass] = plugin
-        @core_plugins << plugin if core_plugins_classes.include? klass
+        @core_plugins << plugin if core_plugin_classes.include? klass
       end
     end
     alias init_plugins refresh_plugins
 
-    # TODO: Needs tests
+
+    def core_dsl_attributes
+      @core_plugins.map { |plugin| { :plugin => plugin, :methods => plugin.public_methods(false) } }
+    end
+
+    def external_dsl_attributes
+      plugins.values.reject { |plugin| @core_plugins.include? plugin } .map { |plugin| { :plugin => plugin, :methods => plugin.public_methods(false) } }
+    end
+
+    def method_values_for_plugin_hashes(plugin_hashes)
+      plugin_hashes.map do |plugin_hash|
+        plugin = plugin_hash[:plugin]
+        methods = plugin_hash[:methods].reject { |name| plugin.method(name).arity != 0 }
+
+        methods.map do |method|
+          value = plugin.send(method)
+          value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if method == :pr_body
+
+          # So that we either have one value per row
+          # or we have [] for an empty array
+          value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          [method.to_s, value]
+        end
+      end.flatten(1)
+    end
+
     # Iterates through the DSL's attributes, and table's the output
     def print_known_info
-      rows = []
-
-      attributes = public_methods(false)
-      attributes.each do |key|
-        value = self.send(key)
-        value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if key == :pr_body
-
-        # So that we either have one value per row
-        # or we have [] for an empty array
-        value = value.join("\n") if value.kind_of?(Array) && value.count > 0
-
-        rows << [key.to_s, value]
-      end
-
+      rows << method_values_for_plugin_hashes(core_dsl_attributes)
+      rows << ["---", "---"]
+      rows << method_values_for_plugin_hashes(external_dsl_attributes)
       rows << ["---", "---"]
       rows << ["SCM", env.scm.class]
       rows << ["Source", env.ci_source.class]
