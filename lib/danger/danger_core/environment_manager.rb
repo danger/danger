@@ -47,7 +47,7 @@ module Danger
     end
 
     def clean_up
-      [danger_base_branch, danger_base_branch].each do |branch|
+      [danger_base_branch, danger_head_branch].each do |branch|
         scm.exec "branch -D #{branch}"
       end
     end
