@@ -9,13 +9,13 @@ describe Danger::GitHub do
     it 'sets a default GitHub host' do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       g = Danger::GitHub.new(stub_ci, gh_env)
-      expect(g.github_host).to eql("github.com")
+      expect(g.host).to eql("github.com")
     end
 
     it 'allows the GitHub host to be overridden' do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
       g = Danger::GitHub.new(stub_ci, gh_env)
-      expect(g.github_host).to eql("git.club-mateusa.com")
+      expect(g.host).to eql("git.club-mateusa.com")
     end
 
     it 'allows the GitHub API host to be overridden' do
