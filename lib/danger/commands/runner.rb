@@ -32,12 +32,14 @@ module Danger
     end
 
     def run
-      # The order of the following commands is *really* important
       env = EnvironmentManager.new(ENV)
       dm = Dangerfile.new(env)
+
       dm.verbose = verbose
       dm.init_plugins
-      return unless dm.env.ci_source # if it's not a PR
+
+      # if it's not a PR
+      return unless dm.env.ci_source
 
       dm.env.fill_environment_vars
       dm.env.ensure_danger_branches_are_setup
@@ -49,16 +51,16 @@ module Danger
 
       dm.parse Pathname.new(@dangerfile_path)
 
-      post_results(dm)
+      post_results dm
+      dm.print_results
 
       dm.env.clean_up
-
-      dm.print_results
     end
 
     def post_results(dm)
       gh = dm.env.request_source
-      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages, markdowns: dm.markdowns)
+      status = dm.status_report
+      gh.update_pull_request!(warnings: status[:warnings], errors: status[:errors], messages: status[:messages], markdowns: status[:markdowns])
     end
   end
 end

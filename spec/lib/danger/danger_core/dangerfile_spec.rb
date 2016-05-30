@@ -31,6 +31,8 @@ describe Danger::Dangerfile do
   end
 
   it 'respects ignored violations' do
+    allow(STDOUT).to receive(:puts) # this disables puts
+
     code = "message 'A message'\n" \
            "warn 'An ignored warning'\n" \
            "warn 'A warning'\n" \
@@ -50,6 +52,8 @@ describe Danger::Dangerfile do
 
   describe "#print_results" do
     it "Prints out 3 tables" do
+      allow(STDOUT).to receive(:puts) # this disables puts
+
       code = "message 'A message'\n" \
              "warn 'Another warning'\n" \
              "warn 'A warning'\n" \
