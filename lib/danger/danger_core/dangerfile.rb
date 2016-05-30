@@ -8,6 +8,9 @@ require 'danger/danger_core/plugins/dangerfile_import_plugin'
 require 'danger/danger_core/plugins/dangerfile_git_plugin'
 require 'danger/danger_core/plugins/dangerfile_github_plugin'
 
+require 'danger/danger_core/plugins/dangerfile_github_plugin'
+
+
 module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL
@@ -68,6 +71,12 @@ module Danger
 
       # Triggers the core plugins
       @env = env_manager
+
+      # Triggers local plugins from the root of a project
+      Dir["./danger_plugins/*.rb"].each do |file|
+        require File.expand_path(file)
+      end
+
       refresh_plugins
     end
 

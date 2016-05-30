@@ -153,10 +153,13 @@ describe Danger::Dangerfile do
       ]
     end
 
+    # NOTE: :protect_files comes from this repo, it is considered a "Danger" plugin, for
+    # danger, not one that is shipped _with danger_. It is included here, because it
+
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq []
+      expect(methods).to eq [:protect_files]
     end
 
     it "exposes plugin external attributes by default" do
@@ -166,7 +169,7 @@ describe Danger::Dangerfile do
 
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:my_thing]
+      expect(methods).to eq [:my_thing, :protect_files]
     end
 
     def sort_data(data)

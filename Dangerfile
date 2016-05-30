@@ -35,4 +35,5 @@ if modified_files.empty? && added_files.empty? && deleted_files.empty?
   fail "This PR has no changes at all, this is likely a developer issue."
 end
 
-file.protect_files(path: "danger.gemspec", message: ".gemspec modified", fail_build: false)
+# This comes from `./danger_plugins/protect_files.rb` which is automatically parsed by Danger
+files.protect_files(path: "danger.gemspec", message: ".gemspec modified", fail_build: false)
