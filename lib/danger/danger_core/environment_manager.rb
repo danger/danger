@@ -15,7 +15,6 @@ module Danger
         if self.ci_source.repo_slug and self.ci_source.pull_request_id
           break
         else
-          puts "Not a Pull Request - skipping `danger` run"
           self.ci_source = nil
           return nil
         end
@@ -29,14 +28,23 @@ module Danger
       self.scm = GitRepo.new # For now
     end
 
+    def pr?
+      self.ci_source != nil
+    end
+
     def fill_environment_vars
       request_source.fetch_details
     end
 
     def ensure_danger_branches_are_setup
+      clean_up
+
       # As this currently just works with GitHub, we can use a github specific feature here:
       pull_id = ci_source.pull_request_id
-      test_branch = request_source.dsl.base_commit
+
+      # TODO: This isn't optimal, should be hidden behind some kind of facade, but the plugin makes that
+      # difficult to do without accessing the dangerfile
+      test_branch = request_source.pr_json[:base][:sha]
 
       # Next, we want to ensure that we have a version of the current branch at a known location
       scm.exec "branch #{danger_base_branch} #{test_branch}"
@@ -48,7 +56,7 @@ module Danger
 
     def clean_up
       [danger_base_branch, danger_base_branch].each do |branch|
-        scm.exec "branch -D #{branch}"
+        scm.exec("branch -D #{branch}") unless scm.exec("rev-parse --quiet --verify #{branch}").empty?
       end
     end
 

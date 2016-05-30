@@ -3,78 +3,13 @@ require 'octokit'
 require 'redcarpet'
 
 module Danger
-  ### The Request Source API exposed to the Dangerfile DSL.
-
-  class GitHubDSL
-    def initialize(github)
-      @github = github
-    end
-
-    # @!group PR Metadata
-    # The title of the Pull Request
-    # @return String
-    #
-    def pr_title
-      @github.pr_json[:title].to_s
-    end
-
-    # @!group PR Metadata
-    # The body text of the Pull Request
-    # @return String
-    #
-    def pr_body
-      @github.pr_json[:body].to_s
-    end
-
-    # @!group PR Metadata
-    # The username of the author of the Pull Request
-    # @return String
-    #
-    def pr_author
-      @github.pr_json[:user][:login].to_s
-    end
-
-    # @!group PR Metadata
-    # The labels assigned to the Pull Request
-    # @return [String]
-    #
-    def pr_labels
-      @github.issue_json[:labels].map { |l| l[:name] }
-    end
-
-    # @!group PR Commit Metadata
-    # The branch to which the PR is going to be merged into
-    # @return String
-    #
-    def branch_for_merge
-      @github.pr_json[:base][:ref]
-    end
-
-    # @!group PR Commit Metadata
-    # The base commit to which the PR is going to be merged as a parent
-    # @return String
-    #
-    def base_commit
-      @github.pr_json[:base][:sha]
-    end
-
-    # @!group PR Commit Metadata
-    # The head commit to which the PR is requesting to be merged from
-    # @return String
-    #
-    def head_commit
-      @github.pr_json[:head][:sha]
-    end
-  end
-
   class GitHub
-    attr_accessor :dsl, :ci_source, :pr_json, :issue_json, :environment, :support_tokenless_auth, :ignored_violations, :github_host
+    attr_accessor :ci_source, :pr_json, :issue_json, :environment, :support_tokenless_auth, :ignored_violations, :github_host
 
     def initialize(ci_source, environment)
       self.ci_source = ci_source
       self.environment = environment
       self.support_tokenless_auth = false
-      self.dsl = GitHubDSL.new(self)
 
       Octokit.auto_paginate = true
       @token = @environment["DANGER_GITHUB_API_TOKEN"]

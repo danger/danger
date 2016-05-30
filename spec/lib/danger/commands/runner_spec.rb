@@ -33,6 +33,8 @@ module Command
     end
 
     it 'runtime errors when no Dangerfile found' do
+      allow(STDOUT).to receive(:puts) # this disables puts
+
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           expect { Danger::Runner.run([]) }.to raise_error SystemExit
@@ -40,13 +42,28 @@ module Command
       end
     end
 
-    it 'runtime errors when no Dangerfile found' do
+    it 'gets through the whole command' do
+      @git_mock = Danger::GitRepo.new
+      allow(Danger::GitRepo).to receive(:new).and_return @git_mock
+
+      git_commands = [
+        { "rev-parse --quiet --verify danger_base" => "OK" },
+        { "rev-parse --quiet --verify danger_head" => "OK" },
+        { "branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe" => "" },
+        { "fetch origin +refs/pull/800/merge:danger_head" => "" },
+        { "branch -D danger_base" => "" }
+      ]
+
+      git_commands.each do |command|
+        allow(@git_mock).to receive(:exec).with(command.keys.first).and_return(command.values.first)
+      end
+
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          # `git remote add origin git@github.com:artsy/eigen.git`
+          `git remote add origin git@github.com:artsy/eigen.git`
           `touch Dangerfile`
-          expect { Danger::Runner.run([]) }.to_not raise_error SystemExit
+          Danger::Runner.run([])
         end
       end
     end

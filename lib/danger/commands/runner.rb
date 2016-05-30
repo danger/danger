@@ -32,33 +32,38 @@ module Danger
     end
 
     def run
-      # The order of the following commands is *really* important
-      dm = Dangerfile.new
-      dm.init_plugins
-      dm.env = EnvironmentManager.new(ENV)
-      dm.verbose = verbose
-      return unless dm.env.ci_source # if it's not a PR
+      env = EnvironmentManager.new(ENV)
+      dm = Dangerfile.new(env)
 
-      dm.env.fill_environment_vars
-      dm.env.ensure_danger_branches_are_setup
+      if dm.env.pr?
+        dm.verbose = verbose
+        dm.init_plugins
 
-      # Offer the chance for a user to specify a branch through the command line
-      ci_base = @base || dm.env.danger_head_branch
-      ci_head = @head || dm.env.danger_base_branch
-      dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+        dm.env.fill_environment_vars
+        dm.env.ensure_danger_branches_are_setup
 
-      dm.parse Pathname.new(@dangerfile_path)
+        # Offer the chance for a user to specify a branch through the command line
+        ci_base = @base || dm.env.danger_head_branch
+        ci_head = @head || dm.env.danger_base_branch
+        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
-      post_results(dm)
+        dm.parse Pathname.new(@dangerfile_path)
 
-      dm.env.clean_up
+        post_results dm
+        dm.print_results
 
-      dm.print_results
+        dm.env.clean_up
+      else
+        puts "Not a Pull Request - skipping `danger` run"
+      end
     end
 
     def post_results(dm)
       gh = dm.env.request_source
-      gh.update_pull_request!(warnings: dm.warnings, errors: dm.errors, messages: dm.messages, markdowns: dm.markdowns)
+      violations = dm.violation_report
+      status = dm.status_report
+
+      gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns])
     end
   end
 end

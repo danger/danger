@@ -12,7 +12,7 @@ task default: :spec
 task :spec do
   Rake::Task['specs'].invoke
   Rake::Task['rubocop'].invoke
-  Rake::Task['spec_docs'].invoke
+  # Rake::Task['spec_docs'].invoke
 end
 
 desc 'Run RuboCop on the lib/specs directory'
