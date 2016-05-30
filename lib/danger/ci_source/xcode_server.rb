@@ -7,6 +7,10 @@ module Danger
         return !env["XCS_BOT_NAME"].nil?
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def initialize(env)
         bot_name = env["XCS_BOT_NAME"]
         return if bot_name.nil?

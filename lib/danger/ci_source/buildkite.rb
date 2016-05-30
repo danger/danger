@@ -4,6 +4,7 @@
 module Danger
   module CISource
     class Buildkite < CI
+
       def self.validates?(env)
         return !env["BUILDKITE"].nil?
       end
@@ -17,6 +18,11 @@ module Danger
 
         self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
       end
+
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::BitBucket]
+      end
+
     end
   end
 end

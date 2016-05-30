@@ -8,6 +8,10 @@ module Danger
         return !env["ghprbPullId"].nil? && !env["GIT_URL"].nil?
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def initialize(env)
         repo = env["GIT_URL"]
         unless repo.nil?
