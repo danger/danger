@@ -3,11 +3,16 @@
 require 'danger/danger_core/dangerfile_dsl'
 require 'danger/danger_core/standard_error'
 
+require 'danger/danger_core/plugins/dangerfile_messaging_plugin'
+require 'danger/danger_core/plugins/dangerfile_import_plugin'
+require 'danger/danger_core/plugins/dangerfile_git_plugin'
+require 'danger/danger_core/plugins/dangerfile_github_plugin'
+
 module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL
 
-    attr_accessor :env, :warnings, :errors, :messages, :markdowns, :verbose
+    attr_accessor :env, :verbose, :plugins
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the Dangerfile was generated programmatically.
@@ -21,10 +26,51 @@ module Danger
       'Dangerfile'
     end
 
+    # These are the classes that are allowed to also use method_missing
+    # in order to provide broader plugin support
+    def core_plugins_classes
+      [
+        Danger::DangerfileMessagingPlugin,
+        Danger::DangerfileImportPlugin,
+        Danger::DangerfileGitHubPlugin,
+        Danger::DangerfileGitPlugin
+      ]
+    end
+
+    # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
+    # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-fail
+
+    def warn(message)
+      method_missing(:warn, message)
+    end
+
+    def fail(message)
+      method_missing(:fail, message)
+    end
+
+    # When an undefined method is called, we check to see if it's something
+    # that the DSLs have, then starts looking at plugins support.
+    def method_missing(method_sym, *arguments, &_block)
+      @core_plugins.each do |plugin|
+        if plugin.public_methods(false).include?(method_sym)
+          return plugin.send(method_sym, *arguments)
+        end
+      end
+      super
+    end
+
+    def initialize(env_manager)
+      @plugins = {}
+      @core_plugins = []
+
+      # Triggers the core plugins
+      @env = env_manager
+      refresh_plugins
+    end
+
     # Iterate through available plugin classes and initialize them with
     # a reference to this Dangerfile
     def refresh_plugins
-      @plugins ||= {}
       plugins = ObjectSpace.each_object(Class).select { |klass| klass < Danger::Plugin }
       plugins.map do |klass|
         plugin = klass.new(self)
@@ -33,7 +79,9 @@ module Danger
         name = plugin.class.instance_name
         self.singleton_class.instance_eval { attr_reader name.to_sym }
         instance_variable_set("@#{name}", plugin)
+
         @plugins[klass] = plugin
+        @core_plugins << plugin if core_plugins_classes.include? klass
       end
     end
     alias init_plugins refresh_plugins
@@ -110,13 +158,14 @@ module Danger
     end
 
     def print_results
-      return if (self.errors + self.warnings + self.messages + self.markdowns).count == 0
+      status = status_report
+      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
 
       puts ""
       puts "danger results:"
       [:errors, :warnings, :messages].each do |current|
         params = {}
-        params[:rows] = self.send(current).collect { |a| [a.message] }
+        params[:rows] = status[current].map { |item| [item] }
         next unless params[:rows].count > 0
         params[:title] = case current
                          when :errors
@@ -132,8 +181,8 @@ module Danger
         puts ""
       end
 
-      puts "Markdown: ".green if self.markdowns.count > 0
-      self.markdowns.each do |current_markdown|
+      puts "Markdown: ".green if status[:markdowns].count > 0
+      status[:markdowns].each do |current_markdown|
         puts current_markdown
       end
     end

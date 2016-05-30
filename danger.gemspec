@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 0.38.0"
   spec.add_development_dependency "yard"
 
-  # spec.add_development_dependency "guard"
-  # spec.add_development_dependency "guard-rspec"
+  spec.add_development_dependency "listen", '3.0.7'
+  spec.add_development_dependency "guard"
+  spec.add_development_dependency "guard-rspec"
 end

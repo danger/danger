@@ -54,18 +54,20 @@ describe Danger::GitHub do
                                             "Some warning"])
     end
 
-    fdescribe "DSL Attributes" do
+    # TODO: Move to the plugin
+    #
+    xdescribe "DSL Attributes" do
       it 'sets the right commit sha' do
         @g.fetch_details
 
-        expect(@g.pr_json[:base][:sha]).to eql(@g.dsl.base_commit)
-        expect(@g.pr_json[:head][:sha]).to eql(@g.dsl.head_commit)
-        expect(@g.pr_json[:base][:ref]).to eql(@g.dsl.branch_for_merge)
+        expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
+        expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
+        expect(@g.pr_json[:base][:ref]).to eql(@g.branch_for_merge)
       end
 
       it 'sets the right labels' do
         @g.fetch_details
-        expect(@g.dsl.pr_labels).to eql(["D:2", "Maintenance Work"])
+        expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
       end
     end
 

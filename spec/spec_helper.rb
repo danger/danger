@@ -18,6 +18,17 @@ def stub_ci
   Danger::CISource::CircleCI.new(env)
 end
 
+def testing_dangerfile
+  outer_env = {
+    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+    "TRAVIS_PULL_REQUEST" => "800",
+    "TRAVIS_REPO_SLUG" => "artsy/eigen",
+    "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d"
+  }
+  env = Danger::EnvironmentManager.new(outer_env)
+  dm = Danger::Dangerfile.new(env)
+end
+
 def fixture(file)
   File.read("spec/fixtures/#{file}.json")
 end

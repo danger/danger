@@ -15,20 +15,20 @@ describe Danger::GitRepo do
         `git commit -m "another"`
       end
 
-      @g = Danger::GitRepo.new
-      @g.diff_for_folder(@tmp_dir, from: "master", to: "new")
+      @dm = testing_dangerfile
+      @dm.env.scm.diff_for_folder(@tmp_dir, from: "master", to: "new")
     end
 
     it "#modified_files returns a FileList object" do
-      expect(@g.dsl.modified_files.class).to eql(Danger::FileList)
+      expect(@dm.modified_files.class).to eql(Danger::FileList)
     end
 
     it "#added_files returns a FileList object" do
-      expect(@g.dsl.added_files.class).to eql(Danger::FileList)
+      expect(@dm.added_files.class).to eql(Danger::FileList)
     end
 
     it "#deleted_files returns a FileList object" do
-      expect(@g.dsl.deleted_files.class).to eql(Danger::FileList)
+      expect(@dm.deleted_files.class).to eql(Danger::FileList)
     end
   end
 
@@ -47,10 +47,10 @@ describe Danger::GitRepo do
           `git commit -m "another"`
         end
 
-        g = Danger::GitRepo.new
-        g.diff_for_folder(dir, from: "master", to: "new")
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.dsl.added_files).to eql(["file2"])
+        expect(@dm.added_files).to eql(["file2"])
       end
     end
 
@@ -69,10 +69,10 @@ describe Danger::GitRepo do
           `git commit -m "another"`
         end
 
-        g = Danger::GitRepo.new
-        g.diff_for_folder(dir, from: "master", to: "new")
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.dsl.deleted_files).to eql(["file"])
+        expect(@dm.deleted_files).to eql(["file"])
       end
     end
 
@@ -91,10 +91,10 @@ describe Danger::GitRepo do
           `git commit -m "another"`
         end
 
-        g = Danger::GitRepo.new
-        g.diff_for_folder(dir, from: "master", to: "new")
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.dsl.modified_files).to eql(["file"])
+        expect(@dm.modified_files).to eql(["file"])
       end
     end
   end
@@ -115,10 +115,10 @@ describe Danger::GitRepo do
           `git commit -m "another"`
         end
 
-        g = Danger::GitRepo.new
-        g.diff_for_folder(dir, from: "master", to: "new")
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.dsl.insertions).to eql(3)
+        expect(@dm.insertions).to eql(3)
       end
     end
 
@@ -137,10 +137,10 @@ describe Danger::GitRepo do
           `git commit -m "another"`
         end
 
-        g = Danger::GitRepo.new
-        g.diff_for_folder(dir, from: "master", to: "new")
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(g.dsl.deletions).to eql(1)
+        expect(@dm.deletions).to eql(1)
       end
     end
 
@@ -160,10 +160,10 @@ describe Danger::GitRepo do
             `git commit -m "another"`
           end
 
-          g = Danger::GitRepo.new
-          g.diff_for_folder(dir, from: "master", to: "new")
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-          messages = g.dsl.commits.map(&:message)
+          messages = @dm.commits.map(&:message)
           expect(messages).to eq(['another'])
         end
       end
