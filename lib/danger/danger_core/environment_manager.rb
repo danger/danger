@@ -15,7 +15,6 @@ module Danger
         if self.ci_source.repo_slug and self.ci_source.pull_request_id
           break
         else
-          puts "Not a Pull Request - skipping `danger` run"
           self.ci_source = nil
           return nil
         end
@@ -27,6 +26,10 @@ module Danger
       self.request_source = GitHub.new(self.ci_source, ENV)
       # Also Git only for now, also open for PRs adding more!
       self.scm = GitRepo.new # For now
+    end
+
+    def pr?
+      self.ci_source != nil
     end
 
     def fill_environment_vars

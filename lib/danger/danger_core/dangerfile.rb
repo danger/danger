@@ -76,7 +76,7 @@ module Danger
         require File.expand_path(file)
       end
 
-      refresh_plugins
+      refresh_plugins if env_manager.pr?
     end
 
     # Iterate through available plugin classes and initialize them with
