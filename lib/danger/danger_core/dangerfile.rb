@@ -83,7 +83,8 @@ module Danger
     # a reference to this Dangerfile
     def refresh_plugins
       plugins = ObjectSpace.each_object(Class).select { |klass| klass < Danger::Plugin }
-      plugins.map do |klass|
+      plugins.each do |klass|
+        next if klass.singleton_class?
         plugin = klass.new(self)
         next if plugin.nil? || @plugins[klass]
 
