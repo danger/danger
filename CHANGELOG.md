@@ -6,6 +6,7 @@
 * [BREAKING] Add initial support for more expressive and documented plugins. Breaks all existing plugins. - dbgrandi/orta
 * All core DSL attributes are handled via Danger Plugins - orta
 * Initial work on the Plugin -> JSON mapper - orta
+* Add support for Semaphore CI - starsirius
 
 ## 0.7.4
 
