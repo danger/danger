@@ -20,6 +20,10 @@ module Danger
         git.exec command
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def initialize(env = {})
         github_host = env["DANGER_GITHUB_HOST"] || "github.com"
 

@@ -22,10 +22,19 @@ module Danger
 
       raise "Could not find a CI source".red unless self.ci_source
 
-      # only GitHub for now, open for PRs adding more!
-      self.request_source = GitHub.new(self.ci_source, ENV)
-      # Also Git only for now, also open for PRs adding more!
-      self.scm = GitRepo.new # For now
+      RequestSources.constants.each do |symb|
+        c = RequestSources.const_get(symb)
+        next unless c.kind_of?(Class)
+        next unless self.ci_source.supports?(c)
+
+        request_source = c.new(self.ci_source, ENV)
+        next unless request_source.validates?
+        self.request_source = request_source
+      end
+
+      raise "Could not find a Request Source".red unless self.request_source
+
+      self.scm = self.request_source.scm
     end
 
     def pr?
