@@ -40,19 +40,22 @@ module Danger
         dm.init_plugins
 
         dm.env.fill_environment_vars
-        dm.env.ensure_danger_branches_are_setup
 
-        # Offer the chance for a user to specify a branch through the command line
-        ci_base = @base || dm.env.danger_head_branch
-        ci_head = @head || dm.env.danger_base_branch
-        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+        begin
+          dm.env.ensure_danger_branches_are_setup
 
-        dm.parse Pathname.new(@dangerfile_path)
+          # Offer the chance for a user to specify a branch through the command line
+          ci_base = @base || dm.env.danger_head_branch
+          ci_head = @head || dm.env.danger_base_branch
+          dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
-        post_results dm
-        dm.print_results
+          dm.parse Pathname.new(@dangerfile_path)
 
-        dm.env.clean_up
+          post_results dm
+          dm.print_results
+        ensure
+          dm.env.clean_up
+        end
       else
         puts "Not a Pull Request - skipping `danger` run"
       end

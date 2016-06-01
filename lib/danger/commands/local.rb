@@ -60,11 +60,14 @@ module Danger
 
       dm.env.request_source = gh
 
-      dm.env.ensure_danger_branches_are_setup
-      dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
-      dm.parse(Pathname.new(@dangerfile_path))
-      dm.print_results
-      dm.env.clean_up
+      begin
+        dm.env.ensure_danger_branches_are_setup
+        dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
+        dm.parse(Pathname.new(@dangerfile_path))
+        dm.print_results
+      ensure
+        dm.env.clean_up
+      end
     end
   end
 end
