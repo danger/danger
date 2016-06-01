@@ -1,6 +1,7 @@
 ## Master
 
 * Support multiple Danger instances with `--dangerId` - marcelofabri
+* Add base request source so services other than GitHub could be used with Danger. - justMaku
 
 ## 0.8.1
 
