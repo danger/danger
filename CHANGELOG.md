@@ -5,6 +5,7 @@
 * Add support for Drone CI = gabro
 * [BREAKING] Add initial support for more expressive and documented plugins. Breaks all existing plugins. - dbgrandi/orta
 * All core DSL attributes are handled via Danger Plugins - orta
+* Add support for Semaphore CI - starsirius
 
 ## 0.7.4
 
