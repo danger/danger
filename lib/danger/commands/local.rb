@@ -50,16 +50,21 @@ module Danger
       # We can use tokenless here, as it's running on someone's computer
       # and is IP locked, as opposed  to on the CI.
       gh.support_tokenless_auth = true
-      gh.fetch_details
+
+      begin
+        gh.fetch_details
+      rescue Octokit::NotFound
+        puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through " + "DANGER_GITHUB_API_TOKEN".yellow + " environment variable."
+        return
+      end
 
       dm.env.request_source = gh
-
-      dm.env.scm = GitRepo.new
 
       dm.env.ensure_danger_branches_are_setup
       dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
       dm.parse(Pathname.new(@dangerfile_path))
       dm.print_results
+      dm.env.clean_up
     end
   end
 end
