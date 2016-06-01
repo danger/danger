@@ -18,16 +18,14 @@ def public_api_methods
   files = [
     "lib/danger/danger_core/dangerfile_dsl.rb",
     "lib/danger/scm_source/git_repo.rb",
-    "lib/danger/request_source/github.rb"
   ]
   docs = YARD::Registry.load(files, true)
 
   danger_dsl = docs.at("Danger::Dangerfile::DSL").meths(visibility: :public)
-  github_dsls = docs.at("Danger::GitHubDSL").meths(visibility: :public)
   git_dsls = docs.at("Danger::GitRepoDSL").meths(visibility: :public)
 
   # Remove init functions
-  (danger_dsl + git_dsls + github_dsls).reject { |m| m.name == :initialize }
+  (danger_dsl + git_dsls).reject { |m| m.name == :initialize }
 end
 
 def loop_group(methods)

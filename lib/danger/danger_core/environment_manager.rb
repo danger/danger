@@ -1,5 +1,5 @@
 require "danger/ci_source/ci_source"
-require "danger/request_source/github"
+require "danger/request_source/request_source"
 
 module Danger
   class EnvironmentManager
@@ -33,46 +33,34 @@ module Danger
     end
 
     def fill_environment_vars
-      request_source.fetch_details
+      self.request_source.fetch_details
     end
 
     def ensure_danger_branches_are_setup
       clean_up
 
-      # As this currently just works with GitHub, we can use a github specific feature here:
-      pull_id = ci_source.pull_request_id
-
-      # TODO: This isn't optimal, should be hidden behind some kind of facade, but the plugin makes that
-      # difficult to do without accessing the dangerfile
-      test_branch = request_source.pr_json[:base][:sha]
-
-      # Next, we want to ensure that we have a version of the current branch at a known location
-      scm.exec "branch #{danger_base_branch} #{test_branch}"
-
-      # OK, so we want to ensure that we have a known head branch, this will always represent
-      # the head of the PR ( e.g. the most recent commit that will be merged. )
-      scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{danger_head_branch}"
+      self.request_source.setup_danger_branches
     end
 
     def clean_up
-      [danger_base_branch, danger_base_branch].each do |branch|
+      [EnvironmentManager.danger_base_branch, EnvironmentManager.danger_head_branch].each do |branch|
         scm.exec("branch -D #{branch}") unless scm.exec("rev-parse --quiet --verify #{branch}").empty?
       end
     end
 
     def meta_info_for_base
-      scm.exec("--no-pager log #{danger_base_branch} -n1")
+      scm.exec("--no-pager log #{EnvironmentManager.danger_base_branch} -n1")
     end
 
     def meta_info_for_head
-      scm.exec("--no-pager log #{danger_head_branch} -n1")
+      scm.exec("--no-pager log #{EnvironmentManager.danger_head_branch} -n1")
     end
 
-    def danger_head_branch
+    def self.danger_head_branch
       "danger_head"
     end
 
-    def danger_base_branch
+    def self.danger_base_branch
       "danger_base"
     end
   end
