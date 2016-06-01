@@ -9,13 +9,13 @@ describe Danger::RequestSources::GitHub do
     it 'sets a default GitHub host' do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.github_host).to eql("github.com")
+      expect(g.host).to eql("github.com")
     end
 
     it 'allows the GitHub host to be overridden' do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
       g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.github_host).to eql("git.club-mateusa.com")
+      expect(g.host).to eql("git.club-mateusa.com")
     end
 
     it 'allows the GitHub API host to be overridden' do
@@ -29,7 +29,7 @@ describe Danger::RequestSources::GitHub do
   describe "valid server response" do
     before do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
-      @g = Danger::GitHub.new(stub_ci, gh_env)
+      @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
       pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
