@@ -24,7 +24,7 @@ end
 
 declared_trivial = (pr_title + pr_body).include?("#trivial") || !has_app_changes
 if !modified_files.include?("CHANGELOG.md") && !declared_trivial
-  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).", sticky: false)
+  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).")
 end
 
 ### Oddly enough, it's quite possible to do some testing of Danger, inside Danger
