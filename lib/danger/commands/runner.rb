@@ -11,7 +11,8 @@ module Danger
     self.plugin_prefixes = %w(claide danger)
 
     def initialize(argv)
-      @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
+      dangerfile = argv.option('dangerfile', 'Dangerfile')
+      @dangerfile_path = dangerfile if File.exist? dangerfile
       @base = argv.option('base')
       @head = argv.option('head')
       super
@@ -27,7 +28,8 @@ module Danger
     def self.options
       [
         ['--base=[master|dev|stable]', 'A branch/tag/commit to use as the base of the diff'],
-        ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head']
+        ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head'],
+        ['--dangerfile=<path/to/dangerfile>', 'The location of your Dangerfile']
       ].concat(super)
     end
 
