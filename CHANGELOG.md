@@ -7,6 +7,7 @@
 * All core DSL attributes are handled via Danger Plugins - orta
 * Initial work on the Plugin -> JSON mapper - orta
 * Add support for Semaphore CI - starsirius
+* Add Ruby 2.3 support - segiddins
 
 ## 0.7.4
 
