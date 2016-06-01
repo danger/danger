@@ -17,8 +17,7 @@ describe Danger::CISource::CircleCI do
   it 'validates when circle env var is found and it has no PR url' do
     env = { "CIRCLE_BUILD_NUM" => "true",
       "CIRCLE_PROJECT_USERNAME" => "orta",
-      "CIRCLE_PROJECT_REPONAME" => "thing"
-    }
+      "CIRCLE_PROJECT_REPONAME" => "thing" }
     expect(Danger::CISource::CircleCI.validates?(env)).to be true
   end
 
