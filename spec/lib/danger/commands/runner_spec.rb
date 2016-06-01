@@ -55,8 +55,11 @@ module Command
           { "rev-parse --quiet --verify danger_head" => "OK" },
           { "branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe" => "" },
           { "fetch origin +refs/pull/800/merge:danger_head" => "" },
-          { "branch -D danger_base" => "" }
+          { "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-" => "git@github.com:artsy/eigen.git" },
+          { "branch -D danger_base" => "" },
+          { "branch -D danger_head" => "" }
         ]
+
         git_commands.each do |command|
           allow(@git_mock).to receive(:exec).with(command.keys.first).and_return(command.values.first)
         end
@@ -80,6 +83,7 @@ module Command
           Dir.chdir dir do
             `git init`
             `git remote add origin git@github.com:artsy/eigen.git`
+
             File.write("Dangerfile", %{
               message "Hi"
               warn "OK"
@@ -89,7 +93,7 @@ module Command
               warn("ok", sticky: false)
               fail("not ok", sticky: false)
               message("hi", sticky: false)
-    })
+            })
 
             # This will call `abort` due to the fails in the Dangerfile
             expect { Danger::Runner.run([]) }.to raise_error(SystemExit)
