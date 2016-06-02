@@ -1,4 +1,4 @@
-## Master
+## 0.8.0
 
 * Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
 * Fix for `danger local` crash due to ^ - dbgrandi
