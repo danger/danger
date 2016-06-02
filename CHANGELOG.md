@@ -1,5 +1,7 @@
 ## Master
 
+## 0.8.1
+
 * Fix Ruby 2.0 support - segiddins
 
 ## 0.8.0
