@@ -29,6 +29,9 @@ module Command
       issue_comments_response = JSON.parse(fixture("issue_comments"), symbolize_names: true)
       allow(octokit_mock).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issue_comments_response)
 
+      issue_comment_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      allow(octokit_mock).to receive(:add_comment).and_return(issue_comment_response)
+
       allow(Octokit::Client).to receive(:new).and_return octokit_mock
     end
 
@@ -42,48 +45,61 @@ module Command
       end
     end
 
-    it 'allows overriding the Dangerfile location' do
-      allow(STDOUT).to receive(:puts) # this disables puts
+    describe "full run" do
+      before do
+        @git_mock = Danger::GitRepo.new
+        allow(Danger::GitRepo).to receive(:new).and_return @git_mock
 
-      Dir.mktmpdir do |dir|
-        Dir.chdir dir do
-          Dir.mkdir 'subdir'
-          Dir.chdir 'subdir' do
+        git_commands = [
+          { "rev-parse --quiet --verify danger_base" => "OK" },
+          { "rev-parse --quiet --verify danger_head" => "OK" },
+          { "branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe" => "" },
+          { "fetch origin +refs/pull/800/merge:danger_head" => "" },
+          { "branch -D danger_base" => "" }
+        ]
+        git_commands.each do |command|
+          allow(@git_mock).to receive(:exec).with(command.keys.first).and_return(command.values.first)
+        end
+      end
+
+      it 'gets through the whole command' do
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            `git remote add origin git@github.com:artsy/eigen.git`
             `touch Dangerfile`
+            Danger::Runner.run([])
           end
-          expect { Danger::Runner.run(['--dangerfile=subdir/Dangerfile']) }.not_to raise_error SystemExit
         end
       end
-    end
 
-    it 'gets through the whole command' do
-      @git_mock = Danger::GitRepo.new
-      allow(Danger::GitRepo).to receive(:new).and_return @git_mock
+      it 'handles an example dangerfile well' do
+        allow(STDOUT).to receive(:puts) # this disables puts
 
-      git_commands = [
-        { "rev-parse --quiet --verify danger_base" => "OK" },
-        { "rev-parse --quiet --verify danger_head" => "OK" },
-        { "branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe" => "" },
-        { "fetch origin +refs/pull/800/merge:danger_head" => "" },
-        { "branch -D danger_base" => "" }
-      ]
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            `git remote add origin git@github.com:artsy/eigen.git`
+            File.write("Dangerfile", %{
+              message "Hi"
+              warn "OK"
+              fail "Not OK"
+              markdown "OK [link](http://sure.com)"
 
-      git_commands.each do |command|
-        allow(@git_mock).to receive(:exec).with(command.keys.first).and_return(command.values.first)
-      end
+              warn("ok", sticky: false)
+              fail("not ok", sticky: false)
+              message("hi", sticky: false)
+    })
 
-      Dir.mktmpdir do |dir|
-        Dir.chdir dir do
-          `git init`
-          `git remote add origin git@github.com:artsy/eigen.git`
-          `touch Dangerfile`
-          Danger::Runner.run([])
+            # This will call `abort` due to the fails in the Dangerfile
+            expect { Danger::Runner.run([]) }.to raise_error(SystemExit)
+          end
         end
       end
-    end
 
-    it 'has the correct version' do
-      expect(Danger::Runner.version).to eq(Danger::VERSION)
+      it 'has the correct version' do
+        expect(Danger::Runner.version).to eq(Danger::VERSION)
+      end
     end
   end
 end

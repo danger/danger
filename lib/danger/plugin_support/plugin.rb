@@ -12,16 +12,14 @@ module Danger
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-fail
     # However, as we're using using them in the DSL, they won't
-    # get method_missing called.
+    # get method_missing called correctly.
 
-    def warn(message)
-      puts "Danger warn"
-      @dangerfile.warn(message)
+    def warn(*args, &blk)
+      method_missing(:warn, *args, &blk)
     end
 
-    def fail(message)
-      puts "Danger fail"
-      @dangerfile.fail(message)
+    def fail(*args, &blk)
+      method_missing(:fail, *args, &blk)
     end
 
     # Since we have a reference to the Dangerfile containing all the information
