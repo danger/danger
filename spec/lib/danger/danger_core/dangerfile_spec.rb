@@ -102,7 +102,7 @@ describe Danger::Dangerfile do
   describe 'initializing plugins' do
     it 'should add a plugin to the @plugins array' do
       class DangerTestPlugin < Danger::Plugin; end
-      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
+      allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerTestPlugin])
       dm = testing_dangerfile
       allow(dm).to receive(:core_dsls).and_return([])
       dm.init_plugins
