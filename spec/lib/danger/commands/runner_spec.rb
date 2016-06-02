@@ -42,6 +42,20 @@ module Command
       end
     end
 
+    it 'allows overriding the Dangerfile location' do
+      allow(STDOUT).to receive(:puts) # this disables puts
+
+      Dir.mktmpdir do |dir|
+        Dir.chdir dir do
+          Dir.mkdir 'subdir'
+          Dir.chdir 'subdir' do
+            `touch Dangerfile`
+          end
+          expect { Danger::Runner.run(['--dangerfile=subdir/Dangerfile']) }.not_to raise_error SystemExit
+        end
+      end
+    end
+
     it 'gets through the whole command' do
       @git_mock = Danger::GitRepo.new
       allow(Danger::GitRepo).to receive(:new).and_return @git_mock

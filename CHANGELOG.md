@@ -8,6 +8,7 @@
 * Initial work on the Plugin -> JSON mapper - orta
 * Add support for Semaphore CI - starsirius
 * Add Ruby 2.3 support - segiddins
+* Allow Dangerfile path to be configured - gabro
 
 ## 0.7.4
 
