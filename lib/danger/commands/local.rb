@@ -11,7 +11,7 @@ module Danger
 
     def self.options
       [
-        ['--use-merged-pr=[#id]', 'The ID of an alreadty merged PR inside your history to use as a reference for the local run.']
+        ['--use-merged-pr=[#id]', 'The ID of an already merged PR inside your history to use as a reference for the local run.']
       ].concat(super)
     end
 
