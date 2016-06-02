@@ -31,6 +31,8 @@ To get up and running quickly, just run
 bundle exec danger init
 ```
 
+The guide will create a default `Dangerfile` and take you through the process of setting up an account for feedback on GitHub.
+
 ## Usage on CI
 
 ```
@@ -41,19 +43,7 @@ This will look at your `Dangerfile` and update the pull request accordingly. Whi
 
 ## CI Support
 
-Danger currently is supported on Travis CI, Circle CI, Xcode Bots via Buildasaur, BuildKite, Jenkins and Drone CI. These work via environment variables, so it's easy to extend to include your own.
-
-### Making your own
-If the CI server you're using isn't available yet, you can build it yourself:
-
-Take a look at some of the [already existing integrations](https://github.com/danger/danger/tree/master/lib/danger/ci_source). The class has 2 mandatory methods:
-
-- `self.validates?` which should detect if the CI is active (detecting via ENV variables, mostly)
-- `initialize` which should set 2 variables:
-  - `self.repo_slug` the repo slug, in `org/repo` or `user/repo` format.
-  - `self.pull_request_id` the number of the pull request that the CI is testing (often available in ENV variables)
-
-We'd love to see pull requests for new integrations!
+Danger currently is supported on Travis CI, Circle CI, Xcode Bots via Buildasaur, BuildKite, Jenkins, Semaphore, and Drone CI. These work via environment variables, so it's easy to extend to include your own.
 
 ## What happens?
 
@@ -171,6 +161,19 @@ at the most recently merged PR, then run your `Dangerfile` against that Pull Req
 
 If you have a specific PR in mind that you'd like to work against, make sure you have it merged in your current git
 history, then append `--use-merged-pr=[id]` to the command.
+
+### Adding a new CI
+If the CI server you're using isn't available yet, you can build it yourself:
+
+Take a look at some of the [already existing integrations](https://github.com/danger/danger/tree/master/lib/danger/ci_source). The class has 2 mandatory methods:
+
+- `self.validates?` which should detect if the CI is active (detecting via ENV variables, mostly)
+- `initialize` which should set 2 variables:
+  - `self.repo_slug` the repo slug, in `org/repo` or `user/repo` format.
+  - `self.pull_request_id` the number of the pull request that the CI is testing (often available in ENV variables)
+
+We'd love to see pull requests for new integrations!
+
 
 ## Suppress Violations
 
