@@ -15,6 +15,7 @@ module Danger
       @dangerfile_path = dangerfile if File.exist? dangerfile
       @base = argv.option('base')
       @head = argv.option('head')
+      @danger_id = argv.option('dangerId', 'danger')
       super
     end
 
@@ -29,7 +30,8 @@ module Danger
       [
         ['--base=[master|dev|stable]', 'A branch/tag/commit to use as the base of the diff'],
         ['--head=[master|dev|stable]', 'A branch/tag/commit to use as the head'],
-        ['--dangerfile=<path/to/dangerfile>', 'The location of your Dangerfile']
+        ['--dangerfile=<path/to/dangerfile>', 'The location of your Dangerfile'],
+        ['--dangerId=<id>', 'The identifier of this Danger instance']
       ].concat(super)
     end
 
@@ -68,7 +70,7 @@ module Danger
       violations = dm.violation_report
       status = dm.status_report
 
-      gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns])
+      gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns], danger_id: @danger_id)
     end
   end
 end
