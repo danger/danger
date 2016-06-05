@@ -82,7 +82,7 @@ module Danger
     # Iterate through available plugin classes and initialize them with
     # a reference to this Dangerfile
     def refresh_plugins
-      plugins = ObjectSpace.each_object(Class).select { |klass| klass < Danger::Plugin }
+      plugins = Plugin.all_plugins
       plugins.each do |klass|
         next if klass.respond_to?(:singleton_class?) && klass.singleton_class?
         plugin = klass.new(self)
