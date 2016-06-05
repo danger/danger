@@ -1,8 +1,16 @@
 ## Master
 
+* Support multiple Danger instances with `--dangerId` - marcelofabri
+
+## 0.8.1
+
+* Fix Ruby 2.0 support - segiddins
+
+## 0.8.0
+
 * Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
 * Fix for `danger local` crash due to ^ - dbgrandi
-* Add support for Drone CI = gabro
+* Add support for Drone CI - gabro
 * [BREAKING] Add initial support for more expressive and documented plugins. Breaks all existing plugins. - dbgrandi/orta
 * All core DSL attributes are handled via Danger Plugins - orta
 * Initial work on the Plugin -> JSON mapper - orta

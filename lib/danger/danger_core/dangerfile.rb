@@ -84,6 +84,7 @@ module Danger
     def refresh_plugins
       plugins = Plugin.all_plugins
       plugins.each do |klass|
+        next if klass.respond_to?(:singleton_class?) && klass.singleton_class?
         plugin = klass.new(self)
         next if plugin.nil? || @plugins[klass]
 
@@ -108,7 +109,7 @@ module Danger
     def method_values_for_plugin_hashes(plugin_hashes)
       plugin_hashes.flat_map do |plugin_hash|
         plugin = plugin_hash[:plugin]
-        methods = plugin_hash[:methods].reject { |name| plugin.method(name).arity != 0 }
+        methods = plugin_hash[:methods].select { |name| plugin.method(name).parameters.empty? }
 
         methods.map do |method|
           value = plugin.send(method)

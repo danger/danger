@@ -192,6 +192,20 @@ Danger will update the comment to cross it out. If you don't want this behavior,
 fail("PR needs labels", sticky: false) if pr_labels.empty?
 ```
 
+## Multiple Dangers
+
+If one Danger is not enough for you, you can run several ones on the same PR. Just use the `danger_id` param. For example: 
+
+```
+bundle exec danger --danger_id=unit_tests
+```
+
+You can have each instance of Danger running on a different CI provider and even doing different validations. An use case would be:
+
+* `basic` runs on a Linux environment (such as Circle CI) and validates the PR itself (title, etc)
+* `compilation` runs on a Mac after running unit tests for your iOS app and comments about warnings, test failures, etc
+* `uitests` runs on a Mac after running UI Unit tests and comments about test failures
+
 ## Useful bits of knowledge
 
 * You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.

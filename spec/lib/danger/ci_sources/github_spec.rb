@@ -153,6 +153,12 @@ describe Danger::GitHub do
         expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
       end
 
+      it "handles a custom danger_id" do
+        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]),
+                                     messages: [], danger_id: 'another_danger')
+        expect(result.gsub(/\s+/, "")).to include("generated_by_another_danger")
+      end
+
       it "sets data-sticky to true when a violation is sticky" do
         sticky_warning = Danger::Violation.new("my warning", true)
         result = @g.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
@@ -213,7 +219,17 @@ describe Danger::GitHub do
         @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
       end
 
-      it "deletes existing issues danger doesnt need to say anything" do
+      it "updates the issue if no danger comments exist and a custom danger_id is provided" do
+        issues = [{ body: "generated_by_another_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
+
+        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+      end
+
+      it "deletes existing issues if danger doesnt need to say anything" do
         issues = [{ body: "generated_by_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 

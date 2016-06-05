@@ -46,11 +46,11 @@ module Danger
     end
 
     # Sending data to GitHub
-    def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [])
+    def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
       comment_result = {}
 
       issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-      editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_danger") == false }
+      editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
 
       if editable_issues.empty?
         previous_violations = {}
@@ -67,7 +67,8 @@ module Danger
                                   errors: errors,
                                 messages: messages,
                                markdowns: markdowns,
-                     previous_violations: previous_violations)
+                     previous_violations: previous_violations,
+                               danger_id: danger_id)
 
         if editable_issues.empty?
           comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
@@ -132,7 +133,7 @@ module Danger
       end
     end
 
-    def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {})
+    def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: 'danger')
       require 'erb'
 
       md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
@@ -145,6 +146,7 @@ module Danger
         table("Message", "book", messages, previous_violations)
       ]
       @markdowns = markdowns
+      @danger_id = danger_id
 
       return ERB.new(File.read(md_template), 0, "-").result(binding)
     end
