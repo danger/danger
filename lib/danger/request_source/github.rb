@@ -173,11 +173,11 @@ module Danger
       end
 
       def table(name, emoji, violations, all_previous_violations)
-        content = violations.map { |v| process_markdown(v) }
+        content = violations.map { |v| process_markdown(v) }.uniq
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
         messages = content.map(&:message)
-        resolved_violations = previous_violations.reject { |s| messages.include? s }
+        resolved_violations = previous_violations.uniq - messages
         count = content.count
         { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
       end
