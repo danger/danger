@@ -220,7 +220,7 @@ Danger allows usage with GitHub Enterprise by setting 2 environment variables:
 
 ## License, Contributor's Guidelines and Code of Conduct
 
-[Join our Slack Group](https://danger-slack.herokuapp.com/)
+We try to keep as much discussion as possible in GitHub issues, but also have a slack, if you'd like an invite ping [@Orta](https://twitter.com/orta/) a DM on twitter with your email. 
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 
