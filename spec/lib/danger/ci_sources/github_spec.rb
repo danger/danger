@@ -237,6 +237,14 @@ describe Danger::GitHub do
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
 
+      it "deletes existing issues if danger doesnt need to say anything and a custom danger_id is provided" do
+        issues = [{ body: "generated_by_another_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], danger_id: "another_danger")
+      end
+
       it "updates the issue if danger doesnt need to say anything but there are sticky violations" do
         issues = [{ body: "generated_by_danger", id: "12" }]
         allow(@g).to receive(:parse_comment).and_return({ errors: ['an error'] })
