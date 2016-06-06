@@ -22,12 +22,10 @@ module Danger
 
       raise "Could not find a CI source".red unless self.ci_source
 
-      RequestSources.constants.each do |symb|
-        c = RequestSources.const_get(symb)
-        next unless c.kind_of?(Class)
-        next unless self.ci_source.supports?(c)
+      RequestSources::RequestSource.available_request_sources.each do |klass|
+        next unless self.ci_source.supports?(klass)
 
-        request_source = c.new(self.ci_source, ENV)
+        request_source = klass.new(self.ci_source, ENV)
         next unless request_source.validates?
         self.request_source = request_source
       end

@@ -3,6 +3,15 @@ module Danger
     class RequestSource
       attr_accessor :ci_source, :environment, :scm, :host, :ignored_violations
 
+      def self.inherited(child_class)
+        available_request_sources.add child_class
+        super
+      end
+
+      def self.available_request_sources
+        @available_request_sources ||= Set.new
+      end
+
       def initialize(_ci_source, _environment)
         raise "Subclass and overwrite initialize"
       end
