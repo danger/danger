@@ -40,7 +40,7 @@ module Danger
     end
 
     def fill_environment_vars
-      self.request_source.fetch_details
+      request_source.fetch_details
     end
 
     def ensure_danger_branches_are_setup
