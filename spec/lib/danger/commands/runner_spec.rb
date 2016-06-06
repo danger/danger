@@ -18,6 +18,7 @@ module Command
       allow(ENV).to receive(:[]).with("TMP").and_return(nil)
       allow(ENV).to receive(:[]).with("TEMP").and_return(nil)
       allow(ENV).to receive(:[]).with("CLAIDE_DISABLE_AUTO_WRAP").and_return(nil)
+      allow(ENV).to receive(:[]).with("GEM_REQUIREMENT_DANGER").and_return(nil)
 
       # Mock out the octokit object with our fixtured data
       octokit_mock = Object
