@@ -61,7 +61,7 @@ module Danger
 
       if previous_violations.empty? && (warnings + errors + messages + markdowns).empty?
         # Just remove the comment, if there's nothing to say.
-        delete_old_comments!
+        delete_old_comments!(danger_id: danger_id)
       else
         body = generate_comment(warnings: warnings,
                                   errors: errors,
@@ -106,10 +106,10 @@ module Danger
     end
 
     # Get rid of the previously posted comment, to only have the latest one
-    def delete_old_comments!(except: nil)
+    def delete_old_comments!(except: nil, danger_id: 'danger')
       issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
       issues.each do |issue|
-        next unless issue[:body].include?("generated_by_danger")
+        next unless issue[:body].include?("generated_by_#{danger_id}")
         next if issue[:id] == except
         client.delete_comment(ci_source.repo_slug, issue[:id])
       end
