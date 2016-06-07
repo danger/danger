@@ -17,7 +17,7 @@ def public_api_methods
   require 'yard'
   files = [
     "lib/danger/danger_core/dangerfile_dsl.rb",
-    "lib/danger/scm_source/git_repo.rb",
+    "lib/danger/scm_source/git_repo.rb"
   ]
   docs = YARD::Registry.load(files, true)
 

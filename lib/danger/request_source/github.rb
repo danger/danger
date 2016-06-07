@@ -126,7 +126,7 @@ module Danger
         end
       end
 
-    # Get rid of the previously posted comment, to only have the latest one
+      # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: 'danger')
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
         issues.each do |issue|
