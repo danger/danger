@@ -6,12 +6,10 @@ module Danger
     attr_accessor :ci_source, :request_source, :scm
 
     def initialize(env)
-      CISource.constants.each do |symb|
-        c = CISource.const_get(symb)
-        next unless c.kind_of?(Class)
-        next unless c.validates?(env)
+      CISource::CI.available_ci_sources.each do |klass|
+        next unless klass.validates?(env)
 
-        self.ci_source = c.new(env)
+        self.ci_source = klass.new(env)
         if self.ci_source.repo_slug and self.ci_source.pull_request_id
           break
         else
