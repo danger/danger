@@ -72,5 +72,17 @@ module Danger
 
       gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns], danger_id: @danger_id)
     end
+
+    def self.report_error(exception)
+      raise exception if exception.kind_of?(SystemExit)
+      message = "#{exception.message.red} (#{exception.class.to_s.yellow})"
+      if exception.backtrace
+        danger_lib = File.expand_path('../../..', __FILE__)
+        message << "\n\t" << exception.backtrace.reverse_each.
+                             drop_while { |bt| !bt.start_with?(danger_lib) }.reverse.
+                             join("\n\t")
+      end
+      abort(message)
+    end
   end
 end
