@@ -1,8 +1,10 @@
 require 'danger/ci_source/travis'
 
 describe Danger::CISource::Travis do
-  it 'validates when Josh K says so' do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+  it 'validates when all Travis environment vars are set and Josh K says so' do
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+            "TRAVIS_PULL_REQUEST" => "800",
+            "TRAVIS_REPO_SLUG" => "artsy/eigen" }
     expect(Danger::CISource::Travis.validates?(env)).to be true
   end
 

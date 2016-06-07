@@ -18,7 +18,7 @@ module Danger
         end
       end
 
-      raise "Could not find a CI source".red unless self.ci_source
+      raise "Could not find a valid pull request within the known CI sources".red unless self.ci_source
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)

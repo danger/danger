@@ -5,7 +5,10 @@ module Danger
   module CISource
     class Jenkins < CI
       def self.validates?(env)
-        return !env["ghprbPullId"].nil? && !env["GIT_URL"].nil?
+        return false unless env["ghprbPullId"].to_i > 0
+        return false unless env["GIT_URL"]
+
+        return true
       end
 
       def supported_request_sources
@@ -13,16 +16,11 @@ module Danger
       end
 
       def initialize(env)
-        repo = env["GIT_URL"]
-        unless repo.nil?
-          repo_matches = repo.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-          self.repo_slug = repo_matches[2] unless repo_matches.nil?
-        end
+        self.repo_url = env["GIT_URL"]
+        self.pull_request_id = env["ghprbPullId"]
 
-        # from https://docs.travis-ci.com/user/pull-requests, as otherwise it's "false"
-        if env["ghprbPullId"].to_i > 0
-          self.pull_request_id = env["ghprbPullId"]
-        end
+        repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+        self.repo_slug = repo_matches[2] unless repo_matches.nil?
       end
     end
   end
