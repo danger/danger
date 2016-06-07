@@ -1,8 +1,10 @@
 require 'danger/ci_source/buildkite'
 
 describe Danger::CISource::Buildkite do
-  it "validates when buildkite env var is found" do
-    env = { "BUILDKITE" => "true" }
+  it "validates when buildkite all env vars is found" do
+    env = { "BUILDKITE" => "true",
+            "BUILDKITE_REPO" => "git@github.com:KrauseFx/danger.git",
+            "BUILDKITE_PULL_REQUEST" => 1 }
     expect(Danger::CISource::Buildkite.validates?(env)).to be true
   end
 

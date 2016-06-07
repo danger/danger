@@ -2,7 +2,7 @@ module Danger
   module CISource
     # "abstract" CI class
     class CI
-      attr_accessor :repo_slug, :pull_request_id, :supported_request_sources
+      attr_accessor :repo_slug, :pull_request_id, :repo_url, :supported_request_sources
 
       def self.inherited(child_class)
         available_ci_sources.add child_class

@@ -4,7 +4,11 @@ module Danger
   module CISource
     class Drone < CI
       def self.validates?(env)
-        return !env["DRONE"].nil?
+        return false unless env["DRONE"]
+        return false unless env["DRONE_REPO"]
+        return false unless env["DRONE_PULL_REQUEST"].to_i > 0
+
+        return true
       end
 
       def supported_request_sources
@@ -13,9 +17,8 @@ module Danger
 
       def initialize(env)
         self.repo_slug = env["DRONE_REPO"]
-        if env["DRONE_PULL_REQUEST"].to_i > 0
-          self.pull_request_id = env["DRONE_PULL_REQUEST"]
-        end
+        self.pull_request_id = env["DRONE_PULL_REQUEST"]
+        self.repo_url = GitRepo.new.origins # Drone doesn't provide a repo url env variable :/
       end
     end
   end

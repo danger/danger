@@ -2,12 +2,28 @@ require 'danger/ci_source/drone'
 
 describe Danger::CISource::Drone do
   it 'validates when DRONE variable is set' do
-    env = { "DRONE" => "true" }
+    env = { "DRONE" => "true",
+            "DRONE_REPO" => "danger/danger",
+            "DRONE_PULL_REQUEST" => 1 }
     expect(Danger::CISource::Drone.validates?(env)).to be true
   end
 
   it 'does not validate when DRONE is not set' do
     env = { "CIRCLE" => "true" }
+    expect(Danger::CISource::Drone.validates?(env)).to be false
+  end
+
+  it 'does not validate when DRONE_PULL_REQUEST is set to non int value' do
+    env = { "CIRCLE" => "true",
+            "DRONE_REPO" => "danger/danger",
+            "DRONE_PULL_REQUEST" => "maku" }
+    expect(Danger::CISource::Drone.validates?(env)).to be false
+  end
+
+  it 'does not validate when DRONE_PULL_REQUEST is set to non positive int value' do
+    env = { "CIRCLE" => "true",
+            "DRONE_REPO" => "danger/danger",
+            "DRONE_PULL_REQUEST" => -1 }
     expect(Danger::CISource::Drone.validates?(env)).to be false
   end
 

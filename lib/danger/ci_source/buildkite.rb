@@ -5,17 +5,19 @@ module Danger
   module CISource
     class Buildkite < CI
       def self.validates?(env)
-        return !env["BUILDKITE"].nil?
+        return false unless env["BUILDKITE"]
+        return false unless env["BUILDKITE_REPO"]
+        return false unless env["BUILDKITE_PULL_REQUEST"]
+
+        return true
       end
 
       def initialize(env)
-        repo = env["BUILDKITE_REPO"]
-        unless repo.nil?
-          repo_matches = repo.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-          self.repo_slug = repo_matches[2] unless repo_matches.nil?
-        end
-
+        self.repo_url = env["BUILDKITE_REPO"]
         self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
+
+        repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+        self.repo_slug = repo_matches[2] unless repo_matches.nil?
       end
 
       def supported_request_sources

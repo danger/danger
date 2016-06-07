@@ -1,8 +1,10 @@
 require 'danger/ci_source/travis'
 
 describe Danger::CISource::Semaphore do
-  it 'validates when semaphore' do
-    env = { "SEMAPHORE" => "true" }
+  it 'validates when all semaphore variables are set' do
+    env = { "SEMAPHORE" => "true",
+            "PULL_REQUEST_NUMBER" => "800",
+            "SEMAPHORE_REPO_SLUG" => "artsy/eigen" }
     expect(Danger::CISource::Semaphore.validates?(env)).to be true
   end
 

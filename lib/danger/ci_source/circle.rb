@@ -6,10 +6,12 @@ module Danger
   module CISource
     class CircleCI < CI
       def self.validates?(env)
-        return false if env["CIRCLE_BUILD_NUM"].nil?
-        return true unless env["CI_PULL_REQUEST"].nil?
+        return false unless env["CIRCLE_BUILD_NUM"]
+        return false unless env["CI_PULL_REQUEST"]
+        return false unless env["CIRCLE_PROJECT_USERNAME"]
+        return false unless env["CIRCLE_PROJECT_REPONAME"]
 
-        return !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
+        return true
       end
 
       def supported_request_sources
@@ -37,6 +39,8 @@ module Danger
       end
 
       def initialize(env)
+        self.repo_url = GitRepo.new.origins # CircleCI doesn't provide a repo url env variable :/
+
         @circle_token = env["CIRCLE_CI_API_TOKEN"]
         url = pull_request_url(env)
 
