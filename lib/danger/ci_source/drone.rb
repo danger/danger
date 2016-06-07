@@ -7,6 +7,10 @@ module Danger
         return !env["DRONE"].nil?
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def initialize(env)
         self.repo_slug = env["DRONE_REPO"]
         if env["DRONE_PULL_REQUEST"].to_i > 0

@@ -7,6 +7,10 @@ module Danger
         return !env["SEMAPHORE"].nil?
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def initialize(env)
         self.repo_slug = env["SEMAPHORE_REPO_SLUG"]
         if env["PULL_REQUEST_NUMBER"].to_i > 0

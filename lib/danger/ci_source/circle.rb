@@ -12,6 +12,10 @@ module Danger
         return !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
       end
 
+      def supported_request_sources
+        @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      end
+
       def client
         @client ||= CircleAPI.new(@circle_token)
       end

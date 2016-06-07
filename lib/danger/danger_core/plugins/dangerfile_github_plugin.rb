@@ -4,7 +4,7 @@ module Danger
   class DangerfileGitHubPlugin < Plugin
     def initialize(dangerfile)
       super(dangerfile)
-      return nil unless dangerfile.env.request_source.class == Danger::GitHub
+      return nil unless dangerfile.env.request_source.class == Danger::RequestSources::GitHub
 
       @github = dangerfile.env.request_source
     end

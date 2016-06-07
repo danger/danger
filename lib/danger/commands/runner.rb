@@ -49,8 +49,8 @@ module Danger
           dm.env.ensure_danger_branches_are_setup
 
           # Offer the chance for a user to specify a branch through the command line
-          ci_base = @base || dm.env.danger_head_branch
-          ci_head = @head || dm.env.danger_base_branch
+          ci_base = @base || EnvironmentManager.danger_base_branch
+          ci_head = @head || EnvironmentManager.danger_head_branch
           dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
           dm.parse Pathname.new(@dangerfile_path)

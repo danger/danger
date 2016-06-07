@@ -15,5 +15,9 @@ module Danger
     def exec(string)
       `git #{string}`.strip
     end
+
+    def origins
+      exec "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
+    end
   end
 end
