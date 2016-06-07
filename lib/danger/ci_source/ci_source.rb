@@ -4,6 +4,15 @@ module Danger
     class CI
       attr_accessor :repo_slug, :pull_request_id, :supported_request_sources
 
+      def self.inherited(child_class)
+        available_ci_sources.add child_class
+        super
+      end
+
+      def self.available_ci_sources
+        @available_ci_sources ||= Set.new
+      end
+
       def supported_request_sources
         raise "CISource subclass must specify the supported request sources"
       end
