@@ -62,7 +62,7 @@ Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
-The `Dangerfile` is a ruby file, so really, you can do anything. However, at this stage you might need selling on the idea a bit more, so lets take some real examples:
+The `Dangerfile` is a Ruby file, so really, you can do anything. However, at this stage you might need selling on the idea a bit more, so lets take some real examples:
 
 #### Dealing with WIP pull requests
 
