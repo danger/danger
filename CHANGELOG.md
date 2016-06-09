@@ -3,6 +3,7 @@
 * Support multiple Danger instances with `--dangerId` - marcelofabri
 * Add base request source so services other than GitHub could be used with Danger. - justMaku
 * Don't validate CI sources that don't expose all required environment variables.
+* Add support for TeamCity CI
 
 ## 0.8.1
 
