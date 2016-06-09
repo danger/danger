@@ -2,7 +2,7 @@ module Danger
   module CISource
     class TeamCity < CI
       def self.validates?(env)
-        env.has_key? 'TEAMCITY_VERSION'
+        env.key? 'TEAMCITY_VERSION'
       end
 
       def supported_request_sources
