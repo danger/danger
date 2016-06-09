@@ -1,9 +1,9 @@
 require 'danger/ci_source/teamcity'
 
-describe Danger::CISource::Travis do
+describe Danger::CISource::TeamCity do
   it 'detects TeamCity' do
     env = { 'TEAMCITY_VERSION' => "42" }
-    expect(Danger::CISource::Travis.validates?(env)).to be true
+    expect(Danger::CISource::TeamCity.validates?(env)).to be true
   end
 
   it 'gets out a repo slug' do
