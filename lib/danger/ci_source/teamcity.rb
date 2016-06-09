@@ -10,6 +10,9 @@ module Danger
       end
 
       def initialize(env)
+        # NB: Unfortunately TeamCity doesn't provide these variables
+        # automatically so you have to add these variables manually to your
+        # project or build configuration
         self.repo_slug       = env['GITHUB_REPO_SLUG']
         self.pull_request_id = env['GITHUB_PULL_REQUEST_ID'].to_i
         self.repo_url        = env['GITHUB_REPO_URL']
