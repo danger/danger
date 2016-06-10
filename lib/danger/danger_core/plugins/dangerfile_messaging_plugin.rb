@@ -19,7 +19,7 @@ module Danger
     #           The markdown based message to be printed below the table
     def markdown(message)
       @markdowns << message
-      puts "Printing markdown #{message}"
+      @dangerfile.ui.puts "Printing markdown #{message}"
     end
 
     # @!group Core
@@ -31,7 +31,7 @@ module Danger
     #           defaults to `true`.
     def message(message, sticky: true)
       @messages << Violation.new(message, sticky)
-      puts "Printing message '#{message}'"
+      @dangerfile.ui.puts "-> wessage: '#{message}'"
     end
 
     # @!group Core
@@ -44,7 +44,7 @@ module Danger
     def warn(message, sticky: true)
       return if should_ignore_violation(message)
       @warnings << Violation.new(message, sticky)
-      puts "Printing warning '#{message}'"
+      @dangerfile.ui.puts "-> warning: '#{message}'"
     end
 
     # @!group Core
@@ -58,7 +58,7 @@ module Danger
     def fail(message, sticky: true)
       return if should_ignore_violation(message)
       @errors << Violation.new(message, sticky)
-      puts "Raising error '#{message}'"
+      @dangerfile.ui.puts "-> error '#{message}'"
     end
 
     def status_report

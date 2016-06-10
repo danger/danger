@@ -32,9 +32,13 @@ def stub_request_source
   Danger::RequestSources::GitHub.new(stub_ci, stub_env)
 end
 
+def testing_ui
+  Cork::Board.new(silent: true)
+end
+
 def testing_dangerfile
   env = Danger::EnvironmentManager.new(stub_env)
-  dm = Danger::Dangerfile.new(env)
+  dm = Danger::Dangerfile.new(env, testing_ui)
 end
 
 def fixture(file)

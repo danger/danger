@@ -14,7 +14,7 @@ module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL
 
-    attr_accessor :env, :verbose, :plugins
+    attr_accessor :env, :verbose, :plugins, :ui
 
     # @return [Pathname] the path where the Dangerfile was loaded from. It is nil
     #         if the Dangerfile was generated programmatically.
@@ -64,9 +64,10 @@ module Danger
       super
     end
 
-    def initialize(env_manager)
+    def initialize(env_manager, cork_board)
       @plugins = {}
       @core_plugins = []
+      @ui = cork_board
 
       # Triggers the core plugins
       @env = env_manager
@@ -140,9 +141,11 @@ module Danger
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
       params[:title] = "Danger v#{Danger::VERSION}\nDSL Attributes".green
 
-      puts ""
-      puts Terminal::Table.new(params)
-      puts ""
+      ui.section('Info:') do
+        ui.puts
+        ui.puts Terminal::Table.new(params)
+        ui.puts
+      end
     end
 
     # Parses the file at a path, optionally takes the content of the file for DI
@@ -159,28 +162,30 @@ module Danger
 
       if contents.tr!('“”‘’‛', %(""'''))
         # Changes have been made
-        puts "Your #{path.basename} has had smart quotes sanitised. " \
-                    'To avoid issues in the future, you should not use ' \
-                    'TextEdit for editing it. If you are not using TextEdit, ' \
-                    'you should turn off smart quotes in your editor of choice.'.red
+        ui.puts "Your #{path.basename} has had smart quotes sanitised. " \
+          'To avoid issues in the future, you should not use ' \
+          'TextEdit for editing it. If you are not using TextEdit, ' \
+          'you should turn off smart quotes in your editor of choice.'.red
       end
 
       if contents.include?("puts")
-        puts "You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead"
+        ui.puts "You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead"
       end
 
       self.defined_in_file = path
-      instance_eval do
-        # rubocop:disable Lint/RescueException
-        begin
-          # rubocop:disable Eval
-          eval(contents, nil, path.to_s)
-          # rubocop:enable Eval
-        rescue Exception => e
-          message = "Invalid `#{path.basename}` file: #{e.message}"
-          raise DSLError.new(message, path, e.backtrace, contents)
+      ui.section("Running:") do
+        instance_eval do
+          # rubocop:disable Lint/RescueException
+          begin
+            # rubocop:disable Eval
+            eval(contents, nil, path.to_s)
+            # rubocop:enable Eval
+          rescue Exception => e
+            message = "Invalid `#{path.basename}` file: #{e.message}"
+            raise DSLError.new(message, path, e.backtrace, contents)
+          end
+          # rubocop:enable Lint/RescueException
         end
-        # rubocop:enable Lint/RescueException
       end
     end
 
@@ -188,29 +193,31 @@ module Danger
       status = status_report
       return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
 
-      puts ""
-      puts "danger results:"
-      [:errors, :warnings, :messages].each do |current|
-        params = {}
-        params[:rows] = status[current].map { |item| [item] }
-        next unless params[:rows].count > 0
-        params[:title] = case current
-                         when :errors
-                           current.to_s.capitalize.red
-                         when :warnings
-                           current.to_s.capitalize.yellow
-                         else
-                           current.to_s.capitalize
-                         end
+      ui.section('Results:') do
+        [:errors, :warnings, :messages].each do |current|
+          params = {}
+          params[:rows] = status[current].map { |item| [item] }
+          next unless params[:rows].count > 0
+          params[:title] = case current
+                           when :errors
+                             current.to_s.capitalize.red
+                           when :warnings
+                             current.to_s.capitalize.yellow
+                           else
+                             current.to_s.capitalize
+                           end
+          ui.puts
+          ui.puts Terminal::Table.new(params)
+          ui.puts
+        end
 
-        puts ""
-        puts Terminal::Table.new(params)
-        puts ""
-      end
-
-      puts "Markdown: ".green if status[:markdowns].count > 0
-      status[:markdowns].each do |current_markdown|
-        puts current_markdown
+        if status[:markdowns].count > 0
+          ui.section('Markdown:') do
+            status[:markdowns].each do |current_markdown|
+              ui.puts current_markdown
+            end
+          end
+        end
       end
     end
   end

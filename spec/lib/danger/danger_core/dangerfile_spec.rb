@@ -16,7 +16,7 @@ describe Danger::Dangerfile do
 
   it 'runs the ruby code inside the Dangerfile' do
     dangerfile_code = "message('hi')"
-    expect_any_instance_of(Danger::DangerfileMessagingPlugin).to receive(:puts).and_return("")
+    expect_any_instance_of(Danger::DangerfileMessagingPlugin).to receive(:message).and_return("")
     dm = testing_dangerfile
     dm.parse Pathname.new(""), dangerfile_code
   end
@@ -31,8 +31,6 @@ describe Danger::Dangerfile do
   end
 
   it 'respects ignored violations' do
-    allow(STDOUT).to receive(:puts) # this disables puts
-
     code = "message 'A message'\n" \
            "warn 'An ignored warning'\n" \
            "warn 'A warning'\n" \
@@ -52,8 +50,6 @@ describe Danger::Dangerfile do
 
   describe "#print_results" do
     it "Prints out 3 tables" do
-      allow(STDOUT).to receive(:puts) # this disables puts
-
       code = "message 'A message'\n" \
              "warn 'Another warning'\n" \
              "warn 'A warning'\n" \

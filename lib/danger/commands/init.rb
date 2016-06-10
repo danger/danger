@@ -7,6 +7,8 @@ module Danger
     self.summary = 'Helps you set up Danger.'
     self.command = 'init'
 
+    attr_accessor :ui
+
     def self.options
       [
         ['--impatient', "'I've not got all day here. Don't add any thematic delays please.'"],
@@ -15,14 +17,14 @@ module Danger
     end
 
     def initialize(argv)
-      ui.no_delay = argv.flag?('impatient', false)
-      ui.no_waiting = argv.flag?('mousey', false)
       @bot_name = File.basename(Dir.getwd).split(".").first.capitalize + "Bot"
       super
+      @ui = Interviewer.new(cork)
+      ui.no_delay = argv.flag?('impatient', false)
+      ui.no_waiting = argv.flag?('mousey', false)
     end
 
     def run
-      ui = Interviewer.new
       ui.say "\nOK, thanks #{ENV['LOGNAME']}, have a seat and we'll get you started.\n".yellow
       ui.pause 1
 
@@ -36,10 +38,6 @@ module Danger
 
       info
       thanks
-    end
-
-    def ui
-      @ui ||= Interviewer.new
     end
 
     def show_todo_state
