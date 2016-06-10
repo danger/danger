@@ -38,15 +38,15 @@ module Danger
 
       def setup_danger_branches
         # we can use a github specific feature here:
-        pull_id = self.ci_source.pull_request_id
-        test_branch = self.pr_json[:base][:sha]
+        base_commit = self.pr_json[:base][:sha]
+        head_commit = self.scm.head_commit
 
         # Next, we want to ensure that we have a version of the current branch at a known location
-        self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{test_branch}"
+        self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
 
         # OK, so we want to ensure that we have a known head branch, this will always represent
         # the head of the PR ( e.g. the most recent commit that will be merged. )
-        self.scm.exec "fetch origin +refs/pull/#{pull_id}/merge:#{EnvironmentManager.danger_head_branch}"
+        self.scm.exec "branch #{EnvironmentManager.danger_head_branch} #{head_commit}"
       end
 
       def fetch_details
