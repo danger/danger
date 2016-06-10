@@ -16,6 +16,10 @@ module Danger
       `git #{string}`.strip
     end
 
+    def head_commit
+      exec "rev-parse HEAD"
+    end
+
     def origins
       exec "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
     end

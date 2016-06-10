@@ -1,5 +1,6 @@
 ## Master
 * Fix updating of the commit status after danger check. - justMaku
+* Relies on the current git HEAD, instead of pulling a merge branch from GitHub - justMaku
 
 ## 0.8.2
 
