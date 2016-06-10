@@ -49,7 +49,7 @@ describe Danger::Dangerfile do
   end
 
   describe "#print_results" do
-    it "Prints out 3 tables" do
+    it "Prints out 3 lists" do
       code = "message 'A message'\n" \
              "warn 'Another warning'\n" \
              "warn 'A warning'\n" \
@@ -60,18 +60,10 @@ describe Danger::Dangerfile do
 
       dm.parse Pathname.new(""), code
 
-      expect(Terminal::Table).to receive(:new).with({
-        rows: [["Another error"], ["An error"]],
-        title: "Errors".red
-      })
-      expect(Terminal::Table).to receive(:new).with({
-        rows: [["Another warning"], ["A warning"]],
-        title: "Warnings".yellow
-      })
-      expect(Terminal::Table).to receive(:new).with({
-        rows: [["A message"]],
-        title: "Messages"
-      })
+      expect(dm).to receive(:print_list).with('Errors:'.red, ['Another error', 'An error'])
+      expect(dm).to receive(:print_list).with('Warnings:'.yellow, ['Another warning', 'A warning'])
+      expect(dm).to receive(:print_list).with('Messages:', ['A message'])
+
       dm.print_results
     end
   end
