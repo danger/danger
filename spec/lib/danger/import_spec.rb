@@ -5,7 +5,7 @@ describe Danger::Dangerfile::DSL do
     before do
       file = make_temp_file("")
       env = Danger::EnvironmentManager.new({ "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => "12" })
-      @dm = Danger::Dangerfile.new env
+      @dm = Danger::Dangerfile.new(env, testing_ui)
       @dm.parse(file.path)
     end
 

@@ -1,9 +1,13 @@
 module Danger
   class Interviewer
-    attr_accessor :no_delay, :no_waiting
+    attr_accessor :no_delay, :no_waiting, :ui
+
+    def initialize(cork_board)
+      @ui = cork_board
+    end
 
     def show_prompt
-      print "> ".bold.green
+      ui.print "> ".bold.green
     end
 
     def yellow_bang
@@ -19,7 +23,7 @@ module Danger
     end
 
     def say(output)
-      puts output
+      ui.puts output
     end
 
     def header(title)
@@ -39,40 +43,40 @@ module Danger
     def wait_for_return
       STDOUT.flush
       STDIN.gets unless @no_delay
-      puts ""
+      ui.puts
     end
 
     def run_command(command, output_command = nil)
       output_command ||= command
-      puts "  " + output_command.magenta
+      ui.puts "  " + output_command.magenta
       system command
     end
 
     def ask(question)
       answer = ""
       loop do
-        puts "\n#{question}?"
+        ui.puts "\n#{question}?"
 
         show_prompt
         answer = STDIN.gets.chomp
 
         break if answer.empty?
 
-        print "\nYou need to provide an answer."
+        ui.print "\nYou need to provide an answer."
       end
       answer
     end
 
     def ask_with_answers(question, possible_answers)
-      print "\n#{question}? ["
+      ui.print "\n#{question}? ["
 
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
           the_answer = (i == 0) ? answer.underline : answer
-          print " " + the_answer
-          print(" /") if i != possible_answers.length - 1
+          ui.print " " + the_answer
+          ui.print(" /") if i != possible_answers.length - 1
         end
-        print " ]\n"
+        ui.print " ]\n"
       end
       print_info.call
 
@@ -88,12 +92,12 @@ module Danger
         # default to first answer
         if answer == ""
           answer = possible_answers[0].downcase
-          puts "Using: " + answer.yellow
+          ui.puts "Using: " + answer.yellow
         end
 
         break if possible_answers.map(&:downcase).include? answer
 
-        print "\nPossible answers are ["
+        ui.print "\nPossible answers are ["
         print_info.call
       end
 

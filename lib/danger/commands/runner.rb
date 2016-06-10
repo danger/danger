@@ -10,12 +10,16 @@ module Danger
 
     self.plugin_prefixes = %w(claide danger)
 
+    attr_accessor :cork
+
     def initialize(argv)
       dangerfile = argv.option('dangerfile', 'Dangerfile')
       @dangerfile_path = dangerfile if File.exist? dangerfile
       @base = argv.option('base')
       @head = argv.option('head')
       @danger_id = argv.option('danger_id', 'danger')
+      @cork = Cork::Board.new(silent: argv.option('silent', false),
+                              verbose: argv.option('verbose', false))
       super
     end
 
@@ -37,7 +41,7 @@ module Danger
 
     def run
       env = EnvironmentManager.new(ENV)
-      dm = Dangerfile.new(env)
+      dm = Dangerfile.new(env, cork)
 
       if dm.env.pr?
         dm.verbose = verbose
@@ -61,7 +65,7 @@ module Danger
           dm.env.clean_up
         end
       else
-        puts "Not a Pull Request - skipping `danger` run"
+        cork.puts "Not a Pull Request - skipping `danger` run"
       end
     end
 
