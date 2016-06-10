@@ -106,23 +106,32 @@ module Danger
                                  details_url: comment_result['html_url'])
       end
 
-      def submit_pull_request_status!(warnings: nil, errors: nil, details_url: nil)
+      def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
         status = (errors.count == 0 ? 'success' : 'failure')
         message = generate_github_description(warnings: warnings, errors: errors)
-        client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
-          description: message,
-          context: "danger/danger",
-          target_url: details_url
-        })
-      rescue
-        # This usually means the user has no commit access to this repo
-        # That's always the case for open source projects where you can only
-        # use a read-only GitHub account
-        if errors.count > 0
-          # We need to fail the actual build here
-          abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
-        else
-          puts message
+
+        latest_pr_commit_ref = self.pr_json[:head][:sha]
+
+        if latest_pr_commit_ref.empty? || latest_pr_commit_ref.nil?
+          raise "Couldn't find a commit to update its status".red
+        end
+
+        begin
+          client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
+            description: message,
+            context: "danger/danger",
+            target_url: details_url
+          })
+        rescue
+          # This usually means the user has no commit access to this repo
+          # That's always the case for open source projects where you can only
+          # use a read-only GitHub account
+          if errors.count > 0
+            # We need to fail the actual build here
+            abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+          else
+            puts message
+          end
         end
       end
 

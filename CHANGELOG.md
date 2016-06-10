@@ -1,4 +1,5 @@
 ## Master
+* Fix updating of the commit status after danger check. - justMaku
 
 ## 0.8.2
 

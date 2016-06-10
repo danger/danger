@@ -75,6 +75,11 @@ describe Danger::RequestSources::GitHub do
       before do
         @date = Time.now.strftime("%Y-%m-%d")
         @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+
+        stub_request(:post, "https://git.club-mateusa.com/api/v3/repos/artsy/eigen/statuses/").
+          with(body: "{\"description\":\"All green. Good on 'ya.\",\"context\":\"danger/danger\",\"target_url\":null,\"state\":\"success\"}",
+                     headers: { 'Accept' => 'application/vnd.github.v3+json', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization' => 'token hi', 'Content-Type' => 'application/json', 'User-Agent' => 'Octokit Ruby Gem 4.3.0' }).
+          to_return(status: 200, body: "", headers: {})
       end
 
       it "no warnings, no errors, no messages" do
@@ -222,9 +227,23 @@ describe Danger::RequestSources::GitHub do
       end
     end
 
+    describe "commit status update" do
+      before do
+        stub_request(:post, "https://git.club-mateusa.com/api/v3/repos/artsy/eigen/statuses/").to_return status: 200
+      end
+
+      it "fails when no head commit is set" do
+        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        expect do
+          @g.submit_pull_request_status!
+        end.to raise_error("Couldn't find a commit to update its status".red)
+      end
+    end
+
     describe "issue creation" do
       before do
         @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        allow(@g).to receive(:submit_pull_request_status!).and_return(true)
       end
 
       it "creates an issue if no danger comments exist" do
