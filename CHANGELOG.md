@@ -2,6 +2,7 @@
 * Fix updating of the commit status after danger check. - justMaku
 * Relies on the current git HEAD, instead of pulling a merge branch from GitHub - justMaku
 * Use Cork for console output. - DanToml
+* Print a list of results, instead of a table. - DanToml
 
 ## 0.8.2
 

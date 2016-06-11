@@ -173,19 +173,17 @@ module Danger
       end
 
       self.defined_in_file = path
-      ui.section("Running:") do
-        instance_eval do
-          # rubocop:disable Lint/RescueException
-          begin
-            # rubocop:disable Eval
-            eval(contents, nil, path.to_s)
-            # rubocop:enable Eval
-          rescue Exception => e
-            message = "Invalid `#{path.basename}` file: #{e.message}"
-            raise DSLError.new(message, path, e.backtrace, contents)
-          end
-          # rubocop:enable Lint/RescueException
+      instance_eval do
+        # rubocop:disable Lint/RescueException
+        begin
+          # rubocop:disable Eval
+          eval(contents, nil, path.to_s)
+          # rubocop:enable Eval
+        rescue Exception => e
+          message = "Invalid `#{path.basename}` file: #{e.message}"
+          raise DSLError.new(message, path, e.backtrace, contents)
         end
+        # rubocop:enable Lint/RescueException
       end
     end
 
@@ -194,21 +192,18 @@ module Danger
       return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
 
       ui.section('Results:') do
-        [:errors, :warnings, :messages].each do |current|
-          params = {}
-          params[:rows] = status[current].map { |item| [item] }
-          next unless params[:rows].count > 0
-          params[:title] = case current
-                           when :errors
-                             current.to_s.capitalize.red
-                           when :warnings
-                             current.to_s.capitalize.yellow
-                           else
-                             current.to_s.capitalize
-                           end
-          ui.puts
-          ui.puts Terminal::Table.new(params)
-          ui.puts
+        [:errors, :warnings, :messages].each do |key|
+          formatted = key.to_s.capitalize + ':'
+          title = case key
+                  when :errors
+                    formatted.red
+                  when :warnings
+                    formatted.yellow
+                  else
+                    formatted
+                  end
+          rows = status[key]
+          print_list(title, rows)
         end
 
         if status[:markdowns].count > 0
@@ -219,6 +214,16 @@ module Danger
           end
         end
       end
+    end
+
+    private
+
+    def print_list(title, rows)
+      ui.title(title) do
+        rows.each do |row|
+          ui.puts("- [ ] #{row}")
+        end
+      end unless rows.empty?
     end
   end
 end
