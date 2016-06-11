@@ -3,6 +3,15 @@ module Danger
     require 'danger/commands/init'
     require 'danger/commands/local'
     require 'danger/commands/new_plugin'
+    require 'claide_plugin'
+
+    # manually set claide plugins as a subcommand
+    @subcommands << CLAide::Command::Plugins
+    CLAide::Plugins.config =
+      CLAide::Plugins::Configuration.new('Danger',
+                                         'danger',
+                                         'https://s3.amazonaws.com/dbgrandi/danger-plugins.json',
+                                         'https://github.com/danger/danger-plugin-template')
 
     self.summary = 'Run the Dangerfile.'
     self.command = 'danger'
