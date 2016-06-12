@@ -12,6 +12,7 @@ module Danger
       end
 
       def self.available_ci_sources
+        require 'set'
         @available_ci_sources ||= Set.new
       end
 
