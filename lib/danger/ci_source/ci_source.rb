@@ -1,3 +1,5 @@
+require 'set'
+
 module Danger
   module CISource
     # "abstract" CI class
