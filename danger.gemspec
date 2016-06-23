@@ -20,10 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.0.0"
 
-  spec.add_runtime_dependency 'claide'
-  spec.add_runtime_dependency 'git'
+  spec.add_runtime_dependency 'claide', '~> 1.0'
+  spec.add_runtime_dependency 'git', '~> 0'
   spec.add_runtime_dependency 'colored', '~> 1.2'
-  spec.add_runtime_dependency 'faraday'
+  spec.add_runtime_dependency 'faraday', '~> 0'
   spec.add_runtime_dependency 'octokit', '~> 4.2'
   spec.add_runtime_dependency 'redcarpet', '~> 3.3'
   spec.add_runtime_dependency 'terminal-table', '~> 1'
@@ -31,14 +31,14 @@ Gem::Specification.new do |spec|
   
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "webmock"
-  spec.add_development_dependency "pry"
-  # spec.add_development_dependency "fastlane", ">= 1.49.0"
-  spec.add_development_dependency "rubocop", "~> 0.38.0"
-  spec.add_development_dependency "yard"
+  spec.add_development_dependency "rspec", '~> 0'
+  spec.add_development_dependency "webmock", '~> 0'
+  spec.add_development_dependency "pry", '~> 0'
+
+  spec.add_development_dependency "rubocop", "~> 0.38"
+  spec.add_development_dependency "yard", '~> 0'
 
   spec.add_development_dependency "listen", '3.0.7'
-  spec.add_development_dependency "guard"
-  spec.add_development_dependency "guard-rspec"
+  spec.add_development_dependency "guard", '~> 0'
+  spec.add_development_dependency "guard-rspec", '~> 0'
 end
