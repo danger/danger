@@ -25,13 +25,13 @@ Add this line to your application's [Gemfile](https://guides.cocoapods.org/using
 gem 'danger'
 ```
 
-Then use Bundler to install the gem.
+Next, use Bundler to install the gem.
 
 ```shell
 bundle install
 ```
 
-Then, to get up and running quickly, just run
+After the gem is installed, you can run Danger's interactive getting started guide:
 
 ```
 bundle exec danger init
