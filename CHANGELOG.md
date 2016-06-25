@@ -1,4 +1,7 @@
 ## Master
+
+## 0.8.3
+
 * Fix updating of the commit status after danger check. - justMaku
 * Relies on the current git HEAD, instead of pulling a merge branch from GitHub - justMaku
 * Use Cork for console output. - DanToml

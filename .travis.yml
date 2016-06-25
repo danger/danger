@@ -10,7 +10,9 @@ rvm:
 
 bundler_args: "--without documentation --path bundle"
 
-before_install: "gem install bundler"
+before_install:
+  - git fetch --depth=1000000
+  - gem install bundler
 
 after_install:
   - rake install
