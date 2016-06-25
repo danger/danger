@@ -25,7 +25,7 @@ module Danger
       classes = parser.classes_in_file
 
       class_syms = classes.map(&:name)
-      expect(class_syms).to eq [:Dangerfile, :ExampleBroken]
+      expect(class_syms).to eq [:ExampleBroken]
     end
 
     it 'skips non-subclasses of Danger::Plugin' do
@@ -58,12 +58,13 @@ module Danger
       expect(json).to eq [{
         name: "ExampleRemote",
         body_md: "",
+        instance_name: "example_remote",
         example_code: [],
         attributes: [],
         methods: [{ name: :echo, body_md: "", tags: [] }],
         tags: [],
         see: [],
-        file: "spec/fixtures/plugins/example_remote.rb"
+        file: "/spec/fixtures/plugins/example_remote.rb"
       }]
     end
 
@@ -77,6 +78,7 @@ module Danger
       expect(json).to eq [{
         name: "DangerProselint",
         body_md:         "Lint markdown files inside your projects.\nThis is done using the [proselint](http://proselint.com) python egg.\nResults are passed out as a table in markdown.",
+        instance_name: "proselint",
         example_code:         ["\n# Runs a linter with comma style disabled\nproselint.disable_linters = [\"misc.scare_quotes\", \"misc.tense_present\"]\nproselint.lint_files \"_posts/*.md\"\n\n# Runs a linter with all styles, on modified and added markpown files in this PR\nproselint.lint_files"],
         attributes: [
           { disable_linters: { read: nil, write:
@@ -86,11 +88,6 @@ module Danger
         ],
 
         methods: [
-          {
-            name: :disable_linters=,
-            body_md: "Allows you to disable a collection of linters from being ran.\nYou can get a list of [them here](https://github.com/amperser/proselint#checks)",
-            tags: []
-          },
           {
             name: :lint_files,
             body_md: "Lints the globbed files, which can fail your build if",
@@ -107,7 +104,7 @@ module Danger
         ],
         tags: [],
         see: ["artsy/artsy.github.io"],
-        file: "spec/fixtures/plugins/example_full_plugin.rb"
+        file: "/spec/fixtures/plugins/example_full_plugin.rb"
       }]
     end
   end
