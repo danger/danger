@@ -132,8 +132,9 @@ module Danger
     end
 
     def current_repo_slug
-      @repo ||= Danger::CISource::LocalGitRepo.new
-      @repo.repo_slug || "[Your/Repo]"
+      @git = GitRepo.new
+      repo_matches = @git.origins.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+      repo_matches[2] || "[Your/Repo]"
     end
 
     def setup_danger_ci
