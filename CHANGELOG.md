@@ -1,6 +1,11 @@
 ## Master
 
 * Initial work on `danger plugin lint` command - orta
+* `danger plugin lint` can run with either:
+  - a list of file paths
+  - a list of gems
+  - no arguments, which will parse `lib/**/**/*` to lint your local plugins
+* Moved new plugin to `danger plugin new` - orta
 
 ## 0.8.3
 
