@@ -13,7 +13,7 @@ module Danger
 
     def self.options
       [
-        ['[path]', 'The path of the ruby file you want to lint'],
+        ['[path]', 'The path of the ruby file you want to lint']
       ].concat(super)
     end
 
