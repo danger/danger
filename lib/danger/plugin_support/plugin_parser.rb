@@ -49,6 +49,7 @@ module Danger
 
       classes.map do |klass|
         # Adds the class being parsed into the ruby runtime
+        puts klass.file
         require klass.file
         real_klass = Danger.const_get klass.name
         attribute_meths = klass.attributes[:instance].values.map { |v| v.values }.flatten

@@ -7,14 +7,14 @@ module Danger
   # @example Specifying custom CocoaPods installation options
   #
   #          # Runs a linter with comma style disabled
-  #          proselint.disable_linters = ["misc.scare_quotes", "misc.tense_present""]
-  #          proselint.lint_files "_posts/*.md
+  #          proselint.disable_linters = ["misc.scare_quotes", "misc.tense_present"]
+  #          proselint.lint_files "_posts/*.md"
   #
   #          # Runs a linter with all styles, on modified and added markpown files in this PR
   #          proselint.lint_files
   #
-  # @see: artsy/artsy.github.io
-  # @tags: blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express
+  # @see  artsy/artsy.github.io
+  # @tags blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express
   #
   class DangerProselint < Plugin
 
