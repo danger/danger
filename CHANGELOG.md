@@ -1,5 +1,7 @@
 ## Master
 
+* Initial work on `danger plugin lint` command - orta
+
 ## 0.8.3
 
 * Fix updating of the commit status after danger check. - justMaku

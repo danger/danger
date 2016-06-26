@@ -17,7 +17,7 @@ end
 
 desc 'Run RuboCop on the lib/specs directory'
 RuboCop::RakeTask.new(:rubocop) do |task|
-  task.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
+  task.patterns = Dir.glob(['lib/**/*.rb', 'spec/**/*.rb']) - Dir.glob(['spec/fixtures/**/*', 'lib/danger/plugin_support/plugin_parser.rb'])
 end
 
 task :test do

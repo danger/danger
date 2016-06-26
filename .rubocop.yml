@@ -1,10 +1,9 @@
 
 AllCops:
-  Include:
-    - 'fastlane/Fastfile'
   Exclude:
-    - 'fastlane/actions/*'
-    - 'lib/assets/PluginTemplate.rb.template'
+    - 'spec/fixtures/**/*'
+    - 'lib/danger/plugin_support/plugin_parser.rb'
+
 
 Style/ClassVars:
   Enabled: false
