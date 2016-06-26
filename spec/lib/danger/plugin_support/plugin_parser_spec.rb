@@ -2,14 +2,6 @@ require "danger/plugin_support/plugin_parser"
 
 module Danger
   describe PluginParser do
-    it 'includes Danger::Plugin in the yard registry' do
-      parser = PluginParser.new ""
-      parser.parse
-
-      plugin_docs = parser.registry.at("Danger::Plugin")
-      expect(plugin_docs).to be_truthy
-    end
-
     it 'includes an example plugin' do
       parser = PluginParser.new "spec/fixtures/plugins/example_broken.rb"
       parser.parse
@@ -25,7 +17,7 @@ module Danger
       classes = parser.classes_in_file
 
       class_syms = classes.map(&:name)
-      expect(class_syms).to eq [:ExampleBroken]
+      expect(class_syms).to eq [:Dangerfile, :ExampleBroken]
     end
 
     it 'skips non-subclasses of Danger::Plugin' do
@@ -69,7 +61,7 @@ module Danger
     end
 
     it 'outputs JSON for well documented subclasses of Danger::Plugin' do
-      parser = PluginParser.new "spec/fixtures/plugins/example_full_plugin.rb"
+      parser = PluginParser.new "spec/fixtures/plugins/example_fully_documented.rb"
       parser.parse
 
       plugins = parser.plugins_from_classes(parser.classes_in_file)
@@ -104,7 +96,7 @@ module Danger
         ],
         tags: [],
         see: ["artsy/artsy.github.io"],
-        file: "/spec/fixtures/plugins/example_full_plugin.rb"
+        file: "/spec/fixtures/plugins/example_fully_documented.rb"
       }]
     end
   end

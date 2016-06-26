@@ -27,12 +27,10 @@ module Danger
 
       # `rm -rf '~/.yard/'`
 
-      YARD::Registry.delete_from_disk
-
-      path = ""
-
       if File.exist? @plugin_ref
         path = @plugin_ref
+      else
+        raise "Could not find a file at path"
       end
 
       parser = PluginParser.new(path)

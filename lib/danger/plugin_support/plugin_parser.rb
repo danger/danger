@@ -5,6 +5,7 @@ module Danger
     attr_accessor :registry
 
     def initialize(path)
+      raise "Path cannot be empty" if path.empty?
       @path = File.expand_path(path)
     end
 
@@ -12,8 +13,10 @@ module Danger
       # could this go in a singleton-y place instead?
       # like class initialize?
       YARD::Tags::Library.define_tag('tags', :tags)
-
       files = ["lib/danger/plugin_support/plugin.rb", @path]
+
+      # This turns on YARD debugging
+      # $DEBUG = true
       self.registry = YARD::Registry.load(files, true)
     end
 
@@ -26,6 +29,7 @@ module Danger
     end
 
     def to_dict(classes)
+
       d_meth = lambda do |meth|
         return nil if meth.nil?
         {
