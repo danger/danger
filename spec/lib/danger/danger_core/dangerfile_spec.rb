@@ -148,7 +148,7 @@ describe Danger::Dangerfile do
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:protect_files]
+      expect(methods).to eq []
     end
 
     it "exposes plugin external attributes by default" do
@@ -158,7 +158,7 @@ describe Danger::Dangerfile do
 
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:my_thing, :protect_files]
+      expect(methods).to eq [:my_thing]
     end
 
     def sort_data(data)

@@ -1,7 +1,7 @@
 module Danger
-  class NewPlugin < Runner
+  class NewPlugin < PluginAbstract
     self.summary = 'Generate a new danger plugin.'
-    self.command = 'new_plugin'
+    self.command = 'new'
 
     def run
       require 'fileutils'

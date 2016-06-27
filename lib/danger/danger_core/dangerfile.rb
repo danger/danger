@@ -30,7 +30,7 @@ module Danger
 
     # These are the classes that are allowed to also use method_missing
     # in order to provide broader plugin support
-    def core_plugin_classes
+    def self.core_plugin_classes
       [
         Danger::DangerfileMessagingPlugin,
         Danger::DangerfileImportPlugin,
@@ -94,7 +94,7 @@ module Danger
         instance_variable_set("@#{name}", plugin)
 
         @plugins[klass] = plugin
-        @core_plugins << plugin if core_plugin_classes.include? klass
+        @core_plugins << plugin if self.class.core_plugin_classes.include? klass
       end
     end
     alias init_plugins refresh_plugins

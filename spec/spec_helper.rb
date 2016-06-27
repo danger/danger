@@ -5,6 +5,10 @@ require 'webmock'
 require 'webmock/rspec'
 require 'json'
 
+RSpec.configure do |config|
+  config.filter_gems_from_backtrace "bundler"
+end
+
 WebMock.disable_net_connect!(allow: 'coveralls.io')
 
 def make_temp_file(contents)

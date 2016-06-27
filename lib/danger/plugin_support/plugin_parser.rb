@@ -1,35 +1,46 @@
 require 'yard'
+require 'json'
 
 module Danger
   class PluginParser
     attr_accessor :registry
 
-    def initialize(path)
-      raise "Path cannot be empty" if path.empty?
-      @path = File.expand_path(path)
+    def initialize(paths)
+      raise "Path cannot be empty" if paths.empty?
+
+      if paths.is_a? String
+        @paths = [File.expand_path(paths)]
+      else
+        @paths = paths
+      end
     end
 
     def parse
       # could this go in a singleton-y place instead?
       # like class initialize?
       YARD::Tags::Library.define_tag('tags', :tags)
-      files = ["lib/danger/plugin_support/plugin.rb", @path]
+      files = ["lib/danger/plugin_support/plugin.rb"] + @paths
 
       # This turns on YARD debugging
       # $DEBUG = true
+      
       self.registry = YARD::Registry.load(files, true)
     end
 
     def classes_in_file
-      registry.all(:class).select { |klass| klass.file == @path }
+      registry.all(:class).select { |klass| @paths.include? klass.file }
     end
 
     def plugins_from_classes(classes)
       classes.select { |klass| klass.inheritance_tree.map(&:name).include? :Plugin }
     end
 
-    def to_dict(classes)
+    def to_json
+      plugins = plugins_from_classes(classes_in_file)
+      to_dict(plugins).to_json
+    end
 
+    def to_dict(classes)
       d_meth = lambda do |meth|
         return nil if meth.nil?
         {
@@ -53,10 +64,9 @@ module Danger
 
       classes.map do |klass|
         # Adds the class being parsed into the ruby runtime
-        puts klass.file
         require klass.file
         real_klass = Danger.const_get klass.name
-        attribute_meths = klass.attributes[:instance].values.map { |v| v.values }.flatten
+        attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
 
         {
           name: klass.name.to_s,

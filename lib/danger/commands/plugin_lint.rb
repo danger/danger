@@ -7,37 +7,66 @@ module Danger
     self.command = 'lint'
 
     def initialize(argv)
-      @plugin_ref = argv.shift_argument
+      @refs = argv.arguments! unless argv.arguments.empty?
       super
     end
 
-    def self.options
-      [
-        ['[path]', 'The path of the ruby file you want to lint']
-      ].concat(super)
-    end
+    self.summary = 'Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success.'
+
+    self.description = <<-DESC
+      Converts a collection of file paths of Danger plugins into a JSON format.
+      Note: Before 1.0, it will also parse the represented JSON to validate whether http://danger.systems would
+      show the plugin on the website.
+    DESC
+
+    self.arguments = [
+      CLAide::Argument.new('Paths, Gems or Nothing', false, true)
+    ]
 
     def run
-      require 'yard'
+      paths = nil
 
-      # Sometimes there's caching issues, they look like this:
-      #  TypeError:
-      #   incompatible marshal file format (can't be read)
-      #     format version 4.8 required; 109.111 given
+      # When given existing paths, map to absolute & existing paths
+      if !@refs.nil? and @refs.select { |ref| File.file? ref }.any?
+        paths = @refs.select { |ref| File.file? ref }
+                     .map { |path| File.expand_path(path) }
 
-      # `rm -rf '~/.yard/'`
+      # When given a list of gems
+      elsif @refs and @refs.kind_of? Array
+        require 'bundler'
+        require 'pathname'
 
-      if File.exist? @plugin_ref
-        path = @plugin_ref
+        Dir.mktmpdir do |dir|
+          gem_names = @refs
+          deps = gem_names.map { |name| Bundler::Dependency.new(name, ">= 0") }
+
+          # Use Gems from rubygems.org
+          source = Bundler::SourceList.new
+          source.add_rubygems_remote("https://rubygems.org")
+
+          # Create a definition to bundle, make sure it always updates
+          # and uses the latest version from the server
+          bundler = Bundler::Definition.new(nil, deps, source, true)
+          bundler.resolve_remotely!
+
+          # Install the gems into a tmp dir
+          options = { path: dir }
+          Bundler::Installer.install(Pathname.new(dir), bundler, options)
+
+          # Get the name'd gems out of bundler, then pull out all their paths
+          gems = gem_names.map { |name| bundler.specs[name] }.flatten
+          paths = gems.map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }.flatten
+        end
+
+      # When empty, imply you want to test the current lib folder as a plugin
       else
-        raise "Could not find a file at path"
+        paths = Dir.glob(File.join(".", "lib/*.rb"))
       end
 
-      parser = PluginParser.new(path)
+      parser = PluginParser.new(paths)
       parser.parse
       json = parser.to_json
-
-      cork.message json
+      cork.puts json
     end
   end
 end
