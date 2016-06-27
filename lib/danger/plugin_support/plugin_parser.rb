@@ -19,6 +19,7 @@ module Danger
       # could this go in a singleton-y place instead?
       # like class initialize?
       YARD::Tags::Library.define_tag('tags', :tags)
+      YARD::Tags::Library.define_tag('availablity', :availablity)
       files = ["lib/danger/plugin_support/plugin.rb"] + @paths
 
       # This turns on YARD debugging

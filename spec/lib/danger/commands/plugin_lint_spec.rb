@@ -1,4 +1,4 @@
-require 'danger/commands/plugin_lint'
+require 'danger/commands/plugins/plugin_lint'
 
 module Danger
   describe Danger::PluginLint do

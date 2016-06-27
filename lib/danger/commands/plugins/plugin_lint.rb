@@ -1,4 +1,4 @@
-require 'danger/commands/plugin_abstract'
+require 'danger/commands/plugins/plugin_abstract'
 require 'danger/plugin_support/plugin_parser'
 require 'danger/plugin_support/plugin_file_resolver'
 

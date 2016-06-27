@@ -3,17 +3,16 @@ require 'pathname'
 
 module Danger
   class PluginFileResolver
+    # Takes an array of files, gems or nothing, then resolves them into
+    # paths that should be sent into the documentation parser
     def initialize(references)
       @refs = references
     end
 
     def resolve_to_paths
-      paths = nil
-
       # When given existing paths, map to absolute & existing paths
       if !@refs.nil? and @refs.select { |ref| File.file? ref }.any?
-        paths = @refs.select { |ref| File.file? ref }
-                     .map { |path| File.expand_path(path) }
+        @refs.select { |ref| File.file? ref }.map { |path| File.expand_path(path) }
 
       # When given a list of gems
       elsif @refs and @refs.kind_of? Array
@@ -37,15 +36,13 @@ module Danger
 
           # Get the name'd gems out of bundler, then pull out all their paths
           gems = gem_names.map { |name| bundler.specs[name] }.flatten
-          paths = gems.map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }.flatten
+          gems.map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }.flatten
         end
 
       # When empty, imply you want to test the current lib folder as a plugin
       else
-        paths = Dir.glob(File.join(".", "lib/*.rb"))
+        Dir.glob(File.join(".", "lib/*.rb"))
       end
-
-      paths
     end
   end
 end
