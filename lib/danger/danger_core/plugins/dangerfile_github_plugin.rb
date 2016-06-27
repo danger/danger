@@ -73,9 +73,14 @@ module Danger
   # @tags core, github
 
   class DangerfileGitHubPlugin < Plugin
+    def self.new(dangerfile)
+      return nil if dangerfile.env.request_source.class != Danger::RequestSources::GitHub
+
+      super
+    end
+
     def initialize(dangerfile)
       super(dangerfile)
-      return nil unless dangerfile.env.request_source.class == Danger::RequestSources::GitHub
 
       @github = dangerfile.env.request_source
     end
