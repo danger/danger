@@ -197,7 +197,7 @@ describe Danger::Dangerfile do
         ["added_files", []],
         ["api", "Octokit::Client"],
         ["base_commit", "704dc55988c6996f69b6873c2424be7d1de67bbe"],
-        ["branch_for_base", "master"], 
+        ["branch_for_base", "master"],
         ["branch_for_head", "orta-circle_ci2"],
         ["commits", []],
         ["deleted_files", []],

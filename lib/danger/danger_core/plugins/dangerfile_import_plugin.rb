@@ -1,7 +1,6 @@
 require 'danger/plugin_support/plugin'
 
 module Danger
-
   # One way to support internal plugins is via `plugin.import` this gives you
   # the chance to quickly iterate without the need for building rubygems. As such,
   # it does not have the stringent rules around documentation expected of a public plugin.
@@ -16,16 +15,15 @@ module Danger
   # @example Import from a local file reference
   #
   #          plugin.import "danger/plugins/watch_plugin.rb"
-  #          
+  #
   # @example Import all files inside a folder
   #
   #          plugin.import "danger/plugins/*.rb"
-  #          
+  #
   # @see  danger/danger
   # @tags core, plugins
 
   class DangerfileImportPlugin < Plugin
-
     def self.instance_name
       "plugin"
     end
@@ -81,7 +79,7 @@ module Danger
     def import_local(path)
       Dir[path].each do |file|
         # Without the expand_path it would fail if the path doesn't start with ./
-        require File.expand_path(file) 
+        require File.expand_path(file)
         refresh_plugins
       end
     end

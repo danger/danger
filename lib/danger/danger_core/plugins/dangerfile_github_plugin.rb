@@ -1,7 +1,6 @@
 require 'danger/plugin_support/plugin'
 
 module Danger
-
   # Handles interacting with GitHub inside a Dangerfile. Provides a few functions which wrap `pr_json` and also
   # through a few standard functions to simplify your code.
   #
@@ -12,17 +11,17 @@ module Danger
   # @example Ensure that labels have been used on the PR
   #
   #          fail "Please add labels to this PR" if github.labels.empty?
-  #          
+  #
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
   #          unless github.api.organization_member?('danger', github.pr_author)
   #            message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
   #          end
-  #          
+  #
   # @example Ensure there is a summary for a PR
   #
   #          fail "Please provide a summary in the Pull Request description" if github.pr_body.length < 5
-  #          
+  #
   # @see  danger/danger
   # @tags core, github
 
@@ -115,7 +114,7 @@ module Danger
     # Provides access to the GitHub API client used inside Danger. Making
     # it easy to use the GitHub API inside a Dangerfile.
     # @return Octokit::Client
-    def api    
+    def api
       @github.client
     end
   end

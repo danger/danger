@@ -2,8 +2,7 @@ require 'danger/danger_core/violation'
 require 'danger/plugin_support/plugin'
 
 module Danger
-
-  # Provides the feedback mechanism for Danger. Danger can keep track of 
+  # Provides the feedback mechanism for Danger. Danger can keep track of
   # messages, warnings, failure and post arbitrary markdown into a comment.
   #
   # The message within which Danger communicates back is amended on each run in a session.
@@ -22,7 +21,7 @@ module Danger
   # @example Failing a build
   #
   #          fail "This build didn't pass tests"
-  #   
+  #
   # @example Failing a build, but not keeping it's value around on subsequent runs
   #
   #          fail("This build didn't pass tests", sticky: false)
@@ -32,7 +31,7 @@ module Danger
   #          warn "This build didn't pass linting"
   #
   # @example Displaying a markdown table
-  #           
+  #
   #          message = "### Proselint found issues\n\n"
   #          message << "Line | Message | Severity |\n"
   #          message << "| --- | ----- | ----- |\n"
@@ -118,7 +117,7 @@ module Danger
     end
 
     # @!group Reporting
-    # A list of all violations passed to Danger, we don't 
+    # A list of all violations passed to Danger, we don't
     # anticipate users of Danger needing to use this.
     #
     # @visibility hidden
