@@ -2,6 +2,48 @@ require 'danger/danger_core/violation'
 require 'danger/plugin_support/plugin'
 
 module Danger
+
+  # Provides the feedback mechanism for Danger. Danger can keep track of 
+  # messages, warnings, failure and post arbitrary markdown into a comment.
+  #
+  # The message within which Danger communicates back is amended on each run in a session.
+  #
+  # Each of `message`, `warn` and `fail` have a `sticky` flag, `true` by default, which
+  # means that the message will be crossed out instead of being removed. If it's not use on
+  # subsequent runs.
+  #
+  # By default, using `fail` would fail the corresponding build. Either via an API call, or
+  # via the return value for the danger command.
+  #
+  # It is possible to have Danger ignore specific warnings or errors by writing `Danger: Ignore "[warning/error text]`.
+  #
+  # Sidenote: Messaging is the only plugin which adds functions to the root of the Dangerfile.
+  #
+  # @example Failing a build
+  #
+  #          fail "This build didn't pass tests"
+  #   
+  # @example Failing a build, but not keeping it's value around on subsequent runs
+  #
+  #          fail("This build didn't pass tests", sticky: false)
+  #
+  # @example Passing a warning
+  #
+  #          warn "This build didn't pass linting"
+  #
+  # @example Displaying a markdown table
+  #           
+  #          message = "### Proselint found issues\n\n"
+  #          message << "Line | Message | Severity |\n"
+  #          message << "| --- | ----- | ----- |\n"
+  #          message << "20 | No documentation | Error \n"
+  #          markdown message
+  #
+  #
+  # @see  danger/danger
+  # @tags core, messaging
+  #
+
   class DangerfileMessagingPlugin < Plugin
     def initialize(dangerfile)
       super(dangerfile)
@@ -10,6 +52,10 @@ module Danger
       @errors = []
       @messages = []
       @markdowns = []
+    end
+
+    def self.instance_name
+      "messaging"
     end
 
     # @!group Core
@@ -57,6 +103,11 @@ module Danger
       @errors << Violation.new(message, sticky)
     end
 
+    # @!group Reporting
+    # A list of all messages passed to Danger, including
+    # the markdowns.
+    #
+    # @return Hash
     def status_report
       {
         errors: @errors.map(&:message).clone.freeze,
@@ -66,6 +117,12 @@ module Danger
       }
     end
 
+    # @!group Reporting
+    # A list of all violations passed to Danger, we don't 
+    # anticipate users of Danger needing to use this.
+    #
+    # @visibility hidden
+    # @return Hash
     def violation_report
       {
         errors: @errors.clone.freeze,

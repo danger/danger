@@ -119,6 +119,9 @@ module Danger
           # So that we either have one value per row
           # or we have [] for an empty array
           value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          value = "Octokit::Client" if method == :api
+          value = "[Skipped]" if method == :pr_json
+
           [method.to_s, value]
         end
       end

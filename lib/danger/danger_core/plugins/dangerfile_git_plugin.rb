@@ -2,7 +2,39 @@ require 'danger/plugin_support/plugin'
 require 'danger/core_ext/file_list'
 
 module Danger
+
+  # Handles interacting with git inside a Dangerfile. Providing access to files that have changed, and useful statistics. Also provides
+  # access to the commits in the form of [Git::Log](https://github.com/schacon/ruby-git/blob/master/lib/git/log.rb) objects.
+  #
+  # @example Do something to all new and edited markdown files
+  #
+  #          markdowns = (git.added_files + git.modified_files).select{ |file| file.end_with? "md" }
+  #          do_something markdowns
+  #
+  # @example Don't allow a file to be deleted
+  #
+  #          fail "Don't delete my precious" if git.deleted_files.include? "my/favourite.file"
+  #          
+  # @example Fail really big diffs
+  #
+  #          fail "We cannot handle the scale of this PR" if git.lines_of_code > 50_000
+  #          
+  # @example Warn when there are merge commits in the diff
+  #
+  #           if commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
+  #             warn 'Please rebase to get rid of the merge commits in this PR'
+  #          end
+  #          
+  #
+  # @see  danger/danger
+  # @tags core, git
+
   class DangerfileGitPlugin < Plugin
+
+    def self.instance_name
+      "git"
+    end
+
     def initialize(dangerfile)
       super(dangerfile)
       raise  unless dangerfile.env.scm.class == Danger::GitRepo
