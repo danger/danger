@@ -113,12 +113,24 @@ module Danger
         methods = plugin_hash[:methods].select { |name| plugin.method(name).parameters.empty? }
 
         methods.map do |method|
-          value = plugin.send(method)
-          value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if method == :pr_body
+          case method
+          when :api
+            value = "Octokit::Client"
 
-          # So that we either have one value per row
-          # or we have [] for an empty array
-          value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          when :pr_json
+            value = "[Skipped]"
+
+          when :pr_body
+            value = plugin.send(method)
+            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")
+
+          else
+            value = plugin.send(method)
+            # So that we either have one value per row
+            # or we have [] for an empty array
+            value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          end
+
           [method.to_s, value]
         end
       end

@@ -19,6 +19,7 @@ module Danger
       # could this go in a singleton-y place instead?
       # like class initialize?
       YARD::Tags::Library.define_tag('tags', :tags)
+      YARD::Tags::Library.define_tag('availablity', :availablity)
       files = ["lib/danger/plugin_support/plugin.rb"] + @paths
 
       # This turns on YARD debugging
@@ -67,12 +68,11 @@ module Danger
         require klass.file
         real_klass = Danger.const_get klass.name
         attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
-
         {
           name: klass.name.to_s,
           body_md: klass.docstring,
           instance_name: real_klass.instance_name,
-          example_code: klass.tags.select { |t| t.tag_name == "example" }.map(&:text).compact,
+          example_code: klass.tags.select { |t| t.tag_name == "example" }.map { |tag| {:title => tag.name, :text => tag.text} }.compact,
           attributes: klass.attributes[:instance].map do |pair|
             { pair.first => d_attr.call(pair.last) }
           end,
