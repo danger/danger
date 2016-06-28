@@ -11,7 +11,7 @@ module Danger
   #          do_something markdowns.select{ |file| file.end_with? "md" }
   #
   # @example Don't allow a file to be deleted
-  #          
+  #
   #          deleted = git.deleted_files.include? "my/favourite.file"
   #          fail "Don't delete my precious" if deleted
   #

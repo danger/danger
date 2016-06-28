@@ -71,7 +71,7 @@ module Danger
         name: "DangerProselint",
         body_md:         "Lint markdown files inside your projects.\nThis is done using the [proselint](http://proselint.com) python egg.\nResults are passed out as a table in markdown.",
         instance_name: "proselint",
-        example_code:   [{:title=>"Specifying custom CocoaPods installation options", :text=>      "\n# Runs a linter with comma style disabled\nproselint.disable_linters = [\"misc.scare_quotes\", \"misc.tense_present\"]\nproselint.lint_files \"_posts/*.md\"\n\n# Runs a linter with all styles, on modified and added markpown files in this PR\nproselint.lint_files"}],
+        example_code:   [{ title: "Specifying custom CocoaPods installation options", text: "\n# Runs a linter with comma style disabled\nproselint.disable_linters = [\"misc.scare_quotes\", \"misc.tense_present\"]\nproselint.lint_files \"_posts/*.md\"\n\n# Runs a linter with all styles, on modified and added markpown files in this PR\nproselint.lint_files" }],
         attributes: [
           { disable_linters: { read: nil, write:
             { name: :disable_linters=,
