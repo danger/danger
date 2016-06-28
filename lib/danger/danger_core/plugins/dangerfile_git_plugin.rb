@@ -7,12 +7,13 @@ module Danger
   #
   # @example Do something to all new and edited markdown files
   #
-  #          markdowns = (git.added_files + git.modified_files).select{ |file| file.end_with? "md" }
-  #          do_something markdowns
+  #          markdowns = (git.added_files + git.modified_files)
+  #          do_something markdowns.select{ |file| file.end_with? "md" }
   #
   # @example Don't allow a file to be deleted
-  #
-  #          fail "Don't delete my precious" if git.deleted_files.include? "my/favourite.file"
+  #          
+  #          deleted = git.deleted_files.include? "my/favourite.file"
+  #          fail "Don't delete my precious" if deleted
   #
   # @example Fail really big diffs
   #
@@ -20,7 +21,7 @@ module Danger
   #
   # @example Warn when there are merge commits in the diff
   #
-  #           if commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
+  #          if commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
   #             warn 'Please rebase to get rid of the merge commits in this PR'
   #          end
   #

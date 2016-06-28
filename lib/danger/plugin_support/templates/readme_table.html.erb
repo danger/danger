@@ -1,0 +1,35 @@
+<% json.each do |plugin| %>
+<table>
+  <colgroup>
+    <col width="10%" />
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th class="align-left"><%= plugin["instance_name"] %></th>
+      <th class="align-right">Functions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr>  
+  <td>
+  </td>
+    <td rowspan="9999" valign="top" >
+      <%= markdown.render(plugin["body_md"]) %>
+      <%- plugin["example_code"].each do |example| %><blockquote><%= example["title"] %>
+          <pre><%= example["text"] %></pre>
+      </blockquote><%- end %>
+</td>
+  </tr><%- plugin["attributes"].each do |attribute| %><tr>
+      <td><%= markdown.render(attribute.values.first["write"]["body_md"]).strip %>
+        <div class="highlight highlight-source-swift"><pre><%= attribute.keys.first %></pre></div>
+      </td>
+    </tr><%- end %><%- plugin["methods"].each do |method| %>
+    <tr>
+      <td><%= markdown.render(method["body_md"]).strip %>
+        <div class="highlight highlight-source-ruby"><pre><%= method["name"] %></pre></div>
+      </td>
+    </tr><%- end %>
+  </tbody>
+  </table>
+<% end %>

@@ -1,7 +1,8 @@
 module Danger
   class PluginAbstract < Runner
     require 'danger/commands/plugins/plugin_lint'
-    require 'danger/commands/plugins/new_plugin'
+	require 'danger/commands/plugins/plugin_readme'
+    require 'danger/commands/plugins/plugin_new'
 
     self.command = 'plugin'
 
