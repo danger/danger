@@ -121,6 +121,8 @@ module Danger
         ui.pause 1
         ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos."
         ui.say "Make a new one for those repos with just " + "public_repo".yellow + "."
+        ui.pause 1
+        ui.say "Additionally, don't forget to add your new GitHub account as a collaborator to your Closed Source project."
       end
 
       ui.say "\n👍, please press return when you have your token set up..."

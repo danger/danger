@@ -6,6 +6,7 @@
   - a list of gems
   - no arguments, which will parse `lib/**/**/*` to lint your local plugins
 * Moved new plugin to `danger plugin new` - orta
+* Notify the user to add the new GitHub account as collaborator to Close Source project
 
 ## 0.8.3
 
