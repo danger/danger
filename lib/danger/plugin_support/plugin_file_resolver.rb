@@ -35,8 +35,8 @@ module Danger
           Bundler::Installer.install(Pathname.new(dir), bundler, options)
 
           # Get the name'd gems out of bundler, then pull out all their paths
-          gems = gem_names.map { |name| bundler.specs[name] }.flatten
-          gems.map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }.flatten
+          gems = gem_names.flat_map { |name| bundler.specs[name] }
+          gems.flat_map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }
         end
 
       # When empty, imply you want to test the current lib folder as a plugin
