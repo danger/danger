@@ -9,6 +9,7 @@
 * Added `api` to the DSL, which is a shortcut to the active `Octokit::Client` - orta
 * Renamed `branch_for_merge` to `branch_for_base` and also added `branch_for_head` - orta
 * Initial work on namespacing existing plugins - orta
+* Notify the user to add the new GitHub account as collaborator to Close Source project
 
 ## 0.8.3
 
