@@ -10,6 +10,7 @@
 * Renamed `branch_for_merge` to `branch_for_base` and also added `branch_for_head` - orta
 * Initial work on namespacing existing plugins - orta
 * Notify the user to add the new GitHub account as collaborator to Close Source project
+* Fixes a problem running `danger local` due to a missing dependency on yard - ashfurrow
 
 ## 0.8.3
 
