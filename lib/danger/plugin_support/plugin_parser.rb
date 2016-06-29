@@ -1,4 +1,3 @@
-require 'yard'
 require 'json'
 
 module Danger
@@ -16,6 +15,7 @@ module Danger
     end
 
     def parse
+      require 'yard'
       # could this go in a singleton-y place instead?
       # like class initialize?
       YARD::Tags::Library.define_tag('tags', :tags)
