@@ -29,11 +29,11 @@ describe Danger::CISource::CircleCI do
     expect(t.pull_request_id).to be nil
   end
 
-  it 'doesnt validate when circle env var is found and it has no PR url' do
+  it 'does validate when circle env var is found and it has no PR url' do
     env = { "CIRCLE_BUILD_NUM" => "true",
             "CIRCLE_PROJECT_USERNAME" => "orta",
             "CIRCLE_PROJECT_REPONAME" => "thing" }
-    expect(Danger::CISource::CircleCI.validates?(env)).to be false
+    expect(Danger::CISource::CircleCI.validates?(env)).to be true
   end
 
   it 'doesnt validate when circle ci is not found' do
