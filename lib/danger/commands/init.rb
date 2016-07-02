@@ -227,7 +227,7 @@ module Danger
 
         ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
-        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#experimental\n"
+        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
         ui.wait_for_return
       end

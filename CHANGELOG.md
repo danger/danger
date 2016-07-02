@@ -1,5 +1,7 @@
 ## Master
 
+## 0.8.3
+
 * Initial work on `danger plugin lint` command - orta
 * `danger plugin lint` can run with either:
   - a list of file paths
