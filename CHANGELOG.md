@@ -1,5 +1,7 @@
 ## Master
 
+* Converts the message link  to be http://danger.systems - orta
+
 ## 0.8.3
 
 * Initial work on `danger plugin lint` command - orta
