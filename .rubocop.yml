@@ -61,10 +61,6 @@ Metrics/MethodLength:
   Exclude:
     - 'lib/*/options.rb'
 
-# Both string notations are okay
-Style/StringLiterals:
-  Enabled: false
-
 # The %w might be confusing for new users
 Style/WordArray:
   MinSize: 19
