@@ -1,8 +1,9 @@
 ## Master
 
 * Converts the message link  to be http://danger.systems - orta
+* Fix `danger lib lint` with no params not finding the plugin paths - orta
 
-## 0.8.3
+## 0.8.4
 
 * Initial work on `danger plugin lint` command - orta
 * `danger plugin lint` can run with either:
