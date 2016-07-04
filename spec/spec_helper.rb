@@ -6,7 +6,7 @@ require 'webmock/rspec'
 require 'json'
 
 RSpec.configure do |config|
-  config.filter_gems_from_backtrace "bundler"
+  config.filter_gems_from_backtrace 'bundler'
 end
 
 WebMock.disable_net_connect!(allow: 'coveralls.io')
@@ -19,16 +19,16 @@ end
 
 def stub_env
   {
-    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
-    "TRAVIS_PULL_REQUEST" => "800",
-    "TRAVIS_REPO_SLUG" => "artsy/eigen",
-    "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d",
-    "DANGER_GITHUB_API_TOKEN" => "hi"
+    'HAS_JOSH_K_SEAL_OF_APPROVAL' => 'true',
+    'TRAVIS_PULL_REQUEST' => '800',
+    'TRAVIS_REPO_SLUG' => 'artsy/eigen',
+    'TRAVIS_COMMIT_RANGE' => '759adcbd0d8f...13c4dc8bb61d',
+    'DANGER_GITHUB_API_TOKEN' => 'hi'
   }
 end
 
 def stub_ci
-  env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
+  env = { 'CI_PULL_REQUEST' => 'https://github.com/artsy/eigen/pull/800' }
   Danger::CISource::CircleCI.new(env)
 end
 

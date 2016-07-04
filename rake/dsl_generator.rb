@@ -16,20 +16,20 @@ end
 def public_api_methods
   require 'yard'
   files = [
-    "lib/danger/danger_core/dangerfile_dsl.rb",
-    "lib/danger/scm_source/git_repo.rb"
+    'lib/danger/danger_core/dangerfile_dsl.rb',
+    'lib/danger/scm_source/git_repo.rb'
   ]
   docs = YARD::Registry.load(files, true)
 
-  danger_dsl = docs.at("Danger::Dangerfile::DSL").meths(visibility: :public)
-  git_dsls = docs.at("Danger::GitRepoDSL").meths(visibility: :public)
+  danger_dsl = docs.at('Danger::Dangerfile::DSL').meths(visibility: :public)
+  git_dsls = docs.at('Danger::GitRepoDSL').meths(visibility: :public)
 
   # Remove init functions
   (danger_dsl + git_dsls).reject { |m| m.name == :initialize }
 end
 
 def loop_group(methods)
-  current_group = ""
+  current_group = ''
 
   methods.each do |method|
     puts "#### #{method.group}\n" if method.group != current_group
@@ -42,10 +42,10 @@ end
 def show_method(method)
   puts "- #{method.name}"
 
-  raise "No docstring found" if method.docstring.empty?
+  raise 'No docstring found' if method.docstring.empty?
   puts "  : #{method.docstring}"
 
   file, line = method.files.flatten
   puts "  : #{file} - #{line}"
-  puts ""
+  puts ''
 end

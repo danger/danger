@@ -34,7 +34,7 @@ module Danger
     end
 
     def self.instance_name
-      "github"
+      'github'
     end
 
     # @!group PR Metadata

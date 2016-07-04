@@ -1,5 +1,5 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
 # Adds :doc & :spec_docs
@@ -21,9 +21,9 @@ RuboCop::RakeTask.new(:rubocop) do |task|
 end
 
 task :test do
-  sh "fastlane test"
+  sh 'fastlane test'
 end
 
 task :push do
-  sh "fastlane release"
+  sh 'fastlane release'
 end

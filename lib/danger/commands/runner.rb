@@ -26,7 +26,7 @@ module Danger
     def validate!
       super
       if self.class == Runner && !@dangerfile_path
-        help! "Could not find a Dangerfile."
+        help! 'Could not find a Dangerfile.'
       end
     end
 
@@ -55,7 +55,7 @@ module Danger
           # Offer the chance for a user to specify a branch through the command line
           ci_base = @base || EnvironmentManager.danger_base_branch
           ci_head = @head || EnvironmentManager.danger_head_branch
-          dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+          dm.env.scm.diff_for_folder('.', from: ci_base, to: ci_head)
 
           dm.parse Pathname.new(@dangerfile_path)
 
@@ -65,7 +65,7 @@ module Danger
           dm.env.clean_up
         end
       else
-        cork.puts "Not a Pull Request - skipping `danger` run"
+        cork.puts 'Not a Pull Request - skipping `danger` run'
       end
     end
 

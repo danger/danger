@@ -2,37 +2,37 @@ require 'danger/ci_source/travis'
 
 describe Danger::CISource::Semaphore do
   it 'validates when all semaphore variables are set' do
-    env = { "SEMAPHORE" => "true",
-            "PULL_REQUEST_NUMBER" => "800",
-            "SEMAPHORE_REPO_SLUG" => "artsy/eigen" }
+    env = { 'SEMAPHORE' => 'true',
+            'PULL_REQUEST_NUMBER' => '800',
+            'SEMAPHORE_REPO_SLUG' => 'artsy/eigen' }
     expect(Danger::CISource::Semaphore.validates?(env)).to be true
   end
 
   it 'doesnt validate when not semaphore' do
-    env = { "CIRCLE" => "true" }
+    env = { 'CIRCLE' => 'true' }
     expect(Danger::CISource::Semaphore.validates?(env)).to be false
   end
 
   it 'gets the pull request ID' do
-    env = { "PULL_REQUEST_NUMBER" => "2" }
+    env = { 'PULL_REQUEST_NUMBER' => '2' }
     t = Danger::CISource::Semaphore.new(env)
-    expect(t.pull_request_id).to eql("2")
+    expect(t.pull_request_id).to eql('2')
   end
 
   it 'gets the repo address' do
-    env = { "SEMAPHORE_REPO_SLUG" => "orta/danger" }
+    env = { 'SEMAPHORE_REPO_SLUG' => 'orta/danger' }
     t = Danger::CISource::Semaphore.new(env)
-    expect(t.repo_slug).to eql("orta/danger")
+    expect(t.repo_slug).to eql('orta/danger')
   end
 
   it 'gets out a repo slug and pull request number' do
     env = {
-      "SEMAPHORE" => "true",
-      "PULL_REQUEST_NUMBER" => "800",
-      "SEMAPHORE_REPO_SLUG" => "artsy/eigen"
+      'SEMAPHORE' => 'true',
+      'PULL_REQUEST_NUMBER' => '800',
+      'SEMAPHORE_REPO_SLUG' => 'artsy/eigen'
     }
     t = Danger::CISource::Semaphore.new(env)
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("800")
+    expect(t.repo_slug).to eql('artsy/eigen')
+    expect(t.pull_request_id).to eql('800')
   end
 end

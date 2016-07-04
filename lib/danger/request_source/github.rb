@@ -13,9 +13,9 @@ module Danger
         self.support_tokenless_auth = false
 
         Octokit.auto_paginate = true
-        @token = @environment["DANGER_GITHUB_API_TOKEN"]
-        if @environment["DANGER_GITHUB_API_HOST"]
-          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
+        @token = @environment['DANGER_GITHUB_API_TOKEN']
+        if @environment['DANGER_GITHUB_API_HOST']
+          Octokit.api_endpoint = @environment['DANGER_GITHUB_API_HOST']
         end
       end
 
@@ -24,11 +24,11 @@ module Danger
       end
 
       def host
-        @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+        @host = @environment['DANGER_GITHUB_HOST'] || 'github.com'
       end
 
       def client
-        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
+        raise 'No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`' if !@token && !support_tokenless_auth
         @client ||= Octokit::Client.new(access_token: @token)
       end
 
@@ -119,7 +119,7 @@ module Danger
         begin
           client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
             description: message,
-            context: "danger/danger",
+            context: 'danger/danger',
             target_url: details_url
           })
         rescue
@@ -146,8 +146,8 @@ module Danger
       end
 
       def random_compliment
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
+        compliment = ['Well done.', 'Congrats.', 'Woo!',
+                      'Yay.', 'Jolly good show.', "Good on 'ya.", 'Nice work.']
         compliment.sample
       end
 
@@ -166,19 +166,19 @@ module Danger
       def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: 'danger')
         require 'erb'
 
-        md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/github.md.erb")
+        md_template = File.join(Danger.gem_path, 'lib/danger/comment_generators/github.md.erb')
 
         # erb: http://www.rrn.dk/rubys-erb-templating-system
         # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
         @tables = [
-          table("Error", "no_entry_sign", errors, previous_violations),
-          table("Warning", "warning", warnings, previous_violations),
-          table("Message", "book", messages, previous_violations)
+          table('Error', 'no_entry_sign', errors, previous_violations),
+          table('Warning', 'warning', warnings, previous_violations),
+          table('Message', 'book', messages, previous_violations)
         ]
         @markdowns = markdowns
         @danger_id = danger_id
 
-        return ERB.new(File.read(md_template), 0, "-").result(binding)
+        return ERB.new(File.read(md_template), 0, '-').result(binding)
       end
 
       def table(name, emoji, violations, all_previous_violations)

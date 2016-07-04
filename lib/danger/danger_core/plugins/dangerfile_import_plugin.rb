@@ -25,7 +25,7 @@ module Danger
 
   class DangerfileImportPlugin < Plugin
     def self.instance_name
-      "plugin"
+      'plugin'
     end
 
     # @!group Plugins
@@ -35,10 +35,10 @@ module Danger
     #           a local path or a https URL to the Ruby file to import
     #           a danger plugin from.
     def import(path)
-      raise "`import` requires a string" unless path.kind_of?(String)
-      path += ".rb" unless path.end_with?(".rb")
+      raise '`import` requires a string' unless path.kind_of?(String)
+      path += '.rb' unless path.end_with?('.rb')
 
-      if path.start_with?("http")
+      if path.start_with?('http')
         import_url(path)
       else
         import_local(path)
@@ -53,7 +53,7 @@ module Danger
     # @param    [String] url
     #           https URL to the Ruby file to use
     def import_url(url)
-      raise "URL is not https, for security reasons `danger` only supports encrypted requests" unless url.start_with?("https://")
+      raise 'URL is not https, for security reasons `danger` only supports encrypted requests' unless url.start_with?('https://')
 
       require 'tmpdir'
       require 'faraday'
@@ -64,7 +64,7 @@ module Danger
       content = @http_client.get(url)
 
       Dir.mktmpdir do |dir|
-        path = File.join(dir, "temporary_remote_action.rb")
+        path = File.join(dir, 'temporary_remote_action.rb')
         File.write(path, content.body)
         import_local(path)
       end

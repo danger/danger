@@ -4,7 +4,7 @@ module Danger
     self.command = 'local'
 
     def initialize(argv)
-      @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
+      @dangerfile_path = 'Dangerfile' if File.exist? 'Dangerfile'
       @pr_num = argv.option('use-merged-pr')
       super
     end
@@ -18,13 +18,13 @@ module Danger
     def validate!
       super
       unless @dangerfile_path
-        help! "Could not find a Dangerfile."
+        help! 'Could not find a Dangerfile.'
       end
     end
 
     def run
-      ENV["DANGER_USE_LOCAL_GIT"] = "YES"
-      ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
+      ENV['DANGER_USE_LOCAL_GIT'] = 'YES'
+      ENV['LOCAL_GIT_PR_ID'] = @pr_num if @pr_num
 
       env = EnvironmentManager.new(ENV)
       dm = Dangerfile.new(env, cork)
@@ -32,7 +32,7 @@ module Danger
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
-        cork.puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
+        cork.puts 'danger local failed because it only works with GitHub projects at the moment. Sorry.'.red
         exit 0
       end
 
@@ -41,7 +41,7 @@ module Danger
       cork.puts "Running your Dangerfile against this PR - https://#{gh.host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
 
       if verbose != true
-        cork.puts "Turning on --verbose"
+        cork.puts 'Turning on --verbose'
         dm.verbose = true
       end
 
@@ -54,7 +54,7 @@ module Danger
       begin
         gh.fetch_details
       rescue Octokit::NotFound
-        cork.puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through " + "DANGER_GITHUB_API_TOKEN".yellow + " environment variable."
+        cork.puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through " + 'DANGER_GITHUB_API_TOKEN'.yellow + ' environment variable.'
         return
       end
 
@@ -62,7 +62,7 @@ module Danger
 
       begin
         dm.env.ensure_danger_branches_are_setup
-        dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
+        dm.env.scm.diff_for_folder('.', from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
         dm.parse(Pathname.new(@dangerfile_path))
         dm.print_results
       ensure

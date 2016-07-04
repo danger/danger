@@ -73,7 +73,7 @@ module Danger
       @env = env_manager
 
       # Triggers local plugins from the root of a project
-      Dir["./danger_plugins/*.rb"].each do |file|
+      Dir['./danger_plugins/*.rb'].each do |file|
         require File.expand_path(file)
       end
 
@@ -115,10 +115,10 @@ module Danger
         methods.map do |method|
           case method
           when :api
-            value = "Octokit::Client"
+            value = 'Octokit::Client'
 
           when :pr_json
-            value = "[Skipped]"
+            value = '[Skipped]'
 
           when :pr_body
             value = plugin.send(method)
@@ -140,14 +140,14 @@ module Danger
     def print_known_info
       rows = []
       rows += method_values_for_plugin_hashes(core_dsl_attributes)
-      rows << ["---", "---"]
+      rows << ['---', '---']
       rows += method_values_for_plugin_hashes(external_dsl_attributes)
-      rows << ["---", "---"]
-      rows << ["SCM", env.scm.class]
-      rows << ["Source", env.ci_source.class]
-      rows << ["Requests", env.request_source.class]
-      rows << ["Base Commit", env.meta_info_for_base]
-      rows << ["Head Commit", env.meta_info_for_head]
+      rows << ['---', '---']
+      rows << ['SCM', env.scm.class]
+      rows << ['Source', env.ci_source.class]
+      rows << ['Requests', env.request_source.class]
+      rows << ['Base Commit', env.meta_info_for_base]
+      rows << ['Head Commit', env.meta_info_for_head]
 
       params = {}
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
@@ -180,8 +180,8 @@ module Danger
           'you should turn off smart quotes in your editor of choice.'.red
       end
 
-      if contents.include?("puts")
-        ui.puts "You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead"
+      if contents.include?('puts')
+        ui.puts 'You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead'
       end
 
       self.defined_in_file = path
