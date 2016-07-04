@@ -1,3 +1,5 @@
+inherit_from:
+  - .rubocop_todo.yml
 
 AllCops:
   Exclude:
@@ -60,10 +62,6 @@ Metrics/MethodLength:
   Max: 60
   Exclude:
     - 'lib/*/options.rb'
-
-# Both string notations are okay
-Style/StringLiterals:
-  Enabled: false
 
 # The %w might be confusing for new users
 Style/WordArray:

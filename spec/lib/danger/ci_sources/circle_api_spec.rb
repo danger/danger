@@ -1,11 +1,11 @@
 require 'danger/ci_source/circle_api'
 
 describe Danger::CircleAPI do
-  api_path = "project/artsy/eigen/1500"
+  api_path = 'project/artsy/eigen/1500'
   accept_json = { accept: 'application/json' }
 
   before do
-    build_response = fixture("circle_build_response")
+    build_response = fixture('circle_build_response')
     @mocked_response = Faraday::Response.new(body: build_response, status: 200)
     @expected_json_response = JSON.parse(build_response, symbolize_names: true)
   end
@@ -29,13 +29,13 @@ describe Danger::CircleAPI do
     api = Danger::CircleAPI.new
     allow(api.client).to receive(:get).with(api_path, { 'circle-token' => nil }, accept_json).and_return(@mocked_response)
 
-    expect(api.fetch_build("artsy/eigen", "1500")).to eql(@expected_json_response)
+    expect(api.fetch_build('artsy/eigen', '1500')).to eql(@expected_json_response)
   end
 
   it 'fetches the build info with token' do
     api = Danger::CircleAPI.new('123456')
     allow(api.client).to receive(:get).with(api_path, { 'circle-token' => '123456' }, accept_json).and_return(@mocked_response)
 
-    expect(api.fetch_build("artsy/eigen", "1500")).to eql(@expected_json_response)
+    expect(api.fetch_build('artsy/eigen', '1500')).to eql(@expected_json_response)
   end
 end

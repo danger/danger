@@ -54,7 +54,7 @@ module Danger
     end
 
     def self.instance_name
-      "messaging"
+      'messaging'
     end
 
     # @!group Core

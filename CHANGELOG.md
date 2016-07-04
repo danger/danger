@@ -2,6 +2,7 @@
 
 * Converts the message link  to be http://danger.systems - orta
 * Fix `danger lib lint` with no params not finding the plugin paths - orta
+* Converts `""` usage to `''` where possible -- dantoml
 
 ## 0.8.4
 

@@ -13,7 +13,7 @@ module Danger
       end
 
       def initialize(_ci_source, _environment)
-        raise "Subclass and overwrite initialize"
+        raise 'Subclass and overwrite initialize'
       end
 
       def validates?
@@ -33,15 +33,15 @@ module Danger
       end
 
       def update_pull_request!(_warnings: [], _errors: [], _messages: [], _markdowns: [])
-        raise "Subclass and overwrite update_pull_request!"
+        raise 'Subclass and overwrite update_pull_request!'
       end
 
       def setup_danger_branches
-        raise "Subclass and overwrite setup_danger_branches"
+        raise 'Subclass and overwrite setup_danger_branches'
       end
 
       def fetch_details
-        raise "Subclass and overwrite initialize"
+        raise 'Subclass and overwrite initialize'
       end
     end
   end

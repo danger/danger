@@ -4,7 +4,7 @@ module Danger
   module CISource
     class XcodeServer < CI
       def self.validates?(env)
-        return false unless env["XCS_BOT_NAME"]
+        return false unless env['XCS_BOT_NAME']
 
         return true
       end
@@ -14,7 +14,7 @@ module Danger
       end
 
       def initialize(env)
-        bot_name = env["XCS_BOT_NAME"]
+        bot_name = env['XCS_BOT_NAME']
         return if bot_name.nil?
 
         repo_matches = bot_name.match(/\[(.+)\]/)

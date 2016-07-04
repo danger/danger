@@ -16,7 +16,7 @@ module Danger
       end
 
       def supported_request_sources
-        raise "CISource subclass must specify the supported request sources"
+        raise 'CISource subclass must specify the supported request sources'
       end
 
       def supports?(request_source)
@@ -28,7 +28,7 @@ module Danger
       end
 
       def initialize(_env)
-        raise "Subclass and overwrite initialize"
+        raise 'Subclass and overwrite initialize'
       end
     end
   end

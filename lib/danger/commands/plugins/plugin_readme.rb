@@ -35,8 +35,8 @@ module Danger
       self.markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
       self.json = JSON.parse(parser.to_json)
 
-      template = File.join(Danger.gem_path, "lib/danger/plugin_support/templates/readme_table.html.erb")
-      cork.puts ERB.new(File.read(template), 0, "-").result(binding)
+      template = File.join(Danger.gem_path, 'lib/danger/plugin_support/templates/readme_table.html.erb')
+      cork.puts ERB.new(File.read(template), 0, '-').result(binding)
     end
   end
 end
