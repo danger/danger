@@ -61,6 +61,7 @@ module Danger
       dm.env.request_source = gh
 
       begin
+        dm.env.fill_environment_vars
         dm.env.ensure_danger_branches_are_setup
         dm.env.scm.diff_for_folder('.', from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
         dm.parse(Pathname.new(@dangerfile_path))
