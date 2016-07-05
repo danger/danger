@@ -102,3 +102,8 @@ Style/Documentation:
 # Adds complexity
 Style/IfInsideElse:
   Enabled: false
+
+# danger specific
+
+Style/BlockComments:
+  Enabled: false

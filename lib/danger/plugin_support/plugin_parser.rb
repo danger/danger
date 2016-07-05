@@ -1,34 +1,34 @@
 require 'json'
 
-#
-#
-#   So you want to improve this? Great. Hard thing is getting yourself into a position where you
-#   have access to all the tokens, so here's something you should run in `bundle exec pry` to dig in:
-#
-#       require 'danger'
-#       require 'yard'
-#       parser = Danger::PluginParser.new "spec/fixtures/plugins/example_fully_documented.rb"
-#       parser.parse
-#       plugins = parser.plugins_from_classes(parser.classes_in_file)
-#       git = plugins.first
-#       klass = git
-#       parser.to_dict(plugins)
-#
-#   Then some helpers
-#
-#       attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
-#
-#       methods = klass.meths - klass.inherited_meths - attribute_meths
-#       usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize }
-#
-#
-#   the alternative, is to add
-#
-#       require 'pry'
-#       binding.pry
-#
-#   anywhere inside the source code below.
-#
+=begin
+
+  So you want to improve this? Great. Hard thing is getting yourself into a position where you
+  have access to all the tokens, so here's something you should run in `bundle exec pry` to dig in:
+
+      require 'danger'
+      require 'yard'
+      parser = Danger::PluginParser.new "spec/fixtures/plugins/example_fully_documented.rb"
+      parser.parse
+      plugins = parser.plugins_from_classes(parser.classes_in_file)
+      git = plugins.first
+      klass = git
+      parser.to_dict(plugins)
+
+  Then some helpers
+
+      attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
+
+      methods = klass.meths - klass.inherited_meths - attribute_meths
+      usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize }
+
+  the alternative, is to add
+
+      require 'pry'
+      binding.pry
+
+  anywhere inside the source code below.
+
+=end
 
 module Danger
   class PluginParser
