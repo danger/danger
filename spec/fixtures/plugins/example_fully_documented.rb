@@ -1,5 +1,4 @@
 module Danger
-
   # Lint markdown files inside your projects.
   # This is done using the [proselint](http://proselint.com) python egg.
   # Results are passed out as a table in markdown.
@@ -17,7 +16,6 @@ module Danger
   # @tags blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express
   #
   class DangerProselint < Plugin
-
     # Allows you to disable a collection of linters from being ran.
     # You can get a list of [them here](https://github.com/amperser/proselint#checks)
     attr_writer :disable_linters
@@ -29,26 +27,25 @@ module Danger
     #          if nil, modified and added files will be used.
     # @return  [void]
     #
-    def lint_files(files=nil)
+    def lint_files(files = nil)
       # Installs a prose checker if needed
       system "pip install --user proselint" unless proselint_installed?
 
       # Check that this is in the user's PATH
       if `which proselint`.strip.empty?
         fail "proselint is not in the user's PATH, or it failed to install"
-        return
       end
 
       # Either use files provided, or use the modified + added
       markdown_files = files ? Dir.glob(files) : (modified_files + added_files)
-      markdown_files.select! do |line| (line.end_with?(".markdown") || line.end_with?(".md")) end
+      markdown_files.select! { |line| line.end_with?(".markdown", ".md") }
 
-      # TODO create the disabled linters JSON in ~/.proselintrc
+      # TODO: create the disabled linters JSON in ~/.proselintrc
       # using @disable_linter
 
       # Convert paths to proselint results
       require 'json'
-      result_jsons = Hash[markdown_files.uniq.collect { |v| [v, JSON.parse(`proselint #{v} --json`.strip) ] }]
+      result_jsons = Hash[markdown_files.uniq.collect { |v| [v, JSON.parse(`proselint #{v} --json`.strip)] }]
       proses = result_jsons.select { |path, prose| prose['data']['errors'].count }
 
       # Get some metadata about the local setup
@@ -72,14 +69,13 @@ module Danger
 
         markdown message
       end
-
-      # Determine if proselint is currently installed in the system paths.
-      # @return  [Bool]
-      #
-      def proselint_installed?
-        `which proselint`.strip.empty?
-      end
     end
 
+    # Determine if proselint is currently installed in the system paths.
+    # @return  [Bool]
+    #
+    def proselint_installed?
+      `which proselint`.strip.empty?
+    end
   end
 end
