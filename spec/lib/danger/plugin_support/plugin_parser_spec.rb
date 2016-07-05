@@ -97,7 +97,7 @@ module Danger
             tags: [{ name: 'return', types: ['Bool'] }]
         }
         ],
-        tags: [],
+        tags: ['blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express'],
         see: ['artsy/artsy.github.io'],
         file: '/spec/fixtures/plugins/example_fully_documented.rb'
       }]

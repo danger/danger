@@ -7,7 +7,7 @@ require 'json'
 
       require 'danger'
       require 'yard'
-      parser = Danger::PluginParser.new("spec/fixtures/plugins/example_fully_documented.rb")
+      parser = Danger::PluginParser.new "spec/fixtures/plugins/example_fully_documented.rb"
       parser.parse
       plugins = parser.plugins_from_classes(parser.classes_in_file)
       git = plugins.first
@@ -114,7 +114,7 @@ module Danger
             { pair.first => d_attr.call(pair.last) }
           end,
           methods: usable_methods.map { |m| d_meth.call(m) },
-          tags: klass.tags.select { |t| t.tag_name == "tags" }.map(&:name).compact,
+          tags: klass.tags.select { |t| t.tag_name == "tags" }.map(&:text).compact,
           see: klass.tags.select { |t| t.tag_name == "see" }.map(&:name).map(&:split).flatten.compact,
           file: klass.file.gsub(File.expand_path("."), "")
         }

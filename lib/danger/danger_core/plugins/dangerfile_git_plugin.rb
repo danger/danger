@@ -43,7 +43,7 @@ module Danger
 
     # @!group Git Files
     # Paths for files that were added during the diff
-    # @return [FileList] an [Array] subclass
+    # @return [FileList<String>] an [Array] subclass
     #
     def added_files
       Danger::FileList.new(@git.diff.select { |diff| diff.type == 'new' }.map(&:path))
@@ -51,7 +51,7 @@ module Danger
 
     # @!group Git Files
     # Paths for files that were removed during the diff
-    # @return [FileList] an [Array] subclass
+    # @return [FileList<String>] an [Array] subclass
     #
     def deleted_files
       Danger::FileList.new(@git.diff.select { |diff| diff.type == 'deleted' }.map(&:path))
@@ -59,7 +59,7 @@ module Danger
 
     # @!group Git Files
     # Paths for files that changed during the diff
-    # @return [FileList] an [Array] subclass
+    # @return [FileList<String>] an [Array] subclass
     #
     def modified_files
       Danger::FileList.new(@git.diff.stats[:files].keys)
@@ -67,7 +67,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code added/removed in the diff
-    # @return Fixnum
+    # @return [Fixnum]
     #
     def lines_of_code
       @git.diff.lines
@@ -75,7 +75,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code removed in the diff
-    # @return Fixnum
+    # @return [Fixnum]
     #
     def deletions
       @git.diff.deletions
@@ -83,7 +83,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code added in the diff
-    # @return Fixnum
+    # @return [Fixnum]
     #
     def insertions
       @git.diff.insertions

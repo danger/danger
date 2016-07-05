@@ -34,6 +34,8 @@ module Danger
     # @param    [String] path
     #           a local path or a https URL to the Ruby file to import
     #           a danger plugin from.
+    # @return [void]
+
     def import(path)
       raise '`import` requires a string' unless path.kind_of?(String)
       path += '.rb' unless path.end_with?('.rb')
@@ -52,6 +54,7 @@ module Danger
     #
     # @param    [String] url
     #           https URL to the Ruby file to use
+    # @return [void]
     def import_url(url)
       raise 'URL is not https, for security reasons `danger` only supports encrypted requests' unless url.start_with?('https://')
 
@@ -76,6 +79,7 @@ module Danger
     # @param    [String] path
     #           The path to the file to import
     #           Can also be a pattern (./**/*plugin.rb)
+    # @return [void]
     def import_local(path)
       Dir[path].each do |file|
         # Without the expand_path it would fail if the path doesn't start with ./
