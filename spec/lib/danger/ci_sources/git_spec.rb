@@ -1,7 +1,7 @@
-require 'danger/scm_source/git_repo'
+require "danger/scm_source/git_repo"
 
 describe Danger::GitRepo do
-  describe 'Return Types' do
+  describe "Return Types" do
     before do
       @tmp_dir = Dir.mktmpdir
       Dir.chdir(@tmp_dir) do
@@ -16,24 +16,24 @@ describe Danger::GitRepo do
       end
 
       @dm = testing_dangerfile
-      @dm.env.scm.diff_for_folder(@tmp_dir, from: 'master', to: 'new')
+      @dm.env.scm.diff_for_folder(@tmp_dir, from: "master", to: "new")
     end
 
-    it '#modified_files returns a FileList object' do
+    it "#modified_files returns a FileList object" do
       expect(@dm.modified_files.class).to eql(Danger::FileList)
     end
 
-    it '#added_files returns a FileList object' do
+    it "#added_files returns a FileList object" do
       expect(@dm.added_files.class).to eql(Danger::FileList)
     end
 
-    it '#deleted_files returns a FileList object' do
+    it "#deleted_files returns a FileList object" do
       expect(@dm.deleted_files.class).to eql(Danger::FileList)
     end
   end
 
-  describe 'with files' do
-    it 'handles adding a new file to a git repo' do
+  describe "with files" do
+    it "handles adding a new file to a git repo" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -48,13 +48,13 @@ describe Danger::GitRepo do
         end
 
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.added_files).to eql(['file2'])
+        expect(@dm.added_files).to eql(["file2"])
       end
     end
 
-    it 'handles file deletions as expected' do
+    it "handles file deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -70,13 +70,13 @@ describe Danger::GitRepo do
         end
 
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.deleted_files).to eql(['file'])
+        expect(@dm.deleted_files).to eql(["file"])
       end
     end
 
-    it 'handles modified as expected' do
+    it "handles modified as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -92,15 +92,15 @@ describe Danger::GitRepo do
         end
 
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.modified_files).to eql(['file'])
+        expect(@dm.modified_files).to eql(["file"])
       end
     end
   end
 
-  describe 'lines of code' do
-    it 'handles code insertions as expected' do
+  describe "lines of code" do
+    it "handles code insertions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -116,13 +116,13 @@ describe Danger::GitRepo do
         end
 
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
         expect(@dm.insertions).to eql(3)
       end
     end
 
-    it 'handles code deletions as expected' do
+    it "handles code deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -138,14 +138,14 @@ describe Danger::GitRepo do
         end
 
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
         expect(@dm.deletions).to eql(1)
       end
     end
 
-    describe '#commits' do
-      it 'returns the commits' do
+    describe "#commits" do
+      it "returns the commits" do
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
             `git init`
@@ -161,10 +161,10 @@ describe Danger::GitRepo do
           end
 
           @dm = testing_dangerfile
-          @dm.env.scm.diff_for_folder(dir, from: 'master', to: 'new')
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
           messages = @dm.commits.map(&:message)
-          expect(messages).to eq(['another'])
+          expect(messages).to eq(["another"])
         end
       end
     end

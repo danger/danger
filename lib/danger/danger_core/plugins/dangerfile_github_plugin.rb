@@ -1,4 +1,4 @@
-require 'danger/plugin_support/plugin'
+require "danger/plugin_support/plugin"
 
 module Danger
   # Handles interacting with GitHub inside a Dangerfile. Provides a few functions which wrap `pr_json` and also
@@ -34,7 +34,7 @@ module Danger
     end
 
     def self.instance_name
-      'github'
+      "github"
     end
 
     # @!group PR Metadata

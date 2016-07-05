@@ -1,18 +1,18 @@
-require 'danger/commands/plugins/plugin_abstract'
-require 'danger/plugin_support/plugin_parser'
-require 'danger/plugin_support/plugin_file_resolver'
+require "danger/commands/plugins/plugin_abstract"
+require "danger/plugin_support/plugin_parser"
+require "danger/plugin_support/plugin_file_resolver"
 
 module Danger
   class PluginLint < PluginAbstract
-    self.summary = 'Lints a plugin'
-    self.command = 'lint'
+    self.summary = "Lints a plugin"
+    self.command = "lint"
 
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
       super
     end
 
-    self.summary = 'Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success.'
+    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
 
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a JSON format.
@@ -21,7 +21,7 @@ module Danger
     DESC
 
     self.arguments = [
-      CLAide::Argument.new('Paths, Gems or Nothing', false, true)
+      CLAide::Argument.new("Paths, Gems or Nothing", false, true)
     ]
 
     def run

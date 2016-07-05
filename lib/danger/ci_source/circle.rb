@@ -1,14 +1,14 @@
 # https://circleci.com/docs/environment-variables
-require 'uri'
-require 'danger/ci_source/circle_api'
+require "uri"
+require "danger/ci_source/circle_api"
 
 module Danger
   module CISource
     class CircleCI < CI
       def self.validates?(env)
-        return false unless env['CIRCLE_BUILD_NUM']
-        return false unless env['CIRCLE_PROJECT_USERNAME']
-        return false unless env['CIRCLE_PROJECT_REPONAME']
+        return false unless env["CIRCLE_BUILD_NUM"]
+        return false unless env["CIRCLE_PROJECT_USERNAME"]
+        return false unless env["CIRCLE_PROJECT_REPONAME"]
 
         return true
       end
@@ -27,11 +27,11 @@ module Danger
       end
 
       def pull_request_url(env)
-        url = env['CI_PULL_REQUEST']
+        url = env["CI_PULL_REQUEST"]
 
-        if url.nil? && !env['CIRCLE_PROJECT_USERNAME'].nil? && !env['CIRCLE_PROJECT_REPONAME'].nil?
-          repo_slug = env['CIRCLE_PROJECT_USERNAME'] + '/' + env['CIRCLE_PROJECT_REPONAME']
-          url = fetch_pull_request_url(repo_slug, env['CIRCLE_BUILD_NUM'])
+        if url.nil? && !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
+          repo_slug = env["CIRCLE_PROJECT_USERNAME"] + "/" + env["CIRCLE_PROJECT_REPONAME"]
+          url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"])
         end
 
         url
@@ -40,13 +40,13 @@ module Danger
       def initialize(env)
         self.repo_url = GitRepo.new.origins # CircleCI doesn't provide a repo url env variable :/
 
-        @circle_token = env['CIRCLE_CI_API_TOKEN']
+        @circle_token = env["CIRCLE_CI_API_TOKEN"]
         url = pull_request_url(env)
 
-        if URI.parse(url).path.split('/').count == 5
-          paths = URI.parse(url).path.split('/')
+        if URI.parse(url).path.split("/").count == 5
+          paths = URI.parse(url).path.split("/")
           # The first one is an extra slash, ignore it
-          self.repo_slug = paths[1] + '/' + paths[2]
+          self.repo_slug = paths[1] + "/" + paths[2]
           self.pull_request_id = paths[4]
         end
       end

@@ -1,5 +1,5 @@
-require 'bundler'
-require 'pathname'
+require "bundler"
+require "pathname"
 
 module Danger
   class PluginFileResolver
@@ -19,11 +19,11 @@ module Danger
         Bundler.with_clean_env do
           Dir.mktmpdir do |dir|
             gem_names = @refs
-            deps = gem_names.map { |name| Bundler::Dependency.new(name, '>= 0') }
+            deps = gem_names.map { |name| Bundler::Dependency.new(name, ">= 0") }
 
             # Use Gems from rubygems.org
             source = Bundler::SourceList.new
-            source.add_rubygems_remote('https://rubygems.org')
+            source.add_rubygems_remote("https://rubygems.org")
 
             # Create a definition to bundle, make sure it always updates
             # and uses the latest version from the server
@@ -36,12 +36,12 @@ module Danger
 
             # Get the name'd gems out of bundler, then pull out all their paths
             gems = gem_names.flat_map { |name| bundler.specs[name] }
-            gems.flat_map { |gem| Dir.glob(File.join(gem.gem_dir, 'lib/**/**/**.rb')) }
+            gems.flat_map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }
           end
         end
       # When empty, imply you want to test the current lib folder as a plugin
       else
-        Dir.glob(File.join('.', 'lib/*.rb')).map { |path| File.expand_path(path) }
+        Dir.glob(File.join(".", "lib/*.rb")).map { |path| File.expand_path(path) }
       end
     end
   end
