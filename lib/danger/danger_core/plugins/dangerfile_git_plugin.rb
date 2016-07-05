@@ -67,7 +67,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code added/removed in the diff
-    # @return Int
+    # @return Fixnum
     #
     def lines_of_code
       @git.diff.lines
@@ -75,7 +75,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code removed in the diff
-    # @return Int
+    # @return Fixnum
     #
     def deletions
       @git.diff.deletions
@@ -83,7 +83,7 @@ module Danger
 
     # @!group Git Metadata
     # The overall lines of code added in the diff
-    # @return Int
+    # @return Fixnum
     #
     def insertions
       @git.diff.insertions
