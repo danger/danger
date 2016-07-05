@@ -39,7 +39,7 @@ module Danger
       def setup_danger_branches
         # we can use a github specific feature here:
         base_commit = self.pr_json[:base][:sha]
-        head_commit = self.scm.head_commit
+        head_commit = self.pr_json[:head][:sha]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"

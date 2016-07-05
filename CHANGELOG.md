@@ -5,6 +5,7 @@
 * Converts `""` usage to `''` where possible -- dantoml
 * More documentation params are exposed to the linter - orta
 * Documentation audit - orta
+* Use proper commits for calculating diff.
 
 ## 0.8.4
 

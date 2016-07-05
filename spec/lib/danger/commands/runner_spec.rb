@@ -54,9 +54,9 @@ module Command
         git_commands = [
           { 'rev-parse --quiet --verify danger_base' => 'OK' },
           { 'rev-parse --quiet --verify danger_head' => 'OK' },
-          { 'rev-parse HEAD' => '704dc55988c6996f69b6873c2424be7d1de67bbe' },
+          { 'rev-parse HEAD' => '561827e46167077b5e53515b4b7349b8ae04610b' },
           { 'branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe' => '' },
-          { 'branch danger_head 704dc55988c6996f69b6873c2424be7d1de67bbe' => '' },
+          { 'branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b' => '' },
           { "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-" => 'git@github.com:artsy/eigen.git' },
           { 'branch -D danger_base' => '' },
           { 'branch -D danger_head' => '' }
