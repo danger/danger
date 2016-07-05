@@ -53,7 +53,7 @@ module Danger
         instance_name: 'example_remote',
         example_code: [],
         attributes: [],
-        methods: [{ name: :echo, body_md: '', tags: [] }],
+        methods: [{ name: :echo, body_md: '', params: [], tags: [] }],
         tags: [],
         see: [],
         file: '/spec/fixtures/plugins/example_remote.rb'
@@ -76,6 +76,7 @@ module Danger
           { disable_linters: { read: nil, write:
             { name: :disable_linters=,
               body_md: "Allows you to disable a collection of linters from being ran.\nYou can get a list of [them here](https://github.com/amperser/proselint#checks)",
+              params: [['value', nil]],
               tags: [] } } }
         ],
 
@@ -83,6 +84,7 @@ module Danger
           {
             name: :lint_files,
             body_md: 'Lints the globbed files, which can fail your build if',
+            params: [['files', 'nil']],
             tags: [
               { name: 'param', types: ['String'] },
               { name: 'return', types: ['void'] }
@@ -91,6 +93,7 @@ module Danger
           {
             name: :proselint_installed?,
             body_md: 'Determine if proselint is currently installed in the system paths.',
+            params: [],
             tags: [{ name: 'return', types: ['Bool'] }]
         }
         ],
