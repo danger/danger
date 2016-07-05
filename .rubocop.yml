@@ -1,3 +1,15 @@
+inherit_from:
+  - .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - 'spec/fixtures/**/*'
+    - 'lib/danger/plugin_support/plugin_parser.rb'
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  Enabled: true
+
 # kind_of? is a good way to check a type
 Style/ClassCheck:
   EnforcedStyle: kind_of?
@@ -77,10 +89,6 @@ Metrics/PerceivedComplexity:
 
 # Sometimes it's easier to read without guards
 Style/GuardClause:
-  Enabled: false
-
-# We allow both " and '
-Style/StringLiterals:
   Enabled: false
 
 # something = if something_else

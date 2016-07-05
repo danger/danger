@@ -1,14 +1,14 @@
 # So much was ripped direct from CocoaPods-Core - thanks!
 
-require 'danger/danger_core/dangerfile_dsl'
-require 'danger/danger_core/standard_error'
+require "danger/danger_core/dangerfile_dsl"
+require "danger/danger_core/standard_error"
 
-require 'danger/danger_core/plugins/dangerfile_messaging_plugin'
-require 'danger/danger_core/plugins/dangerfile_import_plugin'
-require 'danger/danger_core/plugins/dangerfile_git_plugin'
-require 'danger/danger_core/plugins/dangerfile_github_plugin'
+require "danger/danger_core/plugins/dangerfile_messaging_plugin"
+require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_git_plugin"
+require "danger/danger_core/plugins/dangerfile_github_plugin"
 
-require 'danger/danger_core/plugins/dangerfile_github_plugin'
+require "danger/danger_core/plugins/dangerfile_github_plugin"
 
 module Danger
   class Dangerfile
@@ -25,7 +25,7 @@ module Danger
     #         presented to the user.
     #
     def to_s
-      'Dangerfile'
+      "Dangerfile"
     end
 
     # These are the classes that are allowed to also use method_missing
@@ -73,7 +73,7 @@ module Danger
       @env = env_manager
 
       # Triggers local plugins from the root of a project
-      Dir['./danger_plugins/*.rb'].each do |file|
+      Dir["./danger_plugins/*.rb"].each do |file|
         require File.expand_path(file)
       end
 
@@ -115,10 +115,10 @@ module Danger
         methods.map do |method|
           case method
           when :api
-            value = 'Octokit::Client'
+            value = "Octokit::Client"
 
           when :pr_json
-            value = '[Skipped]'
+            value = "[Skipped]"
 
           when :pr_body
             value = plugin.send(method)
@@ -140,20 +140,20 @@ module Danger
     def print_known_info
       rows = []
       rows += method_values_for_plugin_hashes(core_dsl_attributes)
-      rows << ['---', '---']
+      rows << ["---", "---"]
       rows += method_values_for_plugin_hashes(external_dsl_attributes)
-      rows << ['---', '---']
-      rows << ['SCM', env.scm.class]
-      rows << ['Source', env.ci_source.class]
-      rows << ['Requests', env.request_source.class]
-      rows << ['Base Commit', env.meta_info_for_base]
-      rows << ['Head Commit', env.meta_info_for_head]
+      rows << ["---", "---"]
+      rows << ["SCM", env.scm.class]
+      rows << ["Source", env.ci_source.class]
+      rows << ["Requests", env.request_source.class]
+      rows << ["Base Commit", env.meta_info_for_base]
+      rows << ["Head Commit", env.meta_info_for_head]
 
       params = {}
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
       params[:title] = "Danger v#{Danger::VERSION}\nDSL Attributes".green
 
-      ui.section('Info:') do
+      ui.section("Info:") do
         ui.puts
         ui.puts Terminal::Table.new(params)
         ui.puts
@@ -165,23 +165,23 @@ module Danger
     def parse(path, contents = nil)
       print_known_info if verbose
 
-      contents ||= File.open(path, 'r:utf-8', &:read)
+      contents ||= File.open(path, "r:utf-8", &:read)
 
       # Work around for Rubinius incomplete encoding in 1.9 mode
-      if contents.respond_to?(:encoding) && contents.encoding.name != 'UTF-8'
-        contents.encode!('UTF-8')
+      if contents.respond_to?(:encoding) && contents.encoding.name != "UTF-8"
+        contents.encode!("UTF-8")
       end
 
-      if contents.tr!('“”‘’‛', %(""'''))
+      if contents.tr!("“”‘’‛", %(""'''))
         # Changes have been made
         ui.puts "Your #{path.basename} has had smart quotes sanitised. " \
-          'To avoid issues in the future, you should not use ' \
-          'TextEdit for editing it. If you are not using TextEdit, ' \
-          'you should turn off smart quotes in your editor of choice.'.red
+          "To avoid issues in the future, you should not use " \
+          "TextEdit for editing it. If you are not using TextEdit, " \
+          "you should turn off smart quotes in your editor of choice.".red
       end
 
-      if contents.include?('puts')
-        ui.puts 'You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead'
+      if contents.include?("puts")
+        ui.puts "You used `puts` in your Dangerfile. To print out text to GitHub use `message` instead"
       end
 
       self.defined_in_file = path
@@ -203,9 +203,9 @@ module Danger
       status = status_report
       return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
 
-      ui.section('Results:') do
+      ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|
-          formatted = key.to_s.capitalize + ':'
+          formatted = key.to_s.capitalize + ":"
           title = case key
                   when :errors
                     formatted.red
@@ -219,7 +219,7 @@ module Danger
         end
 
         if status[:markdowns].count > 0
-          ui.section('Markdown:') do
+          ui.section("Markdown:") do
             status[:markdowns].each do |current_markdown|
               ui.puts current_markdown
             end

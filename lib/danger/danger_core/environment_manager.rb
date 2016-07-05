@@ -1,5 +1,5 @@
-require 'danger/ci_source/ci_source'
-require 'danger/request_source/request_source'
+require "danger/ci_source/ci_source"
+require "danger/request_source/request_source"
 
 module Danger
   class EnvironmentManager
@@ -18,7 +18,7 @@ module Danger
         end
       end
 
-      raise 'Could not find a valid pull request within the known CI sources'.red unless self.ci_source
+      raise "Could not find a valid pull request within the known CI sources".red unless self.ci_source
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)
@@ -28,7 +28,7 @@ module Danger
         self.request_source = request_source
       end
 
-      raise 'Could not find a Request Source'.red unless self.request_source
+      raise "Could not find a Request Source".red unless self.request_source
 
       self.scm = self.request_source.scm
     end
@@ -62,11 +62,11 @@ module Danger
     end
 
     def self.danger_head_branch
-      'danger_head'
+      "danger_head"
     end
 
     def self.danger_base_branch
-      'danger_base'
+      "danger_base"
     end
   end
 end

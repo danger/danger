@@ -1,5 +1,5 @@
-require 'danger/plugin_support/plugin'
-require 'danger/core_ext/file_list'
+require "danger/plugin_support/plugin"
+require "danger/core_ext/file_list"
 
 module Danger
   # Handles interacting with git inside a Dangerfile. Providing access to files that have changed, and useful statistics. Also provides
@@ -31,7 +31,7 @@ module Danger
 
   class DangerfileGitPlugin < Plugin
     def self.instance_name
-      'git'
+      "git"
     end
 
     def initialize(dangerfile)
@@ -46,7 +46,7 @@ module Danger
     # @return [FileList<String>] an [Array] subclass
     #
     def added_files
-      Danger::FileList.new(@git.diff.select { |diff| diff.type == 'new' }.map(&:path))
+      Danger::FileList.new(@git.diff.select { |diff| diff.type == "new" }.map(&:path))
     end
 
     # @!group Git Files
@@ -54,7 +54,7 @@ module Danger
     # @return [FileList<String>] an [Array] subclass
     #
     def deleted_files
-      Danger::FileList.new(@git.diff.select { |diff| diff.type == 'deleted' }.map(&:path))
+      Danger::FileList.new(@git.diff.select { |diff| diff.type == "deleted" }.map(&:path))
     end
 
     # @!group Git Files
