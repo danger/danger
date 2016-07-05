@@ -1,5 +1,37 @@
 require 'json'
 
+=begin 
+
+  So you want to improve this? Great. Hard thing is getting yourself into a position where you 
+  have access to all the tokens, so here's something you should run in `bundle exec pry` to dig in:
+
+      require 'danger'
+      require 'yard'
+      parser = Danger::PluginParser.new("spec/fixtures/plugins/example_fully_documented.rb")
+      parser.parse
+      plugins = parser.plugins_from_classes(parser.classes_in_file)
+      git = plugins.first
+      klass = git
+      parser.to_dict(plugins)
+
+  Then some helpers
+  
+      attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
+
+      methods = klass.meths - klass.inherited_meths - attribute_meths
+      usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize }
+
+
+  the alternative, is to add
+
+      require 'pry'
+      binding.pry
+
+  anywhere inside the source code below.
+
+=end
+
+
 module Danger
   class PluginParser
     attr_accessor :registry
@@ -47,6 +79,7 @@ module Danger
         {
           name: meth.name,
           body_md: meth.docstring,
+          params: meth.parameters,
           tags: meth.tags.map do |t|
             {
                name: t.tag_name,
@@ -64,10 +97,14 @@ module Danger
       end
 
       classes.map do |klass|
-        # Adds the class being parsed into the ruby runtime
+        # Adds the class being parsed into the ruby runtime, so that we can access it's instance_name
         require klass.file
         real_klass = Danger.const_get klass.name
         attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
+
+        methods = klass.meths - klass.inherited_meths - attribute_meths
+        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :insance_name }
+
         {
           name: klass.name.to_s,
           body_md: klass.docstring,
@@ -76,7 +113,7 @@ module Danger
           attributes: klass.attributes[:instance].map do |pair|
             { pair.first => d_attr.call(pair.last) }
           end,
-          methods: (klass.meths - klass.inherited_meths - attribute_meths ).select { |m| m.visibility == :public }.map { |m| d_meth.call(m) },
+          methods: usable_methods.map { |m| d_meth.call(m) },
           tags: klass.tags.select { |t| t.tag_name == "tags" }.map(&:name).compact,
           see: klass.tags.select { |t| t.tag_name == "see" }.map(&:name).map(&:split).flatten.compact,
           file: klass.file.gsub(File.expand_path("."), "")
