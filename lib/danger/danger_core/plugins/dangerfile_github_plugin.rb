@@ -39,7 +39,7 @@ module Danger
 
     # @!group PR Metadata
     # The title of the Pull Request.
-    # @return String
+    # @return [String]
     #
     def pr_title
       @github.pr_json[:title].to_s
@@ -47,7 +47,7 @@ module Danger
 
     # @!group PR Metadata
     # The body text of the Pull Request.
-    # @return String
+    # @return [String]
     #
     def pr_body
       pr_json[:body].to_s
@@ -55,7 +55,7 @@ module Danger
 
     # @!group PR Metadata
     # The username of the author of the Pull Request.
-    # @return String
+    # @return [String]
     #
     def pr_author
       pr_json[:user][:login].to_s
@@ -71,7 +71,7 @@ module Danger
 
     # @!group PR Commit Metadata
     # The branch to which the PR is going to be merged into.
-    # @return String
+    # @return [String]
     #
     def branch_for_base
       pr_json[:base][:ref]
@@ -79,7 +79,7 @@ module Danger
 
     # @!group PR Commit Metadata
     # The branch to which the PR is going to be merged from.
-    # @return String
+    # @return [String]
     #
     def branch_for_head
       pr_json[:head][:ref]
@@ -95,7 +95,7 @@ module Danger
 
     # @!group PR Commit Metadata
     # The head commit to which the PR is requesting to be merged from.
-    # @return String
+    # @return [String]
     #
     def head_commit
       pr_json[:head][:sha]
@@ -104,7 +104,7 @@ module Danger
     # @!group GitHub Misca
     # The hash that represents the PR's JSON. For an example of what this looks like
     # see the [Danger Fixture'd one](https://raw.githubusercontent.com/danger/danger/master/spec/fixtures/pr_response.json).
-    # @return Hash
+    # @return [Hash]
     #
     def pr_json
       @github.pr_json
@@ -113,7 +113,7 @@ module Danger
     # @!group GitHub Misc
     # Provides access to the GitHub API client used inside Danger. Making
     # it easy to use the GitHub API inside a Dangerfile.
-    # @return Octokit::Client
+    # @return [Octokit::Client]
     def api
       @github.client
     end
