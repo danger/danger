@@ -72,29 +72,56 @@ module Danger
     end
 
     # rubocop:disable Metrics/AbcSize
+
+    def method_return_string(meth)
+      return "" unless meth[:tags]
+
+      return_value = meth[:tags].find { |t| t[:name] == "return" && t[:types] }
+      return "" if return_value.nil?
+      return "" if return_value[:types].nil?
+      return "" unless return_value[:types].kind_of? Array
+
+      unless return_value.empty?
+        return "" if return_value[:types].first == "void"
+        return return_value[:types].first
+      end
+      ""
+    end
+
+    def method_params(params)
+      return {} unless params[:params]
+
+      params_names = params[:params].compact.flat_map(&:first)
+      params_values = params[:tags].find { |t| t[:name] == "param" }
+
+      return {} if params_values.nil?
+      return {} if params_values[:types].nil?
+
+      return params_names.map.with_index do |name, index|
+        { name => params_values[:types][index] }
+      end
+    end
+
+    def method_parser(meth)
+      return nil if meth.nil?
+      method = {
+        name: meth.name,
+        body_md: meth.docstring,
+        params: meth.parameters,
+        tags: meth.tags.map { |t| { name: t.tag_name, types: t.types } }
+      }
+      method[:param_couplets] = method_params(method)
+      method
+    end
+
+    def attribute_parser(attribute)
+      {
+        read: method_parser(attribute[:read]),
+        write: method_parser(attribute[:write])
+      }
+    end
+
     def to_dict(classes)
-      d_meth = lambda do |meth|
-        return nil if meth.nil?
-        {
-          name: meth.name,
-          body_md: meth.docstring,
-          params: meth.parameters,
-          tags: meth.tags.map do |t|
-            {
-               name: t.tag_name,
-               types: t.types
-            }
-          end
-        }
-      end
-
-      d_attr = lambda do |attribute|
-        {
-          read: d_meth.call(attribute[:read]),
-          write: d_meth.call(attribute[:write])
-        }
-      end
-
       classes.map do |klass|
         # Adds the class being parsed into the ruby runtime, so that we can access it's instance_name
         require klass.file
@@ -109,10 +136,8 @@ module Danger
           body_md: klass.docstring,
           instance_name: real_klass.instance_name,
           example_code: klass.tags.select { |t| t.tag_name == "example" }.map { |tag| { title: tag.name, text: tag.text } }.compact,
-          attributes: klass.attributes[:instance].map do |pair|
-            { pair.first => d_attr.call(pair.last) }
-          end,
-          methods: usable_methods.map { |m| d_meth.call(m) },
+          attributes: klass.attributes[:instance].map { |pair| { pair.first => attribute_parser(pair.last) } },
+          methods: usable_methods.map { |m| method_parser(m) },
           tags: klass.tags.select { |t| t.tag_name == "tags" }.map(&:text).compact,
           see: klass.tags.select { |t| t.tag_name == "see" }.map(&:name).map(&:split).flatten.compact,
           file: klass.file.gsub(File.expand_path("."), "")
