@@ -40,5 +40,4 @@ describe Danger::CISource::Buildkite do
     }
     expect(Danger::CISource::Buildkite.validates?(env)).to be false
   end
-
 end
