@@ -8,6 +8,7 @@
 * More documentation params are exposed to the linter - orta
 * Documentation audit - orta
 * Use proper commits for calculating diff.
+* Update environment variables used by Buildkite - bentrengrove
 
 ## 0.8.4
 
