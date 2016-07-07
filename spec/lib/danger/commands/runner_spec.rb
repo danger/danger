@@ -10,7 +10,6 @@ module Command
       # We'll take the first CI Source
       allow(ENV).to receive(:[]).with("BUILDKITE").and_return("SURE")
       allow(ENV).to receive(:[]).with("BUILDKITE_PULL_REQUEST_REPO").and_return("git@github.com:artsy/eigen.git")
-      allow(ENV).to receive(:[]).with("BUILDKITE_PULL_REQUEST_REPO").and_return("git@github.com:artsy/eigen.git")
       allow(ENV).to receive(:[]).with("BUILDKITE_PULL_REQUEST").and_return("800")
 
       # ENV vars used under the hood
@@ -68,7 +67,7 @@ module Command
         end
       end
 
-      it "gets through the whole command" do
+      pending "gets through the whole command" do
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
             `git init`
