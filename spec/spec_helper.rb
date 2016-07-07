@@ -5,8 +5,13 @@ require "webmock"
 require "webmock/rspec"
 require "json"
 
+require "support/gitlab_helper"
+require "support/github_helper"
+
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
+  config.include Danger::Support::GitLabHelper, api_provider: :gitlab
+  config.include Danger::Support::GitHubHelper, api_provider: :github
 end
 
 # Now that we could be using Danger's plugins in Danger
@@ -18,25 +23,6 @@ def make_temp_file(contents)
   file = Tempfile.new("dangefile_tests")
   file.write contents
   file
-end
-
-def stub_env
-  {
-    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
-    "TRAVIS_PULL_REQUEST" => "800",
-    "TRAVIS_REPO_SLUG" => "artsy/eigen",
-    "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d",
-    "DANGER_GITHUB_API_TOKEN" => "hi"
-  }
-end
-
-def stub_ci
-  env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-  Danger::CircleCI.new(env)
-end
-
-def stub_request_source
-  Danger::RequestSources::GitHub.new(stub_ci, stub_env)
 end
 
 # rubocop:disable Lint/NestedMethodDefinition

@@ -23,6 +23,10 @@ module Danger
         !!self.scm.origins.match(%r{#{Regexp.escape self.host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
       end
 
+      def validates?
+        raise "Subclass and overwrite validates?"
+      end
+
       def scm
         @scm ||= nil
       end

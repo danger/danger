@@ -24,6 +24,7 @@ module Danger
 
         request_source = klass.new(self.ci_source, ENV)
         next unless request_source.validates_as_ci?
+        next unless request_source.validates?
         self.request_source = request_source
       end
 

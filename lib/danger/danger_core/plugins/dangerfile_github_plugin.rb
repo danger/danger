@@ -205,6 +205,10 @@ module Danger
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
+    [:title, :body, :author, :labels, :json].each do |suffix|
+      alias_method "mr_#{suffix}".to_sym, "pr_#{suffix}".to_sym
+    end
+
     private
 
     def create_link(href, text)

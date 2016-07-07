@@ -7,6 +7,7 @@ require "danger/danger_core/plugins/dangerfile_messaging_plugin"
 require "danger/danger_core/plugins/dangerfile_import_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
+require "danger/danger_core/plugins/dangerfile_gitlab_plugin"
 
 module Danger
   class Dangerfile
@@ -34,7 +35,7 @@ module Danger
 
     # The ones that everything would break without
     def self.essential_plugin_classes
-      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin]
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin]
     end
 
     # Both of these methods exist on all objects
@@ -57,6 +58,7 @@ module Danger
     # rubocop:disable Style/MethodMissing
 
     def method_missing(method_sym, *arguments, &_block)
+      print(@core_plugins.map(&:to_s))
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
           return plugin.send(method_sym, *arguments)
