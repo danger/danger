@@ -31,10 +31,10 @@ describe Danger::RequestSources::GitHub do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
