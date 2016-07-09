@@ -1,12 +1,12 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'git'
+require "git"
 
 module Danger
   class GitRepo
     attr_accessor :diff, :log
 
-    def diff_for_folder(folder, from: "master", to: 'HEAD')
+    def diff_for_folder(folder, from: "master", to: "HEAD")
       repo = Git.open folder
       self.diff = repo.diff(from, to)
       self.log = repo.log.between(from, to)

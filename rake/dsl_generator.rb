@@ -1,4 +1,4 @@
-desc 'Generate documentation'
+desc "Generate documentation"
 task :doc do
   puts "## Danger\n\n"
 
@@ -6,7 +6,7 @@ task :doc do
   loop_group(dsls)
 end
 
-desc 'Test that our public DSL is entirely documented'
+desc "Test that our public DSL is entirely documented"
 task :spec_docs do
   dsls = public_api_methods
   docless = dsls.select { |method| method.docstring.empty? }
@@ -14,7 +14,7 @@ task :spec_docs do
 end
 
 def public_api_methods
-  require 'yard'
+  require "yard"
   files = [
     "lib/danger/danger_core/dangerfile_dsl.rb",
     "lib/danger/scm_source/git_repo.rb"

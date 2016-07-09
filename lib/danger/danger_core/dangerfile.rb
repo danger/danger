@@ -1,14 +1,14 @@
 # So much was ripped direct from CocoaPods-Core - thanks!
 
-require 'danger/danger_core/dangerfile_dsl'
-require 'danger/danger_core/standard_error'
+require "danger/danger_core/dangerfile_dsl"
+require "danger/danger_core/standard_error"
 
-require 'danger/danger_core/plugins/dangerfile_messaging_plugin'
-require 'danger/danger_core/plugins/dangerfile_import_plugin'
-require 'danger/danger_core/plugins/dangerfile_git_plugin'
-require 'danger/danger_core/plugins/dangerfile_github_plugin'
+require "danger/danger_core/plugins/dangerfile_messaging_plugin"
+require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_git_plugin"
+require "danger/danger_core/plugins/dangerfile_github_plugin"
 
-require 'danger/danger_core/plugins/dangerfile_github_plugin'
+require "danger/danger_core/plugins/dangerfile_github_plugin"
 
 module Danger
   class Dangerfile
@@ -25,12 +25,12 @@ module Danger
     #         presented to the user.
     #
     def to_s
-      'Dangerfile'
+      "Dangerfile"
     end
 
     # These are the classes that are allowed to also use method_missing
     # in order to provide broader plugin support
-    def core_plugin_classes
+    def self.core_plugin_classes
       [
         Danger::DangerfileMessagingPlugin,
         Danger::DangerfileImportPlugin,
@@ -94,7 +94,7 @@ module Danger
         instance_variable_set("@#{name}", plugin)
 
         @plugins[klass] = plugin
-        @core_plugins << plugin if core_plugin_classes.include? klass
+        @core_plugins << plugin if self.class.core_plugin_classes.include? klass
       end
     end
     alias init_plugins refresh_plugins
@@ -113,12 +113,24 @@ module Danger
         methods = plugin_hash[:methods].select { |name| plugin.method(name).parameters.empty? }
 
         methods.map do |method|
-          value = plugin.send(method)
-          value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if method == :pr_body
+          case method
+          when :api
+            value = "Octokit::Client"
 
-          # So that we either have one value per row
-          # or we have [] for an empty array
-          value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          when :pr_json
+            value = "[Skipped]"
+
+          when :pr_body
+            value = plugin.send(method)
+            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")
+
+          else
+            value = plugin.send(method)
+            # So that we either have one value per row
+            # or we have [] for an empty array
+            value = value.join("\n") if value.kind_of?(Array) && value.count > 0
+          end
+
           [method.to_s, value]
         end
       end
@@ -141,7 +153,7 @@ module Danger
       params[:rows] = rows.each { |current| current[0] = current[0].yellow }
       params[:title] = "Danger v#{Danger::VERSION}\nDSL Attributes".green
 
-      ui.section('Info:') do
+      ui.section("Info:") do
         ui.puts
         ui.puts Terminal::Table.new(params)
         ui.puts
@@ -153,19 +165,19 @@ module Danger
     def parse(path, contents = nil)
       print_known_info if verbose
 
-      contents ||= File.open(path, 'r:utf-8', &:read)
+      contents ||= File.open(path, "r:utf-8", &:read)
 
       # Work around for Rubinius incomplete encoding in 1.9 mode
-      if contents.respond_to?(:encoding) && contents.encoding.name != 'UTF-8'
-        contents.encode!('UTF-8')
+      if contents.respond_to?(:encoding) && contents.encoding.name != "UTF-8"
+        contents.encode!("UTF-8")
       end
 
-      if contents.tr!('“”‘’‛', %(""'''))
+      if contents.tr!("“”‘’‛", %(""'''))
         # Changes have been made
         ui.puts "Your #{path.basename} has had smart quotes sanitised. " \
-          'To avoid issues in the future, you should not use ' \
-          'TextEdit for editing it. If you are not using TextEdit, ' \
-          'you should turn off smart quotes in your editor of choice.'.red
+          "To avoid issues in the future, you should not use " \
+          "TextEdit for editing it. If you are not using TextEdit, " \
+          "you should turn off smart quotes in your editor of choice.".red
       end
 
       if contents.include?("puts")
@@ -191,9 +203,9 @@ module Danger
       status = status_report
       return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
 
-      ui.section('Results:') do
+      ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|
-          formatted = key.to_s.capitalize + ':'
+          formatted = key.to_s.capitalize + ":"
           title = case key
                   when :errors
                     formatted.red
@@ -207,7 +219,7 @@ module Danger
         end
 
         if status[:markdowns].count > 0
-          ui.section('Markdown:') do
+          ui.section("Markdown:") do
             status[:markdowns].each do |current_markdown|
               ui.puts current_markdown
             end

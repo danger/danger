@@ -1,18 +1,18 @@
-require 'danger/commands/init_helpers/interviewer'
-require 'danger/ci_source/local_git_repo'
-require 'yaml'
+require "danger/commands/init_helpers/interviewer"
+require "danger/ci_source/local_git_repo"
+require "yaml"
 
 module Danger
   class Init < Runner
-    self.summary = 'Helps you set up Danger.'
-    self.command = 'init'
+    self.summary = "Helps you set up Danger."
+    self.command = "init"
 
     attr_accessor :ui
 
     def self.options
       [
-        ['--impatient', "'I've not got all day here. Don't add any thematic delays please.'"],
-        ['--mousey', "'Don't make me press return to continue the adventure.'"]
+        ["--impatient", "'I've not got all day here. Don't add any thematic delays please.'"],
+        ["--mousey", "'Don't make me press return to continue the adventure.'"]
       ].concat(super)
     end
 
@@ -20,8 +20,8 @@ module Danger
       @bot_name = File.basename(Dir.getwd).split(".").first.capitalize + "Bot"
       super
       @ui = Interviewer.new(cork)
-      ui.no_delay = argv.flag?('impatient', false)
-      ui.no_waiting = argv.flag?('mousey', false)
+      ui.no_delay = argv.flag?("impatient", false)
+      ui.no_waiting = argv.flag?("mousey", false)
     end
 
     def run
@@ -57,7 +57,7 @@ module Danger
       content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
       File.write("Dangerfile", content)
 
-      ui.header 'Step 1: Creating a starter Dangerfile'
+      ui.header "Step 1: Creating a starter Dangerfile"
       ui.say "I've set up an example Dangerfile for you in this folder.\n"
       ui.pause 1
 
@@ -78,7 +78,7 @@ module Danger
     end
 
     def setup_github_account
-      ui.header 'Step 2: Creating a GitHub account'
+      ui.header "Step 2: Creating a GitHub account"
 
       ui.say "In order to get the most out of Danger, I'd recommend giving her the ability to post in"
       ui.say "the code-review comment section.\n\n"
@@ -87,9 +87,9 @@ module Danger
       ui.say "IMO, it's best to do this by using the private mode of your browser. Create an account like"
       ui.say "#{@bot_name}, and don't forget a cool robot avatar.\n\n"
       ui.pause 1
-      ui.say 'Here are great resources for creative commons images of robots:'
-      ui.link 'https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9'
-      ui.link 'https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359'
+      ui.say "Here are great resources for creative commons images of robots:"
+      ui.link "https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9"
+      ui.link "https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359"
 
       ui.say ""
       note_about_clicking_links
@@ -99,7 +99,7 @@ module Danger
     end
 
     def setup_access_token
-      ui.header 'Step 3: Configuring a GitHub Personal Access Token'
+      ui.header "Step 3: Configuring a GitHub Personal Access Token"
 
       ui.say "Here's the link, you should open this in the private session where you just created the new GitHub account"
       ui.link "https://github.com/settings/tokens/new"
@@ -121,6 +121,8 @@ module Danger
         ui.pause 1
         ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos."
         ui.say "Make a new one for those repos with just " + "public_repo".yellow + "."
+        ui.pause 1
+        ui.say "Additionally, don't forget to add your new GitHub account as a collaborator to your Closed Source project."
       end
 
       ui.say "\n👍, please press return when you have your token set up..."
@@ -138,7 +140,7 @@ module Danger
     end
 
     def setup_danger_ci
-      ui.header 'Step 4: Add Danger for your CI'
+      ui.header "Step 4: Add Danger for your CI"
 
       uses_travis if File.exist? ".travis.yml"
       uses_circle if File.exist? "circle.yml"
@@ -208,7 +210,7 @@ module Danger
       ui.link "https://travis-ci.org/#{current_repo_slug}/settings"
       ui.say "\nThe name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
       if @is_open_source
-        ui.say "Make sure to have \"Display value in build log\" enabled."
+        ui.say 'Make sure to have "Display value in build log" enabled.'
       end
     end
 
@@ -225,7 +227,7 @@ module Danger
 
         ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
-        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#experimental\n"
+        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
         ui.wait_for_return
       end

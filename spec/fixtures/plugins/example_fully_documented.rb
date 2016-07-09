@@ -12,8 +12,8 @@ module Danger
   #          # Runs a linter with all styles, on modified and added markpown files in this PR
   #          proselint.lint_files
   #
-  # @see     artsy/artsy.github.io
-  # @tags    blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express
+  # @see  artsy/artsy.github.io
+  # @tags blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express
   #
   class DangerProselint < Plugin
     # Allows you to disable a collection of linters from being ran.

@@ -7,9 +7,9 @@ describe String do
 
   describe "#danger_pluralize" do
     examples = [
-      { count: 0, string: '0 errors' },
-      { count: 1, string: '1 error' },
-      { count: 2, string: '2 errors' }
+      { count: 0, string: "0 errors" },
+      { count: 1, string: "1 error" },
+      { count: 2, string: "2 errors" }
     ]
 
     examples.each do |example|

@@ -1,4 +1,4 @@
-require 'danger/scm_source/git_repo'
+require "danger/scm_source/git_repo"
 
 describe Danger::GitRepo do
   describe "Return Types" do
@@ -33,7 +33,7 @@ describe Danger::GitRepo do
   end
 
   describe "with files" do
-    it 'handles adding a new file to a git repo' do
+    it "handles adding a new file to a git repo" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -54,7 +54,7 @@ describe Danger::GitRepo do
       end
     end
 
-    it 'handles file deletions as expected' do
+    it "handles file deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -76,7 +76,7 @@ describe Danger::GitRepo do
       end
     end
 
-    it 'handles modified as expected' do
+    it "handles modified as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -100,7 +100,7 @@ describe Danger::GitRepo do
   end
 
   describe "lines of code" do
-    it 'handles code insertions as expected' do
+    it "handles code insertions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -122,7 +122,7 @@ describe Danger::GitRepo do
       end
     end
 
-    it 'handles code deletions as expected' do
+    it "handles code deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
@@ -144,7 +144,7 @@ describe Danger::GitRepo do
       end
     end
 
-    describe '#commits' do
+    describe "#commits" do
       it "returns the commits" do
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
@@ -164,7 +164,7 @@ describe Danger::GitRepo do
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
           messages = @dm.commits.map(&:message)
-          expect(messages).to eq(['another'])
+          expect(messages).to eq(["another"])
         end
       end
     end

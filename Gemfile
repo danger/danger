@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gem 'claide'
 #gem 'claide-plugins', :path => '/Users/dbgrandi/danger-plugins/claide-plugins'

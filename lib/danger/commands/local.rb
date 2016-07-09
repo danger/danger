@@ -1,17 +1,17 @@
 module Danger
   class Local < Runner
-    self.summary = 'Run the Dangerfile locally.'
-    self.command = 'local'
+    self.summary = "Run the Dangerfile locally."
+    self.command = "local"
 
     def initialize(argv)
       @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
-      @pr_num = argv.option('use-merged-pr')
+      @pr_num = argv.option("use-merged-pr")
       super
     end
 
     def self.options
       [
-        ['--use-merged-pr=[#id]', 'The ID of an already merged PR inside your history to use as a reference for the local run.']
+        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."]
       ].concat(super)
     end
 
@@ -61,8 +61,9 @@ module Danger
       dm.env.request_source = gh
 
       begin
+        dm.env.fill_environment_vars
         dm.env.ensure_danger_branches_are_setup
-        dm.env.scm.diff_for_folder(".", from: dm.env.ci_source.base_commit, to: dm.env.ci_source.head_commit)
+        dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
         dm.parse(Pathname.new(@dangerfile_path))
         dm.print_results
       ensure

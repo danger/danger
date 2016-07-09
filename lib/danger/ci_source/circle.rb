@@ -1,13 +1,12 @@
 # https://circleci.com/docs/environment-variables
-require 'uri'
-require 'danger/ci_source/circle_api'
+require "uri"
+require "danger/ci_source/circle_api"
 
 module Danger
   module CISource
     class CircleCI < CI
       def self.validates?(env)
         return false unless env["CIRCLE_BUILD_NUM"]
-        return false unless env["CI_PULL_REQUEST"]
         return false unless env["CIRCLE_PROJECT_USERNAME"]
         return false unless env["CIRCLE_PROJECT_REPONAME"]
 

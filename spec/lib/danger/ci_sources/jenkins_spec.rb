@@ -1,4 +1,4 @@
-require 'danger/ci_source/circle'
+require "danger/ci_source/circle"
 
 describe Danger::CISource::Jenkins do
   it "validates when jenkins env var is found" do

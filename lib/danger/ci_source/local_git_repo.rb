@@ -1,7 +1,7 @@
 # For more info see: https://github.com/schacon/ruby-git
 
-require 'git'
-require 'uri'
+require "git"
+require "uri"
 
 module Danger
   module CISource
@@ -39,7 +39,7 @@ module Danger
         end
 
         specific_pr = env["LOCAL_GIT_PR_ID"]
-        pr_ref = specific_pr ? "##{specific_pr}" : ''
+        pr_ref = specific_pr ? "##{specific_pr}" : ""
         pr_command = "log --merges --oneline | grep \"Merge pull request #{pr_ref}\" | head -n 1"
 
         # get the most recent PR merge

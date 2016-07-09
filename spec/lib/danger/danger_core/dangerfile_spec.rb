@@ -1,27 +1,27 @@
-require 'pathname'
-require 'tempfile'
+require "pathname"
+require "tempfile"
 
-require 'danger/danger_core/plugins/dangerfile_messaging_plugin'
-require 'danger/danger_core/plugins/dangerfile_import_plugin'
-require 'danger/danger_core/plugins/dangerfile_git_plugin'
-require 'danger/danger_core/plugins/dangerfile_github_plugin'
+require "danger/danger_core/plugins/dangerfile_messaging_plugin"
+require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_git_plugin"
+require "danger/danger_core/plugins/dangerfile_github_plugin"
 
 describe Danger::Dangerfile do
-  it 'keeps track of the original Dangerfile' do
+  it "keeps track of the original Dangerfile" do
     file = make_temp_file ""
     dm = testing_dangerfile
     dm.parse file.path
     expect(dm.defined_in_file).to eq file.path
   end
 
-  it 'runs the ruby code inside the Dangerfile' do
+  it "runs the ruby code inside the Dangerfile" do
     dangerfile_code = "message('hi')"
     expect_any_instance_of(Danger::DangerfileMessagingPlugin).to receive(:message).and_return("")
     dm = testing_dangerfile
     dm.parse Pathname.new(""), dangerfile_code
   end
 
-  it 'raises elegantly with bad ruby code inside the Dangerfile' do
+  it "raises elegantly with bad ruby code inside the Dangerfile" do
     dangerfile_code = "asdas = asdasd + asdasddas"
     dm = testing_dangerfile
 
@@ -30,7 +30,7 @@ describe Danger::Dangerfile do
     end.to raise_error(Danger::DSLError)
   end
 
-  it 'respects ignored violations' do
+  it "respects ignored violations" do
     code = "message 'A message'\n" \
            "warn 'An ignored warning'\n" \
            "warn 'A warning'\n" \
@@ -38,14 +38,14 @@ describe Danger::Dangerfile do
            "fail 'An error'\n"
 
     dm = testing_dangerfile
-    dm.env.request_source.ignored_violations = ['A message', 'An ignored warning', 'An ignored error']
+    dm.env.request_source.ignored_violations = ["A message", "An ignored warning", "An ignored error"]
 
     dm.parse Pathname.new(""), code
 
     results = dm.status_report
-    expect(results[:messages]).to eql(['A message'])
-    expect(results[:errors]).to eql(['An error'])
-    expect(results[:warnings]).to eql(['A warning'])
+    expect(results[:messages]).to eql(["A message"])
+    expect(results[:errors]).to eql(["An error"])
+    expect(results[:warnings]).to eql(["A warning"])
   end
 
   describe "#print_results" do
@@ -56,20 +56,20 @@ describe Danger::Dangerfile do
              "fail 'Another error'\n" \
              "fail 'An error'\n"
       dm = testing_dangerfile
-      dm.env.request_source.ignored_violations = ['A message', 'An ignored warning', 'An ignored error']
+      dm.env.request_source.ignored_violations = ["A message", "An ignored warning", "An ignored error"]
 
       dm.parse Pathname.new(""), code
 
-      expect(dm).to receive(:print_list).with('Errors:'.red, ['Another error', 'An error'])
-      expect(dm).to receive(:print_list).with('Warnings:'.yellow, ['Another warning', 'A warning'])
-      expect(dm).to receive(:print_list).with('Messages:', ['A message'])
+      expect(dm).to receive(:print_list).with("Errors:".red, ["Another error", "An error"])
+      expect(dm).to receive(:print_list).with("Warnings:".yellow, ["Another warning", "A warning"])
+      expect(dm).to receive(:print_list).with("Messages:", ["A message"])
 
       dm.print_results
     end
   end
 
   describe "verbose" do
-    it 'outputs metadata when verbose' do
+    it "outputs metadata when verbose" do
       file = make_temp_file ""
       dm = testing_dangerfile
       dm.verbose = true
@@ -78,7 +78,7 @@ describe Danger::Dangerfile do
       dm.parse file.path
     end
 
-    it 'does not print metadata by default' do
+    it "does not print metadata by default" do
       file = make_temp_file ""
       dm = testing_dangerfile
 
@@ -87,18 +87,18 @@ describe Danger::Dangerfile do
     end
   end
 
-  describe 'initializing plugins' do
-    it 'should add a plugin to the @plugins array' do
+  describe "initializing plugins" do
+    it "should add a plugin to the @plugins array" do
       class DangerTestPlugin < Danger::Plugin; end
       allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerTestPlugin])
       dm = testing_dangerfile
       allow(dm).to receive(:core_dsls).and_return([])
       dm.init_plugins
 
-      expect(dm.instance_variable_get('@plugins').length).to eq(1)
+      expect(dm.instance_variable_get("@plugins").length).to eq(1)
     end
 
-    it 'should add an instance variable to the dangerfile' do
+    it "should add an instance variable to the dangerfile" do
       class DangerTestPlugin < Danger::Plugin; end
       allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
       dm = testing_dangerfile
@@ -110,23 +110,23 @@ describe Danger::Dangerfile do
     end
   end
 
-  describe 'printing verbose metadata' do
+  describe "printing verbose metadata" do
     it "exposes core attributes" do
       dm = testing_dangerfile
       methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
 
       expect(methods).to eq [
         :added_files,
+        :api,
         :base_commit,
-        :branch_for_merge,
+        :branch_for_base,
+        :branch_for_head,
         :commits,
         :deleted_files,
         :deletions,
         :fail,
         :head_commit,
         :import,
-        :import_local,
-        :import_url,
         :insertions,
         :lines_of_code,
         :markdown,
@@ -134,6 +134,7 @@ describe Danger::Dangerfile do
         :modified_files,
         :pr_author,
         :pr_body,
+        :pr_json,
         :pr_labels,
         :pr_title,
         :status_report,
@@ -148,7 +149,7 @@ describe Danger::Dangerfile do
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:protect_files]
+      expect(methods).to eq []
     end
 
     it "exposes plugin external attributes by default" do
@@ -158,7 +159,7 @@ describe Danger::Dangerfile do
 
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:my_thing, :protect_files]
+      expect(methods).to eq [:my_thing]
     end
 
     def sort_data(data)
@@ -194,8 +195,10 @@ describe Danger::Dangerfile do
 
       expect(data).to eq [
         ["added_files", []],
+        ["api", "Octokit::Client"],
         ["base_commit", "704dc55988c6996f69b6873c2424be7d1de67bbe"],
-        ["branch_for_merge", "master"],
+        ["branch_for_base", "master"],
+        ["branch_for_head", "orta-circle_ci2"],
         ["commits", []],
         ["deleted_files", []],
         ["deletions", 60],
@@ -205,6 +208,7 @@ describe Danger::Dangerfile do
         ["modified_files", "CHANGELOG.md\nlib/danger/ci_source/local_git_repo.rb\nlib/danger/commands/local.rb\nlib/danger/commands/new_plugin.rb\nlib/danger/commands/runner.rb\nlib/danger/environment_manager.rb\nspec/sources/local_git_repo_spec.rb"],
         ["pr_author", "orta"],
         ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
+        ["pr_json", "[Skipped]"],
         ["pr_labels", "D:2\nMaintenance Work"],
         ["pr_title", "[CI] Use Xcode 7 for Circle CI"],
         ["status_report", { errors: [], warnings: [], messages: [], markdowns: [] }],

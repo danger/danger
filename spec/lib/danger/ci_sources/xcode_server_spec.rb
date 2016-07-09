@@ -1,4 +1,4 @@
-require 'danger/ci_source/xcode_server'
+require "danger/ci_source/xcode_server"
 
 describe Danger::CISource::XcodeServer do
   it "validates when Xcode Server has XCS_BOT_NAME env var" do

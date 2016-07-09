@@ -1,4 +1,4 @@
-require 'danger/ci_source/ci_source'
+require "danger/ci_source/ci_source"
 
 describe Danger::CISource::Buildkite do
   before do

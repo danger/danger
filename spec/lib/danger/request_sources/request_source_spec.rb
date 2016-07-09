@@ -1,8 +1,8 @@
-require 'danger/request_source/github'
+require "danger/request_source/github"
 
 describe Danger::RequestSources::RequestSource do
   describe "the base request source" do
-    it 'validates when passed a corresponding repository' do
+    it "validates when passed a corresponding repository" do
       git_mock = Danger::GitRepo.new
       allow(git_mock).to receive(:exec).with("remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-").and_return("git@github.com:artsy/eigen.git")
 
@@ -11,7 +11,7 @@ describe Danger::RequestSources::RequestSource do
       expect(g.validates?).to be true
     end
 
-    it 'validates when passed a corresponding repository with custom host' do
+    it "validates when passed a corresponding repository with custom host" do
       git_mock = Danger::GitRepo.new
 
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }

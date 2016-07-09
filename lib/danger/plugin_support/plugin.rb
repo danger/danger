@@ -5,7 +5,7 @@ module Danger
     end
 
     def self.instance_name
-      to_s.gsub("Danger", "").danger_underscore.split('/').last
+      to_s.gsub("Danger", "").danger_underscore.split("/").last
     end
 
     # Both of these methods exist on all objects
@@ -23,6 +23,10 @@ module Danger
 
     def self.all_plugins
       @all_plugins ||= []
+    end
+
+    def self.clear_external_plugins
+      @all_plugins = @all_plugins.select { |plugin| Dangerfile.core_plugin_classes.include? plugin }
     end
 
     def self.inherited(plugin)

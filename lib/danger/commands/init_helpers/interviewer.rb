@@ -28,7 +28,7 @@ module Danger
 
     def header(title)
       say title.yellow
-      say ''
+      say ""
       pause 0.6
     end
 
