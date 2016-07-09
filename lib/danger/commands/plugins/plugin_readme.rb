@@ -1,15 +1,18 @@
-require "danger/commands/plugins/plugin_abstract"
 require "danger/plugin_support/plugin_parser"
 require "danger/plugin_support/plugin_file_resolver"
 require "json"
 
 module Danger
-  class PluginReadme < PluginAbstract
+  class PluginReadme < CLAide::Command::Plugins
     self.summary = "Generates a README from a set of plugins"
     self.command = "readme"
 
+    attr_accessor :cork
+
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
+      @cork = Cork::Board.new(silent: argv.option("silent", false),
+                              verbose: argv.option("verbose", false))
       super
     end
 
