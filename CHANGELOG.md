@@ -1,4 +1,13 @@
 ## Master
+* `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
+  - `danger plugin lint` is now `danger plugins lint`
+  - `danger plugin readme` is now `danger plugins readme`
+* use `claide-plugins` gem to provide plugin management - dbgrandi
+  - extends `claide-plugins` gem with list, search, create commands
+  - `list` is the default command for `danger plugins`
+  - `list` shows all plugins
+  - `search` let's you search with a regexp
+  - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
 
 ## 0.8.5
 
