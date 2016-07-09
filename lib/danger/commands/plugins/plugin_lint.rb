@@ -1,14 +1,17 @@
-require "danger/commands/plugins/plugin_abstract"
 require "danger/plugin_support/plugin_parser"
 require "danger/plugin_support/plugin_file_resolver"
 
 module Danger
-  class PluginLint < PluginAbstract
+  class PluginLint < CLAide::Command::Plugins
     self.summary = "Lints a plugin"
     self.command = "lint"
 
+    attr_accessor :cork
+
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
+      @cork = Cork::Board.new(silent: argv.option("silent", false),
+                              verbose: argv.option("verbose", false))
       super
     end
 
