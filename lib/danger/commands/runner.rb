@@ -1,17 +1,19 @@
 module Danger
   class Runner < CLAide::Command
-    require 'danger/commands/init'
-    require 'danger/commands/local'
-    require "danger/commands/plugins/plugin_abstract"
+    require "danger/commands/init"
+    require "danger/commands/local"
 
     # manually set claide plugins as a subcommand
-    require 'claide_plugin'
+    require "claide_plugin"
     @subcommands << CLAide::Command::Plugins
     CLAide::Plugins.config =
-      CLAide::Plugins::Configuration.new('Danger',
-                                         'danger',
-                                         'https://raw.githubusercontent.com/danger/danger.systems/master/plugins-search-generated.json',
-                                         'https://github.com/danger/danger-plugin-template')
+      CLAide::Plugins::Configuration.new("Danger",
+                                         "danger",
+                                         "https://raw.githubusercontent.com/danger/danger.systems/master/plugins-search-generated.json",
+                                         "https://github.com/danger/danger-plugin-template")
+
+    require "danger/commands/plugins/plugin_lint"
+    require "danger/commands/plugins/plugin_readme"
 
     self.summary = "Run the Dangerfile."
     self.command = "danger"
