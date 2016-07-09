@@ -9,6 +9,8 @@
   - `search` let's you search with a regexp
   - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
 
+* Warn users not to store GitHub tokens in the repository -- dantoml
+
 ## 0.8.5
 
 * Converts the message link to be http://danger.systems - orta
