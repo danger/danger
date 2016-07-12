@@ -48,7 +48,7 @@ module Danger
       cork.puts
 
       # We can use tokenless here, as it's running on someone's computer
-      # and is IP locked, as opposed  to on the CI.
+      # and is IP locked, as opposed to on the CI.
       gh.support_tokenless_auth = true
 
       begin

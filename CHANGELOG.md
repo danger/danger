@@ -12,6 +12,7 @@
 * Warn users not to store GitHub tokens in the repository -- dantoml
 * Crash on load fix for `danger plugins readme` -- orta
 * Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
+* `danger plugins lint` contains more information - orta
 
 ## 0.8.5
 
