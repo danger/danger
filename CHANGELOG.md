@@ -1,4 +1,8 @@
 ## Master
+
+
+## 0.9.0
+
 * `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
   - `danger plugin lint` is now `danger plugins lint`
   - `danger plugin readme` is now `danger plugins readme`
