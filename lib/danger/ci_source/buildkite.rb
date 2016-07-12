@@ -6,14 +6,14 @@ module Danger
     class Buildkite < CI
       def self.validates?(env)
         return false unless env["BUILDKITE"]
-        return false unless env["BUILDKITE_REPO"]
+        return false unless env["BUILDKITE_PULL_REQUEST_REPO"] && !env["BUILDKITE_PULL_REQUEST_REPO"].empty?
         return false unless env["BUILDKITE_PULL_REQUEST"]
 
         return true
       end
 
       def initialize(env)
-        self.repo_url = env["BUILDKITE_REPO"]
+        self.repo_url = env["BUILDKITE_PULL_REQUEST_REPO"]
         self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
 
         repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})

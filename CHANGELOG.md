@@ -1,4 +1,17 @@
 ## Master
+* `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
+  - `danger plugin lint` is now `danger plugins lint`
+  - `danger plugin readme` is now `danger plugins readme`
+* use `claide-plugins` gem to provide plugin management - dbgrandi
+  - extends `claide-plugins` gem with list, search, create commands
+  - `list` is the default command for `danger plugins`
+  - `list` shows all plugins
+  - `search` let's you search with a regexp
+  - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
+
+* Warn users not to store GitHub tokens in the repository -- dantoml
+* Crash on load fix for `danger plugins readme` -- orta
+* Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
 
 ## 0.8.5
 
@@ -8,6 +21,7 @@
 * More documentation params are exposed to the linter - orta
 * Documentation audit - orta
 * Use proper commits for calculating diff.
+* Update environment variables used by Buildkite - bentrengrove
 
 ## 0.8.4
 

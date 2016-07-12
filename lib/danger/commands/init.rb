@@ -115,6 +115,7 @@ module Danger
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
         ui.say "#{@bot_name} does not need admin access to your repo. So its ability to cause chaos is minimalized.\n"
 
+        ui.say "\nIt is important that you do not store this token in your repository, as GitHub will automatically revoke it when pushed.\n"
       elsif @is_open_source == "closed"
         ui.say "For Closed Source projects, I'd recommend giving the token access to the whole repo scope."
         ui.say "This means only providing access to " + "repo".yellow + ", and its children in the token.\n\n"
