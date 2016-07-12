@@ -43,6 +43,10 @@ module Danger
       def fetch_details
         raise "Subclass and overwrite initialize"
       end
+
+      def organisation
+        raise "Subclass and overwrite organisation"
+      end
     end
   end
 end

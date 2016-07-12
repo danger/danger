@@ -64,7 +64,15 @@ module Danger
         dm.env.fill_environment_vars
         dm.env.ensure_danger_branches_are_setup
         dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
+
         dm.parse(Pathname.new(@dangerfile_path))
+
+        if dm.env.request_source.organisation
+          # TODO: Add actual error handling here
+          url = "https://raw.githubusercontent.com/#{dm.env.request_source.organisation}/danger/master/Dangerfile"
+          path = dm.plugin.download(url)
+          dm.parse(Pathname.new(path))
+        end
         dm.print_results
       ensure
         dm.env.clean_up

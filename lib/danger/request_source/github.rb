@@ -231,6 +231,10 @@ module Danger
         message = match.nil? ? html : match.captures.first
         Violation.new(message, violation.sticky)
       end
+
+      def organisation
+        "themoji" # TODO: Detect this value
+      end
     end
   end
 end

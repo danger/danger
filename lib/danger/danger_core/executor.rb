@@ -14,7 +14,6 @@ module Danger
       dm ||= Dangerfile.new(env, cork)
 
       if dm.env.pr?
-        # dm.verbose = verbose
         dm.init_plugins
 
         dm.env.fill_environment_vars
@@ -27,7 +26,7 @@ module Danger
           ci_head = head || EnvironmentManager.danger_head_branch
           dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
-          dm.parse Pathname.new(dangerfile_path)
+          dm.parse(Pathname.new(dangerfile_path))
 
           post_results(dm, danger_id)
           dm.print_results
