@@ -1,10 +1,10 @@
 module Danger
   class Executor
-    def run(env: nil, 
-            dm: nil, 
-            cork: nil, 
-            base: nil, 
-            head: nil, 
+    def run(env: nil,
+            dm: nil,
+            cork: nil,
+            base: nil,
+            head: nil,
             dangerfile_path: nil,
             danger_id: nil)
 
@@ -29,7 +29,7 @@ module Danger
 
           dm.parse Pathname.new(dangerfile_path)
 
-          post_results dm
+          post_results(dm, danger_id)
           dm.print_results
         ensure
           dm.env.clean_up
@@ -39,7 +39,7 @@ module Danger
       end
     end
 
-    def post_results(dm)
+    def post_results(dm, danger_id)
       gh = dm.env.request_source
       violations = dm.violation_report
       status = dm.status_report
