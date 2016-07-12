@@ -13,6 +13,7 @@
 * Crash on load fix for `danger plugins readme` -- orta
 * Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
 * `danger plugins lint` contains more information - orta
+* Make link instructions in onboarding OS aware -- K0nserv
 
 ## 0.8.5
 

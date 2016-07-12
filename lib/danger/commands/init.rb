@@ -244,7 +244,13 @@ module Danger
     end
 
     def note_about_clicking_links
-      ui.say "Note: Holding cmd ( ⌘ ) and #{ENV['ITERM_SESSION_ID'] ? '' : 'double '}clicking a link will open it in your browser."
+      modifier_key = "ctrl"
+      clicks = "clicking"
+
+      modifier_key = "cmd ( ⌘ )" if darwin?
+      clicks = "double clicking" if darwin? && !ENV["ITERM_SESSION_ID"]
+
+      ui.say "Note: Holding #{modifier_key} and #{clicks} a link will open it in your browser."
     end
 
     def info
@@ -267,6 +273,10 @@ module Danger
       ui.say "And you're good to go. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
       ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
       ui.say "If you don't like it, help us improve it! xxx"
+    end
+
+    def darwin?
+      Gem::Platform.local.os == "darwin"
     end
   end
 end
