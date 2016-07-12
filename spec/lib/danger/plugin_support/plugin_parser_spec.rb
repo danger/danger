@@ -1,5 +1,7 @@
 require "danger/plugin_support/plugin_parser"
 
+# rubocop:disable Metrics/ModuleLength
+
 module Danger
   describe PluginParser do
     it "includes an example plugin" do
@@ -53,7 +55,7 @@ module Danger
         instance_name: "example_remote",
         example_code: [],
         attributes: [],
-        methods: [{ name: :echo, body_md: "", params: [], tags: [] }],
+        methods: [{ name: :echo, body_md: "", params: [], tags: [], param_couplets: {}, return: "", one_liner: "echo" }],
         tags: [],
         see: [],
         file: "/spec/fixtures/plugins/example_remote.rb"
@@ -77,7 +79,10 @@ module Danger
             { name: :disable_linters=,
               body_md: "Allows you to disable a collection of linters from being ran.\nYou can get a list of [them here](https://github.com/amperser/proselint#checks)",
               params: [["value", nil]],
-              tags: [] } } }
+              tags: [],
+              param_couplets: {},
+              return: "",
+              one_liner: "disable_linters=" } } }
         ],
 
         methods: [
@@ -88,19 +93,44 @@ module Danger
             tags: [
               { name: "param", types: ["String"] },
               { name: "return", types: ["void"] }
-            ]
+            ],
+              param_couplets: [{ "files" => "String" }],
+              return: "",
+              one_liner: "lint_files(files: String)"
            },
           {
             name: :proselint_installed?,
             body_md: "Determine if proselint is currently installed in the system paths.",
             params: [],
-            tags: [{ name: "return", types: ["Bool"] }]
+            tags: [{ name: "return", types: ["Bool"] }],
+            param_couplets: {},
+            return: "Bool",
+            one_liner: "proselint_installed? -> Bool"
         }
         ],
         tags: ["blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express"],
         see: ["artsy/artsy.github.io"],
         file: "/spec/fixtures/plugins/example_fully_documented.rb"
       }]
+    end
+
+    it "creates method descriptions that make sense" do
+      parser = PluginParser.new "spec/fixtures/plugins/plugin_many_methods.rb"
+      parser.parse
+
+      plugins = parser.plugins_from_classes(parser.classes_in_file)
+      json = parser.to_dict(plugins)
+      method_one_liners = json.first[:methods].map { |m| m[:one_liner] }
+
+      expect(method_one_liners).to eq([
+                                        "one",
+                                        "two",
+                                        "two_point_five",
+                                        "three(param1: String)",
+                                        "four(param1: Number, param2) -> String",
+                                        "five(param1: Array<String>, param2, param3) -> String",
+                                        "six? -> Bool"
+                                      ])
     end
   end
 end

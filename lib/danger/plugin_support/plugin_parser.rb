@@ -110,7 +110,26 @@ module Danger
         params: meth.parameters,
         tags: meth.tags.map { |t| { name: t.tag_name, types: t.types } }
       }
-      method[:param_couplets] = method_params(method)
+
+      return_v = method_return_string(method)
+      params_v = method_params(method)
+
+      # Pull out some derived data
+      method[:param_couplets] = params_v
+      method[:return] = return_v
+
+      # Create the center params, `thing: OK, other: Thing`
+      string_params = params_v.map do |param|
+        name = param.keys.first
+        param[name].nil? ? name : name + ": " + param[name]
+      end.join ", "
+
+      # Wrap it in () if there _are_ params
+      string_params = "(" + string_params + ")" unless string_params.empty?
+      # Append the return type if we have one
+      suffix = return_v.empty? ? "" : " -> #{return_v}"
+
+      method[:one_liner] = meth.name.to_s + string_params + suffix
       method
     end
 
