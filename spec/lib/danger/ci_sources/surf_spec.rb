@@ -4,7 +4,7 @@ describe Danger::CISource::Surf do
   it "validates when all Surf environment vars are set" do
     env = { "SURF_REPO" => "https://github.com/surf-build/surf",
             "SURF_NWO" => "surf-build/surf" }
-          
+
     expect(Danger::CISource::Surf.validates?(env)).to be true
   end
 
@@ -29,7 +29,7 @@ describe Danger::CISource::Surf do
     env = {
       "SURF_PR_NUM" => "800",
       "SURF_NWO" => "artsy/eigen",
-      "SURF_REPO" => "https://github.com/artsy/eigen",
+      "SURF_REPO" => "https://github.com/artsy/eigen"
     }
     t = Danger::CISource::Surf.new(env)
     expect(t.repo_slug).to eql("artsy/eigen")
