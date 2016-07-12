@@ -4,6 +4,7 @@ require "danger/danger_core/environment_manager"
 require "danger/commands/runner"
 require "danger/plugin_support/plugin"
 require "danger/core_ext/string"
+require "danger/danger_core/executor"
 
 require "claide"
 require "colored"

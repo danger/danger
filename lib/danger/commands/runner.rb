@@ -15,13 +15,13 @@ module Danger
     require "danger/commands/plugins/plugin_lint"
     require "danger/commands/plugins/plugin_readme"
 
+    attr_accessor :cork
+
     self.summary = "Run the Dangerfile."
     self.command = "danger"
     self.version = Danger::VERSION
 
     self.plugin_prefixes = %w(claide danger)
-
-    attr_accessor :cork
 
     def initialize(argv)
       dangerfile = argv.option("dangerfile", "Dangerfile")
@@ -51,53 +51,10 @@ module Danger
     end
 
     def run
-      env = EnvironmentManager.new(ENV)
-      dm = Dangerfile.new(env, cork)
-
-      if dm.env.pr?
-        dm.verbose = verbose
-        dm.init_plugins
-
-        dm.env.fill_environment_vars
-
-        begin
-          dm.env.ensure_danger_branches_are_setup
-
-          # Offer the chance for a user to specify a branch through the command line
-          ci_base = @base || EnvironmentManager.danger_base_branch
-          ci_head = @head || EnvironmentManager.danger_head_branch
-          dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
-
-          dm.parse Pathname.new(@dangerfile_path)
-
-          post_results dm
-          dm.print_results
-        ensure
-          dm.env.clean_up
-        end
-      else
-        cork.puts "Not a Pull Request - skipping `danger` run"
-      end
-    end
-
-    def post_results(dm)
-      gh = dm.env.request_source
-      violations = dm.violation_report
-      status = dm.status_report
-
-      gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns], danger_id: @danger_id)
-    end
-
-    def self.report_error(exception)
-      raise exception if exception.kind_of?(SystemExit)
-      message = "#{exception.message.red} (#{exception.class.to_s.yellow})"
-      if exception.backtrace
-        danger_lib = File.expand_path("../../..", __FILE__)
-        message << "\n\t" << exception.backtrace.reverse_each.
-                             drop_while { |bt| !bt.start_with?(danger_lib) }.reverse.
-                             join("\n\t")
-      end
-      abort(message)
+      Executor.new.run(base: @base, 
+                       head: @head,
+                       dangerfile_path: @dangerfile_path,
+                       danger_id: @danger_id)
     end
   end
 end
