@@ -10,6 +10,7 @@
   - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
 
 * Warn users not to store GitHub tokens in the repository -- dantoml
+* Crash on load fix for `danger plugins readme` -- orta
 
 ## 0.8.5
 
