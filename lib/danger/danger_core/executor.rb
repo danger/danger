@@ -14,7 +14,7 @@ module Danger
       dm ||= Dangerfile.new(env, cork)
 
       if dm.env.pr?
-        dm.verbose = verbose
+        # dm.verbose = verbose
         dm.init_plugins
 
         dm.env.fill_environment_vars
