@@ -1,6 +1,7 @@
 require "danger/plugin_support/plugin_parser"
 require "danger/plugin_support/plugin_file_resolver"
 require "json"
+require "erb"
 
 module Danger
   class PluginReadme < CLAide::Command::Plugins
