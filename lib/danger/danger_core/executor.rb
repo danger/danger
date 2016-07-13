@@ -28,6 +28,12 @@ module Danger
 
           dm.parse(Pathname.new(dangerfile_path))
 
+          if dm.env.request_source.organisation && dm.env.request_source.fetch_repository(repository: "danger")
+            url = dm.env.request_source.file_url(repository: "danger", path: "Dangerfile")
+            path = dm.plugin.download(url)
+            dm.parse(Pathname.new(path))
+          end
+
           post_results(dm, danger_id)
           dm.print_results
         ensure
