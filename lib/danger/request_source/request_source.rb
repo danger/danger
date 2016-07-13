@@ -47,6 +47,14 @@ module Danger
       def organisation
         raise "Subclass and overwrite organisation"
       end
+
+      def fetch_repository(_organisation: nil, _repository: nil)
+        raise "Subclass and overwrite fetch_repository"
+      end
+
+      def file_url(_organisation: nil, _repository: nil, _branch: "master", _path: nil)
+        raise "Subclass and overwrite file_url"
+      end
     end
   end
 end
