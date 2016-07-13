@@ -43,7 +43,7 @@ module Danger
     end
 
     def failed?
-      errors.empty?
+      errors.empty? == false
     end
 
     def print_summary(ui)
