@@ -13,6 +13,7 @@ module Danger
                                          "https://github.com/danger/danger-plugin-template")
 
     require "danger/commands/plugins/plugin_lint"
+    require "danger/commands/plugins/plugin_json"
     require "danger/commands/plugins/plugin_readme"
 
     self.summary = "Run the Dangerfile."

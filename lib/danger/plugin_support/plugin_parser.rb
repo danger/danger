@@ -68,7 +68,12 @@ module Danger
 
     def to_json
       plugins = plugins_from_classes(classes_in_file)
-      to_dict(plugins).to_json
+      to_h(plugins)
+    end
+
+    def to_json_string
+      plugins = plugins_from_classes(classes_in_file)
+      to_h(plugins).to_json
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -140,7 +145,7 @@ module Danger
       }
     end
 
-    def to_dict(classes)
+    def to_h(classes)
       classes.map do |klass|
         # Adds the class being parsed into the ruby runtime, so that we can access it's instance_name
         require klass.file

@@ -1,11 +1,10 @@
 require "danger/plugin_support/plugin_parser"
 require "danger/plugin_support/plugin_file_resolver"
-require "danger/plugin_support/plugin_linter"
 
 module Danger
-  class PluginLint < CLAide::Command::Plugins
-    self.summary = "Lints a plugin"
-    self.command = "lint"
+  class PluginJSON < CLAide::Command::Plugins
+    self.summary = "Prints the JSON documentation representing a plugin"
+    self.command = "json"
 
     attr_accessor :cork
 
@@ -34,11 +33,8 @@ module Danger
 
       parser = PluginParser.new(paths)
       parser.parse
-      json = parser.to_json
-
-      linter = PluginLinter.new(json)
-      linter.lint
-      linter.print_summary(cork)
+      json = parser.to_json_string
+      cork.puts json
     end
   end
 end
