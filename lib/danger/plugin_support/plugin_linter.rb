@@ -1,17 +1,14 @@
 module Danger
   class PluginLinter
     class Rule
-      attr_accessor :modifier, :description, :title, :function
+      attr_accessor :modifier, :description, :title, :function, :ref
 
-      def initialize(modifier, title, description, function)
+      def initialize(modifier, ref, title, description, function)
         @modifier = modifier
         @title = title
         @description = description
         @function = function
-      end
-
-      def reference
-        ""
+        @ref = ref
       end
     end
 
@@ -25,16 +22,16 @@ module Danger
 
     def class_rules
       [
-        Rule.new(:warning, "Tags", "This plugin does not include `@tags tag1, tag2` and thus will be harder to find in search.", proc do |json|
+        Rule.new(:warning, 30, "Tags", "This plugin does not include `@tags tag1, tag2` and thus will be harder to find in search.", proc do |json|
           json[:tags] && json[:tags].empty?
         end),
-        Rule.new(:warning, "References", "Ideally you have a reference implementation of your plugin that you can show to people, add `@see org/repo` to have the site auto link it.", proc do |json|
+        Rule.new(:warning, 29, "References", "Ideally you have a reference implementation of your plugin that you can show to people, add `@see org/repo` to have the site auto link it.", proc do |json|
           json[:see] && json[:see].empty?
         end),
-        Rule.new(:error, "Description Markdown", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
+        Rule.new(:error, 4..6, "Description Markdown", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
           json[:body_md] && json[:body_md].empty?
         end),
-        Rule.new(:error, "Examples", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
+        Rule.new(:error, 8..27, "Examples", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
           json[:example_code] && json[:example_code].empty?
         end)
       ]
@@ -42,23 +39,23 @@ module Danger
 
     def method_rules
       [
-        Rule.new(:error, "Description", "This plugin does not include `@tags tag1, tag2` and thus will be harder to find in search.", proc do |json|
+        Rule.new(:error, 40..41, "Description", "You should include a description for your method.", proc do |json|
           json[:body_md] && json[:body_md].empty?
         end),
-        Rule.new(:warning, "Params", "If the function has no useful return value, use ` @return  [void]`.", proc do |json|
+        Rule.new(:warning, 43..45, "Params", "If the function has no useful return value, use ` @return  [void]`.", proc do |json|
           json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
         end),
-        Rule.new(:warning, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
+        Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
           json[:return] && json[:return].empty?
         end)
       ]
     end
 
-    def link(first = nil, last = nil)
-      if first && last
-        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{first}#-L#{last}"
-      elsif first
-        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{first}"
+    def link(ref)
+      if ref.kind_of? Range
+        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}"
+      elsif ref.kind_of? Fixnum
+        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}"
       else
         "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb"
       end
@@ -90,24 +87,23 @@ module Danger
     def print_summary(ui)
       if errors.empty?
         ui.notice "Passed linting"
+      else
+        ui.puts "Failed linting".red
       end
 
-      unless errors.empty?
-        ui.section("Errors") do
-          errors.each do |error|
-            ui.labeled(error.title, [error.description, error.reference])
+      do_rules = proc do |name, rules|
+        unless rules.empty?
+          ui.section(name) do
+            rules.each do |rule|
+              ui.labeled(rule.title, [rule.description, link(rule.ref)])
+              ui.puts ""
+            end
           end
         end
       end
 
-      unless warnings.empty?
-        ui.section("Warnings") do
-          warnings.each do |error|
-            ui.labeled(error.title, [error.description, error.reference])
-          end
-        end
-      end
-
+      do_rules.call("Errors", errors)
+      do_rules.call("Warnings", warnings)
     end
   end
 end
