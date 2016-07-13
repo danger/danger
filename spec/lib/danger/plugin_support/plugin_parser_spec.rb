@@ -47,7 +47,7 @@ module Danger
       parser.parse
 
       plugins = parser.plugins_from_classes(parser.classes_in_file)
-      json = parser.to_dict(plugins)
+      json = parser.to_h(plugins)
 
       expect(json).to eq [{
         name: "ExampleRemote",
@@ -67,7 +67,7 @@ module Danger
       parser.parse
 
       plugins = parser.plugins_from_classes(parser.classes_in_file)
-      json = parser.to_dict(plugins)
+      json = parser.to_h(plugins)
 
       expect(json).to eq [{
         name: "DangerProselint",
@@ -119,7 +119,7 @@ module Danger
       parser.parse
 
       plugins = parser.plugins_from_classes(parser.classes_in_file)
-      json = parser.to_dict(plugins)
+      json = parser.to_h(plugins)
       method_one_liners = json.first[:methods].map { |m| m[:one_liner] }
 
       expect(method_one_liners).to eq([

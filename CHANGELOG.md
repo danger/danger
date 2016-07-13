@@ -1,5 +1,8 @@
 ## Master
 
+* `danger plugins lint` is a linter - orta
+* `danger plugins json` will show you the JSON output of your docs - orta
+
 
 ## 0.9.0
 
