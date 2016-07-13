@@ -1,5 +1,6 @@
 module Danger
   class PluginLinter
+    # An internal class that is used to represent a rule for the linter.
     class Rule
       attr_accessor :modifier, :description, :title, :function, :ref, :metadata, :type
 
@@ -24,6 +25,11 @@ module Danger
       @errors = []
     end
 
+    # Lints the current JSON, looking at:
+    # * Class rules
+    # * Method rules
+    # * Attribute rules
+    #
     def lint
       json.each do |plugin|
         apply_rules(plugin, "class", class_rules)
@@ -42,17 +48,24 @@ module Danger
       end
     end
 
+    # Did the linter pass/fail?
+    #
     def failed?
       errors.empty? == false
     end
 
+    # Prints a summary of the errors and warnings.
+    #
     def print_summary(ui)
+      # Print whether it passed/failed at the top
       if failed?
         ui.notice "Passed\n"
       else
         ui.puts "\n[!] Failed\n".red
       end
 
+      # A generic proc to handle the similarities between
+      # erros and warnings.
       do_rules = proc do |name, rules|
         unless rules.empty?
           ui.section(name.bold) do
@@ -65,12 +78,15 @@ module Danger
         end
       end
 
+      # Run the rules
       do_rules.call("Errors".red, errors)
       do_rules.call("Warnings".yellow, warnings)
     end
 
     private
 
+    # Rules that apply to a class
+    #
     def class_rules
       [
         Rule.new(:error, 4..6, "Description Markdown", "Above your class you need documentation that covers the scope, and the usage of your plugin.", proc do |json|
@@ -88,6 +104,8 @@ module Danger
       ]
     end
 
+    # Rules that apply to individual methods, and attributes
+    #
     def method_rules
       [
         Rule.new(:error, 40..41, "Description", "You should include a description for your method.", proc do |json|
@@ -102,6 +120,8 @@ module Danger
       ]
     end
 
+    # Generates a link to see an example of said rule
+    #
     def link(ref)
       if ref.kind_of? Range
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
@@ -112,6 +132,10 @@ module Danger
       end
     end
 
+    # Runs the rule, if it fails then additional metadata
+    # is added to the rule (for printing later) and it's
+    # added to either `warnings` or `errors`.
+    #
     def apply_rules(json, type, rules)
       rules.each do |rule|
         next unless rule.function.call(json)
