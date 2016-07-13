@@ -22,6 +22,7 @@ module Danger
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def run
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
@@ -77,5 +78,6 @@ module Danger
         dm.env.clean_up
       end
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
