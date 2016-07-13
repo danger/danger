@@ -235,6 +235,15 @@ module Danger
       def organisation
         "themoji" # TODO: Detect this value
       end
+
+      # @return [Hash] with the information about the repo
+      #   returns nil if the repo is not available
+      def fetch_repository(organisation: nil, repository: nil)
+        organisation ||= self.organisation
+        return self.client.repo("#{organisation}/#{repository}")
+      rescue Octokit::NotFound
+        return nil # repo doesn't exist
+      end
     end
   end
 end
