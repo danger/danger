@@ -232,8 +232,11 @@ module Danger
         Violation.new(message, violation.sticky)
       end
 
+      # @return [String] The organisation name, is nil if it can't be detected
       def organisation
-        "themoji" # TODO: Detect this value
+        matched = self.issue_json.repository_url.match(%r{repos\/(.*)\/})
+        return matched[1] if matched
+        nil
       end
 
       # @return [Hash] with the information about the repo
