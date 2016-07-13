@@ -4,7 +4,7 @@ describe Danger::RequestSources::RequestSource do
   describe "the base request source" do
     it "validates when passed a corresponding repository" do
       git_mock = Danger::GitRepo.new
-      allow(git_mock).to receive(:exec).with("remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-").and_return("git@github.com:artsy/eigen.git")
+      allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@github.com:artsy/eigen.git")
 
       g = stub_request_source
       g.scm = git_mock
@@ -18,13 +18,13 @@ describe Danger::RequestSources::RequestSource do
       g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
       g.scm = git_mock
 
-      allow(git_mock).to receive(:exec).with("remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-").and_return("git@git.club-mateusa.com:artsy/eigen.git")
+      allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@git.club-mateusa.com:artsy/eigen.git")
       expect(g.validates?).to be true
     end
 
     it 'doesn\'t validate when passed a wrong repository' do
       git_mock = Danger::GitRepo.new
-      allow(git_mock).to receive(:exec).with("remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-").and_return("git@bitbucket.org:artsy/eigen.git")
+      allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@bitbucket.org:artsy/eigen.git")
 
       g = stub_request_source
       g.scm = git_mock

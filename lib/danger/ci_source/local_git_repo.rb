@@ -28,7 +28,7 @@ module Danger
         github_host = env["DANGER_GITHUB_HOST"] || "github.com"
 
         # get the remote URL
-        remote = run_git "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
+        remote = run_git("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
         if remote
           remote_url_matches = remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
           if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
@@ -40,10 +40,10 @@ module Danger
 
         specific_pr = env["LOCAL_GIT_PR_ID"]
         pr_ref = specific_pr ? "##{specific_pr}" : ""
-        pr_command = "log --merges --oneline | grep \"Merge pull request #{pr_ref}\" | head -n 1"
+        pr_command = "log --merges --oneline"
 
         # get the most recent PR merge
-        pr_merge = run_git pr_command.strip
+        pr_merge = run_git(pr_command.strip).lines.grep(Regexp.new("Merge pull request " + pr_ref))[0]
 
         if pr_merge.to_s.empty?
           if specific_pr
