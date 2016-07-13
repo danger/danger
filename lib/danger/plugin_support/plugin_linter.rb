@@ -1,7 +1,7 @@
 module Danger
   class PluginLinter
     class Rule
-      attr_accessor :modifier, :description, :title, :function, :ref
+      attr_accessor :modifier, :description, :title, :function, :ref, :metadata
 
       def initialize(modifier, ref, title, description, function)
         @modifier = modifier
@@ -9,6 +9,10 @@ module Danger
         @description = description
         @function = function
         @ref = ref
+      end
+
+      def object_applied_to
+        metadata[:name]
       end
     end
 
@@ -22,16 +26,16 @@ module Danger
 
     def class_rules
       [
+        Rule.new(:error, 4..6, "Description Markdown", "Above your class you need documentation that covers the scope, and the usage of your plugin.", proc do |json|
+          json[:body_md] && json[:body_md].empty?
+        end),
         Rule.new(:warning, 30, "Tags", "This plugin does not include `@tags tag1, tag2` and thus will be harder to find in search.", proc do |json|
           json[:tags] && json[:tags].empty?
         end),
-        Rule.new(:warning, 29, "References", "Ideally you have a reference implementation of your plugin that you can show to people, add `@see org/repo` to have the site auto link it.", proc do |json|
+        Rule.new(:warning, 29, "References", "Ideally, you have a reference implementation of your plugin that you can show to people, add `@see org/repo` to have the site auto link it.", proc do |json|
           json[:see] && json[:see].empty?
         end),
-        Rule.new(:error, 4..6, "Description Markdown", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
-          json[:body_md] && json[:body_md].empty?
-        end),
-        Rule.new(:error, 8..27, "Examples", "Above your class you need documentation that covers the scope, and the usage of your plugin", proc do |json|
+        Rule.new(:error, 8..27, "Examples", "You should include some examples of common use-cases for your plugin.", proc do |json|
           json[:example_code] && json[:example_code].empty?
         end)
       ]
@@ -64,6 +68,7 @@ module Danger
     def apply_rules(json, rules)
       rules.each do |rule|
         next unless rule.function.call(json)
+        rule.metadata = json
 
         case rule.modifier
         when :warning
@@ -84,18 +89,22 @@ module Danger
       end
     end
 
+    def failed?
+      errors.empty?
+    end
+
     def print_summary(ui)
-      if errors.empty?
-        ui.notice "Passed linting"
+      if failed?
+        ui.notice "Passed\n"
       else
-        ui.puts "Failed linting".red
+        ui.puts "Failed linting\n".red
       end
 
       do_rules = proc do |name, rules|
         unless rules.empty?
-          ui.section(name) do
+          ui.section(name.bold) do
             rules.each do |rule|
-              ui.labeled(rule.title, [rule.description, link(rule.ref)])
+              ui.labeled(rule.title + " - #{rule.object_applied_to}", [rule.description, link(rule.ref)])
               ui.puts ""
             end
           end

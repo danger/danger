@@ -39,6 +39,8 @@ module Danger
       linter = PluginLinter.new(json)
       linter.lint
       linter.print_summary(cork)
+
+      exit(1) if linter.failed?
     end
   end
 end
