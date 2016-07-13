@@ -67,8 +67,7 @@ module Danger
 
         dm.parse(Pathname.new(@dangerfile_path))
 
-        if dm.env.request_source.organisation
-          # TODO: Add actual error handling here
+        if dm.env.request_source.organisation && dm.env.request_source.fetch_repository(repository: "danger")
           url = "https://raw.githubusercontent.com/#{dm.env.request_source.organisation}/danger/master/Dangerfile"
           path = dm.plugin.download(url)
           dm.parse(Pathname.new(path))
