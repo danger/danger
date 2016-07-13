@@ -126,6 +126,5 @@ module Danger
         end
       end
     end
-
   end
 end
