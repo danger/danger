@@ -1,4 +1,8 @@
 ## Master
+
+
+## 0.9.0
+
 * `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
   - `danger plugin lint` is now `danger plugins lint`
   - `danger plugin readme` is now `danger plugins readme`
@@ -12,6 +16,9 @@
 * Warn users not to store GitHub tokens in the repository -- dantoml
 * Crash on load fix for `danger plugins readme` -- orta
 * Add support for org-wide Dangerfile -- KrauseFx
+* Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
+* `danger plugins lint` contains more information - orta
+* Make link instructions in onboarding OS aware -- K0nserv
 
 ## 0.8.5
 
