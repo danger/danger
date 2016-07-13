@@ -1,7 +1,7 @@
 module Danger
   class PluginLinter
     class Rule
-      attr_accessor :modifier, :description, :title, :function, :ref, :metadata
+      attr_accessor :modifier, :description, :title, :function, :ref, :metadata, :type
 
       def initialize(modifier, ref, title, description, function)
         @modifier = modifier
@@ -12,7 +12,6 @@ module Danger
       end
 
       def object_applied_to
-        type = metadata[:instance_name] ? "class" : "method"
         metadata[:name].to_s.bold + " (" + type + ")"
       end
     end
@@ -24,6 +23,53 @@ module Danger
       @warnings = []
       @errors = []
     end
+
+    def lint
+      json.each do |plugin|
+        apply_rules(plugin, "class", class_rules)
+
+        plugin[:methods].each do |method|
+          apply_rules(method, "method", method_rules)
+        end
+
+        plugin[:attributes].each do |method_hash|
+          method_name = method_hash.keys.first
+          method = method_hash[method_name]
+
+          value = method[:write] || method[:read]
+          apply_rules(value, "attribute", method_rules)
+        end
+      end
+    end
+
+    def failed?
+      errors.empty?
+    end
+
+    def print_summary(ui)
+      if failed?
+        ui.notice "Passed\n"
+      else
+        ui.puts "\n[!] Failed\n".red
+      end
+
+      do_rules = proc do |name, rules|
+        unless rules.empty?
+          ui.section(name.bold) do
+            rules.each do |rule|
+              title = rule.title.bold + " - #{rule.object_applied_to}"
+              ui.labeled(title, [rule.description, link(rule.ref)])
+              ui.puts ""
+            end
+          end
+        end
+      end
+
+      do_rules.call("Errors".red, errors)
+      do_rules.call("Warnings".yellow, warnings)
+    end
+
+    private
 
     def class_rules
       [
@@ -66,10 +112,11 @@ module Danger
       end
     end
 
-    def apply_rules(json, rules)
+    def apply_rules(json, type, rules)
       rules.each do |rule|
         next unless rule.function.call(json)
         rule.metadata = json
+        rule.type = type
 
         case rule.modifier
         when :warning
@@ -80,40 +127,5 @@ module Danger
       end
     end
 
-    def lint
-      json.each do |plugin|
-        apply_rules(plugin, class_rules)
-
-        plugin[:methods].each do |method|
-          apply_rules(method, method_rules)
-        end
-      end
-    end
-
-    def failed?
-      errors.empty?
-    end
-
-    def print_summary(ui)
-      if failed?
-        ui.notice "Passed\n"
-      else
-        ui.puts "\n[!] Failed\n".red
-      end
-
-      do_rules = proc do |name, rules|
-        unless rules.empty?
-          ui.section(name.bold) do
-            rules.each do |rule|
-              ui.labeled(rule.title.bold + " - #{rule.object_applied_to}", [rule.description, link(rule.ref)])
-              ui.puts ""
-            end
-          end
-        end
-      end
-
-      do_rules.call("Errors".red, errors)
-      do_rules.call("Warnings".yellow, warnings)
-    end
   end
 end
