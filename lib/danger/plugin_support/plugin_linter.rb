@@ -12,7 +12,8 @@ module Danger
       end
 
       def object_applied_to
-        metadata[:name]
+        type = metadata[:instance_name] ? "class" : "method"
+        metadata[:name].to_s.bold + " (" + type + ")"
       end
     end
 
@@ -57,11 +58,11 @@ module Danger
 
     def link(ref)
       if ref.kind_of? Range
-        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}"
+        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
       elsif ref.kind_of? Fixnum
-        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}"
+        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue
       else
-        "@see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb"
+        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb".blue
       end
     end
 
@@ -97,22 +98,22 @@ module Danger
       if failed?
         ui.notice "Passed\n"
       else
-        ui.puts "Failed linting\n".red
+        ui.puts "\n[!] Failed\n".red
       end
 
       do_rules = proc do |name, rules|
         unless rules.empty?
           ui.section(name.bold) do
             rules.each do |rule|
-              ui.labeled(rule.title + " - #{rule.object_applied_to}", [rule.description, link(rule.ref)])
+              ui.labeled(rule.title.bold + " - #{rule.object_applied_to}", [rule.description, link(rule.ref)])
               ui.puts ""
             end
           end
         end
       end
 
-      do_rules.call("Errors", errors)
-      do_rules.call("Warnings", warnings)
+      do_rules.call("Errors".red, errors)
+      do_rules.call("Warnings".yellow, warnings)
     end
   end
 end
