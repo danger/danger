@@ -247,6 +247,12 @@ module Danger
       rescue Octokit::NotFound
         return nil # repo doesn't exist
       end
+
+      # @return [String] A URL to the specific file, ready to be downloaded
+      def file_url(organisation: nil, repository: nil, branch: 'master', path: nil)
+        organisation ||= self.organisation
+        "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+      end
     end
   end
 end
