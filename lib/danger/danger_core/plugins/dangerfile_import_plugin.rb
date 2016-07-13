@@ -67,7 +67,7 @@ module Danger
       end
       content = @http_client.get(path_or_url)
 
-      path = File.join(Dir.mktmpdir, "temporary_danger")
+      path = File.join(Dir.mktmpdir, "temporary_danger.rb")
       File.write(path, content.body)
       return path
     end
