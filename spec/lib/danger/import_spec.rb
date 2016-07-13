@@ -38,7 +38,7 @@ describe Danger::Dangerfile::DSL do
       it 'downloads a remote .rb file' do
         expect { @dm.example_remote.echo }.to raise_error NoMethodError
 
-        url = 'https://krausefx.com/example_remote'
+        url = 'https://krausefx.com/example_remote.rb'
         stub_request(:get, 'https://krausefx.com/example_remote.rb').
           to_return(status: 200, body: File.read('spec/fixtures/plugins/example_remote.rb'))
 

@@ -124,6 +124,7 @@ describe Danger::Dangerfile do
         :commits,
         :deleted_files,
         :deletions,
+        :download,
         :fail,
         :head_commit,
         :import,
