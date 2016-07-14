@@ -248,6 +248,16 @@ module Danger
         return nil # repo doesn't exist
       end
 
+      # @return [Hash] with the information about the repo.
+      #   This will automatically detect if the repo is capitalised
+      #   returns nil if there is no danger repo
+      def fetch_danger_repo(organisation: nil)
+        data = nil
+        data ||= fetch_repository(organisation: organisation, repository: "danger")
+        data ||= fetch_repository(organisation: organisation, repository: "Danger")
+        return data
+      end
+
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: 'master', path: nil)
         organisation ||= self.organisation
