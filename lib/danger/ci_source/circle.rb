@@ -4,6 +4,7 @@ require "danger/ci_source/circle_api"
 
 module Danger
   module CISource
+    # https://circleci.com
     class CircleCI < CI
       def self.validates?(env)
         return false unless env["CIRCLE_BUILD_NUM"]

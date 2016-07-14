@@ -2,6 +2,7 @@
 
 module Danger
   module CISource
+    # https://semaphoreci.com
     class Semaphore < CI
       def self.validates?(env)
         return false unless env["SEMAPHORE"]

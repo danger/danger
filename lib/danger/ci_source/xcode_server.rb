@@ -2,6 +2,7 @@
 
 module Danger
   module CISource
+    # https://github.com/czechboy0/Buildasaur
     class XcodeServer < CI
       def self.validates?(env)
         return false unless env["XCS_BOT_NAME"]

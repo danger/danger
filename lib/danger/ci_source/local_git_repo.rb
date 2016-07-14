@@ -5,6 +5,7 @@ require "uri"
 
 module Danger
   module CISource
+    # ignore
     class LocalGitRepo < CI
       attr_accessor :base_commit, :head_commit
 
