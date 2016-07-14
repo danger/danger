@@ -1,5 +1,5 @@
 ## Master
-
+* Danger no longer relies on the GNU utilities and can run on Windows - henriwatson
 * `danger plugins lint` is a linter - orta
 * `danger plugins json` will show you the JSON output of your docs - orta
 
