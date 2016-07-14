@@ -35,6 +35,7 @@ module Danger
             self.repo_slug = remote_url_matches["repo_slug"]
           else
             puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise."
+            exit 1
           end
         end
 
@@ -47,10 +48,15 @@ module Danger
 
         if pr_merge.to_s.empty?
           if specific_pr
-            raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
+            puts "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
           else
-            raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
+            puts "No recent pull requests found for this repo, danger requires at least one merged PR for running locally."
+            puts "This could be because you are using a rebase flow instead of merges, in this case, you should use:\n"
+            puts "$ danger local --use-merged-pr=[id]\n"
+            puts "To work against an existing PR."
           end
+
+          exit 1
         end
 
         self.pull_request_id = pr_merge.match("#([0-9]+)")[1]

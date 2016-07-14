@@ -33,7 +33,7 @@ module Danger
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
         cork.puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
-        exit 0
+        exit 1
       end
 
       gh = dm.env.request_source
