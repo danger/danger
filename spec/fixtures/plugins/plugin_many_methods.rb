@@ -53,9 +53,6 @@ module Danger
     # @return   [Array<String>]
     attr_accessor :seven
 
-    # Eight docs
-    #
-    # @return   [Array<String>]
     attr_accessor :eight
   end
 end

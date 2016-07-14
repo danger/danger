@@ -21,7 +21,7 @@ module Danger
     end
 
     def origins
-      exec "remote show origin -n | grep \"Fetch URL\" | cut -d ':' -f 2-"
+      exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
     end
   end
 end

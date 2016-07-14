@@ -5,11 +5,11 @@ def run_in_repo
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
       `git init`
-      `touch file1`
+      File.open(dir + "/file1", "w") {}
       `git add .`
       `git commit -m "adding file1"`
       `git checkout -b new-branch`
-      `touch file2`
+      File.open(dir + "/file2", "w") {}
       `git add .`
       `git commit -m "adding file2"`
       `git checkout master`
@@ -118,7 +118,7 @@ describe Danger::CISource::LocalGitRepo do
     def add_another_pr
       # Add a new PR merge commit
       `git checkout -b new-branch2`
-      `touch file3`
+      File.open("file3", "w") {}
       `git add .`
       `git commit -m "adding file2"`
       `git checkout master`

@@ -6,11 +6,11 @@ describe Danger::GitRepo do
       @tmp_dir = Dir.mktmpdir
       Dir.chdir(@tmp_dir) do
         `git init`
-        `touch file`
+        File.open(@tmp_dir + "/file", "w") {}
         `git add .`
         `git commit -m "ok"`
         `git checkout -b new`
-        `touch file2`
+        File.open(@tmp_dir + "/file2", "w") {}
         `git add .`
         `git commit -m "another"`
       end
@@ -37,12 +37,12 @@ describe Danger::GitRepo do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          `touch file`
+          File.open(dir + "/file1", "w") {}
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new`
-          `touch file2`
+          File.open(dir + "/file2", "w") {}
           `git add .`
           `git commit -m "another"`
         end
@@ -58,13 +58,12 @@ describe Danger::GitRepo do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          `touch file`
-          `echo "hi\n\nfb\nasdasd" > file`
+          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new`
-          `rm file`
+          File.delete(dir + "/file")
           `git add . --all`
           `git commit -m "another"`
         end
@@ -80,13 +79,12 @@ describe Danger::GitRepo do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          `touch file`
-          `echo "hi\n\nfb\nasdasd" > file`
+          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new`
-          `echo "ok\nmorestuff" >> file`
+          File.open(dir + "/file", "a") { |file| file.write("ok\nmorestuff") }
           `git add .`
           `git commit -m "another"`
         end
@@ -104,13 +102,12 @@ describe Danger::GitRepo do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          `touch file`
-          `echo "hi\n\nfb\nasdasd" > file`
+          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new`
-          `echo "hi\n\najsdha" >> file`
+          File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
           `git add .`
           `git commit -m "another"`
         end
@@ -126,13 +123,12 @@ describe Danger::GitRepo do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
-          `touch file`
-          `echo "1\n2\n3\n4\n5\n" > file`
+          File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new`
-          `echo "1\n2\n3\n5\n" > file`
+          File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n5\n") }
           `git add .`
           `git commit -m "another"`
         end
@@ -149,13 +145,12 @@ describe Danger::GitRepo do
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
             `git init`
-            `touch file`
-            `echo "hi\n\nfb\nasdasd" > file`
+            File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
             `git add .`
             `git commit -m "ok"`
 
             `git checkout -b new`
-            `echo "hi\n\najsdha" >> file`
+            File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
             `git add .`
             `git commit -m "another"`
           end

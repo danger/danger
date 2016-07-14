@@ -36,9 +36,20 @@ def stub_request_source
   Danger::RequestSources::GitHub.new(stub_ci, stub_env)
 end
 
+# rubocop:disable Lint/NestedMethodDefinition
 def testing_ui
-  Cork::Board.new(silent: true)
+  @output = StringIO.new
+  def @output.winsize
+    [20, 9999]
+  end
+
+  cork = Cork::Board.new(out: @output)
+  def cork.string
+    out.string.gsub(/\e\[([;\d]+)?m/, "")
+  end
+  cork
 end
+# rubocop:enable Lint/NestedMethodDefinition
 
 def testing_dangerfile
   env = Danger::EnvironmentManager.new(stub_env)
