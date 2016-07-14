@@ -51,9 +51,9 @@ module Command
         a = "fake"
         expect(Danger::Executor).to receive(:new).and_return(a)
         expect(a).to receive(:run).with({
-          base: nil, 
-          head: nil, 
-          dangerfile_path: "Dangerfile", 
+          base: nil,
+          head: nil,
+          dangerfile_path: "Dangerfile",
           danger_id: "danger"
         })
         Danger::Runner.run([])
