@@ -264,7 +264,7 @@ module Danger
       # @return [Bool] is this repo the danger repo of the org?
       def danger_repo?(organisation: nil, repository: nil)
         repo = fetch_repository(organisation: organisation, repository: repository)
-        return repo[:name].downcase == "danger"
+        return repo[:name].casecmp("danger").zero?
       rescue
         false
       end

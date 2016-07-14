@@ -109,6 +109,28 @@ describe Danger::RequestSources::GitHub do
       end
     end
 
+    describe "#danger_repo?" do
+      before do
+        @g.fetch_details
+        @issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+      end
+
+      it "returns true if the repo's name is danger" do
+        @issue_response[:name] = "Danger"
+        expect(@g.client).to receive(:repo).with("artsy/danger").and_return(@issue_response)
+        expect(@g.ci_source).to receive(:repo_slug).and_return("artsy/danger")
+        expect(@g.danger_repo?).to eq(true)
+      end
+
+      it "returns false if the repo's name is danger (it's eigen)" do
+        @issue_response[:name] = "eigen"
+        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(@issue_response)
+
+        expect(@g.danger_repo?).to eq(false)
+      end
+    end
+
     describe "#file_url" do
       it "returns a valid URL with the minimum parameters" do
         url = @g.file_url(repository: "danger",
