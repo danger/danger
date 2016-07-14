@@ -1,5 +1,6 @@
 module Danger
   module CISource
+    # https://www.jetbrains.com/teamcity/
     class TeamCity < CI
       def self.validates?(env)
         env.key? "TEAMCITY_VERSION"
