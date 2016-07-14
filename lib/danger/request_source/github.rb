@@ -256,15 +256,15 @@ module Danger
       #   returns nil if there is no danger repo
       def fetch_danger_repo(organisation: nil)
         data = nil
-        data ||= fetch_repository(organisation: organisation, repository: "danger")
-        data ||= fetch_repository(organisation: organisation, repository: "Danger")
+        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.downcase)
+        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.capitalize)
         return data
       end
 
       # @return [Bool] is this repo the danger repo of the org?
       def danger_repo?(organisation: nil, repository: nil)
         repo = fetch_repository(organisation: organisation, repository: repository)
-        return repo[:name].casecmp("danger").zero?
+        return repo[:name].casecmp(DANGER_REPO_NAME).zero?
       rescue
         false
       end

@@ -1,6 +1,8 @@
 module Danger
   module RequestSources
     class RequestSource
+      DANGER_REPO_NAME = "danger".freeze
+
       attr_accessor :ci_source, :environment, :scm, :host, :ignored_violations
 
       def self.inherited(child_class)
