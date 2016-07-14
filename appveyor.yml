@@ -1,0 +1,8 @@
+install:
+  - set PATH=C:\Ruby22\bin;%PATH%
+  - bundle install
+
+build: off
+
+test_script:
+  - bundle exec rake spec
