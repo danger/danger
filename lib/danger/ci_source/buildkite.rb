@@ -3,6 +3,7 @@
 
 module Danger
   module CISource
+    # https://buildkite.com
     class Buildkite < CI
       def self.validates?(env)
         return false unless env["BUILDKITE"]

@@ -2,6 +2,7 @@
 
 module Danger
   module CISource
+    # https://drone.io
     class Drone < CI
       def self.validates?(env)
         return false unless env["DRONE"]

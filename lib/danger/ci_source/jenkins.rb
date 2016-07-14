@@ -3,6 +3,7 @@
 
 module Danger
   module CISource
+    # https://jenkins-ci.org
     class Jenkins < CI
       def self.validates?(env)
         return false unless env["ghprbPullId"].to_i > 0

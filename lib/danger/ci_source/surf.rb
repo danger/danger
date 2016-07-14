@@ -2,6 +2,7 @@
 
 module Danger
   module CISource
+    # http://github.com/surf-build/surf
     class Surf < CI
       def self.validates?(env)
         return ["SURF_REPO", "SURF_NWO"].all? { |x| env[x] }

@@ -3,6 +3,7 @@
 
 module Danger
   module CISource
+    # https://travis-ci.com
     class Travis < CI
       def self.validates?(env)
         return false unless env["HAS_JOSH_K_SEAL_OF_APPROVAL"]
