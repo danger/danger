@@ -245,6 +245,7 @@ module Danger
       #   returns nil if the repo is not available
       def fetch_repository(organisation: nil, repository: nil)
         organisation ||= self.organisation
+        repository ||= self.ci_source.repo_slug.split("/").last
         return self.client.repo("#{organisation}/#{repository}")
       rescue Octokit::NotFound
         return nil # repo doesn't exist
@@ -258,6 +259,14 @@ module Danger
         data ||= fetch_repository(organisation: organisation, repository: "danger")
         data ||= fetch_repository(organisation: organisation, repository: "Danger")
         return data
+      end
+
+      # @return [Bool] is this repo the danger repo of the org?
+      def danger_repo?(organisation: nil, repository: nil)
+        repo = fetch_repository(organisation: organisation, repository: repository)
+        return repo[:name].downcase == "danger"
+      rescue
+        false
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
