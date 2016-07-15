@@ -1,5 +1,7 @@
 ## Master
 
+* Improves wording when failing a OSS build - orta
+
 ## 0.9.1
 
 * Danger no longer relies on the GNU utilities and can run on Windows - henriwatson

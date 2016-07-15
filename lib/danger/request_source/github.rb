@@ -128,7 +128,12 @@ module Danger
           # use a read-only GitHub account
           if errors.count > 0
             # We need to fail the actual build here
-            abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+            is_private = pr_json[:base][:repo][:private]
+            if is_private
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+            else
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
+            end
           else
             puts message
           end
