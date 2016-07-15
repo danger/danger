@@ -57,7 +57,7 @@ module Danger
 
     def download(path_or_url)
       raise "`download` requires a string" unless path_or_url.kind_of?(String)
-      raise "URL is not https, for security reasons `danger` only supports encrypted requests" unless path_or_url.start_with?("https://")
+      raise "URL is not https, for security reasons `danger` only supports encrypted requests" if URI.parse(path_or_url).scheme != "https"
 
       require "tmpdir"
       require "faraday"

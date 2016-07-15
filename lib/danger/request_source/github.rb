@@ -240,8 +240,7 @@ module Danger
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
         matched = self.issue_json[:repository_url].match(%r{repos\/(.*)\/})
-        return matched[1] if matched
-        nil
+        return matched[1] if matched && matched[1]
       rescue
         nil
       end
@@ -251,9 +250,9 @@ module Danger
       def fetch_repository(organisation: nil, repository: nil)
         organisation ||= self.organisation
         repository ||= self.ci_source.repo_slug.split("/").last
-        return self.client.repo("#{organisation}/#{repository}")
+        self.client.repo("#{organisation}/#{repository}")
       rescue Octokit::NotFound
-        return nil # repo doesn't exist
+        nil # repo doesn't exist
       end
 
       # @return [Hash] with the information about the repo.
@@ -263,13 +262,13 @@ module Danger
         data = nil
         data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.downcase)
         data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.capitalize)
-        return data
+        data
       end
 
       # @return [Bool] is this repo the danger repo of the org?
       def danger_repo?(organisation: nil, repository: nil)
         repo = fetch_repository(organisation: organisation, repository: repository)
-        return repo[:name].casecmp(DANGER_REPO_NAME).zero?
+        repo[:name].casecmp(DANGER_REPO_NAME).zero?
       rescue
         false
       end

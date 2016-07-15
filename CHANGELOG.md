@@ -1,6 +1,15 @@
 ## Master
 
 * Improves wording when failing a OSS build - orta
+* Add support for org-wide Dangerfile -- KrauseFx
+  - To use this, create a repo on your GitHub organization called "danger" (or "Danger")
+  - Add a `Dangerfile` to the root of that repo.
+  - This new `Dangerfile` is ran after current repo's `Dangerfile`.
+
+  The org `Dangerfile` will have access to all of the same plugins, and metadata.
+  For an example, see: https://github.com/Themoji/danger
+
+* Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 
 ## 0.9.1
 
@@ -22,7 +31,6 @@
 
 * Warn users not to store GitHub tokens in the repository -- dantoml
 * Crash on load fix for `danger plugins readme` -- orta
-* Add support for org-wide Dangerfile -- KrauseFx
 * Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
 * `danger plugins lint` contains more information - orta
 * Make link instructions in onboarding OS aware -- K0nserv
