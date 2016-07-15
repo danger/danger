@@ -36,15 +36,40 @@ module Danger
     #           a danger plugin from.
     # @return [void]
 
-    def import(path)
-      raise "`import` requires a string" unless path.kind_of?(String)
-      path += ".rb" unless path.end_with?(".rb")
+    def import(path_or_url)
+      raise "`import` requires a string" unless path_or_url.kind_of?(String)
 
-      if path.start_with?("http")
-        import_url(path)
+      if path_or_url.start_with?("http")
+        import_url(path_or_url)
       else
-        import_local(path)
+        import_local(path_or_url)
       end
+    end
+
+    # @!group Plugins
+    # Download a local or remote plugin or Dangerfile
+    # This method will not import the file for you, use plugin.import instead
+    #
+    # @param    [String] path
+    #           a local path or a https URL to the Ruby file to import
+    #           a danger plugin from.
+    # @return [String] The path to the downloaded Ruby file
+
+    def download(path_or_url)
+      raise "`download` requires a string" unless path_or_url.kind_of?(String)
+      raise "URL is not https, for security reasons `danger` only supports encrypted requests" if URI.parse(path_or_url).scheme != "https"
+
+      require "tmpdir"
+      require "faraday"
+
+      @http_client ||= Faraday.new do |b|
+        b.adapter :net_http
+      end
+      content = @http_client.get(path_or_url)
+
+      path = File.join(Dir.mktmpdir, "temporary_danger.rb")
+      File.write(path, content.body)
+      return path
     end
 
     private
@@ -56,21 +81,8 @@ module Danger
     #           https URL to the Ruby file to use
     # @return [void]
     def import_url(url)
-      raise "URL is not https, for security reasons `danger` only supports encrypted requests" unless url.start_with?("https://")
-
-      require "tmpdir"
-      require "faraday"
-
-      @http_client ||= Faraday.new do |b|
-        b.adapter :net_http
-      end
-      content = @http_client.get(url)
-
-      Dir.mktmpdir do |dir|
-        path = File.join(dir, "temporary_remote_action.rb")
-        File.write(path, content.body)
-        import_local(path)
-      end
+      path = download(url)
+      import_local(path)
     end
 
     # @!group Plugins

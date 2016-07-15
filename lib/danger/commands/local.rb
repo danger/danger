@@ -64,10 +64,22 @@ module Danger
         dm.env.fill_environment_vars
         dm.env.ensure_danger_branches_are_setup
         dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
+
         dm.parse(Pathname.new(@dangerfile_path))
+        check_and_run_org_dangerfile(dm)
+
         dm.print_results
       ensure
         dm.env.clean_up
+      end
+    end
+
+    # Check to see if there's a Dangerfile in the organisation, and run it if so
+    def check_and_run_org_dangerfile(dm)
+      if dm.env.request_source.organisation && !dm.env.request_source.danger_repo? && (danger_repo = dm.env.request_source.fetch_danger_repo)
+        url = dm.env.request_source.file_url(repository: danger_repo.name, path: "Dangerfile")
+        path = dm.plugin.download(url)
+        dm.parse(Pathname.new(path))
       end
     end
   end

@@ -1,6 +1,15 @@
 ## Master
 
 * Improves wording when failing a OSS build - orta
+* Add support for org-wide Dangerfile -- KrauseFx
+  - To use this, create a repo on your GitHub organization called "danger" (or "Danger")
+  - Add a `Dangerfile` to the root of that repo.
+  - This new `Dangerfile` is ran after current repo's `Dangerfile`.
+
+  The org `Dangerfile` will have access to all of the same plugins, and metadata.
+  For an example, see: https://github.com/Themoji/danger
+
+* Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 
 ## 0.9.1
 

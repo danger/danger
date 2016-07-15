@@ -54,6 +54,99 @@ describe Danger::RequestSources::GitHub do
                                             "Some warning"])
     end
 
+    describe "#organisation" do
+      it "valid value available" do
+        @g.fetch_details
+        expect(@g.organisation).to eq("artsy")
+      end
+
+      it "no valid value available doesn't crash" do
+        @g.issue_json = nil
+        expect(@g.organisation).to eq(nil)
+      end
+    end
+
+    describe "#fetch_repository" do
+      before do
+        @g.fetch_details
+      end
+
+      it "works with valid data" do
+        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/yolo").and_return(issue_response)
+
+        result = @g.fetch_repository(repository: "yolo")
+        expect(result[:url]).to eq("https://api.github.com/repos/Themoji/Danger")
+      end
+
+      it "returns nil for no response" do
+        expect(@g.client).to receive(:repo).with("artsy/yolo").and_return(nil)
+
+        expect(@g.fetch_repository(repository: "yolo")).to eq(nil)
+      end
+    end
+
+    describe "#fetch_danger_repo" do
+      before do
+        @g.fetch_details
+      end
+
+      it "tries both 'danger' and 'Danger' as repo, 'Danger' first" do
+        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/danger").and_return(nil)
+        expect(@g.client).to receive(:repo).with("artsy/Danger").and_return(issue_response)
+
+        result = @g.fetch_danger_repo
+        expect(result[:url]).to eq("https://api.github.com/repos/Themoji/Danger")
+      end
+
+      it "tries both 'danger' and 'Danger' as repo, 'danger' first" do
+        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/danger").and_return(issue_response)
+
+        result = @g.fetch_danger_repo
+        expect(result[:url]).to eq("https://api.github.com/repos/Themoji/Danger")
+      end
+    end
+
+    describe "#danger_repo?" do
+      before do
+        @g.fetch_details
+        @issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+      end
+
+      it "returns true if the repo's name is danger" do
+        @issue_response[:name] = "Danger"
+        expect(@g.client).to receive(:repo).with("artsy/danger").and_return(@issue_response)
+        expect(@g.ci_source).to receive(:repo_slug).and_return("artsy/danger")
+        expect(@g.danger_repo?).to eq(true)
+      end
+
+      it "returns false if the repo's name is danger (it's eigen)" do
+        @issue_response[:name] = "eigen"
+        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(@issue_response)
+
+        expect(@g.danger_repo?).to eq(false)
+      end
+    end
+
+    describe "#file_url" do
+      it "returns a valid URL with the minimum parameters" do
+        url = @g.file_url(repository: "danger",
+                                path: "path/Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com//danger/master/path/Dangerfile")
+      end
+
+      it "returns a valid URL with more parameters" do
+        url = @g.file_url(repository: "danger",
+                        organisation: "org_yo",
+                              branch: "yolo_branch",
+                                path: "path/Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/org_yo/danger/yolo_branch/path/Dangerfile")
+      end
+    end
+
     # TODO: Move to the plugin
     #
     xdescribe "DSL Attributes" do

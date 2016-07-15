@@ -46,6 +46,20 @@ module Command
       end
     end
 
+    describe "Calls Executor" do
+      it "works without parameters" do
+        a = "fake"
+        expect(Danger::Executor).to receive(:new).and_return(a)
+        expect(a).to receive(:run).with({
+          base: nil,
+          head: nil,
+          dangerfile_path: "Dangerfile",
+          danger_id: "danger"
+        })
+        Danger::Runner.run([])
+      end
+    end
+
     describe "full run" do
       before do
         @git_mock = Danger::GitRepo.new
