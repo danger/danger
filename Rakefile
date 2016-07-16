@@ -18,7 +18,6 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.patterns = Dir.glob(["lib/**/*.rb", "spec/**/*.rb"]) - Dir.glob(["spec/fixtures/**/*", "lib/danger/plugin_support/plugin_parser.rb"])
 end
 
-
 # desc "Tests that the core documentation is up to snuff"
 task :spec_docs do
   core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")

@@ -24,7 +24,6 @@ module Danger
   # @tags core, plugins
 
   class DangerfileImportPlugin < Plugin
-
     # The instance name used in the Dangerfile
     # @return [String]
     #

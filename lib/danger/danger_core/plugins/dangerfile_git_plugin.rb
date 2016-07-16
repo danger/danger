@@ -31,7 +31,6 @@ module Danger
   # @tags core, git
 
   class DangerfileGitPlugin < Plugin
-
     # The instance name used in the Dangerfile
     # @return [String]
     #

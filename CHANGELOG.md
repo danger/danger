@@ -10,6 +10,7 @@
   For an example, see: https://github.com/Themoji/danger
 
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
+* Minor core documentation updates - orta
 
 ## 0.9.1
 
