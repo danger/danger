@@ -11,8 +11,6 @@
 
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 * Add http caching for Github API calls when running `danger local` - dbgrandi
-  - You can clear the cache with the `--clear-http-cache` command line arg
-  - The cache TTL is 5 minutes
 
 ## 0.9.1
 
