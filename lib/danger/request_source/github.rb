@@ -33,7 +33,7 @@ module Danger
       end
 
       def markdown_parser
-        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
+        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, space_after_headers: true, no_intra_emphasis: true, tables: true, fenced_code_blocks: true)
       end
 
       def setup_danger_branches

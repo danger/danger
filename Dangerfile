@@ -41,7 +41,7 @@ files.protect_files(path: "danger.gemspec", message: ".gemspec modified", fail_b
 core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
 core_lint_output = `bundle exec yard stats #{core_plugins.join ' '} --list-undoc --tag tags`
 if core_lint_output.include? "100.00%"
-  fail "The core plugins are not at 100% doc'd - see: \n```#{core_lint_output}\n```"
+  fail "The core plugins are not at 100% doc'd - see: \n\n```\n#{core_lint_output}\n```"
 elsif core_lint_output.include? "warning"
-  warn "The core plugins are have yard warnings - see: \n```#{core_lint_output}\n```"
+  warn "The core plugins are have yard warnings - see: \n\n```\n#{core_lint_output}\n```"
 end
