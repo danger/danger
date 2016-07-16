@@ -201,6 +201,16 @@ Danger will update the comment to cross it out. If you don't want this behavior,
 fail("PR needs labels", sticky: false) if pr_labels.empty?
 ```
 
+## Org-Wide Dangerfile
+
+To have consistent rules across the repos in your organisation, you can use a shared `Dangerfile`:
+
+1. create a repo on your GitHub organization called `danger` (or `Danger`)
+1. Add a `Dangerfile` to the root of that repo
+1. The new `Dangerfile` is ran after the current repo's `Dangerfile`
+
+The org `Dangerfile` will have access to all of the same plugins, and metadata. For an example, see [themoji/danger](https://github.com/Themoji/danger).
+
 ## Multiple Dangers
 
 If one Danger is not enough for you, you can run several ones on the same PR. Just use the `danger_id` param. For example: 
