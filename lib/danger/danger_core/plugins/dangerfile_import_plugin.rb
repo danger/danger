@@ -24,6 +24,10 @@ module Danger
   # @tags core, plugins
 
   class DangerfileImportPlugin < Plugin
+
+    # The instance name used in the Dangerfile
+    # @return [String]
+    #
     def self.instance_name
       "plugin"
     end
@@ -31,11 +35,11 @@ module Danger
     # @!group Plugins
     # Download a local or remote plugin and use it inside the Dangerfile.
     #
-    # @param    [String] path
+    # @param    [String] path_or_url
     #           a local path or a https URL to the Ruby file to import
     #           a danger plugin from.
-    # @return [void]
-
+    # @return   [void]
+    #
     def import(path_or_url)
       raise "`import` requires a string" unless path_or_url.kind_of?(String)
 
@@ -50,11 +54,11 @@ module Danger
     # Download a local or remote plugin or Dangerfile
     # This method will not import the file for you, use plugin.import instead
     #
-    # @param    [String] path
+    # @param    [String] path_or_url
     #           a local path or a https URL to the Ruby file to import
     #           a danger plugin from.
     # @return [String] The path to the downloaded Ruby file
-
+    #
     def download(path_or_url)
       raise "`download` requires a string" unless path_or_url.kind_of?(String)
       raise "URL is not https, for security reasons `danger` only supports encrypted requests" if URI.parse(path_or_url).scheme != "https"

@@ -51,7 +51,7 @@ module Danger
     # Did the linter pass/fail?
     #
     def failed?
-      errors.empty? == false
+      errors.count > 0
     end
 
     # Prints a summary of the errors and warnings.
@@ -59,15 +59,16 @@ module Danger
     def print_summary(ui)
       # Print whether it passed/failed at the top
       if failed?
-        ui.notice "Passed\n"
-      else
         ui.puts "\n[!] Failed\n".red
+      else
+        ui.notice "Passed"
       end
 
       # A generic proc to handle the similarities between
       # erros and warnings.
       do_rules = proc do |name, rules|
         unless rules.empty?
+          ui.puts ""
           ui.section(name.bold) do
             rules.each do |rule|
               title = rule.title.bold + " - #{rule.object_applied_to}"
@@ -111,7 +112,7 @@ module Danger
         Rule.new(:error, 40..41, "Description", "You should include a description for your method.", proc do |json|
           json[:body_md] && json[:body_md].empty?
         end),
-        Rule.new(:warning, 43..45, "Params", "If the function has no useful return value, use ` @return  [void]`.", proc do |json|
+        Rule.new(:warning, 43..45, "Params", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
           json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
         end),
         Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|

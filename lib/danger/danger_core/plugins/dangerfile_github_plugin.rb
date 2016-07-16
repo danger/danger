@@ -33,6 +33,9 @@ module Danger
       @github = dangerfile.env.request_source
     end
 
+    # The instance name used in the Dangerfile
+    # @return [String]
+    #
     def self.instance_name
       "github"
     end
@@ -87,7 +90,7 @@ module Danger
 
     # @!group PR Commit Metadata
     # The base commit to which the PR is going to be merged as a parent.
-    # @return String
+    # @return [String]
     #
     def base_commit
       pr_json[:base][:sha]

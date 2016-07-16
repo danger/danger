@@ -1,6 +1,7 @@
 require "danger/plugin_support/plugin"
 require "danger/core_ext/file_list"
 
+# Danger
 module Danger
   # Handles interacting with git inside a Dangerfile. Providing access to files that have changed, and useful statistics. Also provides
   # access to the commits in the form of [Git::Log](https://github.com/schacon/ruby-git/blob/master/lib/git/log.rb) objects.
@@ -30,6 +31,10 @@ module Danger
   # @tags core, git
 
   class DangerfileGitPlugin < Plugin
+
+    # The instance name used in the Dangerfile
+    # @return [String]
+    #
     def self.instance_name
       "git"
     end

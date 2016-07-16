@@ -153,7 +153,7 @@ module Danger
         attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
 
         methods = klass.meths - klass.inherited_meths - attribute_meths
-        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :insance_name }
+        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :instance_name }
 
         {
           name: klass.name.to_s,

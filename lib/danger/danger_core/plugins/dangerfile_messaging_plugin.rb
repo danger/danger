@@ -53,6 +53,9 @@ module Danger
       @markdowns = []
     end
 
+    # The instance name used in the Dangerfile
+    # @return [String]
+    #
     def self.instance_name
       "messaging"
     end
@@ -62,6 +65,8 @@ module Danger
     #
     # @param    [String] message
     #           The markdown based message to be printed below the table
+    # @return   [void]
+    #
     def markdown(message)
       @markdowns << message
     end
@@ -69,10 +74,13 @@ module Danger
     # @!group Core
     # Print out a generate message on the PR
     #
-    # @param    [String] message The message to present to the user
+    # @param    [String] message
+    #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @return   [void]
+    #
     def message(message, sticky: true)
       @messages << Violation.new(message, sticky)
     end
@@ -80,10 +88,13 @@ module Danger
     # @!group Core
     # Specifies a problem, but not critical
     #
-    # @param    [String] message The message to present to the user
+    # @param    [String] message
+    #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @return   [void]
+    #
     def warn(message, sticky: true)
       return if should_ignore_violation(message)
       @warnings << Violation.new(message, sticky)
@@ -97,6 +108,8 @@ module Danger
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @return   [void]
+    #
     def fail(message, sticky: true)
       return if should_ignore_violation(message)
       @errors << Violation.new(message, sticky)
@@ -106,7 +119,8 @@ module Danger
     # A list of all messages passed to Danger, including
     # the markdowns.
     #
-    # @return Hash
+    # @visibility hidden
+    # @return     [Hash]
     def status_report
       {
         errors: @errors.map(&:message).clone.freeze,
@@ -121,7 +135,7 @@ module Danger
     # anticipate users of Danger needing to use this.
     #
     # @visibility hidden
-    # @return Hash
+    # @return     [Hash]
     def violation_report
       {
         errors: @errors.clone.freeze,
