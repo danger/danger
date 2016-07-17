@@ -1,3 +1,8 @@
+require "danger/commands/local_helpers/http_cache"
+require "faraday/http_cache"
+require "octokit"
+require "tmpdir"
+
 module Danger
   class Local < Runner
     self.summary = "Run the Dangerfile locally."
@@ -6,12 +11,14 @@ module Danger
     def initialize(argv)
       @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
       @pr_num = argv.option("use-merged-pr")
+      @clear_http_cache = argv.flag?("clear-http-cache", false)
       super
     end
 
     def self.options
       [
-        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."]
+        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."],
+        ["--clear-http-cache", "Clear the local http cache before running Danger locally."]
       ].concat(super)
     end
 
@@ -25,6 +32,15 @@ module Danger
     def run
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
+
+      # setup caching for Github calls to hitting the API rate limit too quickly
+      cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
+      cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
+      Octokit.middleware = Faraday::Builder.new do |builder|
+        builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
+        builder.use Octokit::Response::RaiseError
+        builder.adapter Faraday.default_adapter
+      end
 
       env = EnvironmentManager.new(ENV)
       dm = Dangerfile.new(env, cork)
