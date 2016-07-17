@@ -21,5 +21,5 @@ end
 # desc "Tests that the core documentation is up to snuff"
 task :spec_docs do
   core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
-  sh "bundle exec danger plugins lint #{core_plugins.join ' '}"
+  sh "danger plugins lint #{core_plugins.join ' '}"
 end
