@@ -34,8 +34,10 @@ module Danger
   class PluginParser
     attr_accessor :registry
 
-    def initialize(paths)
+    def initialize(paths, verbose = false)
       raise "Path cannot be empty" if paths.empty?
+
+      setup_yard(verbose)
 
       if paths.kind_of? String
         @paths = [File.expand_path(paths)]
@@ -44,12 +46,20 @@ module Danger
       end
     end
 
-    def parse
+    def setup_yard(verbose)
       require 'yard'
-      # could this go in a singleton-y place instead?
-      # like class initialize?
+
+      # Unless specifically asked, don't output anything.
+      unless verbose
+        YARD::Logger.instance.level = YARD::Logger::FATAL
+      end
+
+      # Add some of our custom tags
       YARD::Tags::Library.define_tag('tags', :tags)
       YARD::Tags::Library.define_tag('availablity', :availablity)
+    end
+
+    def parse
       files = ["lib/danger/plugin_support/plugin.rb"] + @paths
 
       # This turns on YARD debugging
