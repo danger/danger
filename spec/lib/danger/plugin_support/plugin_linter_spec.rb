@@ -48,7 +48,7 @@ module Danger
 
       linter.print_summary(ui)
 
-      expect(ui.string).to eq("\n[!] Failed\n\nWarnings\n  - Example Title - NameOfExample (TypeOfThing):\n    - Example Description\n    - @see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L30\n\n")
+      expect(ui.string).to eq("\n[!] Passed\n\nWarnings\n  - Example Title - NameOfExample (TypeOfThing):\n    - Example Description\n    - @see - https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L30\n\n")
     end
   end
 end

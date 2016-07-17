@@ -227,14 +227,14 @@ module Danger
       end
 
       def parse_tables_from_comment(comment)
-        comment.split('</table>')
+        comment.split("</table>")
       end
 
       def process_markdown(violation)
         html = markdown_parser.render(violation.message)
-        match = html.match(%r{^<p>(.*)</p>$})
-        message = match.nil? ? html : match.captures.first
-        Violation.new(message, violation.sticky)
+        # Remove the outer `<p>`, the -5 represents a newline + `</p>`
+        html = html[3...-5] if html.start_with? "<p>"
+        Violation.new(html, violation.sticky)
       end
 
       # @return [String] The organisation name, is nil if it can't be detected

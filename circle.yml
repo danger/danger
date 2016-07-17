@@ -5,12 +5,11 @@ machine:
 
 dependencies:
   pre:
-    - gem install rubygems-bundler
-    - gem install bundler
+    - rvm install rubygems 2.4.8 --force
+    - gem install bundler -v 1.11.2
 
 test:
   override:
     - git config --global user.email "danger@example.com"
     - git config --global user.name "Danger McShane"
-    - bundle exec rake spec
-    - if [ -z "$DANGER_GITHUB_API_TOKEN" ]; then echo "skipping fork of danger on CI"; else bundle exec danger --verbose; fi
+    - bundle exec rake specs

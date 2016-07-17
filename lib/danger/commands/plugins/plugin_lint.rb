@@ -32,7 +32,7 @@ module Danger
       file_resolver = PluginFileResolver.new(@refs)
       paths = file_resolver.resolve_to_paths
 
-      parser = PluginParser.new(paths)
+      parser = PluginParser.new(paths, verbose: true)
       parser.parse
       json = parser.to_json
 

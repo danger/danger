@@ -10,6 +10,8 @@
   For an example, see: https://github.com/Themoji/danger
 
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
+* Minor core documentation updates - orta
+* Fixes to the markdown support in `warn`, `fail` and `message` - orta
 * Add http caching for Github API calls when running `danger local` - dbgrandi
 
 ## 0.9.1
