@@ -216,11 +216,11 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "a multiline warning with markdown, no errors" do
-        warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)\n\n```\ncode\n```\n\nHello"])
+        warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)\n\n```\nsomething\n```\n\nHello"])
         result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><p><code>code</code></p><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><p><code>something</code></p><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
         )
         # rubocop:enable Metrics/LineLength
       end
