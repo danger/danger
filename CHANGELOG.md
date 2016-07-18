@@ -1,5 +1,7 @@
 ## Master
 
+## 0.10.0
+
 * Improves wording when failing a OSS build - orta
 * Add support for org-wide Dangerfile -- KrauseFx
   - To use this, create a repo on your GitHub organization called "danger" (or "Danger")
@@ -11,6 +13,7 @@
 
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 * Minor core documentation updates - orta
+* `danger plugin lint` now says it's failed when it's failed, not when it succeeds - orta
 * Fixes to the markdown support in `warn`, `fail` and `message` - orta
 * Add http caching for Github API calls when running `danger local` - dbgrandi
 
