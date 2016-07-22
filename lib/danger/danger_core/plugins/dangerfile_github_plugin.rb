@@ -120,5 +120,13 @@ module Danger
     def api
       @github.client
     end
+
+    # @!group PR Content
+    # The unified diff produced by Github for this PR
+    # see [Unified diff](https://en.wikipedia.org/wiki/Diff_utility#Unified_format)
+    # @return [String]
+    def pr_diff
+      @github.pr_diff
+    end
   end
 end

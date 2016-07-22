@@ -135,6 +135,7 @@ describe Danger::Dangerfile do
         :modified_files,
         :pr_author,
         :pr_body,
+        :pr_diff,
         :pr_json,
         :pr_labels,
         :pr_title,
@@ -182,6 +183,8 @@ describe Danger::Dangerfile do
       allow(dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
       issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
       allow(dm.env.request_source.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
+      diff_response = diff_fixture("pr_diff_response")
+      allow(dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800", accept: "application/vnd.github.v3.diff").and_return(diff_response)
 
       # Use a diff from Danger's history:
       # https://github.com/danger/danger/compare/98c4f7760bb16300d1292bb791917d8e4990fd9a...9a424ecd5ad7404fa71cf2c99627d2882f0f02ce
@@ -209,6 +212,7 @@ describe Danger::Dangerfile do
         ["modified_files", "CHANGELOG.md\nlib/danger/ci_source/local_git_repo.rb\nlib/danger/commands/local.rb\nlib/danger/commands/new_plugin.rb\nlib/danger/commands/runner.rb\nlib/danger/environment_manager.rb\nspec/sources/local_git_repo_spec.rb"],
         ["pr_author", "orta"],
         ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
+        ["pr_diff", diff_response],
         ["pr_json", "[Skipped]"],
         ["pr_labels", "D:2\nMaintenance Work"],
         ["pr_title", "[CI] Use Xcode 7 for Circle CI"],

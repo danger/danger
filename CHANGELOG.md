@@ -1,5 +1,7 @@
 ## Master
 
+* add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
+
 ## 0.10.1
 
 * Add `danger local --pry`, which drops into a Pry shell after eval-ing the Dangerfile - dbgrandi

@@ -64,6 +64,10 @@ def comment_fixture(file)
   File.read("spec/fixtures/#{file}.html")
 end
 
+def diff_fixture(file)
+  File.read("spec/fixtures/#{file}.diff")
+end
+
 def violation(message)
   Danger::Violation.new(message, false)
 end
