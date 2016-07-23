@@ -36,6 +36,10 @@ module Danger
         @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
       end
 
+      def pr_diff
+        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: 'application/vnd.github.v3.diff')
+      end
+
       def setup_danger_branches
         # we can use a github specific feature here:
         base_commit = self.pr_json[:base][:sha]

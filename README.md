@@ -65,6 +65,7 @@ Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file
 :recycle: | `deleted_files` | The list of removed files
 :abc:  | `pr_title` | The title of the PR
 :book:  | `pr_body` | The body of the PR
+:pencil:  | `pr_diff` | The unified diff for the PR
 :busts_in_silhouette:  | `pr_author` | The author who submitted the PR
 :bookmark: | `pr_labels` | The labels added to the PR
 
