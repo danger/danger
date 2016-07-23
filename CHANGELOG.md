@@ -1,5 +1,7 @@
 ## Master
 
+* Add `danger local --pry`, which drops into a Pry shell after eval-ing the Dangerfile - dbgrandi
+
 ## 0.10.0
 
 * Improves wording when failing a OSS build - orta
