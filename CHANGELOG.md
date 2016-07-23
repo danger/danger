@@ -1,5 +1,8 @@
 ## Master
 
+* `danger plugins readme` improvements - orta
+
+
 ## 0.10.1
 
 * Add `danger local --pry`, which drops into a Pry shell after eval-ing the Dangerfile - dbgrandi

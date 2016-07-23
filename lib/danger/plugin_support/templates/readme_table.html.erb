@@ -3,22 +3,30 @@
 ### <%= plugin["instance_name"] %>
 
 <%= plugin["body_md"] %>
+
 <%- plugin["example_code"].each do |example| %>
-<blockquote><%= example["title"] %>
-  <pre><%= example["text"] %></pre>
-</blockquote>
+> <%= example["title"] %>
+> ```ruby<%= example["text"] %>
+> ```
+
+
 <%- end %>
 
 <%- unless plugin["attributes"].empty? %>
 #### Attributes
-<%- plugin["attributes"].each do |attribute| %><tr>
-`<%= attribute.keys.first %>` - <%= attribute.values.first["write"]["body_md"] %>
+<%- plugin["attributes"].each do |attribute| %>
+`<%= attribute.keys.first %>`
+
+<%= attribute.values.first["write"]["body_md"] %>
 <%- end %>
 <%- end %>
 
 #### Methods
+
 <%- plugin["methods"].each do |method| %>
-`<%= method["name"] %>` - <%= method["body_md"] %>
+`<%= method["one_liner"] %>`
+
+ <%= method["body_md"] %>
 <%- end %>
 
 <% end %>
