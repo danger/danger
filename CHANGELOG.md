@@ -1,5 +1,41 @@
 ## Master
 
+* **BREAKING** Removes a lot of top-level attributes in the DSL - orta
+
+Full list of changes:
+
+```
+# Git Stuff
+modified_files -> git.modified_files
+added_files -> git.added_files
+deleted_files -> git.deleted_files
+lines_of_code -> git.lines_of_code
+deletions -> git.deletions
+insertions -> git.insertions
+commits -> git.commits
+
+# GitHub Stuff
+pr_title ->  github.deleted
+pr_body -> github.body
+pr_author -> github.author
+pr_label -> github.label
+branch_for_base -> github.branch_for_base
+branch_for_head -> github.branch_for_head
+base_commit -> github.base_commit
+head_commit -> github.head_commit
+env.request_source.pr_json -> github.pr_json
+env.request_source.api -> github.api
+
+# Importing Stuff
+import -> plugin.import
+```
+
+The main reason for this is that we can support many code review APIs without having to fudge the Dangerfile DSL to make them conform to GitHub standards. This would mean a gitlab user could write `gitlab.mr_author` to access the author once [#229](https://github.com/danger/danger/pull/299) lands.
+
+It also ensures that Danger's plugins are treated like external plugins. This means any work going into improving core plugins (via documentation or automation for example) will improve the upcoming plugin community.
+
+I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
+
 ## 0.10.1
 
 * Add `danger local --pry`, which drops into a Pry shell after eval-ing the Dangerfile - dbgrandi
