@@ -27,13 +27,11 @@ module Danger
     end
 
     def validate_pry_available
-      begin
-        require 'pry'
-      rescue LoadError
-        cork.warn "Pry was not found, and is required for 'danger local --pry'."
-        cork.print_warnings
-        abort
-      end
+      require "pry"
+    rescue LoadError
+      cork.warn "Pry was not found, and is required for 'danger local --pry'."
+      cork.print_warnings
+      abort
     end
 
     def self.options
