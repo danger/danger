@@ -36,9 +36,9 @@ module Danger
     private
 
     # When using `danger local --pry`, every plugin had an unreasonable
-    # amount of text output due to the dangefile. So, it is filtered
-    # out. Users will start out in the context of the Dangerfile,
-    # and can view it by just typing `self` into the REPL.
+    # amount of text output due to the Dangerfile reference in every
+    # plugin. So, it is filtered out. Users will start out in the context
+    # of the Dangerfile, and can view it by just typing `self` into the REPL.
     #
     def pretty_print_instance_variables
       super - [:@dangerfile]

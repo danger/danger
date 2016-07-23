@@ -12,18 +12,23 @@ module Danger
     def initialize(argv)
       @pr_num = argv.option("use-merged-pr")
       @clear_http_cache = argv.flag?("clear-http-cache", false)
-      @should_pry = argv.flag?("pry", false)
 
       super
 
-      if @should_pry && !@dangerfile_path.empty? && validate_pry_available
-        File.delete "_Dangerfile.tmp" if File.exist? "_Dangerfile.tmp"
-        FileUtils.cp @dangerfile_path, "_Dangerfile.tmp"
-        File.open("_Dangerfile.tmp", "a") do |f|
-          f.write("binding.pry; File.delete(\"_Dangerfile.tmp\")")
-        end
-        @dangerfile_path = "_Dangerfile.tmp"
+      setup_pry if should_pry?(argv)
+    end
+
+    def should_pry?(argv)
+      argv.flag?("pry", false) && !@dangerfile_path.empty? && validate_pry_available
+    end
+
+    def setup_pry
+      File.delete "_Dangerfile.tmp" if File.exist? "_Dangerfile.tmp"
+      FileUtils.cp @dangerfile_path, "_Dangerfile.tmp"
+      File.open("_Dangerfile.tmp", "a") do |f|
+        f.write("binding.pry; File.delete(\"_Dangerfile.tmp\")")
       end
+      @dangerfile_path = "_Dangerfile.tmp"
     end
 
     def validate_pry_available
