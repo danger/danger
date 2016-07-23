@@ -1,5 +1,6 @@
 require "danger/commands/local_helpers/http_cache"
 require "faraday/http_cache"
+require "fileutils"
 require "octokit"
 require "tmpdir"
 
@@ -9,16 +10,37 @@ module Danger
     self.command = "local"
 
     def initialize(argv)
-      @dangerfile_path = "Dangerfile" if File.exist? "Dangerfile"
       @pr_num = argv.option("use-merged-pr")
       @clear_http_cache = argv.flag?("clear-http-cache", false)
+      @should_pry = argv.flag?("pry", false)
+
       super
+
+      if @should_pry && !@dangerfile_path.empty? && validate_pry_available
+        File.delete "_Dangerfile.tmp" if File.exist? "_Dangerfile.tmp"
+        FileUtils.cp @dangerfile_path, "_Dangerfile.tmp"
+        File.open("_Dangerfile.tmp", "a") do |f|
+          f.write("binding.pry")
+        end
+        @dangerfile_path = "_Dangerfile.tmp"
+      end
+    end
+
+    def validate_pry_available
+      begin
+        require 'pry'
+      rescue LoadError
+        cork.warn "Pry was not found, and is required for 'danger local --pry'."
+        cork.print_warnings
+        abort
+      end
     end
 
     def self.options
       [
         ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."],
-        ["--clear-http-cache", "Clear the local http cache before running Danger locally."]
+        ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
+        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       ].concat(super)
     end
 
