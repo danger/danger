@@ -115,34 +115,7 @@ describe Danger::Dangerfile do
       dm = testing_dangerfile
       methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
 
-      expect(methods).to eq [
-        :added_files,
-        :api,
-        :base_commit,
-        :branch_for_base,
-        :branch_for_head,
-        :commits,
-        :deleted_files,
-        :deletions,
-        :download,
-        :fail,
-        :head_commit,
-        :import,
-        :insertions,
-        :lines_of_code,
-        :markdown,
-        :message,
-        :modified_files,
-        :pr_author,
-        :pr_body,
-        :pr_diff,
-        :pr_json,
-        :pr_labels,
-        :pr_title,
-        :status_report,
-        :violation_report,
-        :warn
-      ]
+      expect(methods).to eq [:fail, :markdown, :message, :status_report, :violation_report, :warn]
     end
 
     # NOTE: :protect_files comes from this repo, it is considered a "Danger" plugin, for
@@ -198,24 +171,6 @@ describe Danger::Dangerfile do
       data = sort_data(data)
 
       expect(data).to eq [
-        ["added_files", []],
-        ["api", "Octokit::Client"],
-        ["base_commit", "704dc55988c6996f69b6873c2424be7d1de67bbe"],
-        ["branch_for_base", "master"],
-        ["branch_for_head", "orta-circle_ci2"],
-        ["commits", []],
-        ["deleted_files", []],
-        ["deletions", 60],
-        ["head_commit", "561827e46167077b5e53515b4b7349b8ae04610b"],
-        ["insertions", 15],
-        ["lines_of_code", 75],
-        ["modified_files", "CHANGELOG.md\nlib/danger/ci_source/local_git_repo.rb\nlib/danger/commands/local.rb\nlib/danger/commands/new_plugin.rb\nlib/danger/commands/runner.rb\nlib/danger/environment_manager.rb\nspec/sources/local_git_repo_spec.rb"],
-        ["pr_author", "orta"],
-        ["pr_body", "![](http://media4.giphy.com/media/Ksn86eRmE2taM/giphy.gif)\n\n> Danger: Ignore \"Developer Specific file shouldn't be changed\"\n\n> Danger: Ignore \"Some warning\"\n"],
-        ["pr_diff", diff_response],
-        ["pr_json", "[Skipped]"],
-        ["pr_labels", "D:2\nMaintenance Work"],
-        ["pr_title", "[CI] Use Xcode 7 for Circle CI"],
         ["status_report", { errors: [], warnings: [], messages: [], markdowns: [] }],
         ["violation_report", { errors: [], warnings: [], messages: [] }]
       ]

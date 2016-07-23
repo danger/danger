@@ -20,15 +20,15 @@ describe Danger::GitRepo do
     end
 
     it "#modified_files returns a FileList object" do
-      expect(@dm.modified_files.class).to eql(Danger::FileList)
+      expect(@dm.git.modified_files.class).to eql(Danger::FileList)
     end
 
     it "#added_files returns a FileList object" do
-      expect(@dm.added_files.class).to eql(Danger::FileList)
+      expect(@dm.git.added_files.class).to eql(Danger::FileList)
     end
 
     it "#deleted_files returns a FileList object" do
-      expect(@dm.deleted_files.class).to eql(Danger::FileList)
+      expect(@dm.git.deleted_files.class).to eql(Danger::FileList)
     end
   end
 
@@ -50,7 +50,7 @@ describe Danger::GitRepo do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.added_files).to eql(["file2"])
+        expect(@dm.git.added_files).to eql(["file2"])
       end
     end
 
@@ -71,7 +71,7 @@ describe Danger::GitRepo do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.deleted_files).to eql(["file"])
+        expect(@dm.git.deleted_files).to eql(["file"])
       end
     end
 
@@ -92,7 +92,7 @@ describe Danger::GitRepo do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.modified_files).to eql(["file"])
+        expect(@dm.git.modified_files).to eql(["file"])
       end
     end
   end
@@ -115,7 +115,7 @@ describe Danger::GitRepo do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.insertions).to eql(3)
+        expect(@dm.git.insertions).to eql(3)
       end
     end
 
@@ -136,7 +136,7 @@ describe Danger::GitRepo do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.deletions).to eql(1)
+        expect(@dm.git.deletions).to eql(1)
       end
     end
 
@@ -158,7 +158,7 @@ describe Danger::GitRepo do
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-          messages = @dm.commits.map(&:message)
+          messages = @dm.git.commits.map(&:message)
           expect(messages).to eq(["another"])
         end
       end
