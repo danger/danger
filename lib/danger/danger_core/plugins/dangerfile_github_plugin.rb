@@ -8,6 +8,10 @@ module Danger
   #
   #          warn "PR is classed as Work in Progress" if github.pr_title.include? "[WIP]"
   #
+  # @example Declare a PR to be simple to avoid specific Danger rules
+  #
+  #          declared_trivial = (github.pr_title + github.pr_body).include?("#trivial")
+  #
   # @example Ensure that labels have been used on the PR
   #
   #          fail "Please add labels to this PR" if github.labels.empty?
@@ -15,12 +19,35 @@ module Danger
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
   #          unless github.api.organization_member?('danger', github.pr_author)
-  #            message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
+  #            message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
   #          end
   #
   # @example Ensure there is a summary for a PR
   #
   #          fail "Please provide a summary in the Pull Request description" if github.pr_body.length < 5
+  #
+  # @example Only accept PRs to the develop branch
+  #
+  #          fail "Please re-submit this PR to develop, we may have already fixed your issue." if github.branch_for_base != "develop"
+  #
+  # @example Note when PRs don't reference a milestone, which goes away when it does
+  #
+  #          has_milestone = github.pr_json["milestone"] != nil
+  #          warn("This PR does not refer to an existing milestone", sticky: false) unless has_milestone
+  #
+  # @example Note when a PR cannot be manually merged, which goes away when you can
+  #
+  #          can_merge = github.pr_json["mergeable"]
+  #          warn("This PR cannot be merged yet.", sticky: false) unless can_merge
+  #
+  # @example Highlight when a celebrity makes a pull request
+  #
+  #          message "Welcome, Danger." if github.pr_author == "dangermcshane"
+  #
+  # @example Ensure that all PRs have an assignee
+  #
+  #          warn "This PR does not have any assignees yet." unless github.pr_json["assignee"]
+  #
   #
   # @see  danger/danger
   # @tags core, github
