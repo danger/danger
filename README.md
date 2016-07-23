@@ -10,6 +10,7 @@ Formalize your Pull Request etiquette.
 <p align="center">
     <a href="#what-is-danger">What is Danger?</a> &bull;
     <a href="#im-here-to-help-out">Helping Out</a> &bull;
+    <a href="#tell-me-of-these-plugins">Plugin Development</a> &bull;
 </p>
 
 -------
@@ -52,9 +53,35 @@ bundle install
 bundle exec rake spec
 ```
 
-This sets everything up and runs all of the tests. I'd strongly recommend using `bundle exec guard` to run your tests as you work. Any changes you make in the lib, or specs will have corresponding tests run instantly. 
+This sets everything up and runs all of the tests. 
 
-The Danger codebase 
+#### Theory
+
+Danger has a [VISION.md](https://github.com/danger/danger/blob/master/VISION.md) file, this sums up the ideas around what Danger is. It's the lower bounds of what Danger means. Orta has written on handling, and creating Danger [on the Artsy blog](http://artsy.github.io/blog/categories/danger/) too.
+
+#### Documentation
+
+The code you write may end up in the public part of the website, the easiest way to tell is that it is vastly overdocumented. If you are working in a space that looks over-documented, please be extra considerate to add documentation. We expect the consumers of that documentation to be non-rubyists, thus avoid specific jargon and try to provide duplicate overlapping examples.  
+
+#### Testing
+
+So far, we've not really figured out the right way to make tests for our CLI commands. When we have done so, they've ended up brittle. So ideally, try to move any logic that would go into a command into separate classes, and test those. We're OK with the command not having coverage, but ideally the classes that make up what it does do.
+
+I'd strongly recommend using `bundle exec guard` to run your tests as you work. Any changes you make in the lib, or specs will have corresponding tests run instantly.
+
+#### Debugging
+
+Ruby is super dynamic, one of the best ways to debug is by using [pry](http://pryrepl.org/). We include pry for developers, when you have a problem copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](http://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
+
+```ruby
+  require 'pry'      
+  binding.pry
+```
+
+## Tell me of these Plugins
+
+* Make the "making a plugin" guide
+* Talk through the tech specs here
 
 ## License, Contributor's Guidelines and Code of Conduct
 
