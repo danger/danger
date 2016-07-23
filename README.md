@@ -8,239 +8,57 @@ Formalize your Pull Request etiquette.
 -------
 
 <p align="center">
-    <a href="#getting-started">Getting Started</a> &bull;
-    <a href="#usage-on-ci">Usage</a> &bull;
-    <a href="#dsl">DSL</a> &bull;
-    <a href="#plugins">Plugins</a> &bull;
-    <a href="#test-locally-with-danger-local">Local</a>
+    <a href="#what-is-danger">What is Danger?</a> &bull;
+    <a href="#im-here-to-help-out">Helping Out</a> &bull;
 </p>
 
 -------
 
+## What is Danger?
+
+Danger runs after your CI, and gives teams the chance to automate common code review chores.
+
+This provides another logical step in your process, through this Danger can help lint your rote tasks in daily code review.
+
+You can use Danger to codify your teams norms. Leaving humans to think about harder problems.
+
+## For example?
+
+* Enforce CHANGELOGs
+* Enforce links to Trello/JIRA in PR/MR bodies
+* Enforce using descriptive labels
+* Look out for common anti-patterns
+* Highlight interesting build artifacts
+* Give specific files have extra focus 
+
+Danger simply provides the glue to let _you_ build out the rules specific to your team's culture. Offering a lot of useful metadata, and a comprehensive plugin system to share common issues. 
+
 ## Getting Started
 
-Add this line to your application's [Gemfile](https://guides.cocoapods.org/using/a-gemfile.html):
+Alright. So, actually, you may be in the wrong place. From here on in, this README is going to be for people who are interested in working on / improving on Danger. 
 
-```ruby
-gem 'danger'
-```
+We keep all of the end-user documentation inside [http://danger.systems](http://danger.systems).
 
-Next, use Bundler to install the gem.
+Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html). 
 
-```shell
+## I'm here to help out!
+
+Brilliant. So, let's get you set up.
+
+``` sh
+git clone https://github.com/danger/danger.git
+cd danger
 bundle install
+bundle exec rake spec
 ```
 
-After the gem is installed, you can run Danger's interactive getting started guide:
+This sets everything up and runs all of the tests. I'd strongly recommend using `bundle exec guard` to run your tests as you work. Any changes you make in the lib, or specs will have corresponding tests run instantly. 
 
-```
-bundle exec danger init
-```
-
-The guide will create a default `Dangerfile` and take you through the process of setting up an account for feedback on GitHub.
-
-## Usage on CI
-
-```
-bundle exec danger
-```
-
-This will look at your `Dangerfile` and update the pull request accordingly. While you are setting up Danger, you may want to use: `--verbose` for more debug information.
-
-## CI Support
-
-Danger currently is supported on Travis CI, Circle CI, Xcode Bots via Buildasaur, BuildKite, Jenkins, Semaphore, Drone CI and TeamCity. These work via environment variables, so it's easy to extend to include your own.
-
-## What happens?
-
-Danger runs at the end of a CI build, she will execute a `Dangerfile`. This file is given some special variables based on the git diff and the Pull Request being running. You can use these variables in Ruby to provide messages, warnings and failures for your build. You set up Danger with a GitHub user account and she will post updates via comments on the Pull Request, and can fail your build too.
-
-## DSL
-
-&nbsp;  | &nbsp; | Danger :no_entry_sign:
--------------: | ------------- | ----
-:sparkles: | `lines_of_code` | The total amount of lines of code in the diff
-:pencil2:  | `modified_files` |  The list of modified files
-:ship: | `added_files` | The list of added files
-:recycle: | `deleted_files` | The list of removed files
-:abc:  | `pr_title` | The title of the PR
-:book:  | `pr_body` | The body of the PR
-:pencil:  | `pr_diff` | The unified diff for the PR
-:busts_in_silhouette:  | `pr_author` | The author who submitted the PR
-:bookmark: | `pr_labels` | The labels added to the PR
-
-The `Dangerfile` is a Ruby file, so really, you can do anything. However, at this stage you might need selling on the idea a bit more, so lets take some real examples:
-
-#### Dealing with WIP pull requests
-
-```ruby
-# Sometimes its a README fix, or something like that - which isn't relevant for
-# including in a CHANGELOG for example
-declared_trivial = pr_title.include? "#trivial"
-
-# Just to let people know
-warn("PR is classed as Work in Progress", sticky: false) if pr_title.include? "[WIP]"
-```
-
-#### Being cautious around specific files
-
-``` ruby
-# Devs shouldn't ship changes to this file
-fail("Developer Specific file shouldn't be changed", sticky: false) if modified_files.include?("Artsy/View_Controllers/App_Navigation/ARTopMenuViewController+DeveloperExtras.m")
-
-# Did you make analytics changes? Well you should also include a change to our analytics spec
-made_analytics_changes = modified_files.include?("/Artsy/App/ARAppDelegate+Analytics.m")
-made_analytics_specs_changes = modified_files.include?("/Artsy_Tests/Analytics_Tests/ARAppAnalyticsSpec.m")
-if made_analytics_changes
-  fail("Analytics changes should have reflected specs changes") if !made_analytics_specs_changes
-
-  # And pay extra attention anyway
-  message('Analytics dict changed, double check for ?: `@""` on new entries')
-  message('Also, double check the [Analytics Eigen schema](https://docs.google.com/spreadsheets/u/1/d/1bLbeOgVFaWzLSjxLOBDNOKs757-zBGoLSM1lIz3OPiI/edit#gid=497747862) if the changes are non-trivial.')
-end
-```
-
-#### Pinging people when a specific file has changed
-
-```ruby
-markdown("@orta something changed in elan!") if modified_files.include? "/components/lib/variables/colors.json"
-```
-
-If you wish to ping a person on a PR you'll need to use the `markdown` method rather than the `message`, `warn` or `fail` methods.
-This is because the HTML generated by the latter methods doesn't trigger GitHub's notification detection.
-
-#### Exposing aspects of CI logs into the PR discussion
-
-```ruby
-build_log = File.read(File.join(ENV["CIRCLE_ARTIFACTS"], "xcode_test_raw.log"))
-snapshots_url = build_log.match(%r{https://eigen-ci.s3.amazonaws.com/\d+/index.html})
-fail("There were [snapshot errors](#{snapshots_url})") if snapshots_url
-```
-
-#### Available commands
-
-Command | Description
-------------- | ----
-`fail` | Causes the PR to fail and print out the error on the PR
-`warn` | Prints out a warning to the PR, but still enables the merge button
-`message` | Show neutral messages on the PR
-`markdown` | Print raw markdown below the summary tables on the PR
-
-## Plugins
-
-Danger was built with a platform in mind: she can be used with any kind of software project and allows you to write your own action to have structured source code.
-
-In your `Dangerfile` you can import local or remote actions using
-
-```ruby
-import "./danger_plugins/work_in_progress_warning"
-# or
-import "https://raw.githubusercontent.com/danger/danger/master/danger_plugins/work_in_progress_warning.rb"
-
-# Call those actions using
-work_in_progress_warning
-
-custom_plugin(variable: "value")
-```
-
-To create a new plugin run
-
-```
-danger new_plugin
-```
-
-This will generate a new Ruby file which you can modify to fit your needs.
-
-## Advanced
-
-You can access more detailed information by accessing the following variables
-
-&nbsp; | Danger :no_entry_sign:
-------------- | ----
-`env.request_source.pr_json` | The full JSON for the pull request
-`env.scm.diff` | The full [Diff](https://github.com/mojombo/grit/blob/master/lib/grit/diff.rb) file for the diff.
-`env.ci_source` | To get information like the repo slug or pull request ID
-
-These are considered implementation details though, and may be subject to change in future releases. We're very
-open to turning useful bits into the official API.
-
-## Test locally with `danger local`
-
-You can use `danger local` to run Danger in an environment similar to how she will be ran on CI. By default Danger will look
-at the most recently merged PR, then run your `Dangerfile` against that Pull Request. This is really useful when making changes.
-
-If you have a specific PR in mind that you'd like to work against, make sure you have it merged in your current git
-history, then append `--use-merged-pr=[id]` to the command.
-
-### Adding a new CI
-If the CI server you're using isn't available yet, you can build it yourself:
-
-Take a look at some of the [already existing integrations](https://github.com/danger/danger/tree/master/lib/danger/ci_source). The class has 2 mandatory methods:
-
-- `self.validates?` which should detect if the CI is active (detecting via ENV variables, mostly)
-- `initialize` which should set 2 variables:
-  - `self.repo_slug` the repo slug, in `org/repo` or `user/repo` format.
-  - `self.pull_request_id` the number of the pull request that the CI is testing (often available in ENV variables)
-
-We'd love to see pull requests for new integrations!
-
-
-## Suppress Violations
-
-You can tell Danger to ignore a specific warning or error by commenting on the PR body:
-
-```
-> Danger: Ignore "Developer Specific file shouldn't be changed"
-```
-
-## Sticky
-
-Danger can keep its history if a warning/error/message is marked as *sticky*. When the violation is resolved,
-Danger will update the comment to cross it out. If you don't want this behavior, just use `sticky: false`.
-
-```ruby
-fail("PR needs labels", sticky: false) if pr_labels.empty?
-```
-
-## Org-Wide Dangerfile
-
-To have consistent rules across the repos in your organisation, you can use a shared `Dangerfile`:
-
-1. create a repo on your GitHub organization called `danger` (or `Danger`)
-1. Add a `Dangerfile` to the root of that repo
-1. The new `Dangerfile` is ran after the current repo's `Dangerfile`
-
-The org `Dangerfile` will have access to all of the same plugins, and metadata. For an example, see [themoji/danger](https://github.com/Themoji/danger).
-
-## Multiple Dangers
-
-If one Danger is not enough for you, you can run several ones on the same PR. Just use the `danger_id` param. For example: 
-
-```
-bundle exec danger --danger_id=unit_tests
-```
-
-You can have each instance of Danger running on a different CI provider and even doing different validations. An use case would be:
-
-* `basic` runs on a Linux environment (such as Circle CI) and validates the PR itself (title, etc)
-* `compilation` runs on a Mac after running unit tests for your iOS app and comments about warnings, test failures, etc
-* `uitests` runs on a Mac after running UI Unit tests and comments about test failures
-
-## Useful bits of knowledge
-
-* You can set the base branch in the command line arguments see: `bundle exec danger --help`, if you commonly merge into non-master branches.
-* Appending `--verbose` to `bundle exec danger` will expose all of the variables that Danger provides, and their values in the shell.
-
-Here are some real-world Dangerfiles: [artsy/eigen](https://github.com/artsy/eigen/blob/master/Dangerfile), [danger/danger](https://github.com/danger/danger/blob/master/Dangerfile), [artsy/elan](https://github.com/artsy/elan/blob/master/Dangerfile) and more!
-
-## Usage with GitHub Enterprise
-Danger allows usage with GitHub Enterprise by setting 2 environment variables:
-- `DANGER_GITHUB_HOST` to the host that GitHub is running on
-- `DANGER_GITHUB_API_HOST` to the host that the GitHub Enterprise API is reachable on.
+The Danger codebase 
 
 ## License, Contributor's Guidelines and Code of Conduct
 
-We try to keep as much discussion as possible in GitHub issues, but also have a slack, if you'd like an invite ping [@Orta](https://twitter.com/orta/) a DM on twitter with your email. 
+We try to keep as much discussion as possible in GitHub issues, but also have a pretty inactive slack, if you'd like an invite ping [@Orta](https://twitter.com/orta/) a DM on twitter with your email. It's mostly interesting if you want to stay on top of Danger without all of the emails from GitHub. 
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 
