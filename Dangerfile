@@ -8,8 +8,8 @@ if has_app_changes && !has_test_changes
 end
 
 # Make a note about contributors not in the organization
-unless github.api.organization_member?('danger', pr_author)
-  message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
+unless github.api.organization_member?('danger', github.pr_author)
+  message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
 
   # Pay extra attention if they modify the gemspec
   if git.modified_files.include?("*.gemspec")
