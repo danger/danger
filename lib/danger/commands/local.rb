@@ -61,7 +61,7 @@ module Danger
       # setup caching for Github calls to hitting the API rate limit too quickly
       cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
       cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
-      Octokit.middleware = Faraday::Builder.new do |builder|
+      Octokit.middleware = Faraday::RackBuilder.new do |builder|
         builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
         builder.use Octokit::Response::RaiseError
         builder.adapter Faraday.default_adapter
