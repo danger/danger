@@ -131,7 +131,7 @@ module Danger
       pr_json[:head][:sha]
     end
 
-    # @!group GitHub Misca
+    # @!group GitHub Misc
     # The hash that represents the PR's JSON. For an example of what this looks like
     # see the [Danger Fixture'd one](https://raw.githubusercontent.com/danger/danger/master/spec/fixtures/pr_response.json).
     # @return [Hash]
@@ -154,6 +154,29 @@ module Danger
     # @return [String]
     def pr_diff
       @github.pr_diff
+    end
+
+    # @!group GitHub Misc
+    # Returns an HTML link for a file in the head repository. An example would be
+    # `<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`
+    # @return String
+    def html_link(paths)
+      paths = [paths] unless paths.kind_of?(Array)
+      commit = head_commit
+      repo = pr_json[:head][:repo][:html_url]
+      paths = paths.map do |path|
+        path_with_slash = "/#{path}" unless path.start_with? "/"
+        create_link("#{repo}/blob/#{commit}#{path_with_slash}", path)
+      end
+
+      return paths.first if paths.count < 2
+      paths.first(paths.count - 1).join(", ") + " & " + paths.last
+    end
+
+    private
+
+    def create_link(href, text)
+      "<a href='#{href}'>#{text}</a>"
     end
   end
 end
