@@ -110,6 +110,27 @@ module Danger
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
 
+      def generate_inline_comment_body(emoji, message, danger_id, resolved: false, template: "github")
+        md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
+        @tables = [
+          { content: [message], resolved: resolved, emoji: emoji }
+        ]
+        @markdowns = []
+        @danger_id = danger_id
+
+        ERB.new(File.read(md_template), 0, '-').result(binding)
+      end
+
+      def generate_inline_markdown_body(markdown, danger_id, template: "github")
+        md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
+        @tables = []
+        @markdowns = [markdown.message]
+        @danger_id = danger_id
+
+        ERB.new(File.read(md_template), 0, '-').result(binding)
+      end
+
+
       def generate_description(warnings: nil, errors: nil)
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
