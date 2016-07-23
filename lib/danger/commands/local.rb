@@ -20,7 +20,7 @@ module Danger
         File.delete "_Dangerfile.tmp" if File.exist? "_Dangerfile.tmp"
         FileUtils.cp @dangerfile_path, "_Dangerfile.tmp"
         File.open("_Dangerfile.tmp", "a") do |f|
-          f.write("binding.pry")
+          f.write("binding.pry; File.delete(\"_Dangerfile.tmp\")")
         end
         @dangerfile_path = "_Dangerfile.tmp"
       end
