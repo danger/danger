@@ -1,5 +1,6 @@
 ## Master
 
+* Add `html_link` to the GitHub plugin - marcelofabri
 * **BREAKING** Removes a lot of top-level attributes in the DSL - orta
 
 Full list of changes:
