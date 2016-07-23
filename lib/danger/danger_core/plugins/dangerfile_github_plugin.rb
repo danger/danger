@@ -48,6 +48,26 @@ module Danger
   #
   #          warn "This PR does not have any assignees yet." unless github.pr_json["assignee"]
   #
+  # @example Send a message with links to a collection of specific files
+  #
+  #          if git.modified_files.include? "config/*.js"
+  #            config_files = git.modified_files.select { |path| path.include? "config/" }
+  #            message "This PR changes #{ github.html_link(config_files) }"
+  #          end
+  #
+  # @example Highlight with a clickable link if a Package.json is changed
+  #
+  #         warn "#{github.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
+  #
+  # @example Note an issue with a particular line on a file using the #L[num] syntax, e.g. `#L23`
+  #
+  #         linter_json = `my_linter lint "file"`
+  #         results = JSON.parse linter_json
+  #         unless results.empty?
+  #           file, line, warning = result.first
+  #           warn "#{github.html_link("#{file}#L#{line}")} has linter issue: #{warning}."
+  #         end
+  #
   #
   # @see  danger/danger
   # @tags core, github
