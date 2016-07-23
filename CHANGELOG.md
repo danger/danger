@@ -35,6 +35,7 @@ The main reason for this is that we can support many code review APIs without ha
 It also ensures that Danger's plugins are treated like external plugins. This means any work going into improving core plugins (via documentation or automation for example) will improve the upcoming plugin community.
 
 I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
+* add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
 
 ## 0.10.1
 

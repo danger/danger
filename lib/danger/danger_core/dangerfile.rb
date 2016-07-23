@@ -8,8 +8,6 @@ require "danger/danger_core/plugins/dangerfile_import_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
 
-require "danger/danger_core/plugins/dangerfile_github_plugin"
-
 module Danger
   class Dangerfile
     include Danger::Dangerfile::DSL

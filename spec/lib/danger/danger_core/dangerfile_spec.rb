@@ -156,6 +156,8 @@ describe Danger::Dangerfile do
       allow(dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
       issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
       allow(dm.env.request_source.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
+      diff_response = diff_fixture("pr_diff_response")
+      allow(dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800", accept: "application/vnd.github.v3.diff").and_return(diff_response)
 
       # Use a diff from Danger's history:
       # https://github.com/danger/danger/compare/98c4f7760bb16300d1292bb791917d8e4990fd9a...9a424ecd5ad7404fa71cf2c99627d2882f0f02ce
