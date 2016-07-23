@@ -75,3 +75,11 @@ end
 def violations(messages)
   messages.map { |s| violation(s) }
 end
+
+def markdown(message)
+  Danger::Markdown.new(message, nil, nil)
+end
+
+def markdowns(messages)
+  messages.map { |s| markdown(s) }
+end

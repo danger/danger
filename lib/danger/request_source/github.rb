@@ -184,7 +184,7 @@ module Danger
           table('Warning', 'warning', warnings, previous_violations),
           table('Message', 'book', messages, previous_violations)
         ]
-        @markdowns = markdowns
+        @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
 
         return ERB.new(File.read(md_template), 0, '-').result(binding)

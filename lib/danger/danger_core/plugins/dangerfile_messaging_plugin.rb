@@ -1,4 +1,5 @@
-require "danger/danger_core/violation"
+require "danger/danger_core/messages/violation"
+require "danger/danger_core/messages/markdown"
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -69,10 +70,14 @@ module Danger
     #
     # @param    [String] message
     #           The markdown based message to be printed below the table
+    # @param    [String] file
+    #           Optional. Path to the file that the message is for.
+    # @param    [String] line
+    #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def markdown(message)
-      @markdowns << message
+    def markdown(message, file: nil, line: nil)
+      @markdowns << Markdown.new(message, file, line)
     end
 
     # @!group Core

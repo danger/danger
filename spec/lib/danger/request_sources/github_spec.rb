@@ -2,7 +2,7 @@
 require "danger/request_source/request_source"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
-require "danger/danger_core/violation"
+require "danger/danger_core/messages/violation"
 
 describe Danger::RequestSources::GitHub do
   describe "the github host" do
@@ -183,14 +183,14 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "supports markdown code below the summary table" do
-        result = @g.generate_comment(warnings: violations(["ups"]), markdowns: ["### h3"])
+        result = @g.generate_comment(warnings: violations(["ups"]), markdowns: markdowns(["### h3"]))
         expect(result.gsub(/\s+/, "")).to eq(
           '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
         )
       end
 
       it "supports markdown only without a table" do
-        result = @g.generate_comment(markdowns: ["### h3"])
+        result = @g.generate_comment(markdowns: markdowns(["### h3"]))
         expect(result.gsub(/\s+/, "")).to eq(
           '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
         )
