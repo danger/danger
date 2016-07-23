@@ -38,6 +38,10 @@ module Danger
   #          message << "20 | No documentation | Error \n"
   #          markdown message
   #
+  # @example Adding an inline warning to a file
+  #
+  #          warn("You shouldn't use puts in your Dangerfile", file: "Dangerfile", line: 10)
+  #
   #
   # @see  danger/danger
   # @tags core, messaging
@@ -79,10 +83,14 @@ module Danger
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @param    [String] file
+    #           Optional. Path to the file that the message is for.
+    # @param    [String] line
+    #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def message(message, sticky: true)
-      @messages << Violation.new(message, sticky)
+    def message(message, sticky: true, file: nil, line: nil)
+      @messages << Violation.new(message, sticky, file, line)
     end
 
     # @!group Core
@@ -93,11 +101,15 @@ module Danger
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @param    [String] file
+    #           Optional. Path to the file that the message is for.
+    # @param    [String] line
+    #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def warn(message, sticky: true)
+    def warn(message, sticky: true, file: nil, line: nil)
       return if should_ignore_violation(message)
-      @warnings << Violation.new(message, sticky)
+      @warnings << Violation.new(message, sticky, file, line)
     end
 
     # @!group Core
@@ -108,11 +120,15 @@ module Danger
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `true`.
+    # @param    [String] file
+    #           Optional. Path to the file that the message is for.
+    # @param    [String] line
+    #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def fail(message, sticky: true)
+    def fail(message, sticky: true, file: nil, line: nil)
       return if should_ignore_violation(message)
-      @errors << Violation.new(message, sticky)
+      @errors << Violation.new(message, sticky, file, line)
     end
 
     # @!group Reporting

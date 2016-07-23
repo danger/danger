@@ -1,6 +1,7 @@
 ## Master
 
 * add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
+* add `file` and `line` optional parameters to methods on the messaging plugin
 
 ## 0.10.1
 

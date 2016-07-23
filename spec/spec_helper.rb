@@ -69,7 +69,7 @@ def diff_fixture(file)
 end
 
 def violation(message)
-  Danger::Violation.new(message, false)
+  Danger::Violation.new(message, false, nil, nil)
 end
 
 def violations(messages)
