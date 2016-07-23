@@ -15,10 +15,10 @@ insertions -> git.insertions
 commits -> git.commits
 
 # GitHub Stuff
-pr_title ->  github.deleted
-pr_body -> github.body
-pr_author -> github.author
-pr_label -> github.label
+pr_title ->  github.pr_title
+pr_body -> github.pr_body
+pr_author -> github.pr_author
+pr_labels -> github.pr_labels
 branch_for_base -> github.branch_for_base
 branch_for_head -> github.branch_for_head
 base_commit -> github.base_commit
