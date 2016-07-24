@@ -22,7 +22,7 @@ module Danger
       linter = PluginLinter.new(json)
       linter.lint
 
-      titles = ["Tags", "References", "Return Type", "Return Type", "Return Type", "Params", "Params", "Return Type"]
+      titles = ["Tags", "References", "Return Type", "Return Type", "Return Type", "Unknown Param", "Return Type"]
       expect(linter.warnings.map(&:title)).to eq(titles)
     end
 

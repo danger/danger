@@ -79,11 +79,11 @@
         ],
         "param_couplets": [
           {
-            "files": "String"
+            "files=nil": "String"
           }
         ],
         "return": "",
-        "one_liner": "lint_files(files: String)"
+        "one_liner": "lint_files(files=nil: String)"
       },
       {
         "name": "proselint_installed?",

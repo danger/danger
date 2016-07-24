@@ -23,3 +23,4 @@ task :spec_docs do
   core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
   sh "danger plugins lint #{core_plugins.join ' '}"
 end
+

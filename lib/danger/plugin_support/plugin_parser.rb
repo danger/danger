@@ -103,17 +103,23 @@ module Danger
       ""
     end
 
-    def method_params(params)
-      return {} unless params[:params]
+    def method_params(method)
+      return {} unless method[:params]
 
-      params_names = params[:params].compact.flat_map(&:first)
-      params_values = params[:tags].find { |t| t[:name] == "param" }
+      params_names = method[:params].map { |param| param.compact.join("=").strip }
+      params_values = method[:tags].select { |t| t[:name] == "param" }
 
-      return {} if params_values.nil?
-      return {} if params_values[:types].nil?
+      return {} if params_values.empty?
+      return {} if params_values.select { |p| p[:types] }.empty?
 
       return params_names.map.with_index do |name, index|
-        { name => params_values[:types][index] }
+        name = name.delete ":"
+        if index < params_values.length
+          type = params_values[index][:types]
+          { name => type ? type.first : "Unknown" }
+        else
+          { name => "Unknown" }
+        end
       end
     end
 
@@ -126,6 +132,7 @@ module Danger
         files: meth.files.map { |item| [item.first.gsub(gem_path, ""), item.last] },
         tags: meth.tags.map { |t| { name: t.tag_name, types: t.types } }
       }
+
 
       return_v = method_return_string(method)
       params_v = method_params(method)

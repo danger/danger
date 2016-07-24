@@ -117,9 +117,12 @@ module Danger
         Rule.new(:warning, 43..45, "Params", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
           json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
         end),
+        Rule.new(:warning, 43..45, "Unknown Param", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
+          json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?("Unknown")
+        end),
         Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
           return_hash = json[:tags].find { |tag| tag[:name] == "return" }
-          !(return_hash && !return_hash[:types].first.empty?)
+          !(return_hash && return_hash[:types] && !return_hash[:types].first.empty?)
         end)
       ]
     end
