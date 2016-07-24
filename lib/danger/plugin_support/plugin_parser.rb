@@ -165,10 +165,14 @@ module Danger
         methods = klass.meths - klass.inherited_meths - attribute_meths
         usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :instance_name }
 
+        plugin_gem = klass.file.include?("gems") ? klass.file.split("gems/").last.split("-")[0..-2].join("-") : nil
+
         {
           name: klass.name.to_s,
           body_md: klass.docstring,
           instance_name: real_klass.instance_name,
+          gem: plugin_gem,
+          files: klass.files,
           example_code: klass.tags.select { |t| t.tag_name == "example" }.map { |tag| { title: tag.name, text: tag.text } }.compact,
           attributes: klass.attributes[:instance].map { |pair| { pair.first => attribute_parser(pair.last) } },
           methods: usable_methods.map { |m| method_parser(m) },
