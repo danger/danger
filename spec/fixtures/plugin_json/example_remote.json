@@ -1,0 +1,49 @@
+[
+  {
+    "name": "ExampleRemote",
+    "body_md": "",
+    "instance_name": "example_remote",
+    "gem": null,
+    "gem_path": "",
+    "files": [
+      [
+        "/spec/fixtures/plugins/example_remote.rb",
+        2
+      ]
+    ],
+    "example_code": [
+
+    ],
+    "attributes": [
+
+    ],
+    "methods": [
+      {
+        "name": "echo",
+        "body_md": "",
+        "params": [
+
+        ],
+        "files": [
+          [
+            "/spec/fixtures/plugins/example_remote.rb",
+            3
+          ]
+        ],
+        "tags": [
+
+        ],
+        "param_couplets": {
+        },
+        "return": "",
+        "one_liner": "echo"
+      }
+    ],
+    "tags": [
+
+    ],
+    "see": [
+
+    ]
+  }
+]

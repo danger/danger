@@ -65,14 +65,16 @@ module Danger
       end
 
       # A generic proc to handle the similarities between
-      # erros and warnings.
+      # errors and warnings.
       do_rules = proc do |name, rules|
         unless rules.empty?
           ui.puts ""
           ui.section(name.bold) do
             rules.each do |rule|
               title = rule.title.bold + " - #{rule.object_applied_to}"
-              ui.labeled(title, [rule.description, link(rule.ref)])
+              subtitles = [rule.description, link(rule.ref)]
+              subtitles += [rule.metadata[:files].join(":")] if rule.metadata[:files]
+              ui.labeled(title, subtitles)
               ui.puts ""
             end
           end
@@ -116,7 +118,8 @@ module Danger
           json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
         end),
         Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
-          json[:return] && json[:return].empty?
+          return_hash = json[:tags].find { |tag| tag[:name] == "return" }
+          !(return_hash && !return_hash[:types].first.empty?)
         end)
       ]
     end

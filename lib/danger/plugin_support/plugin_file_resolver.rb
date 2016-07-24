@@ -19,7 +19,7 @@ module Danger
       elsif @refs and @refs.kind_of? Array
         Bundler.with_clean_env do
           # We don't use the block syntax as we want it to persist until the OS cleans it on reboot
-          # or whatever, it needs to persist outside this scope. 
+          # or whatever, it needs to persist outside this scope.
           dir = Dir.mktmpdir
 
           Dir.chdir(dir) do
