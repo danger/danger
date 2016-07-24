@@ -37,6 +37,7 @@ It also ensures that Danger's plugins are treated like external plugins. This me
 
 I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
 * add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
+* Improvements to the linter and the JSON output for plugin docs - orta
 
 ## 0.10.1
 

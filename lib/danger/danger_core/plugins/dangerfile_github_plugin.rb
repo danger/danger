@@ -177,9 +177,9 @@ module Danger
     end
 
     # @!group GitHub Misc
-    # Returns an HTML link for a file in the head repository. An example would be
+    # Returns a HTML anchor for a file, or files in the head repository. An example would be:
     # `<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`
-    # @return String
+    # @return [String]
     def html_link(paths)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
