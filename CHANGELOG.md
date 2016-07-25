@@ -1,5 +1,7 @@
 ## Master
 
+* add `file` and `line` optional parameters to methods on the messaging plugin
+
 ## 2.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta

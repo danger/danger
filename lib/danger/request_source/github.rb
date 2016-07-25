@@ -184,7 +184,7 @@ module Danger
           table('Warning', 'warning', warnings, previous_violations),
           table('Message', 'book', messages, previous_violations)
         ]
-        @markdowns = markdowns
+        @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
 
         return ERB.new(File.read(md_template), 0, '-').result(binding)
@@ -238,7 +238,8 @@ module Danger
         html = markdown_parser.render(violation.message)
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
-        Violation.new(html, violation.sticky)
+        # TODO: Parse out file and lines if possible
+        Violation.new(html, violation.sticky, nil, nil)
       end
 
       # @return [String] The organisation name, is nil if it can't be detected

@@ -68,10 +68,18 @@ def diff_fixture(file)
   File.read("spec/fixtures/#{file}.diff")
 end
 
-def violation(message)
-  Danger::Violation.new(message, false)
+def violation(message, sticky: false)
+  Danger::Violation.new(message, sticky, nil, nil)
 end
 
-def violations(messages)
-  messages.map { |s| violation(s) }
+def violations(messages, sticky: false)
+  messages.map { |s| violation(s, sticky: sticky) }
+end
+
+def markdown(message)
+  Danger::Markdown.new(message, nil, nil)
+end
+
+def markdowns(messages)
+  messages.map { |s| markdown(s) }
 end
