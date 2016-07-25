@@ -191,11 +191,11 @@ module Danger
       end
 
       def table(name, emoji, violations, all_previous_violations)
-        content = violations.map { |v| process_markdown(v) }.uniq
+        content = violations.map { |v| process_markdown(v) }
+        messages = content.map(&:message).uniq
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
-        messages = content.map(&:message)
-        resolved_violations = previous_violations.uniq - messages
+        resolved_violations = previous_violations.map(&:message).uniq - messages
         count = content.count
         { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
       end
@@ -216,8 +216,20 @@ module Danger
       end
 
       def violations_from_table(table)
-        regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
-        table.scan(regex).flatten.map(&:strip)
+        row_regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
+        message_regexp = %r{(<a href="https://github.com/#{ci_source.repo_slug}/blob/[0-9a-z]+/(?<file>[^#]+)#L(?<line>[0-9]+)">[^<]*</a> - )?(?<message>.*?)}im
+
+        table.scan(row_regex).flatten.map do |row|
+          message = row.strip
+          match = message_regexp.match(message)
+
+          if match[:line]
+            line = match[:line].to_i
+          else
+            line = nil
+          end
+          Violation.new(message, true, match[:file], line)
+        end
       end
 
       def table_kind_from_title(title)
@@ -235,11 +247,17 @@ module Danger
       end
 
       def process_markdown(violation)
-        html = markdown_parser.render(violation.message)
+        message = violation.message
+        message = "#{markdown_link_to_message violation} - #{message}" if violation.file && violation.line
+
+        html = markdown_parser.render(message)
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
-        # TODO: Parse out file and lines if possible
-        Violation.new(html, violation.sticky, nil, nil)
+        Violation.new(html, violation.sticky, violation.file, violation.line)
+      end
+
+      def markdown_link_to_message(message)
+        "[#{message.file}#L#{message.line}](https://github.com/#{ci_source.repo_slug}/blob/#{pr_json[:head][:sha]}/#{message.file}#L#{message.line})"
       end
 
       # @return [String] The organisation name, is nil if it can't be detected
