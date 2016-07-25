@@ -10,6 +10,7 @@ module Danger
     attr_accessor :cork
 
     def initialize(argv)
+      @warnings_as_errors = argv.flag?("warnings-as-errors", false)
       @refs = argv.arguments! unless argv.arguments.empty?
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
@@ -28,6 +29,12 @@ module Danger
       CLAide::Argument.new("Paths, Gems or Nothing", false, true)
     ]
 
+    def self.options
+      [
+        ["--warnings-as-errors", "Ensure strict linting."]
+      ].concat(super)
+    end
+
     def run
       file_resolver = PluginFileResolver.new(@refs)
       paths = file_resolver.resolve_to_paths
@@ -40,7 +47,8 @@ module Danger
       linter.lint
       linter.print_summary(cork)
 
-      exit(1) if linter.failed?
+      abort("Failing due to errors\n".red) if linter.failed?
+      abort("Failing due to warnings as errors\n".red) if @warnings_as_errors && !linter.warnings.empty?
     end
   end
 end

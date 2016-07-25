@@ -8,8 +8,8 @@ if has_app_changes && !has_test_changes
 end
 
 # Make a note about contributors not in the organization
-unless github.api.organization_member?('danger', pr_author)
-  message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
+unless github.api.organization_member?('danger', github.pr_author)
+  message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
 
   # Pay extra attention if they modify the gemspec
   if git.modified_files.include?("*.gemspec")
@@ -28,6 +28,17 @@ declared_trivial = (github.pr_title + github.pr_body).include?("#trivial") || !h
 
 if !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
   fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).")
+end
+
+# Docs are critical, so let's re-run the docs part of the specs and show any issues:
+core_plugins_docs = `bundle exec danger plugins lint lib/danger/danger_core/plugins/*.rb --warnings-as-errors`
+
+# If it failed, fail the build, and include markdown with the output error.
+unless $?.success?
+  # We want to strip ANSI colors for our markdown, and make paths relative
+  colourless_error = core_plugins_docs.gsub(/\e\[(\d+)(;\d+)*m/, "")
+  markdown("### Core Docs Errors \n\n#{colourless_error}")
+  fail("Failing due to documentation issues, see below.", sticky: false)
 end
 
 # Oddly enough, it's quite possible to do some testing of Danger, inside Danger

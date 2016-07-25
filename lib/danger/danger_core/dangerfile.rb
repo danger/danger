@@ -29,19 +29,14 @@ module Danger
     # These are the classes that are allowed to also use method_missing
     # in order to provide broader plugin support
     def self.core_plugin_classes
-      [
-        Danger::DangerfileMessagingPlugin,
-        Danger::DangerfileImportPlugin,
-        Danger::DangerfileGitHubPlugin,
-        Danger::DangerfileGitPlugin
-      ]
+      [Danger::DangerfileMessagingPlugin]
     end
 
     # Both of these methods exist on all objects
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-fail
     # However, as we're using using them in the DSL, they won't
-    # get method_missing called correctly.
+    # get method_missing called correctly without overriding them.
 
     def warn(*args, &blk)
       method_missing(:warn, *args, &blk)
@@ -52,7 +47,10 @@ module Danger
     end
 
     # When an undefined method is called, we check to see if it's something
-    # that the DSLs have, then starts looking at plugins support.
+    # that the core DSLs have, then starts looking at plugins support.
+
+    # rubocop:disable Style/MethodMissing
+
     def method_missing(method_sym, *arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
@@ -199,7 +197,7 @@ module Danger
 
     def print_results
       status = status_report
-      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
+      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count.zero?
 
       ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|

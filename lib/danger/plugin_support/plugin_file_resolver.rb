@@ -1,5 +1,6 @@
 require "bundler"
 require "pathname"
+require "fileutils"
 
 module Danger
   class PluginFileResolver
@@ -17,26 +18,25 @@ module Danger
       # When given a list of gems
       elsif @refs and @refs.kind_of? Array
         Bundler.with_clean_env do
-          Dir.mktmpdir do |dir|
+          # We don't use the block syntax as we want it to persist until the OS cleans it on reboot
+          # or whatever, it needs to persist outside this scope.
+          dir = Dir.mktmpdir
+
+          Dir.chdir(dir) do
             gem_names = @refs
-            deps = gem_names.map { |name| Bundler::Dependency.new(name, ">= 0") }
+            gemfile = File.new("Gemfile", "w")
+            gemfile.write "source 'https://rubygems.org'"
 
-            # Use Gems from rubygems.org
-            source = Bundler::SourceList.new
-            source.add_rubygems_remote("https://rubygems.org")
+            gem_names.each do |plugin|
+              gemfile.write "\ngem '#{plugin}'"
+            end
 
-            # Create a definition to bundle, make sure it always updates
-            # and uses the latest version from the server
-            bundler = Bundler::Definition.new(nil, deps, source, true)
-            bundler.resolve_remotely!
+            gemfile.close
+            `bundle install --path vendor/gems`
 
-            # Install the gems into a tmp dir
-            options = { path: dir }
-            Bundler::Installer.install(Pathname.new(dir), bundler, options)
-
-            # Get the name'd gems out of bundler, then pull out all their paths
-            gems = gem_names.flat_map { |name| bundler.specs[name] }
-            gems.flat_map { |gem| Dir.glob(File.join(gem.gem_dir, "lib/**/**/**.rb")) }
+            # the paths are relative to our current Chdir
+            relative_paths = gem_names.flat_map { |plugin| Dir.glob("vendor/gems/ruby/*/gems/#{plugin}*/lib/**/**/**/**.rb") }
+            relative_paths.map { |path| File.join(dir, path) }
           end
         end
       # When empty, imply you want to test the current lib folder as a plugin

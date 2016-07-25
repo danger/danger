@@ -8,6 +8,10 @@ module Danger
   #
   #          warn "PR is classed as Work in Progress" if github.pr_title.include? "[WIP]"
   #
+  # @example Declare a PR to be simple to avoid specific Danger rules
+  #
+  #          declared_trivial = (github.pr_title + github.pr_body).include?("#trivial")
+  #
   # @example Ensure that labels have been used on the PR
   #
   #          fail "Please add labels to this PR" if github.labels.empty?
@@ -15,12 +19,55 @@ module Danger
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
   #          unless github.api.organization_member?('danger', github.pr_author)
-  #            message "@#{pr_author} is not a contributor yet, would you like to join the Danger org?"
+  #            message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
   #          end
   #
   # @example Ensure there is a summary for a PR
   #
   #          fail "Please provide a summary in the Pull Request description" if github.pr_body.length < 5
+  #
+  # @example Only accept PRs to the develop branch
+  #
+  #          fail "Please re-submit this PR to develop, we may have already fixed your issue." if github.branch_for_base != "develop"
+  #
+  # @example Note when PRs don't reference a milestone, which goes away when it does
+  #
+  #          has_milestone = github.pr_json["milestone"] != nil
+  #          warn("This PR does not refer to an existing milestone", sticky: false) unless has_milestone
+  #
+  # @example Note when a PR cannot be manually merged, which goes away when you can
+  #
+  #          can_merge = github.pr_json["mergeable"]
+  #          warn("This PR cannot be merged yet.", sticky: false) unless can_merge
+  #
+  # @example Highlight when a celebrity makes a pull request
+  #
+  #          message "Welcome, Danger." if github.pr_author == "dangermcshane"
+  #
+  # @example Ensure that all PRs have an assignee
+  #
+  #          warn "This PR does not have any assignees yet." unless github.pr_json["assignee"]
+  #
+  # @example Send a message with links to a collection of specific files
+  #
+  #          if git.modified_files.include? "config/*.js"
+  #            config_files = git.modified_files.select { |path| path.include? "config/" }
+  #            message "This PR changes #{ github.html_link(config_files) }"
+  #          end
+  #
+  # @example Highlight with a clickable link if a Package.json is changed
+  #
+  #         warn "#{github.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
+  #
+  # @example Note an issue with a particular line on a file using the #L[num] syntax, e.g. `#L23`
+  #
+  #         linter_json = `my_linter lint "file"`
+  #         results = JSON.parse linter_json
+  #         unless results.empty?
+  #           file, line, warning = result.first
+  #           warn "#{github.html_link("#{file}#L#{line}")} has linter issue: #{warning}."
+  #         end
+  #
   #
   # @see  danger/danger
   # @tags core, github
@@ -104,7 +151,7 @@ module Danger
       pr_json[:head][:sha]
     end
 
-    # @!group GitHub Misca
+    # @!group GitHub Misc
     # The hash that represents the PR's JSON. For an example of what this looks like
     # see the [Danger Fixture'd one](https://raw.githubusercontent.com/danger/danger/master/spec/fixtures/pr_response.json).
     # @return [Hash]
@@ -127,6 +174,29 @@ module Danger
     # @return [String]
     def pr_diff
       @github.pr_diff
+    end
+
+    # @!group GitHub Misc
+    # Returns a HTML anchor for a file, or files in the head repository. An example would be:
+    # `<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`
+    # @return [String]
+    def html_link(paths)
+      paths = [paths] unless paths.kind_of?(Array)
+      commit = head_commit
+      repo = pr_json[:head][:repo][:html_url]
+      paths = paths.map do |path|
+        path_with_slash = "/#{path}" unless path.start_with? "/"
+        create_link("#{repo}/blob/#{commit}#{path_with_slash}", path)
+      end
+
+      return paths.first if paths.count < 2
+      paths.first(paths.count - 1).join(", ") + " & " + paths.last
+    end
+
+    private
+
+    def create_link(href, text)
+      "<a href='#{href}'>#{text}</a>"
     end
   end
 end
