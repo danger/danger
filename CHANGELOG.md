@@ -1,7 +1,8 @@
 ## Master
 
-* Add `html_link` to the GitHub plugin - marcelofabri
-* **BREAKING** Removes a lot of top-level attributes in the DSL - orta
+## 2.0
+
+* **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
 
 Full list of changes:
 
@@ -35,9 +36,10 @@ The main reason for this is that we can support many code review APIs without ha
 
 It also ensures that Danger's plugins are treated like external plugins. This means any work going into improving core plugins (via documentation or automation for example) will improve the upcoming plugin community.
 
-I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
-* add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
+I don't like breaking backwards compatibility. Sorry, for as far as I can see at this point, this is the only one Danger needs.
+* add `pr_diff` exposing the unified diff for the PR to the GitHub plugin - champo
 * Improvements to the linter and the JSON output for plugin docs - orta
+* Add `html_link` to the GitHub plugin - marcelofabri
 
 ## 0.10.1
 
