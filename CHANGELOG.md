@@ -1,5 +1,7 @@
 ## Master
 
+* add `file` and `line` optional parameters to methods on the messaging plugin
+
 ## 2.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
@@ -42,7 +44,6 @@ I don't like breaking backwards compatibility. Sorry, for as far as I can see at
 * Add `html_link` to the GitHub plugin - marcelofabri
 I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
 * add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
-* add `file` and `line` optional parameters to methods on the messaging plugin
 * Improvements to the linter, readme generator and the JSON output for plugin docs - orta
 
 ## 0.10.1
