@@ -40,6 +40,9 @@ I don't like breaking backwards compatibility. Sorry, for as far as I can see at
 * add `pr_diff` exposing the unified diff for the PR to the GitHub plugin - champo
 * Improvements to the linter and the JSON output for plugin docs - orta
 * Add `html_link` to the GitHub plugin - marcelofabri
+I don't like breaking backwards comparability. Sorry, for as far as I can see at this point, this is the only one Danger needs.
+* add `pr_diff` exposing the unified diff for the PR to the Github plugin - champo
+* Improvements to the linter, readme generator and the JSON output for plugin docs - orta
 
 ## 0.10.1
 
