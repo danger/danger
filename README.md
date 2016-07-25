@@ -10,7 +10,7 @@ Formalize your Pull Request etiquette.
 <p align="center">
     <a href="#what-is-danger">What is Danger?</a> &bull;
     <a href="#im-here-to-help-out">Helping Out</a> &bull;
-    <a href="#tell-me-of-these-plugins">Plugin Development</a> &bull;
+    <a href="#tell-me-of-these-plugins">Plugin Development</a>
 </p>
 
 -------
