@@ -74,8 +74,8 @@ I'd strongly recommend using `bundle exec guard` to run your tests as you work. 
 Ruby is super dynamic, one of the best ways to debug is by using [pry](http://pryrepl.org/). We include pry for developers, when you have a problem copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](http://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
 
 ```ruby
-  require 'pry'      
-  binding.pry
+require 'pry'      
+binding.pry
 ```
 
 ## Tell me of these Plugins
