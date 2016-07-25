@@ -9,6 +9,16 @@ module Danger
       self.line = line
     end
 
+    def ==(other)
+      return false if other.nil?
+      return false unless other.kind_of? self.class
+
+      other.message == message &&
+        other.sticky == sticky &&
+        other.file == file &&
+        other.line == line
+    end
+
     def to_s
       extra = []
       extra << "sticky: true" if sticky
