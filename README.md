@@ -80,7 +80,7 @@ Ruby is super dynamic, one of the best ways to debug is by using [pry](http://pr
 
 ## Tell me of these Plugins
 
-* Make the "making a plugin" guide
+* Follow the [Creating your first plugin](http://danger.systems/guides/creating_your_first_plugin.html) guide
 * Talk through the tech specs here
 
 ## License, Contributor's Guidelines and Code of Conduct
