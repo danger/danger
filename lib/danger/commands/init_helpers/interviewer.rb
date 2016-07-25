@@ -72,7 +72,7 @@ module Danger
 
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
-          the_answer = (i == 0) ? answer.underline : answer
+          the_answer = i.zero? ? answer.underline : answer
           ui.print " " + the_answer
           ui.print(" /") if i != possible_answers.length - 1
         end

@@ -49,6 +49,8 @@ module Danger
     # When an undefined method is called, we check to see if it's something
     # that the core DSLs have, then starts looking at plugins support.
 
+    # rubocop:disable Style/MethodMissing
+
     def method_missing(method_sym, *arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
@@ -195,7 +197,7 @@ module Danger
 
     def print_results
       status = status_report
-      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count == 0
+      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count.zero?
 
       ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|
