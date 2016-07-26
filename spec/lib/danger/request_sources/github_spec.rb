@@ -235,7 +235,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "deduplicates previous violations" do
-        previous_violations = { error: ["an error", "an error"] }
+        previous_violations = { error: violations(["an error", "an error"]) }
         allow(@g).to receive(:random_compliment).and_return("random compliment")
         result = @g.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
         expect(result).to eq(<<-HTML)
@@ -263,14 +263,14 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "crosses resolved violations and changes the title" do
-        previous_violations = { error: ["an error"] }
+        previous_violations = { error: violations(["an error"]) }
         result = @g.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
         expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">:white_check_mark:')
         expect(result.gsub(/\s+/, "")).to include('<td>:white_check_mark:</td><tddata-sticky="true"><del>anerror</del></td>')
       end
 
       it "uncrosses violations that were on the list and happened again" do
-        previous_violations = { error: ["an error"] }
+        previous_violations = { error: violations(["an error"]) }
         result = @g.generate_comment(warnings: [], errors: violations(["an error"]), messages: [], previous_violations: previous_violations)
         expect(result.gsub(/\s+/, "")).to eq(
           '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
@@ -278,7 +278,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "counts only unresolved violations on the title" do
-        previous_violations = { error: ["an error"] }
+        previous_violations = { error: violations(["an error"]) }
         result = @g.generate_comment(warnings: [], errors: violations(["another error"]),
                                      messages: [], previous_violations: previous_violations)
         expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">1Error</th>')
@@ -424,25 +424,32 @@ describe Danger::RequestSources::GitHub do
       it "parses a comment with error" do
         comment = comment_fixture("comment_with_error")
         violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"] })
+        expect(violations).to eq({ error: violations(["Some error"], sticky: true) })
       end
 
       it "parses a comment with error and warnings" do
         comment = comment_fixture("comment_with_error_and_warnings")
         violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+        expect(violations).to eq({ error: violations(["Some error"], sticky: true), warning: violations(["First warning", "Second warning"], sticky: true) })
       end
 
       it "ignores non-sticky violations when parsing a comment" do
         comment = comment_fixture("comment_with_non_sticky")
         violations = @g.parse_comment(comment)
-        expect(violations).to eq({ warning: ["First warning"] })
+        expect(violations).to eq({ warning: violations(["First warning"], sticky: true) })
       end
 
       it "parses a comment with error and warnings removing strike tag" do
         comment = comment_fixture("comment_with_resolved_violation")
         violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+        expect(violations).to eq({ error: violations(["Some error"], sticky: true), warning: violations(["First warning", "Second warning"], sticky: true) })
+      end
+
+      it "parses a comment with a file link" do
+        comment = comment_fixture("comment_with_file_link")
+        violations = @g.parse_comment(comment)
+        message = '<a href="https://github.com/artsy/eigen/blob/13c4dc8bb61d/.gitignore#L10">.gitignore:10</a> - some warning'
+        expect(violations).to eq({ warning: [Danger::Violation.new(message, true, ".gitignore", 10)] })
       end
     end
   end
