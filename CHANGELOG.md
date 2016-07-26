@@ -1,5 +1,9 @@
 ## Master
 
+## 2.0.1
+
+* Fix for the `danger init` template not being up to date with 2.0 syntax - orta
+
 ## 2.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
