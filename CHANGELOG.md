@@ -1,5 +1,7 @@
 ## Master
 
+## 2.0.1
+
 * Updates the `danger init` template to 2.0 syntax - orta
 
 ## 2.0
