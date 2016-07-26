@@ -2,7 +2,7 @@
 
 ## 2.0.1
 
-* Fix for the `danger init` template not being up to date with 2.0 syntax - orta
+* Updates the `danger init` template to 2.0 syntax - orta
 
 ## 2.0
 
