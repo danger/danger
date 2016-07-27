@@ -1,5 +1,7 @@
 ## Master
 
+* Fixes Buildkite not validating when not in a PR - bentrengrove
+
 ## 2.0.1
 
 * Updates the `danger init` template to 2.0 syntax - orta
