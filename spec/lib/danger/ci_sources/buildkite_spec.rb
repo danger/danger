@@ -38,6 +38,9 @@ describe Danger::CISource::Buildkite do
       "BUILDKITE_PULL_REQUEST_REPO" => nil,
       "BUILDKITE_PULL_REQUEST" => "false"
     }
-    expect(Danger::CISource::Buildkite.validates?(env)).to be false
+    expect(Danger::CISource::Buildkite.validates?(env)).to be true
+    t = Danger::CISource::Buildkite.new(env)
+    expect(t.repo_slug).to eql(nil)
+    expect(t.pull_request_id).to eql(nil)
   end
 end
