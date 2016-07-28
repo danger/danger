@@ -3,6 +3,7 @@ module Danger
     require "danger/commands/init"
     require "danger/commands/local"
     require "danger/commands/systems"
+    require "danger/commands/pr"
 
     # manually set claide plugins as a subcommand
     require "claide_plugin"

@@ -5,14 +5,23 @@ require "octokit"
 require "tmpdir"
 
 module Danger
-  class Local < Runner
-    self.summary = "Run the Dangerfile locally."
-    self.command = "local"
+  class PullRequest < Runner
+    self.summary = "Run the current Dangerfile against a Pull Request."
+    self.command = "pr"
+    self.arguments = [
+      CLAide::Argument.new("pull_request_url", false)
+    ]
 
     def initialize(argv)
-      @pr_num = argv.option("use-merged-pr")
-      @clear_http_cache = argv.flag?("clear-http-cache", false)
+      @clear_http_cache = argv.flag?("clear-http-cache", true)
       super
+
+      @pull_request = argv.shift_argument
+      unless @pull_request
+        cork.warn "Please give a GitHub PR url to work with."
+        cork.print_warnings
+        abort
+      end
 
       setup_pry if should_pry?(argv)
     end
@@ -33,14 +42,13 @@ module Danger
     def validate_pry_available
       require "pry"
     rescue LoadError
-      cork.warn "Pry was not found, and is required for 'danger local --pry'."
+      cork.puts "Pry was not found, and is required for 'danger local --pry'.".red
       cork.print_warnings
       abort
     end
 
     def self.options
       [
-        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."],
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       ].concat(super)
@@ -55,7 +63,7 @@ module Danger
 
     def run
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
-      ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
+      ENV["LOCAL_GIT_PR_URL"] = @pull_request
 
       # setup caching for Github calls to hitting the API rate limit too quickly
       cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
