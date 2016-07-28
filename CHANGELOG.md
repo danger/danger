@@ -1,5 +1,8 @@
 ## Master
 
+* Refactors the CI Source init, and verification section - orta
+* Adds a `danger systems ci_docs` command that outputs the CI sources and their docs - orta
+
 ## 2.0.1
 
 * Updates the `danger init` template to 2.0 syntax - orta
