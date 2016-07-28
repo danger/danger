@@ -16,24 +16,8 @@ module Danger
         table.scan(regex).flatten.map(&:strip)
       end
 
-      def parse_comment(comment)
-        tables = parse_tables_from_comment(comment)
-        violations = {}
-        tables.each do |table|
-          next unless table =~ %r{<th width="100%"(.*?)</th>}im
-          title = Regexp.last_match(1)
-          kind = table_kind_from_title(title)
-          next unless kind
-
-          violations[kind] = violations_from_table(table)
-        end
-
-        violations.reject { |_, v| v.empty? }
-      end
-
       def process_markdown(violation)
         html = markdown_parser.render(violation.message)
-        match = html.match(%r{^<p>(.*)</p>$})
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
         Violation.new(html, violation.sticky)
@@ -81,8 +65,8 @@ module Danger
         end
       end
 
-      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: 'danger', template: 'github')
-        require 'erb'
+      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
+        require "erb"
 
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}.md.erb")
 
