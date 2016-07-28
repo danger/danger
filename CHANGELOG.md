@@ -1,5 +1,7 @@
 ## Master
 
+* Merges some of the work on splitting the request source done in #299 - orta, who merged k0nserv's work.
+
 ## 2.0.1
 
 * Updates the `danger init` template to 2.0 syntax - orta
