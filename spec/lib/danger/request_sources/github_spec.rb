@@ -31,10 +31,10 @@ describe Danger::RequestSources::GitHub do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
@@ -310,22 +310,22 @@ describe Danger::RequestSources::GitHub do
 
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
-        message = @g.generate_github_description(warnings: [], errors: [])
+        message = @g.generate_description(warnings: [], errors: [])
         expect(message).to start_with("All green.")
       end
 
       it "Shows an error messages when there are errors" do
-        message = @g.generate_github_description(warnings: violations([1, 2, 3]), errors: [])
+        message = @g.generate_description(warnings: violations([1, 2, 3]), errors: [])
         expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
+        message = @g.generate_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
         expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1]), errors: violations([1]))
+        message = @g.generate_description(warnings: violations([1]), errors: violations([1]))
         expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
     end
