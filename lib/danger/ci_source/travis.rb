@@ -25,11 +25,11 @@ module Danger
   #
   class Travis < CI
     def self.validates_as_ci?(env)
-      return false unless env["HAS_JOSH_K_SEAL_OF_APPROVAL"]
-      return false unless env["TRAVIS_REPO_SLUG"]
-      return false unless env["TRAVIS_PULL_REQUEST"]
+      env.key? "HAS_JOSH_K_SEAL_OF_APPROVAL"
+    end
 
-      return true
+    def self.validates_as_pr?(env)
+      ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] }
     end
 
     def supported_request_sources

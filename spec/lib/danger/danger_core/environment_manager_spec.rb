@@ -32,9 +32,7 @@ describe Danger::EnvironmentManager do
   end
 
   it "skips push runs and only runs for pull requests" do
-    env = { "TRAVIS_REPO_SLUG" => "orta/danger",
-            "TRAVIS_PULL_REQUEST" => "false",
-            "HAS_JOSH_K_SEAL_OF_APPROVAL" => "1" }
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
     expect(Danger::EnvironmentManager.local_ci_source(env)).to be_truthy
     expect(Danger::EnvironmentManager.pr?(env)).to eq(false)
   end

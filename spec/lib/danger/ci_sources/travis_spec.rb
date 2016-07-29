@@ -6,6 +6,13 @@ describe Danger::Travis do
             "TRAVIS_PULL_REQUEST" => "800",
             "TRAVIS_REPO_SLUG" => "artsy/eigen" }
     expect(Danger::Travis.validates_as_ci?(env)).to be true
+    expect(Danger::Travis.validates_as_pr?(env)).to be true
+  end
+
+  it "validates as Travis but not as a PR" do
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+    expect(Danger::Travis.validates_as_ci?(env)).to be true
+    expect(Danger::Travis.validates_as_pr?(env)).to be false
   end
 
   it "doesnt validate when Josh K aint around" do

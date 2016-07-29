@@ -23,11 +23,11 @@ module Danger
     end
 
     def self.validates_as_ci?(_env)
-      false
+      abort "You need to include a function for #{self} for validates_as_ci?"
     end
 
     def self.validates_as_pr?(_env)
-      false
+      abort "You need to include a function for #{self} for validates_as_pr?"
     end
 
     def initialize(_env)
