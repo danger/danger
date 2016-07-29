@@ -71,11 +71,16 @@ module Danger
   #
   # @see  danger/danger
   # @tags core, github
-
+  #
   class DangerfileGitHubPlugin < Plugin
+    # So that this init can fail.
+    def self.new(dangerfile)
+      return nil if dangerfile.env.request_source.class != Danger::RequestSources::GitHub
+      super
+    end
+
     def initialize(dangerfile)
       super(dangerfile)
-      return nil unless dangerfile.env.request_source.class == Danger::RequestSources::GitHub
 
       @github = dangerfile.env.request_source
     end

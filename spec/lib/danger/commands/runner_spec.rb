@@ -23,14 +23,14 @@ module Command
       # Mock out the octokit object with our fixtured data
       octokit_mock = Object
 
-      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
       allow(octokit_mock).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
-      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
       allow(octokit_mock).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
-      issue_comments_response = JSON.parse(fixture("issue_comments"), symbolize_names: true)
+      issue_comments_response = JSON.parse(fixture("github_api/issue_comments"), symbolize_names: true)
       allow(octokit_mock).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issue_comments_response)
 
-      issue_comment_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_comment_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
       allow(octokit_mock).to receive(:add_comment).and_return(issue_comment_response)
 
       allow(Octokit::Client).to receive(:new).and_return octokit_mock
