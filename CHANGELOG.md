@@ -1,5 +1,7 @@
 ## Master
 
+## 2.1.0
+
 * Refactors the CI Source init, and verification section - orta
 * Adds a `danger systems ci_docs` command that outputs the CI sources and their docs - orta
 * Merges some of the work on splitting the request source done in #299 - orta, who merged k0nserv's work.
