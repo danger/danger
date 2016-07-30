@@ -8,7 +8,7 @@ describe Danger::RequestSources::RequestSource do
 
       g = stub_request_source
       g.scm = git_mock
-      expect(g.validates?).to be true
+      expect(g.validates_as_ci?).to be true
     end
 
     it "validates when passed a corresponding repository with custom host" do
@@ -19,7 +19,7 @@ describe Danger::RequestSources::RequestSource do
       g.scm = git_mock
 
       allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@git.club-mateusa.com:artsy/eigen.git")
-      expect(g.validates?).to be true
+      expect(g.validates_as_ci?).to be true
     end
 
     it 'doesn\'t validate when passed a wrong repository' do
@@ -28,7 +28,7 @@ describe Danger::RequestSources::RequestSource do
 
       g = stub_request_source
       g.scm = git_mock
-      expect(g.validates?).to be false
+      expect(g.validates_as_ci?).to be false
     end
   end
 end

@@ -1,10 +1,9 @@
 require "danger/danger_core/environment_manager"
 
 describe Danger::EnvironmentManager do
-  it "raises without enough info in the ENV" do
-    expect do
-      Danger::EnvironmentManager.new({ "KEY" => "VALUE" })
-    end.to raise_error("Could not find a valid pull request within the known CI sources".red)
+  it "does not return a CI source with no ENV deets" do
+    env = { "KEY" => "VALUE" }
+    expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
   end
 
   it "stores travis in the source" do
@@ -33,10 +32,8 @@ describe Danger::EnvironmentManager do
   end
 
   it "skips push runs and only runs for pull requests" do
-    env = { "TRAVIS_REPO_SLUG" => "orta/danger",
-            "TRAVIS_PULL_REQUEST" => "false",
-            "HAS_JOSH_K_SEAL_OF_APPROVAL" => "1" }
-    e = Danger::EnvironmentManager.new(env)
-    expect(e.ci_source).to eq(nil)
+    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+    expect(Danger::EnvironmentManager.local_ci_source(env)).to be_truthy
+    expect(Danger::EnvironmentManager.pr?(env)).to eq(false)
   end
 end

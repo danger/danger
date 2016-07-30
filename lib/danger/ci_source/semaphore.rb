@@ -1,26 +1,32 @@
 # https://semaphoreci.com/docs/available-environment-variables.html
 
 module Danger
-  module CISource
-    # https://semaphoreci.com
-    class Semaphore < CI
-      def self.validates?(env)
-        return false unless env["SEMAPHORE"]
-        return false unless env["SEMAPHORE_REPO_SLUG"]
-        return false unless env["PULL_REQUEST_NUMBER"].to_i > 0
+  ### CI Setup
+  #
+  # For Semaphor you will want to go to the settings page of the project. Inside "Build Settings"
+  # you should add `bundle exec danger` to the Setup thread.
+  #
+  # ### Token Setup
+  #
+  # You can add your `DANGER_GITHUB_API_TOKEN` inside the "Environment Variables" section in the settings.
+  #
+  class Semaphore < CI
+    def self.validates_as_ci?(env)
+      env.key? "SEMAPHORE"
+    end
 
-        return true
-      end
+    def self.validates_as_pr?(env)
+      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] }
+    end
 
-      def supported_request_sources
-        @supported_request_sources ||= [Danger::RequestSources::GitHub]
-      end
+    def supported_request_sources
+      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+    end
 
-      def initialize(env)
-        self.repo_slug = env["SEMAPHORE_REPO_SLUG"]
-        self.pull_request_id = env["PULL_REQUEST_NUMBER"]
-        self.repo_url = GitRepo.new.origins # Semaphore doesn't provide a repo url env variable :/
-      end
+    def initialize(env)
+      self.repo_slug = env["SEMAPHORE_REPO_SLUG"]
+      self.pull_request_id = env["PULL_REQUEST_NUMBER"]
+      self.repo_url = GitRepo.new.origins # Semaphore doesn't provide a repo url env variable :/
     end
   end
 end
