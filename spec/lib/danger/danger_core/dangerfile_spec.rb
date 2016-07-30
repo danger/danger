@@ -111,6 +111,11 @@ describe Danger::Dangerfile do
   end
 
   describe "printing verbose metadata" do
+
+    before do
+      Danger::Plugin.clear_external_plugins
+    end
+
     it "exposes core attributes" do
       dm = testing_dangerfile
       methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
@@ -118,13 +123,11 @@ describe Danger::Dangerfile do
       expect(methods).to eq [:fail, :markdown, :message, :status_report, :violation_report, :warn]
     end
 
-    # NOTE: :protect_files comes from this repo, it is considered a "Danger" plugin, for
-    # danger, not one that is shipped _with danger_. It is included here, because it
-
+    # These are things that require scoped access
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq []
+      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :my_thing, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
     end
 
     it "exposes plugin external attributes by default" do

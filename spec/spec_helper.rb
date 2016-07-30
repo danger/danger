@@ -9,6 +9,9 @@ RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
 end
 
+# Now that we could be using Danger's plugins in Danger
+Danger::Plugin.clear_external_plugins
+
 WebMock.disable_net_connect!(allow: "coveralls.io")
 
 def make_temp_file(contents)

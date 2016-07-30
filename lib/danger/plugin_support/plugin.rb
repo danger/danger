@@ -28,7 +28,7 @@ module Danger
     end
 
     def self.clear_external_plugins
-      @all_plugins = @all_plugins.select { |plugin| Dangerfile.core_plugin_classes.include? plugin }
+      @all_plugins = @all_plugins.select { |plugin| Dangerfile.essential_plugin_classes.include? plugin }
     end
 
     def self.inherited(plugin)

@@ -63,3 +63,6 @@ elsif core_lint_output.include? "warning"
   warn "The core plugins are have yard warnings - see below", sticky: false
   markdown "```\n#{core_lint_output}```"
 end
+
+junit.parse "junit-results.xml"
+junit.report

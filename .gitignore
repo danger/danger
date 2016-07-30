@@ -43,6 +43,6 @@ build/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-fastlane/report.xml
 .keys
 .idea
+junit-results.xml

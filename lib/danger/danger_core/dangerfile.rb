@@ -29,8 +29,14 @@ module Danger
     # These are the classes that are allowed to also use method_missing
     # in order to provide broader plugin support
     def self.core_plugin_classes
-      [Danger::DangerfileMessagingPlugin]
+      [DangerfileMessagingPlugin]
     end
+
+    # The ones that everything would break without
+    def self.essential_plugin_classes
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin]
+    end
+
 
     # Both of these methods exist on all objects
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
