@@ -65,4 +65,5 @@ elsif core_lint_output.include? "warning"
 end
 
 junit.parse "junit-results.xml"
+junit.headers = [:file, :name]
 junit.report
