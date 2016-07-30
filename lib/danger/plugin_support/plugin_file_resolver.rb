@@ -41,7 +41,7 @@ module Danger
         end
       # When empty, imply you want to test the current lib folder as a plugin
       else
-        Dir.glob(File.join(".", "lib/*.rb")).map { |path| File.expand_path(path) }
+        Dir.glob(File.join(".", "lib/**/*.rb")).map { |path| File.expand_path(path) }
       end
     end
   end
