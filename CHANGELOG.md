@@ -1,6 +1,7 @@
 ## Master
 
 * Updates the `danger init` template to 2.0 syntax - orta
+* Improves the default file resolves for all the `danger plugins` commands, it will now work with a new plugin by default. - orta
 
 ## 2.0
 
