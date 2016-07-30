@@ -16,6 +16,8 @@ module Danger
   # Adding this to your `.travis.yml` allows Danger to fail your build, both on the TravisCI website and within your Pull Request.
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
+  # _Note:_ Travis CI defaults to using an older version of Ruby, so you may need to add `rvm: 2.0.0` to the root your `.travis.yml`.
+  #
   # ### Token Setup
   #
   # You need to add the `DANGER_GITHUB_API_TOKEN` environment variable, to do this,
