@@ -31,7 +31,8 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] }
+      exists = ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] }
+      exists && env["TRAVIS_PULL_REQUEST"].to_i > 0
     end
 
     def supported_request_sources

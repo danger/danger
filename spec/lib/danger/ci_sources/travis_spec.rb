@@ -20,6 +20,11 @@ describe Danger::Travis do
     expect(Danger::Travis.validates_as_ci?(env)).to be false
   end
 
+  it "fails the PR check when the pull request is false " do
+    env = { "TRAVIS_PULL_REQUEST" => "false" }
+    expect(Danger::Travis.validates_as_pr?(env)).to be_falsey
+  end
+
   it "gets the pull request ID" do
     env = { "TRAVIS_PULL_REQUEST" => "2" }
     t = Danger::Travis.new(env)
