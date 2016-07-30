@@ -2,28 +2,40 @@
 # https://buildkite.com/docs/guides/environment-variables
 
 module Danger
-  module CISource
-    # https://buildkite.com
-    class Buildkite < CI
-      def self.validates?(env)
-        return false unless env["BUILDKITE"]
-        return false unless env["BUILDKITE_PULL_REQUEST_REPO"] && !env["BUILDKITE_PULL_REQUEST_REPO"].empty?
-        return false unless env["BUILDKITE_PULL_REQUEST"]
+  # ### CI Setup
+  #
+  # With BuildKite you run the server yourself, so you will want to run  it as a part of your build process.
+  # It is common to have build steps, so we would recommend adding this to your scrip:
+  #
+  #  ``` shell
+  #   echo "--- Running Danger"
+  #   bundle exec danger
+  #  ```
+  #
+  # ### Token Setup
+  #
+  # As this is self-hosted, you will need to add the `DANGER_GITHUB_API_TOKEN` to your build user's ENV. The alternative
+  # is to pass in the token as a prefix to the command `DANGER_GITHUB_API_TOKEN="123" bundle exec danger`.
+  #
+  class Buildkite < CI
+    def self.validates_as_ci?(env)
+      env.key? "BUILDKITE"
+    end
 
-        return true
-      end
+    def self.validates_as_pr?(env)
+      ["BUILDKITE_PULL_REQUEST_REPO", "BUILDKITE_PULL_REQUEST"].all? { |x| env[x] }
+    end
 
-      def initialize(env)
-        self.repo_url = env["BUILDKITE_PULL_REQUEST_REPO"]
-        self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
+    def initialize(env)
+      self.repo_url = env["BUILDKITE_PULL_REQUEST_REPO"]
+      self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
 
-        repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-        self.repo_slug = repo_matches[2] unless repo_matches.nil?
-      end
+      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+      self.repo_slug = repo_matches[2] unless repo_matches.nil?
+    end
 
-      def supported_request_sources
-        @supported_request_sources ||= [Danger::RequestSources::GitHub]
-      end
+    def supported_request_sources
+      @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
   end
 end

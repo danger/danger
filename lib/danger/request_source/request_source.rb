@@ -18,7 +18,8 @@ module Danger
         raise "Subclass and overwrite initialize"
       end
 
-      def validates?
+      # What does this do?
+      def validates_as_ci?
         !!self.scm.origins.match(%r{#{Regexp.escape self.host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
       end
 
