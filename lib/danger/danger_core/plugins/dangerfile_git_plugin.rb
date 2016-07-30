@@ -23,9 +23,15 @@ module Danger
   # @example Warn when there are merge commits in the diff
   #
   #          if commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
-  #             warn 'Please rebase to get rid of the merge commits in this PR'
+  #            warn 'Please rebase to get rid of the merge commits in this PR'
   #          end
   #
+  # @example Warn when somebody tries to add nokogiri to the project
+  #
+  #          diff = git.diff_for_file["Gemfile.lock"]
+  #          if diff && diff.patch =~ "nokogiri"
+  #            warn 'Please do not add nokogiri to the project. Thank you.'
+  #          end
   #
   # @see  danger/danger
   # @tags core, git
@@ -99,6 +105,14 @@ module Danger
     #
     def commits
       @git.log.to_a
+    end
+
+    # @!group Git Metadata
+    # Details for a specific file in this diff
+    # @return [Git::Diff::DiffFile] from the gem `git`
+    #
+    def diff_for_file(file)
+      modified_files.include?(file) ? @git.diff[file] : nil
     end
   end
 end
