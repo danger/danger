@@ -4,7 +4,7 @@ module Danger
   module Helpers
     module CommentsHelper
       def markdown_parser
-        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
+        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(hard_wrap: true), no_intra_emphasis: true)
       end
 
       def parse_tables_from_comment(comment)
