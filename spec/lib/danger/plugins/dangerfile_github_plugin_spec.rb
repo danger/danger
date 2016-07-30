@@ -14,6 +14,11 @@ module Danger
           expect(link).to eq("<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>")
         end
 
+        it "can show just a path" do
+          link = @dsl.html_link("/path/file.txt", full_path: false)
+          expect(link).to eq("<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/path/file.txt'>file.txt</a>")
+        end
+
         it "works with 2 paths" do
           link = @dsl.html_link(["file.txt", "example.json"])
           expect(link).to eq("<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a> & " \
