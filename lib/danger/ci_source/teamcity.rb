@@ -1,7 +1,7 @@
-module Danger
-  # https://www.jetbrains.com/teamcity/
+# https://www.jetbrains.com/teamcity/
 
-  ### CI Setup
+module Danger
+  # ### CI Setup
   #
   # You need to go to your project settings. Then depending on the type of your build settings, you may need
   # to add a new build step for Danger. You want to be able to run the command `bundle exec danger`, so

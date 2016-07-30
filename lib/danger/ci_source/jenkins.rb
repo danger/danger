@@ -4,7 +4,7 @@
 module Danger
   # https://jenkins-ci.org
 
-  ### CI Setup
+  # ### CI Setup
   #
   # Ah Jenkins, so many memories. So, if you're using Jenkins, you're hosting your own environment. You
   # will want to be using the [GitHub pull request builder plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin)

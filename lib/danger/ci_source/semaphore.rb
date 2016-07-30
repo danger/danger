@@ -1,7 +1,7 @@
 # https://semaphoreci.com/docs/available-environment-variables.html
 
 module Danger
-  ### CI Setup
+  # ### CI Setup
   #
   # For Semaphor you will want to go to the settings page of the project. Inside "Build Settings"
   # you should add `bundle exec danger` to the Setup thread.
