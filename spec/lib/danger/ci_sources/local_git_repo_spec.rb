@@ -39,7 +39,7 @@ describe Danger::CISource::LocalGitRepo do
   end
 
   describe "github repos" do
-    it "gets the repo address when it uses https" do
+    xit "gets the repo address when it uses https" do
       run_in_repo do
         `git remote add origin https://github.com/orta/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }

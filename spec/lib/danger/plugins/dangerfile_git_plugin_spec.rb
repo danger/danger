@@ -1,5 +1,22 @@
 require "ostruct"
 
+def run_in_repo_with_diff
+  Dir.mktmpdir do |dir|
+    Dir.chdir dir do
+      `git init`
+      File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
+      `git add .`
+      `git commit -m "adding file1"`
+      `git checkout -b new-branch`
+      File.open(dir + "/file2", "w") { |f| f.write "Pants!" }
+      `git add .`
+      `git commit -m "adding file2"`
+      g = Git.open(".")
+      yield g
+    end
+  end
+end
+
 module Danger
   describe DangerfileGitPlugin do
     it "fails init if the dangerfile's request source is not a GitRepo" do
@@ -63,6 +80,24 @@ module Danger
         allow(@repo).to receive(:log).and_return(log)
 
         expect(@dsl.commits).to eq(log)
+      end
+
+      describe "getting diff for a specific file" do
+        it "returns nil when a specific diff does not exist" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            expect(@dsl.diff_for_file("file_nope_no_way")).to be_nil
+          end
+        end
+
+        it "gets a specific diff" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            expect(@dsl.diff_for_file("file2")).to_not be_nil
+          end
+        end
       end
     end
   end
