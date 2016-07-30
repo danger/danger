@@ -2,7 +2,7 @@
 # http://docs.travis-ci.com/user/environment-variables/
 
 module Danger
-  ### CI Setup
+  # ### CI Setup
   # You need to edit your `.travis.yml` to include `bundle exec danger`. If you already have
   # a `script:` section then we recommend adding this command at the end of the script step: `- bundle exec danger`.
   #
