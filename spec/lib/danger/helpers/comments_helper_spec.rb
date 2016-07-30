@@ -169,7 +169,7 @@ describe Danger::Helpers::CommentsHelper do
   end
 
   describe "#generate_comment" do
-    it "produces the exepected coment" do
+    it "produces the expected comment" do
       comment = dummy.generate_comment(
         warnings: [Danger::Violation.new("This is a warning", false)],
         errors: [Danger::Violation.new("This is an error", true)],
@@ -191,6 +191,22 @@ describe Danger::Helpers::CommentsHelper do
       expect(comment).to include("<td>:warning:</td>")
 
       expect(comment).to include("*Raw markdown*")
+    end
+
+    it "produces the expected comment when there are newlines" do
+      comment = dummy.generate_comment(
+        warnings: [Danger::Violation.new("This is a warning\nin two lines", false)],
+        errors: [],
+        messages: [],
+        markdowns: [],
+        danger_id: "my_danger_id",
+        template: "github"
+      )
+
+      expect(comment).to include('data-meta="generated_by_my_danger_id"')
+
+      expect(comment).to include("<td data-sticky=\"false\">This is a warning<br>\nin two lines</td>")
+      expect(comment).to include("<td>:warning:</td>")
     end
   end
 
