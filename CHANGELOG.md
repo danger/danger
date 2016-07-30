@@ -1,6 +1,7 @@
 ## Master
 
 * Merges some of the work on splitting the request source done in #299 - orta, who merged k0nserv's work.
+* Add `git.diff_for_file("some/file.txt")` to get a Git::Diff::DiffFile - dbgrandi
 
 ## 2.0.1
 

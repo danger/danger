@@ -100,5 +100,13 @@ module Danger
     def commits
       @git.log.to_a
     end
+
+    # @!group Git Metadata
+    # Details for a specific file in this diff
+    # @return [Git::Diff::DiffFile] from the gem `git`
+    #
+    def diff_for_file(file)
+      modified_files.include?(file) ? @git.diff[file] : nil
+    end
   end
 end
