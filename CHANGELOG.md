@@ -4,6 +4,7 @@
 * Add `git.diff_for_file("some/file.txt")` to get a Git::Diff::DiffFile - dbgrandi
 * Improves the default file resolves for all the `danger plugins` commands, it will now work with a new plugin by default. - orta
 * \n now works in HTML tables - marcelofabri
+* You can now pass `full_path: false` to `github.html_link("/path/file.txt", full_path: false)` to have it only show the filename. - orta
 
 ## 2.0.1
 
