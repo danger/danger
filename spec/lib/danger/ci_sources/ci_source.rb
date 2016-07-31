@@ -1,6 +1,6 @@
 require "danger/ci_source/ci_source"
 
-describe Danger::CISource::Buildkite do
+describe Danger::Buildkite do
   before do
     @request_source = Danger::RequestSources::GitHub
     @ci_source = stub_ci

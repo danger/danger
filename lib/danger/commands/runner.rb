@@ -2,6 +2,7 @@ module Danger
   class Runner < CLAide::Command
     require "danger/commands/init"
     require "danger/commands/local"
+    require "danger/commands/systems"
 
     # manually set claide plugins as a subcommand
     require "claide_plugin"
