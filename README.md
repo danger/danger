@@ -30,7 +30,7 @@ You can use Danger to codify your teams norms. Leaving humans to think about har
 * Enforce using descriptive labels
 * Look out for common anti-patterns
 * Highlight interesting build artifacts
-* Give specific files have extra focus 
+* Give specific files extra focus 
 
 Danger simply provides the glue to let _you_ build out the rules specific to your team's culture. Offering a lot of useful metadata, and a comprehensive plugin system to share common issues. 
 
