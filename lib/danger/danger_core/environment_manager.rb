@@ -5,31 +5,29 @@ module Danger
   class EnvironmentManager
     attr_accessor :ci_source, :request_source, :scm
 
+    # Finds a Danger::CI class based on the ENV
+    def self.local_ci_source(env)
+      CI.available_ci_sources.find { |ci| ci.validates_as_ci? env }
+    end
+
+    # Uses the current Danger::CI subclass, and sees if it is a PR
+    def self.pr?(env)
+      local_ci_source(env).validates_as_pr?(env)
+    end
+
     def initialize(env)
-      CISource::CI.available_ci_sources.each do |klass|
-        next unless klass.validates?(env)
-
-        self.ci_source = klass.new(env)
-        if self.ci_source.repo_slug and self.ci_source.pull_request_id
-          break
-        else
-          self.ci_source = nil
-          return nil
-        end
-      end
-
-      raise "Could not find a valid pull request within the known CI sources".red unless self.ci_source
+      ci_klass = self.class.local_ci_source(env)
+      self.ci_source = ci_klass.new(env)
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)
 
         request_source = klass.new(self.ci_source, ENV)
-        next unless request_source.validates?
+        next unless request_source.validates_as_ci?
         self.request_source = request_source
       end
 
-      raise "Could not find a Request Source".red unless self.request_source
-
+      raise "Could not find a Request Source for #{ci_klass}".red unless self.request_source
       self.scm = self.request_source.scm
     end
 

@@ -19,21 +19,21 @@ def run_in_repo
   end
 end
 
-describe Danger::CISource::LocalGitRepo do
+describe Danger::LocalGitRepo do
   it "validates when run by danger local" do
     env = { "DANGER_USE_LOCAL_GIT" => "true" }
-    expect(Danger::CISource::LocalGitRepo.validates?(env)).to be true
+    expect(Danger::LocalGitRepo.validates_as_ci?(env)).to be true
   end
 
   it "doesnt validate when the local git flag is missing" do
     env = { "HAS_ANDREW_W_K_SEAL_OF_APPROVAL" => "true" }
-    expect(Danger::CISource::LocalGitRepo.validates?(env)).to be false
+    expect(Danger::LocalGitRepo.validates_as_ci?(env)).to be false
   end
 
   it "gets the pull request ID" do
     run_in_repo do
       env = { "DANGER_USE_LOCAL_GIT" => "true" }
-      t = Danger::CISource::LocalGitRepo.new(env)
+      t = Danger::LocalGitRepo.new(env)
       expect(t.pull_request_id).to eql("1234")
     end
   end
@@ -43,7 +43,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin https://github.com/orta/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
@@ -52,7 +52,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git@github.com:orta/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
@@ -61,7 +61,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git@github.com:artsy/artsy.github.com.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("artsy/artsy.github.com")
       end
     end
@@ -70,7 +70,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git://github.com:orta/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
@@ -79,7 +79,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git://git@github.com:orta/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("orta/danger")
       end
     end
@@ -88,7 +88,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to be_nil
       end
     end
@@ -99,7 +99,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true", "DANGER_GITHUB_HOST" => "git.evilcorp.com" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to eql("tyrell/danger")
       end
     end
@@ -108,7 +108,7 @@ describe Danger::CISource::LocalGitRepo do
       run_in_repo do
         `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
         env = { "DANGER_USE_LOCAL_GIT" => "true", "DANGER_GITHUB_HOST" => "git.robot.com" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.repo_slug).to be_nil
       end
     end
@@ -130,7 +130,7 @@ describe Danger::CISource::LocalGitRepo do
         add_another_pr
 
         env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1234" }
-        t = Danger::CISource::LocalGitRepo.new(env)
+        t = Danger::LocalGitRepo.new(env)
         expect(t.pull_request_id).to eql("1234")
       end
     end
@@ -141,7 +141,7 @@ describe Danger::CISource::LocalGitRepo do
 
         env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1238" }
 
-        expect { Danger::CISource::LocalGitRepo.new(env) }.to raise_error RuntimeError
+        expect { Danger::LocalGitRepo.new(env) }.to raise_error RuntimeError
       end
     end
   end
