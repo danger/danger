@@ -1,5 +1,7 @@
 ## Master
 
+* Improvements to `danger init` - orta
+
 ## 2.1.1
 
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
