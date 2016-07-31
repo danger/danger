@@ -37,7 +37,6 @@ module Danger
       [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin]
     end
 
-
     # Both of these methods exist on all objects
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-warn
     # http://ruby-doc.org/core-2.2.3/Kernel.html#method-i-fail

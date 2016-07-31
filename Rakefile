@@ -5,6 +5,7 @@ begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
 rescue LoadError
+  puts "Please use `bundle exec` to get all the rake commands"
 end
 
 task default: :spec

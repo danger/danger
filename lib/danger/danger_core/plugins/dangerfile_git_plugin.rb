@@ -46,7 +46,7 @@ module Danger
 
     def initialize(dangerfile)
       super(dangerfile)
-      raise  unless dangerfile.env.scm.class == Danger::GitRepo
+      raise unless dangerfile.env.scm.class == Danger::GitRepo
 
       @git = dangerfile.env.scm
     end
