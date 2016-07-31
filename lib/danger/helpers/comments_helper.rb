@@ -1,10 +1,10 @@
-require "redcarpet"
+require "kramdown"
 
 module Danger
   module Helpers
     module CommentsHelper
-      def markdown_parser
-        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(hard_wrap: true), no_intra_emphasis: true)
+      def markdown_parser(text)
+        Kramdown::Document.new(text, input: "GFM")
       end
 
       def parse_tables_from_comment(comment)
@@ -17,9 +17,10 @@ module Danger
       end
 
       def process_markdown(violation)
-        html = markdown_parser.render(violation.message)
+        html = markdown_parser(violation.message).to_html
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
+
         Violation.new(html, violation.sticky)
       end
 

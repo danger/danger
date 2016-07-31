@@ -53,13 +53,8 @@ describe Danger::Helpers::CommentsHelper do
 
   describe "#markdown_parser" do
     it "is a Redcarpet::Markdown instance" do
-      parser = dummy.markdown_parser
-      expect(parser).to be_an_instance_of(Redcarpet::Markdown)
-    end
-
-    it "uses a HTML renderer" do
-      parser = dummy.markdown_parser
-      expect(parser.renderer).to be_an_instance_of(Redcarpet::Render::HTML)
+      parser = dummy.markdown_parser("")
+      expect(parser).to be_an_instance_of(Kramdown::Document)
     end
   end
 
@@ -205,7 +200,7 @@ describe Danger::Helpers::CommentsHelper do
 
       expect(comment).to include('data-meta="generated_by_my_danger_id"')
 
-      expect(comment).to include("<td data-sticky=\"false\">This is a warning<br>\nin two lines</td>")
+      expect(comment).to include("<td data-sticky=\"false\">This is a warning<br />\nin two lines</td>")
       expect(comment).to include("<td>:warning:</td>")
     end
   end
