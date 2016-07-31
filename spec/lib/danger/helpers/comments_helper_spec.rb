@@ -1,6 +1,6 @@
 # coding: utf-8
-require "danger/helpers/comments_helper"
-require "danger/danger_core/violation"
+require 'danger/helpers/comments_helper'
+require 'danger/danger_core/violation'
 
 SINGLE_TABLE_COMMENT = <<-EOS.freeze
   Other comment content
@@ -51,91 +51,91 @@ describe Danger::Helpers::CommentsHelper do
     d
   end
 
-  describe "#markdown_parser" do
-    it "is a Redcarpet::Markdown instance" do
+  describe '#markdown_parser' do
+    it 'is a Redcarpet::Markdown instance' do
       parser = dummy.markdown_parser
       expect(parser).to be_an_instance_of(Redcarpet::Markdown)
     end
 
-    it "uses a HTML renderer" do
+    it 'uses a HTML renderer' do
       parser = dummy.markdown_parser
       expect(parser.renderer).to be_an_instance_of(Redcarpet::Render::HTML)
     end
   end
 
-  describe "#parse_tables_from_comment" do
-    it "splits a single table comment" do
+  describe '#parse_tables_from_comment' do
+    it 'splits a single table comment' do
       result = dummy.parse_tables_from_comment(SINGLE_TABLE_COMMENT)
       expect(result.size).to be(2)
-      expect(result[0]).to include("<table>")
-      expect(result[0]).to include("<thead>")
-      expect(result[0]).to include("<tbody>")
+      expect(result[0]).to include('<table>')
+      expect(result[0]).to include('<thead>')
+      expect(result[0]).to include('<tbody>')
 
-      expect(result[1]).not_to include("<table>")
-      expect(result[1]).not_to include("<thead>")
-      expect(result[1]).not_to include("<tbody>")
+      expect(result[1]).not_to include('<table>')
+      expect(result[1]).not_to include('<thead>')
+      expect(result[1]).not_to include('<tbody>')
     end
 
-    it "splits a multi table comment" do
+    it 'splits a multi table comment' do
       result = dummy.parse_tables_from_comment(MULTI_TABLE_COMMENT)
       expect(result.size).to be(3)
-      expect(result[0]).to include("<table>")
-      expect(result[0]).to include("<thead>")
-      expect(result[0]).to include("<tbody>")
-      expect(result[0]).to include("Error")
-      expect(result[0]).not_to include("Warning")
+      expect(result[0]).to include('<table>')
+      expect(result[0]).to include('<thead>')
+      expect(result[0]).to include('<tbody>')
+      expect(result[0]).to include('Error')
+      expect(result[0]).not_to include('Warning')
 
-      expect(result[1]).to include("<table>")
-      expect(result[1]).to include("<thead>")
-      expect(result[1]).to include("<tbody>")
-      expect(result[1]).not_to include("Error")
-      expect(result[1]).to include("Warning")
+      expect(result[1]).to include('<table>')
+      expect(result[1]).to include('<thead>')
+      expect(result[1]).to include('<tbody>')
+      expect(result[1]).not_to include('Error')
+      expect(result[1]).to include('Warning')
 
-      expect(result[2]).not_to include("<table>")
-      expect(result[2]).not_to include("<thead>")
-      expect(result[2]).not_to include("<tbody>")
+      expect(result[2]).not_to include('<table>')
+      expect(result[2]).not_to include('<thead>')
+      expect(result[2]).not_to include('<tbody>')
     end
   end
 
-  describe "#violations_from_table" do
-    it "finds violations" do
+  describe '#violations_from_table' do
+    it 'finds violations' do
       violations = dummy.violations_from_table(SINGLE_TABLE_COMMENT)
 
       expect(violations.size).to be(1)
-      expect(violations.first).to eq("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>")
+      expect(violations.first).to eq('<p>Please include a CHANGELOG entry. You can find it at <a href="https://github.com/danger/danger/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</p>')
     end
   end
 
-  describe "#parse_comment" do
-    it "parse violations by kind" do
+  describe '#parse_comment' do
+    it 'parse violations by kind' do
       violations = dummy.parse_comment(MULTI_TABLE_COMMENT)
 
       expect(violations[:error].size).to be(1)
       expect(violations[:warning].size).to be(1)
       expect(violations[:message]).to be_nil
 
-      expect(violations[:error][0]).to include("Please include a CHANGELOG")
-      expect(violations[:warning][0]).to include("External contributor has edited")
+      expect(violations[:error][0]).to include('Please include a CHANGELOG')
+      expect(violations[:warning][0]).to include('External contributor has edited')
     end
   end
 
-  describe "#table" do
-    let(:violation_1) { Danger::Violation.new("**Violation 1**", false) }
+  describe '#table' do
+    let(:violation_1) { Danger::Violation.new('**Violation 1**', false) }
     let(:violation_2) do
-      Danger::Violation.new("A [link](https://example.com)", true)
+      Danger::Violation.new('A [link](https://example.com)', true)
     end
 
-    it "produces table data" do
-      table_data = dummy.table("2 Errors", "no_entry_sign", [violation_1, violation_2], {})
+    it 'produces table data' do
+      table_data = dummy.table('2 Errors', 'no_entry_sign', [violation_1, violation_2], {})
 
-      expect(table_data[:name]).to eq("2 Errors")
-      expect(table_data[:emoji]).to eq("no_entry_sign")
+      expect(table_data[:name]).to eq('2 Errors')
+      expect(table_data[:emoji]).to eq('no_entry_sign')
       expect(table_data[:content].size).to be(2)
-      expect(table_data[:content][0].message).to eq("<strong>Violation 1</strong>")
+      expect(table_data[:content][0].message).to eq('<strong>Violation 1</strong>')
       expect(table_data[:content][0].sticky).to eq(false)
 
       expect(table_data[:content][1].message).to eq(
-        "A <a href=\"https://example.com\">link</a>"
+        'A <a href="https://example.com">link</a>'
       )
       expect(table_data[:content][1].sticky).to eq(true)
       expect(table_data[:resolved]).to be_empty
@@ -143,24 +143,24 @@ describe Danger::Helpers::CommentsHelper do
     end
   end
 
-  describe "#table_kind_from_title" do
+  describe '#table_kind_from_title' do
     [
-      { title: "errors", singular: "Error", plural: "Errors", expected: :error },
-      { title: "warnings", singular: "Warning", plural: "Warnings", expected: :warning },
-      { title: "messages", singular: "Message", plural: "Messages", expected: :message }
+      { title: 'errors', singular: 'Error', plural: 'Errors', expected: :error },
+      { title: 'warnings', singular: 'Warning', plural: 'Warnings', expected: :warning },
+      { title: 'messages', singular: 'Message', plural: 'Messages', expected: :message }
     ].each do |option|
       describe option[:title] do
-        it "handles singular" do
+        it 'handles singular' do
           kind = dummy.table_kind_from_title("1 #{option[:singular]}")
           expect(kind).to eq(option[:expected])
         end
 
-        it "handles plural" do
+        it 'handles plural' do
           kind = dummy.table_kind_from_title("42 #{option[:plural]}")
           expect(kind).to eq(option[:expected])
         end
 
-        it "handles lowercase" do
+        it 'handles lowercase' do
           kind = dummy.table_kind_from_title("42 #{option[:plural].downcase}")
           expect(kind).to eq(option[:expected])
         end
@@ -168,69 +168,69 @@ describe Danger::Helpers::CommentsHelper do
     end
   end
 
-  describe "#generate_comment" do
-    it "produces the expected comment" do
+  describe '#generate_comment' do
+    it 'produces the expected comment' do
       comment = dummy.generate_comment(
-        warnings: [Danger::Violation.new("This is a warning", false)],
-        errors: [Danger::Violation.new("This is an error", true)],
-        messages: [Danger::Violation.new("This is a message", false)],
-        markdowns: ["*Raw markdown*"],
-        danger_id: "my_danger_id",
-        template: "github"
+        warnings: [Danger::Violation.new('This is a warning', false)],
+        errors: [Danger::Violation.new('This is an error', true)],
+        messages: [Danger::Violation.new('This is a message', false)],
+        markdowns: ['*Raw markdown*'],
+        danger_id: 'my_danger_id',
+        template: 'github'
       )
 
       expect(comment).to include('data-meta="generated_by_my_danger_id"')
 
       expect(comment).to include('<td data-sticky="true">This is an error</td>')
-      expect(comment).to include("<td>:no_entry_sign:</td>")
+      expect(comment).to include('<td>:no_entry_sign:</td>')
 
       expect(comment).to include('<td data-sticky="false">This is a warning</td>')
-      expect(comment).to include("<td>:warning:</td>")
+      expect(comment).to include('<td>:warning:</td>')
 
       expect(comment).to include('<td data-sticky="false">This is a message</td>')
-      expect(comment).to include("<td>:warning:</td>")
+      expect(comment).to include('<td>:warning:</td>')
 
-      expect(comment).to include("*Raw markdown*")
+      expect(comment).to include('*Raw markdown*')
     end
 
-    it "produces the expected comment when there are newlines" do
+    it 'produces the expected comment when there are newlines' do
       comment = dummy.generate_comment(
         warnings: [Danger::Violation.new("This is a warning\nin two lines", false)],
         errors: [],
         messages: [],
         markdowns: [],
-        danger_id: "my_danger_id",
-        template: "github"
+        danger_id: 'my_danger_id',
+        template: 'github'
       )
 
       expect(comment).to include('data-meta="generated_by_my_danger_id"')
 
       expect(comment).to include("<td data-sticky=\"false\">This is a warning<br>\nin two lines</td>")
-      expect(comment).to include("<td>:warning:</td>")
+      expect(comment).to include('<td>:warning:</td>')
     end
   end
 
-  describe "#generate_description" do
-    it "Handles no errors or warnings" do
+  describe '#generate_description' do
+    it 'Handles no errors or warnings' do
       message = dummy.generate_description(warnings: [], errors: [])
-      expect(message).to include("All green.")
+      expect(message).to include('All green.')
     end
 
-    it "handles a single error and a single warning" do
+    it 'handles a single error and a single warning' do
       message = dummy.generate_description(warnings: [1], errors: [1])
 
-      expect(message).to include("⚠ ")
-      expect(message).to include("Error")
-      expect(message).to include("Warning")
+      expect(message).to include('⚠ ')
+      expect(message).to include('Error')
+      expect(message).to include('Warning')
       expect(message).to include("Don't worry, everything is fixable.")
     end
 
-    it "handles multiple errors and warning with pluralisation" do
+    it 'handles multiple errors and warning with pluralisation' do
       message = dummy.generate_description(warnings: [1, 2], errors: [1, 2])
 
-      expect(message).to include("⚠ ")
-      expect(message).to include("Errors")
-      expect(message).to include("Warnings")
+      expect(message).to include('⚠ ')
+      expect(message).to include('Errors')
+      expect(message).to include('Warnings')
       expect(message).to include("Don't worry, everything is fixable.")
     end
   end

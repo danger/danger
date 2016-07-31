@@ -5,7 +5,7 @@ module Danger
     end
 
     def self.instance_name
-      to_s.gsub("Danger", "").danger_underscore.split("/").last
+      to_s.gsub('Danger', '').danger_underscore.split('/').last
     end
 
     # Both of these methods exist on all objects

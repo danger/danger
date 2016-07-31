@@ -19,16 +19,16 @@ module Danger
   #
   class Buildkite < CI
     def self.validates_as_ci?(env)
-      env.key? "BUILDKITE"
+      env.key? 'BUILDKITE'
     end
 
     def self.validates_as_pr?(env)
-      ["BUILDKITE_PULL_REQUEST_REPO", "BUILDKITE_PULL_REQUEST"].all? { |x| env[x] }
+      ['BUILDKITE_PULL_REQUEST_REPO', 'BUILDKITE_PULL_REQUEST'].all? { |x| env[x] }
     end
 
     def initialize(env)
-      self.repo_url = env["BUILDKITE_PULL_REQUEST_REPO"]
-      self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
+      self.repo_url = env['BUILDKITE_PULL_REQUEST_REPO']
+      self.pull_request_id = env['BUILDKITE_PULL_REQUEST']
 
       repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?

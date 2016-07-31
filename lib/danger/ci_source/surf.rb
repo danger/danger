@@ -13,7 +13,7 @@ module Danger
   #
   class Surf < CI
     def self.validates_as_ci?(env)
-      return ["SURF_REPO", "SURF_NWO"].all? { |x| env[x] }
+      return ['SURF_REPO', 'SURF_NWO'].all? { |x| env[x] }
     end
 
     def self.validates_as_pr?(_)
@@ -25,12 +25,12 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SURF_NWO"]
-      if env["SURF_PR_NUM"].to_i > 0
-        self.pull_request_id = env["SURF_PR_NUM"]
+      self.repo_slug = env['SURF_NWO']
+      if env['SURF_PR_NUM'].to_i > 0
+        self.pull_request_id = env['SURF_PR_NUM']
       end
 
-      self.repo_url = env["SURF_REPO"]
+      self.repo_url = env['SURF_REPO']
     end
   end
 end

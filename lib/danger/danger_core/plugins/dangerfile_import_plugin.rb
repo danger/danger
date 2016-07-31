@@ -1,4 +1,4 @@
-require "danger/plugin_support/plugin"
+require 'danger/plugin_support/plugin'
 
 module Danger
   # One way to support internal plugins is via `plugin.import` this gives you
@@ -28,7 +28,7 @@ module Danger
     # @return [String]
     #
     def self.instance_name
-      "plugin"
+      'plugin'
     end
 
     # @!group Plugins
@@ -40,9 +40,9 @@ module Danger
     # @return   [void]
     #
     def import(path_or_url)
-      raise "`import` requires a string" unless path_or_url.kind_of?(String)
+      raise '`import` requires a string' unless path_or_url.kind_of?(String)
 
-      if path_or_url.start_with?("http")
+      if path_or_url.start_with?('http')
         import_url(path_or_url)
       else
         import_local(path_or_url)
@@ -59,18 +59,18 @@ module Danger
     # @return [String] The path to the downloaded Ruby file
     #
     def download(path_or_url)
-      raise "`download` requires a string" unless path_or_url.kind_of?(String)
-      raise "URL is not https, for security reasons `danger` only supports encrypted requests" if URI.parse(path_or_url).scheme != "https"
+      raise '`download` requires a string' unless path_or_url.kind_of?(String)
+      raise 'URL is not https, for security reasons `danger` only supports encrypted requests' if URI.parse(path_or_url).scheme != 'https'
 
-      require "tmpdir"
-      require "faraday"
+      require 'tmpdir'
+      require 'faraday'
 
       @http_client ||= Faraday.new do |b|
         b.adapter :net_http
       end
       content = @http_client.get(path_or_url)
 
-      path = File.join(Dir.mktmpdir, "temporary_danger.rb")
+      path = File.join(Dir.mktmpdir, 'temporary_danger.rb')
       File.write(path, content.body)
       return path
     end

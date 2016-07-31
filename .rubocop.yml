@@ -6,10 +6,6 @@ AllCops:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'
 
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-  Enabled: true
-
 # kind_of? is a good way to check a type
 Style/ClassCheck:
   EnforcedStyle: kind_of?

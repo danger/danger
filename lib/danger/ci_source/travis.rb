@@ -27,12 +27,12 @@ module Danger
   #
   class Travis < CI
     def self.validates_as_ci?(env)
-      env.key? "HAS_JOSH_K_SEAL_OF_APPROVAL"
+      env.key? 'HAS_JOSH_K_SEAL_OF_APPROVAL'
     end
 
     def self.validates_as_pr?(env)
-      exists = ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] }
-      exists && env["TRAVIS_PULL_REQUEST"].to_i > 0
+      exists = ['TRAVIS_PULL_REQUEST', 'TRAVIS_REPO_SLUG'].all? { |x| env[x] }
+      exists && env['TRAVIS_PULL_REQUEST'].to_i > 0
     end
 
     def supported_request_sources
@@ -40,9 +40,9 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["TRAVIS_REPO_SLUG"]
-      if env["TRAVIS_PULL_REQUEST"].to_i > 0
-        self.pull_request_id = env["TRAVIS_PULL_REQUEST"]
+      self.repo_slug = env['TRAVIS_REPO_SLUG']
+      if env['TRAVIS_PULL_REQUEST'].to_i > 0
+        self.pull_request_id = env['TRAVIS_PULL_REQUEST']
       end
       self.repo_url = GitRepo.new.origins # Travis doesn't provide a repo url env variable :/
     end

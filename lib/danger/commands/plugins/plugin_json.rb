@@ -1,21 +1,21 @@
-require "danger/plugin_support/plugin_parser"
-require "danger/plugin_support/plugin_file_resolver"
+require 'danger/plugin_support/plugin_parser'
+require 'danger/plugin_support/plugin_file_resolver'
 
 module Danger
   class PluginJSON < CLAide::Command::Plugins
-    self.summary = "Prints the JSON documentation representing a plugin"
-    self.command = "json"
+    self.summary = 'Prints the JSON documentation representing a plugin'
+    self.command = 'json'
 
     attr_accessor :cork
 
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
-      @cork = Cork::Board.new(silent: argv.option("silent", false),
-                              verbose: argv.option("verbose", false))
+      @cork = Cork::Board.new(silent: argv.option('silent', false),
+                              verbose: argv.option('verbose', false))
       super
     end
 
-    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
+    self.summary = 'Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success.'
 
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a JSON format.
@@ -24,7 +24,7 @@ module Danger
     DESC
 
     self.arguments = [
-      CLAide::Argument.new("Paths, Gems or Nothing", false, true)
+      CLAide::Argument.new('Paths, Gems or Nothing', false, true)
     ]
 
     def run

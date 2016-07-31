@@ -18,11 +18,11 @@ module Danger
   #
   class Jenkins < CI
     def self.validates_as_ci?(env)
-      env.key? "JENKINS_URL"
+      env.key? 'JENKINS_URL'
     end
 
     def self.validates_as_pr?(env)
-      ["ghprbPullId"].all? { |x| env[x] }
+      ['ghprbPullId'].all? { |x| env[x] }
     end
 
     def supported_request_sources
@@ -30,8 +30,8 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_url = env["GIT_URL"]
-      self.pull_request_id = env["ghprbPullId"]
+      self.repo_url = env['GIT_URL']
+      self.pull_request_id = env['ghprbPullId']
 
       repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?

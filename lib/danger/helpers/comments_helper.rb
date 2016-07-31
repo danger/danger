@@ -1,4 +1,4 @@
-require "redcarpet"
+require 'redcarpet'
 
 module Danger
   module Helpers
@@ -8,7 +8,7 @@ module Danger
       end
 
       def parse_tables_from_comment(comment)
-        comment.split("</table>")
+        comment.split('</table>')
       end
 
       def violations_from_table(table)
@@ -19,7 +19,7 @@ module Danger
       def process_markdown(violation)
         html = markdown_parser.render(violation.message)
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
-        html = html[3...-5] if html.start_with? "<p>"
+        html = html[3...-5] if html.start_with? '<p>'
         Violation.new(html, violation.sticky)
       end
 
@@ -65,29 +65,29 @@ module Danger
         end
       end
 
-      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
-        require "erb"
+      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: 'danger', template: 'github')
+        require 'erb'
 
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}.md.erb")
 
         # erb: http://www.rrn.dk/rubys-erb-templating-system
         # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
         @tables = [
-          table("Error", "no_entry_sign", errors, previous_violations),
-          table("Warning", "warning", warnings, previous_violations),
-          table("Message", "book", messages, previous_violations)
+          table('Error', 'no_entry_sign', errors, previous_violations),
+          table('Warning', 'warning', warnings, previous_violations),
+          table('Message', 'book', messages, previous_violations)
         ]
         @markdowns = markdowns
         @danger_id = danger_id
 
-        return ERB.new(File.read(md_template), 0, "-").result(binding)
+        return ERB.new(File.read(md_template), 0, '-').result(binding)
       end
 
       def generate_description(warnings: nil, errors: nil)
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
-          message = "⚠ "
+          message = '⚠ '
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
           message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
           message += "Don't worry, everything is fixable."
@@ -96,8 +96,8 @@ module Danger
       end
 
       def random_compliment
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
+        compliment = ['Well done.', 'Congrats.', 'Woo!',
+                      'Yay.', 'Jolly good show.', "Good on 'ya.", 'Nice work.']
         compliment.sample
       end
     end

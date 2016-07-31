@@ -1,4 +1,4 @@
-require "danger/plugin_support/plugin"
+require 'danger/plugin_support/plugin'
 
 module Danger
   # Handles interacting with GitHub inside a Dangerfile. Provides a few functions which wrap `pr_json` and also
@@ -89,7 +89,7 @@ module Danger
     # @return [String]
     #
     def self.instance_name
-      "github"
+      'github'
     end
 
     # @!group PR Metadata
@@ -196,13 +196,13 @@ module Danger
       repo = pr_json[:head][:repo][:html_url]
 
       paths = paths.map do |path|
-        url_path = path.start_with?("/") ? path : "/#{path}"
+        url_path = path.start_with?('/') ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
         create_link("#{repo}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2
-      paths.first(paths.count - 1).join(", ") + " & " + paths.last
+      paths.first(paths.count - 1).join(', ') + ' & ' + paths.last
     end
 
     private

@@ -13,12 +13,12 @@ module Danger
 
       # Could we find a CI source at all?
       unless EnvironmentManager.local_ci_source(ENV)
-        abort("Could not find the type of CI for Danger to run on.".red) unless ci_klass
+        abort('Could not find the type of CI for Danger to run on.'.red) unless ci_klass
       end
 
       # Could we determine that the CI source is inside a PR?
       unless EnvironmentManager.pr?(ENV)
-        cork.puts "Not a Pull Request - skipping `danger` run".yellow
+        cork.puts 'Not a Pull Request - skipping `danger` run'.yellow
         return
       end
 
@@ -36,12 +36,12 @@ module Danger
         # Offer the chance for a user to specify a branch through the command line
         ci_base = base || EnvironmentManager.danger_base_branch
         ci_head = head || EnvironmentManager.danger_head_branch
-        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+        dm.env.scm.diff_for_folder('.', from: ci_base, to: ci_head)
 
         dm.parse(Pathname.new(dangerfile_path))
 
         if dm.env.request_source.organisation && !dm.env.request_source.danger_repo? && (danger_repo = dm.env.request_source.fetch_danger_repo)
-          url = dm.env.request_source.file_url(repository: danger_repo.name, path: "Dangerfile")
+          url = dm.env.request_source.file_url(repository: danger_repo.name, path: 'Dangerfile')
           path = dm.plugin.download(url)
           dm.parse(Pathname.new(path))
         end
