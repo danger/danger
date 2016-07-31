@@ -1,5 +1,5 @@
-require "danger/plugin_support/plugin_parser"
-require "danger/plugin_support/plugin_linter"
+require 'danger/plugin_support/plugin_parser'
+require 'danger/plugin_support/plugin_linter'
 
 def json_doc_for_path(path)
   parser = Danger::PluginParser.new path
@@ -9,24 +9,24 @@ end
 
 module Danger
   describe PluginParser do
-    it "creates a set of errors for fixtured plugins" do
-      json = json_doc_for_path("spec/fixtures/plugins/plugin_many_methods.rb")
+    it 'creates a set of errors for fixtured plugins' do
+      json = json_doc_for_path('spec/fixtures/plugins/plugin_many_methods.rb')
       linter = PluginLinter.new(json)
       linter.lint
-      titles = ["Description Markdown", "Examples", "Description", "Description"]
+      titles = ['Description Markdown', 'Examples', 'Description', 'Description']
       expect(linter.errors.map(&:title)).to eq(titles)
     end
 
-    it "creates a set of warnings for fixtured plugins" do
-      json = json_doc_for_path("spec/fixtures/plugins/plugin_many_methods.rb")
+    it 'creates a set of warnings for fixtured plugins' do
+      json = json_doc_for_path('spec/fixtures/plugins/plugin_many_methods.rb')
       linter = PluginLinter.new(json)
       linter.lint
 
-      titles = ["Tags", "References", "Return Type", "Return Type", "Return Type", "Unknown Param", "Return Type"]
+      titles = ['Tags', 'References', 'Return Type', 'Return Type', 'Return Type', 'Unknown Param', 'Return Type']
       expect(linter.warnings.map(&:title)).to eq(titles)
     end
 
-    it "fails when there are errors" do
+    it 'fails when there are errors' do
       linter = PluginLinter.new({})
       expect(linter.failed?).to eq(false)
 
@@ -37,12 +37,12 @@ module Danger
       expect(linter.failed?).to eq(true)
     end
 
-    it "handles outputting a warning" do
+    it 'handles outputting a warning' do
       ui = testing_ui
       linter = PluginLinter.new({})
-      warning = PluginLinter::Rule.new(:warning, 30, "Example Title", "Example Description", nil)
-      warning.metadata = { name: "NameOfExample" }
-      warning.type = "TypeOfThing"
+      warning = PluginLinter::Rule.new(:warning, 30, 'Example Title', 'Example Description', nil)
+      warning.metadata = { name: 'NameOfExample' }
+      warning.type = 'TypeOfThing'
 
       linter.warnings << warning
 

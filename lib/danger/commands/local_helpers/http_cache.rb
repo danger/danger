@@ -1,4 +1,4 @@
-require "pstore"
+require 'pstore'
 
 module Danger
   class HTTPCache

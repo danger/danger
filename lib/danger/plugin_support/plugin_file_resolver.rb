@@ -1,6 +1,6 @@
-require "bundler"
-require "pathname"
-require "fileutils"
+require 'bundler'
+require 'pathname'
+require 'fileutils'
 
 module Danger
   class PluginFileResolver
@@ -24,7 +24,7 @@ module Danger
 
           Dir.chdir(dir) do
             gem_names = @refs
-            gemfile = File.new("Gemfile", "w")
+            gemfile = File.new('Gemfile', 'w')
             gemfile.write "source 'https://rubygems.org'"
 
             gem_names.each do |plugin|
@@ -41,7 +41,7 @@ module Danger
         end
       # When empty, imply you want to test the current lib folder as a plugin
       else
-        Dir.glob(File.join(".", "lib/**/*.rb")).map { |path| File.expand_path(path) }
+        Dir.glob(File.join('.', 'lib/**/*.rb')).map { |path| File.expand_path(path) }
       end
     end
   end

@@ -1,5 +1,5 @@
-require "danger/ci_source/ci_source"
-require "danger/request_source/request_source"
+require 'danger/ci_source/ci_source'
+require 'danger/request_source/request_source'
 
 module Danger
   class EnvironmentManager
@@ -60,11 +60,11 @@ module Danger
     end
 
     def self.danger_head_branch
-      "danger_head"
+      'danger_head'
     end
 
     def self.danger_base_branch
-      "danger_base"
+      'danger_base'
     end
   end
 end

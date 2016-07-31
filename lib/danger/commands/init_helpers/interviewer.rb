@@ -7,19 +7,19 @@ module Danger
     end
 
     def show_prompt
-      ui.print "> ".bold.green
+      ui.print '> '.bold.green
     end
 
     def yellow_bang
-      "! ".yellow
+      '! '.yellow
     end
 
     def green_bang
-      "! ".green
+      '! '.green
     end
 
     def red_bang
-      "! ".red
+      '! '.red
     end
 
     def say(output)
@@ -28,12 +28,12 @@ module Danger
 
     def header(title)
       say title.yellow
-      say ""
+      say ''
       pause 0.6
     end
 
     def link(url)
-      say " -> " + url.underline + "\n"
+      say ' -> ' + url.underline + "\n"
     end
 
     def pause(time)
@@ -48,12 +48,12 @@ module Danger
 
     def run_command(command, output_command = nil)
       output_command ||= command
-      ui.puts "  " + output_command.magenta
+      ui.puts '  ' + output_command.magenta
       system command
     end
 
     def ask(question)
-      answer = ""
+      answer = ''
       loop do
         ui.puts "\n#{question}?"
 
@@ -73,26 +73,26 @@ module Danger
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
           the_answer = i.zero? ? answer.underline : answer
-          ui.print " " + the_answer
-          ui.print(" /") if i != possible_answers.length - 1
+          ui.print ' ' + the_answer
+          ui.print(' /') if i != possible_answers.length - 1
         end
         ui.print " ]\n"
       end
       print_info.call
 
-      answer = ""
+      answer = ''
 
       loop do
         show_prompt
         answer = @no_waiting ? possible_answers[0].downcase : STDIN.gets.downcase.chomp
 
-        answer = "yes" if answer == "y"
-        answer = "no" if answer == "n"
+        answer = 'yes' if answer == 'y'
+        answer = 'no' if answer == 'n'
 
         # default to first answer
-        if answer == ""
+        if answer == ''
           answer = possible_answers[0].downcase
-          ui.puts "Using: " + answer.yellow
+          ui.puts 'Using: ' + answer.yellow
         end
 
         break if possible_answers.map(&:downcase).include? answer

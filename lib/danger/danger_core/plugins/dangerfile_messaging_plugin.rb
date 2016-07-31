@@ -1,5 +1,5 @@
-require "danger/danger_core/violation"
-require "danger/plugin_support/plugin"
+require 'danger/danger_core/violation'
+require 'danger/plugin_support/plugin'
 
 module Danger
   # Provides the feedback mechanism for Danger. Danger can keep track of
@@ -57,7 +57,7 @@ module Danger
     # @return [String]
     #
     def self.instance_name
-      "messaging"
+      'messaging'
     end
 
     # @!group Core

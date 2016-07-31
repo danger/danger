@@ -20,7 +20,7 @@ module Danger
       end
 
       def load_default_plugins
-        Dir["./danger_plugins/*.rb"].each do |file|
+        Dir['./danger_plugins/*.rb'].each do |file|
           require File.expand_path(file)
         end
       end

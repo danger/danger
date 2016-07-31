@@ -12,11 +12,11 @@ module Danger
   #
   class Semaphore < CI
     def self.validates_as_ci?(env)
-      env.key? "SEMAPHORE"
+      env.key? 'SEMAPHORE'
     end
 
     def self.validates_as_pr?(env)
-      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] }
+      ['SEMAPHORE_REPO_SLUG', 'PULL_REQUEST_NUMBER'].all? { |x| env[x] }
     end
 
     def supported_request_sources
@@ -24,8 +24,8 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SEMAPHORE_REPO_SLUG"]
-      self.pull_request_id = env["PULL_REQUEST_NUMBER"]
+      self.repo_slug = env['SEMAPHORE_REPO_SLUG']
+      self.pull_request_id = env['PULL_REQUEST_NUMBER']
       self.repo_url = GitRepo.new.origins # Semaphore doesn't provide a repo url env variable :/
     end
   end

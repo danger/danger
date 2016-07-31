@@ -17,11 +17,11 @@ module Danger
   #
   class XcodeServer < CI
     def self.validates_as_ci?(env)
-      env.key? "XCS_BOT_NAME"
+      env.key? 'XCS_BOT_NAME'
     end
 
     def self.validates_as_pr?(env)
-      env["XCS_BOT_NAME"].include? "BuildaBot"
+      env['XCS_BOT_NAME'].include? 'BuildaBot'
     end
 
     def supported_request_sources
@@ -29,7 +29,7 @@ module Danger
     end
 
     def initialize(env)
-      bot_name = env["XCS_BOT_NAME"]
+      bot_name = env['XCS_BOT_NAME']
       return if bot_name.nil?
 
       repo_matches = bot_name.match(/\[(.+)\]/)

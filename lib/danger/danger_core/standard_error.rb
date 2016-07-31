@@ -1,5 +1,5 @@
-require "claide"
-require "claide/informative_error"
+require 'claide'
+require 'claide/informative_error'
 
 module Danger
   # From below here - this entire file was taken verbatim for CocoaPods-Core.
@@ -73,12 +73,12 @@ module Danger
 
         trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
         return m unless trace_line
-        line_numer = trace_line.split(":")[1].to_i - 1
+        line_numer = trace_line.split(':')[1].to_i - 1
         return m unless line_numer
 
         lines      = contents.lines
-        indent     = " #  "
-        indicator  = indent.tr("#", ">")
+        indent     = ' #  '
+        indicator  = indent.tr('#', '>')
         first_line = line_numer.zero?
         last_line  = (line_numer == (lines.count - 1))
 
@@ -99,7 +99,7 @@ module Danger
       description = self.description
       if dsl_path && description =~ /((#{Regexp.quote File.expand_path(dsl_path)}|#{Regexp.quote dsl_path.to_s}):\d+)/
         trace_line = Regexp.last_match[1]
-        description = description.sub(/#{Regexp.quote trace_line}:\s*/, "")
+        description = description.sub(/#{Regexp.quote trace_line}:\s*/, '')
       end
       [trace_line, description]
     end
