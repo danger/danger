@@ -72,7 +72,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "works with valid data" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/yolo").and_return(issue_response)
 
         result = @g.fetch_repository(repository: "yolo")
@@ -92,7 +92,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "tries both 'danger' and 'Danger' as repo, 'Danger' first" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/danger").and_return(nil)
         expect(@g.client).to receive(:repo).with("artsy/Danger").and_return(issue_response)
 
@@ -101,7 +101,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "tries both 'danger' and 'Danger' as repo, 'danger' first" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/danger").and_return(issue_response)
 
         result = @g.fetch_danger_repo
@@ -112,7 +112,7 @@ describe Danger::RequestSources::GitHub do
     describe "#danger_repo?" do
       before do
         @g.fetch_details
-        @issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        @issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
       end
 
       it "returns true if the repo's name is danger" do
@@ -124,10 +124,16 @@ describe Danger::RequestSources::GitHub do
 
       it "returns false if the repo's name is danger (it's eigen)" do
         @issue_response[:name] = "eigen"
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(@issue_response)
 
-        expect(@g.danger_repo?).to eq(false)
+        expect(@g.danger_repo?).to be_falsey
+      end
+
+      it "returns true if the repo is a fork of danger" do
+        issue_response = JSON.parse(fixture("github_api/danger_fork_repo"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(issue_response)
+
+        expect(@g.danger_repo?).to be_truthy
       end
     end
 

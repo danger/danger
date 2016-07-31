@@ -1,6 +1,7 @@
 ## Master
 
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
+* Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
 
 ## 2.1.0
 
