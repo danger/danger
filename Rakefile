@@ -3,7 +3,7 @@ require "rubocop/rake_task"
 
 begin
   require "rspec/core/rake_task"
-  RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:specs)
 rescue LoadError
   puts "Please use `bundle exec` to get all the rake commands"
 end

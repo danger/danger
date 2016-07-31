@@ -1,5 +1,7 @@
 ## Master
 
+* Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
+
 ## 2.1.0
 
 * Refactors the CI Source init, and verification section - orta
