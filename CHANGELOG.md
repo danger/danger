@@ -1,5 +1,7 @@
 ## Master
 
+## 2.1.1
+
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
 * Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
 * Replaces `redcarpet` through `kramdown` to avoid jruby foo - LeFnord
@@ -19,7 +21,7 @@
 
 * Updates the `danger init` template to 2.0 syntax - orta
 
-## 2.0
+## 2.0.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
 
