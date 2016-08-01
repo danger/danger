@@ -7,10 +7,7 @@ module Danger
         Kramdown::Document.new(text, input: "GFM")
       end
 
-      def parse_tables_from_comment(comment)
-        comment.split("</table>")
-      end
-
+      # !@group Extension points
       # Produces a message-like from a row in a comment table
       #
       # @param [String] row
@@ -21,13 +18,7 @@ module Danger
         Violation.new(row, true, nil, nil)
       end
 
-      def violations_from_table(table)
-        row_regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
-        table.scan(row_regex).flatten.map do |row|
-          parse_message_from_row(row.strip)
-        end
-      end
-
+      # !@group Extension points
       # Produces a markdown link to the file the message points to
       #
       # request_source implementations are invited to override this method with their
@@ -38,6 +29,17 @@ module Danger
       # @return [String] The Markdown compatible link
       def markdown_link_to_message(message)
         "#{messages.file}#L#{message.line}"
+      end
+
+      def parse_tables_from_comment(comment)
+        comment.split("</table>")
+      end
+
+      def violations_from_table(table)
+        row_regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
+        table.scan(row_regex).flatten.map do |row|
+          parse_message_from_row(row.strip)
+        end
       end
 
       def process_markdown(violation)
@@ -110,7 +112,7 @@ module Danger
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
 
-      def generate_inline_comment_body(emoji, message, danger_id, resolved: false, template: "github")
+      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: false, template: "github")
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
         @tables = [
           { content: [message], resolved: resolved, emoji: emoji }
@@ -118,18 +120,17 @@ module Danger
         @markdowns = []
         @danger_id = danger_id
 
-        ERB.new(File.read(md_template), 0, '-').result(binding)
+        ERB.new(File.read(md_template), 0, "-").result(binding)
       end
 
-      def generate_inline_markdown_body(markdown, danger_id, template: "github")
+      def generate_inline_markdown_body(markdown, danger_id: "danger", template: "github")
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
         @tables = []
         @markdowns = [markdown.message]
         @danger_id = danger_id
 
-        ERB.new(File.read(md_template), 0, '-').result(binding)
+        ERB.new(File.read(md_template), 0, "-").result(binding)
       end
-
 
       def generate_description(warnings: nil, errors: nil)
         if errors.empty? && warnings.empty?

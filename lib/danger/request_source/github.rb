@@ -188,22 +188,21 @@ module Danger
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| comment[:body].include?("generated_by_#{danger_id}") }
 
-        submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations, danger_id)
-        submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations, danger_id)
-        submit_inline_comments_for_kind!('book', messages, diff_lines, danger_comments, previous_violations, danger_id)
-        submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, previous_violations, danger_id)
+        submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
+        submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
+        submit_inline_comments_for_kind!('book', messages, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
+        submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
 
         danger_comments.each do |comment|
           violation = violations_from_table(comment[:body]).first
           next if violation.nil?
 
-          body = generate_inline_comment_body('white_check_mark', violation, danger_id, resolved: true)
+          body = generate_inline_comment_body('white_check_mark', violation, danger_id: danger_id, resolved: true, template: "github")
           client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
         end
       end
 
-      def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id)
-
+      def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
         head_ref = pr_json[:head][:sha]
         submit_inline = proc do |m|
           next false unless m.file && m.line
@@ -215,17 +214,24 @@ module Danger
 
           # Once we know we're gonna submit it, we format it
           if emoji.nil?
-            body = generate_inline_markdown_body(m, danger_id)
+            body = generate_inline_markdown_body(m, danger_id: danger_id, template: "github")
           else
             m = process_markdown(m)
-            body = generate_inline_comment_body(emoji, m, danger_id)
+            body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "github")
             # A comment might be in previous_violations because only now it's part of the unified diff
             # TODO: Check against previous violations
           end
 
-          # TODO: If we match, undo the strike through if it exists
           matching_comments = danger_comments.select do |i|
-            i[:path] == m.file && i[:commit_id] == head_ref && i[:position] == position && i[:body] == body
+            next false unless i[:path] == m.file && i[:commit_id] == head_ref && i[:position] == position
+
+            # Parse it to avoid problems with strikethrough
+            violation = violations_from_table(i[:body]).first
+            if violation
+              violation.message == m.message
+            else
+              i[:body] == body
+            end
           end
 
           if matching_comments.empty?
@@ -234,9 +240,13 @@ module Danger
           else
             # Remove the surviving comment so we don't strike it out
             danger_comments.reject! { |c| matching_comments.include? c }
+
+            # Update the comment to remove the strikethrough if present
+            comment = matching_comments.first
+            client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
           end
 
-          # Remove this ele#ment from the array
+          # Remove this element from the array
           next true
         end
 
