@@ -71,11 +71,16 @@ module Danger
   #
   # @see  danger/danger
   # @tags core, github
-
+  #
   class DangerfileGitHubPlugin < Plugin
+    # So that this init can fail.
+    def self.new(dangerfile)
+      return nil if dangerfile.env.request_source.class != Danger::RequestSources::GitHub
+      super
+    end
+
     def initialize(dangerfile)
       super(dangerfile)
-      return nil unless dangerfile.env.request_source.class == Danger::RequestSources::GitHub
 
       @github = dangerfile.env.request_source
     end
@@ -177,16 +182,23 @@ module Danger
     end
 
     # @!group GitHub Misc
-    # Returns a HTML anchor for a file, or files in the head repository. An example would be:
-    # `<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`
+    # Returns a list of HTML anchors for a file, or files in the head repository. An example would be:
+    # `<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`. It returns a string of multiple anchors if passed an array.
+    # @param    [String or Array<String>] paths
+    #           A list of strings to convert to github anchors
+    # @param    [Bool] full_path
+    #           Shows the full path as the link's text, defaults to `true`.
+    #
     # @return [String]
-    def html_link(paths)
+    def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
       repo = pr_json[:head][:repo][:html_url]
+
       paths = paths.map do |path|
-        path_with_slash = "/#{path}" unless path.start_with? "/"
-        create_link("#{repo}/blob/#{commit}#{path_with_slash}", path)
+        url_path = path.start_with?("/") ? path : "/#{path}"
+        text = full_path ? path : File.basename(path)
+        create_link("#{repo}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2

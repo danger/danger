@@ -31,10 +31,10 @@ describe Danger::RequestSources::GitHub do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
@@ -72,7 +72,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "works with valid data" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/yolo").and_return(issue_response)
 
         result = @g.fetch_repository(repository: "yolo")
@@ -92,7 +92,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "tries both 'danger' and 'Danger' as repo, 'Danger' first" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/danger").and_return(nil)
         expect(@g.client).to receive(:repo).with("artsy/Danger").and_return(issue_response)
 
@@ -101,7 +101,7 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "tries both 'danger' and 'Danger' as repo, 'danger' first" do
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/danger").and_return(issue_response)
 
         result = @g.fetch_danger_repo
@@ -112,7 +112,7 @@ describe Danger::RequestSources::GitHub do
     describe "#danger_repo?" do
       before do
         @g.fetch_details
-        @issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
+        @issue_response = JSON.parse(fixture("github_api/repo_response"), symbolize_names: true)
       end
 
       it "returns true if the repo's name is danger" do
@@ -124,10 +124,16 @@ describe Danger::RequestSources::GitHub do
 
       it "returns false if the repo's name is danger (it's eigen)" do
         @issue_response[:name] = "eigen"
-        issue_response = JSON.parse(fixture("repo_response"), symbolize_names: true)
         expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(@issue_response)
 
-        expect(@g.danger_repo?).to eq(false)
+        expect(@g.danger_repo?).to be_falsey
+      end
+
+      it "returns true if the repo is a fork of danger" do
+        issue_response = JSON.parse(fixture("github_api/danger_fork_repo"), symbolize_names: true)
+        expect(@g.client).to receive(:repo).with("artsy/eigen").and_return(issue_response)
+
+        expect(@g.danger_repo?).to be_truthy
       end
     end
 
@@ -220,7 +226,7 @@ describe Danger::RequestSources::GitHub do
         result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
         # rubocop:disable Metrics/LineLength
         expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><p><code>something</code></p><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
         )
         # rubocop:enable Metrics/LineLength
       end
@@ -310,22 +316,22 @@ describe Danger::RequestSources::GitHub do
 
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
-        message = @g.generate_github_description(warnings: [], errors: [])
+        message = @g.generate_description(warnings: [], errors: [])
         expect(message).to start_with("All green.")
       end
 
       it "Shows an error messages when there are errors" do
-        message = @g.generate_github_description(warnings: violations([1, 2, 3]), errors: [])
+        message = @g.generate_description(warnings: violations([1, 2, 3]), errors: [])
         expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
+        message = @g.generate_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
         expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1]), errors: violations([1]))
+        message = @g.generate_description(warnings: violations([1]), errors: violations([1]))
         expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
     end

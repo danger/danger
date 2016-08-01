@@ -4,7 +4,7 @@ module Danger
       before do
         dm = testing_dangerfile
         @dsl = DangerfileGitHubPlugin.new dm
-        pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+        pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
         allow(@dsl).to receive(:pr_json).and_return(pr_response)
       end
 
@@ -12,6 +12,11 @@ module Danger
         it "works with a single path" do
           link = @dsl.html_link("file.txt")
           expect(link).to eq("<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>")
+        end
+
+        it "can show just a path" do
+          link = @dsl.html_link("/path/file.txt", full_path: false)
+          expect(link).to eq("<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/path/file.txt'>file.txt</a>")
         end
 
         it "works with 2 paths" do

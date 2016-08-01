@@ -11,14 +11,16 @@
 
 <%- unless plugin["attributes"].empty? %>
 #### Attributes
-<%- plugin["attributes"].each do |attribute| %><tr>
+<%- plugin["attributes"].each do |attribute| %>
 `<%= attribute.keys.first %>` - <%= attribute.values.first["write"]["body_md"] %>
 <%- end %>
 <%- end %>
 
+<%- unless plugin["methods"].empty? %>
 #### Methods
 <%- plugin["methods"].each do |method| %>
 `<%= method["name"] %>` - <%= method["body_md"] %>
+<%- end %>
 <%- end %>
 
 <% end %>
