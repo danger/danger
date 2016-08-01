@@ -22,21 +22,19 @@ module Danger
         return
       end
 
-      # OK, then we can have some
+      # OK, then we can set ourselves up
       env ||= EnvironmentManager.new(ENV)
       dm ||= Dangerfile.new(env, cork)
 
-      dm.init_plugins
-
-      dm.env.fill_environment_vars
+      env.fill_environment_vars
 
       begin
-        dm.env.ensure_danger_branches_are_setup
+        env.ensure_danger_branches_are_setup
 
         # Offer the chance for a user to specify a branch through the command line
         ci_base = base || EnvironmentManager.danger_base_branch
         ci_head = head || EnvironmentManager.danger_head_branch
-        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+        env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
         dm.parse(Pathname.new(dangerfile_path))
 

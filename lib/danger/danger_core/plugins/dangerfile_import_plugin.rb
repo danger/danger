@@ -99,7 +99,7 @@ module Danger
       Dir[path].each do |file|
         # Without the expand_path it would fail if the path doesn't start with ./
         require File.expand_path(file)
-        refresh_plugins
+        env.setup_plugins(@dangerfile)
       end
     end
   end

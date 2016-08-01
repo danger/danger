@@ -1,9 +1,10 @@
 require "danger/ci_source/ci_source"
+require "danger/danger_core/plugin_host"
 require "danger/request_source/request_source"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :request_source, :scm
+    attr_accessor :ci_source, :request_source, :scm, :plugin_host
 
     # Finds a Danger::CI class based on the ENV
     def self.local_ci_source(env)
@@ -29,6 +30,8 @@ module Danger
 
       raise "Could not find a Request Source for #{ci_klass}".red unless self.request_source
       self.scm = self.request_source.scm
+
+      self.plugin_host = PluginHost.new
     end
 
     def pr?
@@ -37,6 +40,11 @@ module Danger
 
     def fill_environment_vars
       request_source.fetch_details
+    end
+
+    def setup_plugins(dangerfile)
+      plugin_host.refresh_plugins(dangerfile)
+      dangerfile.extend_with_plugins(plugin_host)
     end
 
     def ensure_danger_branches_are_setup
