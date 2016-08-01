@@ -36,7 +36,7 @@ module Danger
       parser = PluginParser.new(paths)
       parser.parse
 
-      self.markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
+      self.markdown = Kramdown::Document.new(text, input: "GFM").to_html
       self.json = JSON.parse(parser.to_json_string)
 
       template = File.join(Danger.gem_path, "lib/danger/plugin_support/templates/readme_table.html.erb")

@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 =begin
 
@@ -171,7 +171,7 @@ module Danger
         attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
 
         methods = klass.meths - klass.inherited_meths - attribute_meths
-        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :instance_name }
+        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :instance_name || m.name == :new }
 
         plugin_gem = klass.file.include?("gems") ? klass.file.split("gems/").last.split("-")[0..-2].join("-") : nil
         # Pull out the gem's path ( to make relative file paths )

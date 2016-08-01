@@ -1,8 +1,30 @@
 ## Master
 
 * add `file` and `line` optional parameters to methods on the messaging plugin
+* Improvements to `danger init` - orta
 
-## 2.0
+## 2.1.1
+
+* Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
+* Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
+* Replaces `redcarpet` through `kramdown` to avoid jruby foo - LeFnord
+
+## 2.1.0
+
+* Refactors the CI Source init, and verification section - orta
+* Adds a `danger systems ci_docs` command that outputs the CI sources and their docs - orta
+* Merges some of the work on splitting the request source done in #299 - orta, who merged k0nserv's work.
+* Add `git.diff_for_file("some/file.txt")` to get a Git::Diff::DiffFile - dbgrandi
+* Improves the default file resolves for all the `danger plugins` commands, it will now work with a new plugin by default. - orta
+* \n now works in HTML tables - marcelofabri
+* You can now pass `full_path: false` to `github.html_link("/path/file.txt", full_path: false)` to have it only show the filename. - orta
+* `danger plugins readme` shows attributes correctly. - orta
+
+## 2.0.1
+
+* Updates the `danger init` template to 2.0 syntax - orta
+
+## 2.0.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
 

@@ -90,6 +90,15 @@ module Danger
       ui.say "Here are great resources for creative commons images of robots:"
       ui.link "https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9"
       ui.link "https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359"
+      ui.pause ""
+
+      if considered_an_oss_repo?
+        ui.say "#{@bot_name} does not need privilidged access to your repo or org. This is because Danger will only"
+        ui.say "be writing comments, and you do not need special access for that."
+      else
+        ui.say "#{@bot_name} will need access to your repo. Simply because the code is not available for the public"
+        ui.say "to read and comment on."
+      end
 
       ui.say ""
       note_about_clicking_links
@@ -113,7 +122,6 @@ module Danger
         ui.pause 1
         ui.say "This token limits Danger's abilities to just writing comments on OSS projects. I recommend"
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
-        ui.say "#{@bot_name} does not need admin access to your repo. So its ability to cause chaos is minimalized.\n"
 
         ui.say "\nIt is important that you do not store this token in your repository, as GitHub will automatically revoke it when pushed.\n"
       elsif @is_open_source == "closed"
@@ -170,10 +178,10 @@ module Danger
     def uses_travis
       danger = "bundle exec danger".yellow
       config = YAML.load(File.read(".travis.yml"))
-      if config["script"]
+      if config.kind_of?(Hash) && config["script"]
         ui.say "Add " + "- ".yellow + danger + " as a new step in the " + "script".yellow + " section of your .travis.yml file."
       else
-        ui.say "I'd recommend adding " + "script: ".yellow + danger + " to the script section of your .travis.yml file."
+        ui.say "I'd recommend adding " + "before_script: ".yellow + danger + " to the script section of your .travis.yml file."
       end
 
       ui.pause 1
@@ -184,7 +192,7 @@ module Danger
       danger = "- bundle exec danger".yellow
       config = YAML.load(File.read("circle.yml"))
 
-      if config["test"]
+      if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]
           ui.say "Add " + danger + " as a new step in the " + "test:post:".yellow + " section of your circle.yml file."
         else
@@ -241,6 +249,8 @@ module Danger
     def unsure_token
       ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
       ui.say "Depending on the CI system, this may need to be done on the machine ( in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
+      ui.say "We have a guide for all supported CI systems on danger.systems:"
+      ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
     end
 
     def note_about_clicking_links

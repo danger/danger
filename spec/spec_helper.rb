@@ -9,6 +9,9 @@ RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
 end
 
+# Now that we could be using Danger's plugins in Danger
+Danger::Plugin.clear_external_plugins
+
 WebMock.disable_net_connect!(allow: "coveralls.io")
 
 def make_temp_file(contents)
@@ -29,7 +32,7 @@ end
 
 def stub_ci
   env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
-  Danger::CISource::CircleCI.new(env)
+  Danger::CircleCI.new(env)
 end
 
 def stub_request_source

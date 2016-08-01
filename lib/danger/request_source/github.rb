@@ -1,10 +1,12 @@
 # coding: utf-8
 require 'octokit'
-require 'redcarpet'
+require 'danger/helpers/comments_helper'
 
 module Danger
   module RequestSources
     class GitHub < RequestSource
+      include Danger::Helpers::CommentsHelper
+
       attr_accessor :pr_json, :issue_json, :support_tokenless_auth
 
       def initialize(ci_source, environment)
@@ -30,10 +32,6 @@ module Danger
       def client
         raise 'No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`' if !@token && !support_tokenless_auth
         @client ||= Octokit::Client.new(access_token: @token)
-      end
-
-      def markdown_parser
-        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
       end
 
       def pr_diff
@@ -93,7 +91,8 @@ module Danger
                                   messages: messages,
                                  markdowns: markdowns,
                        previous_violations: previous_violations,
-                                 danger_id: danger_id)
+                                 danger_id: danger_id,
+                                  template: 'github')
 
           if editable_issues.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
@@ -112,7 +111,7 @@ module Danger
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
         status = (errors.count.zero? ? 'success' : 'failure')
-        message = generate_github_description(warnings: warnings, errors: errors)
+        message = generate_description(warnings: warnings, errors: errors)
 
         latest_pr_commit_ref = self.pr_json[:head][:sha]
 
@@ -154,106 +153,17 @@ module Danger
         end
       end
 
-      def random_compliment
-        compliment = ['Well done.', 'Congrats.', 'Woo!',
-                      'Yay.', 'Jolly good show.', "Good on 'ya.", 'Nice work.']
-        compliment.sample
-      end
-
-      def generate_github_description(warnings: nil, errors: nil)
-        if errors.empty? && warnings.empty?
-          return "All green. #{random_compliment}"
-        else
-          message = "⚠ "
-          message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
-          message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
-          message += "Don't worry, everything is fixable."
-          return message
-        end
-      end
-
-      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: 'danger')
-        require 'erb'
-
-        md_template = File.join(Danger.gem_path, 'lib/danger/comment_generators/github.md.erb')
-
-        # erb: http://www.rrn.dk/rubys-erb-templating-system
-        # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
-        @tables = [
-          table('Error', 'no_entry_sign', errors, previous_violations),
-          table('Warning', 'warning', warnings, previous_violations),
-          table('Message', 'book', messages, previous_violations)
-        ]
-        @markdowns = markdowns.map(&:message)
-        @danger_id = danger_id
-
-        return ERB.new(File.read(md_template), 0, '-').result(binding)
-      end
-
-      def table(name, emoji, violations, all_previous_violations)
-        content = violations.map { |v| process_markdown(v) }
-        messages = content.map(&:message).uniq
-        kind = table_kind_from_title(name)
-        previous_violations = all_previous_violations[kind] || []
-        resolved_violations = previous_violations.map(&:message).uniq - messages
-        count = content.count
-        { name: name, emoji: emoji, content: content, resolved: resolved_violations, count: count }
-      end
-
-      def parse_comment(comment)
-        tables = parse_tables_from_comment(comment)
-        violations = {}
-        tables.each do |table|
-          next unless table =~ %r{<th width="100%"(.*?)</th>}im
-          title = Regexp.last_match(1)
-          kind = table_kind_from_title(title)
-          next unless kind
-
-          violations[kind] = violations_from_table(table)
-        end
-
-        violations.reject { |_, v| v.empty? }
-      end
-
-      def violations_from_table(table)
-        row_regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
+      def parse_message_from_row(row)
         message_regexp = %r{(<a href="https://github.com/#{ci_source.repo_slug}/blob/[0-9a-z]+/(?<file>[^#]+)#L(?<line>[0-9]+)">[^<]*</a> - )?(?<message>.*?)}im
 
-        table.scan(row_regex).flatten.map do |row|
-          message = row.strip
-          match = message_regexp.match(message)
+        match = message_regexp.match(row)
 
-          if match[:line]
-            line = match[:line].to_i
-          else
-            line = nil
-          end
-          Violation.new(message, true, match[:file], line)
+        if match[:line]
+          line = match[:line].to_i
+        else
+          line = nil
         end
-      end
-
-      def table_kind_from_title(title)
-        if title =~ /error/i
-          :error
-        elsif title =~ /warning/i
-          :warning
-        elsif title =~ /message/i
-          :message
-        end
-      end
-
-      def parse_tables_from_comment(comment)
-        comment.split("</table>")
-      end
-
-      def process_markdown(violation)
-        message = violation.message
-        message = "#{markdown_link_to_message violation} - #{message}" if violation.file && violation.line
-
-        html = markdown_parser.render(message)
-        # Remove the outer `<p>`, the -5 represents a newline + `</p>`
-        html = html[3...-5] if html.start_with? "<p>"
-        Violation.new(html, violation.sticky, violation.file, violation.line)
+        Violation.new(row, true, match[:file], line)
       end
 
       def markdown_link_to_message(message)
@@ -291,7 +201,7 @@ module Danger
       # @return [Bool] is this repo the danger repo of the org?
       def danger_repo?(organisation: nil, repository: nil)
         repo = fetch_repository(organisation: organisation, repository: repository)
-        repo[:name].casecmp(DANGER_REPO_NAME).zero?
+        repo[:name].casecmp(DANGER_REPO_NAME).zero? || repo[:parent] && repo[:parent][:full_name] == "danger/danger"
       rescue
         false
       end
