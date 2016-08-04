@@ -20,7 +20,7 @@ module Danger
   #
   # ### Token Setup
   #
-  # There is no difference here for OSS vs Closed, add your `DANGER_GITHUB_API_TOKEN` to the Environment variable settings page.
+  # There is no difference here for OSS vs Closed, add your `DANGER_GITHUB_API_TOKEN` to the Environment variable settings page. You must however turn on **Permissive building of fork pull requests**..
   #
   class CircleCI < CI
     def self.validates_as_ci?(env)
