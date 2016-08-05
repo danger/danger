@@ -31,6 +31,22 @@ module Danger
         "#{messages.file}#L#{message.line}"
       end
 
+      # !@group Extension points
+      # Determine whether two messages are equivalent
+      #
+      # request_source implementations are invited to override this method.
+      # This is mostly here to enable sources to detect when inlines change only in their
+      # commit hash and not in content per-se. since the link is implementation dependant
+      # so should be the comparision.
+      #
+      # @param [Violation or Markdown] m1
+      # @param [Violation or Markdown] m2
+      #
+      # @return [Boolean] whether they represent the same message
+      def messages_are_equivalent(m1, m2)
+        m1 == m2
+      end
+
       def parse_tables_from_comment(comment)
         comment.split("</table>")
       end
@@ -69,17 +85,21 @@ module Danger
 
       def table(name, emoji, violations, all_previous_violations)
         content = violations.map { |v| process_markdown(v) }
-        messages = content.map(&:message).uniq
+
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
-        resolved_violations = previous_violations.map(&:message).uniq - messages
+        resolved_violations = previous_violations.reject do |pv|
+          content.select { |v| messages_are_equivalent(v, pv) }.count > 0
+        end
+
+        resolved_messages = resolved_violations.map(&:message).uniq
         count = content.count
 
         {
           name: name,
           emoji: emoji,
           content: content,
-          resolved: resolved_violations,
+          resolved: resolved_messages,
           count: count
         }
       end

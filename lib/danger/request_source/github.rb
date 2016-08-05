@@ -188,22 +188,33 @@ module Danger
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| comment[:body].include?("generated_by_#{danger_id}") }
 
-        submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
-        submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
-        submit_inline_comments_for_kind!('book', messages, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
-        submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, previous_violations, danger_id: danger_id)
+        submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations[:warning], danger_id: danger_id)
+        submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations[:error], danger_id: danger_id)
+        submit_inline_comments_for_kind!('book', messages, diff_lines, danger_comments, previous_violations[:message], danger_id: danger_id)
+        submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
 
+        # submit removes from the array all comments that are still in force
+        # so we strike out all remaining ones
         danger_comments.each do |comment|
           violation = violations_from_table(comment[:body]).first
           next if violation.nil?
+
+          # TODO: Check that this violation isn't now out of the diff (case of a force push)
 
           body = generate_inline_comment_body('white_check_mark', violation, danger_id: danger_id, resolved: true, template: "github")
           client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
         end
       end
 
+      def messages_are_equivalent(m1, m2)
+        blob_regexp = %r{blob/[0-9a-z]+/}
+        m1.file == m2.file && m1.line == m2.line &&
+          m1.message.sub(blob_regexp, "") == m2.message.sub(blob_regexp, "")
+      end
+
       def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
         head_ref = pr_json[:head][:sha]
+        previous_violations ||= []
         submit_inline = proc do |m|
           next false unless m.file && m.line
 
@@ -219,18 +230,21 @@ module Danger
             m = process_markdown(m)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "github")
             # A comment might be in previous_violations because only now it's part of the unified diff
-            # TODO: Check against previous violations
+            # We remove from the array since it won't have a place in the table anymore
+            previous_violations.reject! { |v| messages_are_equivalent(v, m) }
           end
 
           matching_comments = danger_comments.select do |i|
-            next false unless i[:path] == m.file && i[:commit_id] == head_ref && i[:position] == position
-
-            # Parse it to avoid problems with strikethrough
-            violation = violations_from_table(i[:body]).first
-            if violation
-              violation.message == m.message
+            if i[:path] == m.file && i[:commit_id] == head_ref && i[:position] == position
+              # Parse it to avoid problems with strikethrough
+              violation = violations_from_table(i[:body]).first
+              if violation
+                messages_are_equivalent(violation, m)
+              else
+                i[:body] == body
+              end
             else
-              i[:body] == body
+              false
             end
           end
 
