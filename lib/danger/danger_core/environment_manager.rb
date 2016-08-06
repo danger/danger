@@ -34,25 +34,30 @@ module Danger
       self.plugin_host = PluginHost.new
     end
 
+    # Are we in a PR where we can do something?
     def pr?
       self.ci_source != nil
     end
 
+    # Others use this to say, OK, everything is ready
     def fill_environment_vars
       request_source.fetch_details
     end
 
+    # The Dangerfile calls this once it's ready'
     def setup_plugins(dangerfile)
       plugin_host.refresh_plugins(dangerfile)
       dangerfile.extend_with_plugins(plugin_host)
     end
 
+    # Pre-requisites
     def ensure_danger_branches_are_setup
       clean_up
 
       self.request_source.setup_danger_branches
     end
 
+    # Ensure things that Danger has created are deleted
     def clean_up
       [EnvironmentManager.danger_base_branch, EnvironmentManager.danger_head_branch].each do |branch|
         scm.exec("branch -D #{branch}") unless scm.exec("rev-parse --quiet --verify #{branch}").empty?

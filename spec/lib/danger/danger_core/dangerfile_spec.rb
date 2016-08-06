@@ -58,4 +58,15 @@ describe Danger::Dangerfile do
       expect(dm.test_plugin.class).to eq(DangerTestPlugin)
     end
   end
+
+  describe "exposing plugins" do
+    it "exposes core plugins" do
+      subject = Danger::PluginHost.new
+
+      dm = testing_dangerfile
+      subject.refresh_plugins(dm)
+
+      expect(dm.instance_variables).to include(:@plugin, :@git, :@github)
+    end
+  end
 end

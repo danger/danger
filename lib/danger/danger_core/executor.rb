@@ -6,7 +6,8 @@ module Danger
             base: nil,
             head: nil,
             dangerfile_path: nil,
-            danger_id: nil)
+            danger_id: nil,
+            verbose: false)
 
       cork ||= Cork::Board.new(silent: false,
                               verbose: false)
@@ -45,10 +46,21 @@ module Danger
         end
 
         post_results(dm, danger_id)
-        dm.print_results
+        print_results(env, cork) if verbose
       ensure
         dm.env.clean_up
       end
+    end
+
+    def print_results(env, cork)
+      # Print out the table of plugin metadata
+      plugin_printer = PluginPrinter.new(env, env.plugin_host, cork)
+      plugin_printer.print_known_info
+
+      # Print out the results from the Dangerfile
+      messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? Danger::DangerfileMessagingPlugin }
+      printer = DangerfilePrinter.new(messaging, cork)
+      printer.print_results
     end
 
     def post_results(dm, danger_id)

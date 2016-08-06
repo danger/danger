@@ -14,7 +14,6 @@ module Danger
     def initialize(env_manager, cork_board)
       @ui = cork_board
       @env = env_manager
-
       env_manager.setup_plugins(self)
     end
 
@@ -25,6 +24,7 @@ module Danger
         self.class.send(:attr_reader, name)
         instance_variable_set("@#{name}", plugin)
       end
+
       # Keep track fo this for `method_missing`
       @core_plugins = plugin_host.core_plugins
     end
@@ -105,7 +105,7 @@ module Danger
 
     # Mainly a helper method for `local --pry`
     def plugins
-      env.plugin_host.plugins
+      env.plugin_host.plugins.values
     end
   end
 end

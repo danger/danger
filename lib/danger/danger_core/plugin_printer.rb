@@ -1,39 +1,11 @@
+# Handles printing all of the metadata currently residing in the plugins
+
 module Danger
   class PluginPrinter
-    def initialize(env, plugin_host, messaging, ui)
+    def initialize(env, plugin_host, ui)
       @env = env
       @plugin_host = plugin_host
-      @messaging = messaging
       @ui = ui
-    end
-
-    def print_results
-      status = @messaging.status_report
-      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count.zero?
-
-      ui.section("Results:") do
-        [:errors, :warnings, :messages].each do |key|
-          formatted = key.to_s.capitalize + ":"
-          title = case key
-                  when :errors
-                    formatted.red
-                  when :warnings
-                    formatted.yellow
-                  else
-                    formatted
-                  end
-          rows = status[key]
-          print_list(title, rows)
-        end
-
-        if status[:markdowns].count > 0
-          @ui.section("Markdown:") do
-            status[:markdowns].each do |current_markdown|
-              @ui.puts current_markdown
-            end
-          end
-        end
-      end
     end
 
     def core_dsl_attributes
@@ -41,7 +13,10 @@ module Danger
     end
 
     def external_dsl_attributes
-      @plugin_host.plugins.values.reject { |plugin| @core_plugins.include? plugin } .map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
+      @plugin_host.plugins
+                  .values
+                  .reject { |plugin| @plugin_host.core_plugins.include? plugin }
+                  .map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
     end
 
     def method_values_for_plugin_hashes(plugin_hashes)
@@ -95,16 +70,6 @@ module Danger
         ui.puts Terminal::Table.new(params)
         ui.puts
       end
-    end
-
-    private
-
-    def print_list(title, rows)
-      ui.title(title) do
-        rows.each do |row|
-          ui.puts("- [ ] #{row}")
-        end
-      end unless rows.empty?
     end
   end
 end

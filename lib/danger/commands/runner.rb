@@ -56,7 +56,8 @@ module Danger
       Executor.new.run(base: @base,
                        head: @head,
                        dangerfile_path: @dangerfile_path,
-                       danger_id: @danger_id)
+                       danger_id: @danger_id,
+                       verbose: @verbose)
     end
   end
 end
