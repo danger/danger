@@ -26,23 +26,4 @@ describe Danger::DangerfilePrinter do
       printer.print_results
     end
   end
-
-  describe "verbose" do
-    it "outputs metadata when verbose" do
-      file = make_temp_file ""
-      dm = testing_dangerfile
-      dm.verbose = true
-
-      expect(dm).to receive(:print_known_info)
-      dm.parse file.path
-    end
-
-    it "does not print metadata by default" do
-      file = make_temp_file ""
-      dm = testing_dangerfile
-
-      expect(dm).to_not receive(:print_known_info)
-      dm.parse file.path
-    end
-  end
 end

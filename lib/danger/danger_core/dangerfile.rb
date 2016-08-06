@@ -67,8 +67,6 @@ module Danger
     # Parses the file at a path, optionally takes the content of the file for DI
     #
     def parse(path, contents = nil)
-      print_known_info if verbose
-
       contents ||= File.open(path, "r:utf-8", &:read)
 
       # Work around for Rubinius incomplete encoding in 1.9 mode

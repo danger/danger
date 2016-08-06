@@ -54,8 +54,8 @@ module Danger
 
     def print_results(env, cork)
       # Print out the table of plugin metadata
-      plugin_printer = PluginPrinter.new(env, env.plugin_host, cork)
-      plugin_printer.print_known_info
+      plugin_printer = PluginPrinter.new(env.plugin_host)
+      plugin_printer.print_plugin_metadata(env, cork)
 
       # Print out the results from the Dangerfile
       messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? Danger::DangerfileMessagingPlugin }

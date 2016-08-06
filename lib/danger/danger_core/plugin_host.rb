@@ -64,8 +64,8 @@ module Danger
     end
     alias init_plugins refresh_plugins
 
-    def printer(dangerfile)
-      PluginPrinter.new(dangerfile.env, self, dangerfile.ui)
+    def printer
+      PluginPrinter.new(self)
     end
   end
 end

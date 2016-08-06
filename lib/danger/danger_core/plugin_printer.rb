@@ -2,10 +2,8 @@
 
 module Danger
   class PluginPrinter
-    def initialize(env, plugin_host, ui)
-      @env = env
+    def initialize(plugin_host)
       @plugin_host = plugin_host
-      @ui = ui
     end
 
     def core_dsl_attributes
@@ -49,7 +47,7 @@ module Danger
     end
 
     # Iterates through the DSL's attributes, and table's the output
-    def print_known_info
+    def print_plugin_metadata(env, ui)
       rows = []
       rows += method_values_for_plugin_hashes(core_dsl_attributes)
       rows << ["---", "---"]

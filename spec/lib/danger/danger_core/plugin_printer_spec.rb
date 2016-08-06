@@ -19,7 +19,7 @@ describe Danger::PluginPrinter do
     @dm = testing_dangerfile
     @host.refresh_plugins(@dm)
 
-    @subject = @host.printer(@dm)
+    @subject = @host.printer
   end
 
   it "exposes core attributes" do
@@ -40,7 +40,7 @@ describe Danger::PluginPrinter do
 
     # refresh all the plugins
     @host.refresh_plugins(@dm)
-    @subject = @host.printer(@dm)
+    @subject = @host.printer
 
     methods = @subject.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
     expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :my_thing, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
@@ -86,7 +86,7 @@ describe Danger::PluginPrinter do
 
       # refresh all the plugins
       @host.refresh_plugins(@dm)
-      @subject = @host.printer(@dm)
+      @subject = @host.printer
 
       data = @subject.method_values_for_plugin_hashes(@subject.external_dsl_attributes)
       # Ensure consistent ordering, and only extract the keys
