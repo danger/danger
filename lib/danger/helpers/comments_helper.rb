@@ -5,7 +5,7 @@ module Danger
   module Helpers
     module CommentsHelper
       # This might be a bit weird, but table_kind_from_title is a shared dependency for
-      # parsing and generating. And rubocop was adamnt about file size so...
+      # parsing and generating. And rubocop was adamant about file size so...
       include Danger::Helpers::CommentsParsingHelper
 
       def markdown_parser(text)

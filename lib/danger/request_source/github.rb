@@ -187,6 +187,7 @@ module Danger
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| comment[:body].include?("generated_by_#{danger_id}") }
+        non_danger_comments = pr_comments - danger_comments
 
         submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations[:warning], danger_id: danger_id)
         submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations[:error], danger_id: danger_id)
@@ -197,12 +198,21 @@ module Danger
         # so we strike out all remaining ones
         danger_comments.each do |comment|
           violation = violations_from_table(comment[:body]).first
-          next if violation.nil?
+          if !violation.nil? && violation.sticky
+            body = generate_inline_comment_body('white_check_mark', violation, danger_id: danger_id, resolved: true, template: "github")
+            client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
+          else
+            # We remove non-sticky violations that have no replies
+            # Since there's no direct concept of a reply in GH, we simply consider
+            # the existance of non-danger comments in that line as replies
+            replies = non_danger_comments.select do |potential|
+              potential[:path] == comment[:path] &&
+                potential[:position] == comment[:position] &&
+                potential[:commit_id] == comment[:commit_id]
+            end
 
-          # TODO: Check that this violation isn't now out of the diff (case of a force push)
-
-          body = generate_inline_comment_body('white_check_mark', violation, danger_id: danger_id, resolved: true, template: "github")
-          client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
+            client.delete_pull_request_comment(ci_source.repo_slug, comment[:id]) if replies.empty?
+          end
         end
       end
 
