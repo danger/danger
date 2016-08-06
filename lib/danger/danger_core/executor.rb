@@ -1,3 +1,6 @@
+require "danger/danger_core/plugin_printer"
+require "danger/danger_core/dangerfile_printer"
+
 module Danger
   class Executor
     def run(env: nil,
@@ -58,7 +61,7 @@ module Danger
       plugin_printer.print_plugin_metadata(env, cork)
 
       # Print out the results from the Dangerfile
-      messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? Danger::DangerfileMessagingPlugin }
+      messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? DangerfileMessagingPlugin }
       printer = DangerfilePrinter.new(messaging, cork)
       printer.print_results
     end
