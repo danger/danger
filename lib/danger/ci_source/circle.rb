@@ -28,7 +28,11 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
+      # This will get used if it's available, instead of the API faffing.
       return true if env["CI_PULL_REQUEST"]
+
+      # Real-world talk, it should be worrying if none of these are in the environment
+      return false unless ["CIRCLE_CI_API_TOKEN", "CIRCLE_PROJECT_USERNAME", "CIRCLE_PROJECT_REPONAME", "CIRCLE_BUILD_NUM"].all? { |x| env[x] }
 
       # Uses the Circle API to determine if it's a PR otherwose
       @circle_token = env["CIRCLE_CI_API_TOKEN"]
@@ -37,15 +41,6 @@ module Danger
 
     def supported_request_sources
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
-    end
-
-    def client
-      @client ||= CircleAPI.new(@circle_token)
-    end
-
-    def fetch_pull_request_url(repo_slug, build_number)
-      build_json = client.fetch_build(repo_slug, build_number)
-      build_json[:pull_request_urls].first
     end
 
     def pull_request_url(env)
@@ -59,17 +54,31 @@ module Danger
       url
     end
 
+    def client
+      @client ||= CircleAPI.new(@circle_token)
+    end
+
+    def fetch_pull_request_url(repo_slug, build_number)
+      build_json = client.fetch_build(repo_slug, build_number)
+      build_json[:pull_request_urls].first
+    end
+
     def initialize(env)
       self.repo_url = GitRepo.new.origins # CircleCI doesn't provide a repo url env variable :/
 
-      @circle_token = env["CIRCLE_CI_API_TOKEN"]
-      url = pull_request_url(env)
+      pr_url = env["CI_PULL_REQUEST"]
 
-      if URI.parse(url).path.split("/").count == 5
-        paths = URI.parse(url).path.split("/")
+      # If it's not a real URL, use the Circle API
+      unless pr_url && URI.parse(pr_url).kind_of?(URI::HTTP)
+        @circle_token = env["CIRCLE_CI_API_TOKEN"]
+        pr_url = pull_request_url(env)
+      end
+
+      pr_path = URI.parse(pr_url).path.split("/")
+      if pr_path.count == 5
         # The first one is an extra slash, ignore it
-        self.repo_slug = paths[1] + "/" + paths[2]
-        self.pull_request_id = paths[4]
+        self.repo_slug = pr_path[1] + "/" + pr_path[2]
+        self.pull_request_id = pr_path[4]
       end
     end
   end
