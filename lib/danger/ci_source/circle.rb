@@ -28,6 +28,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
+      # This will get used if it's available, instead of the API faffing.
       return true if env["CI_PULL_REQUEST"]
 
       # Real-world talk, it should be worrying if none of these are in the environment
@@ -42,15 +43,6 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
-    def client
-      @client ||= CircleAPI.new(@circle_token)
-    end
-
-    def fetch_pull_request_url(repo_slug, build_number)
-      build_json = client.fetch_build(repo_slug, build_number)
-      build_json[:pull_request_urls].first
-    end
-
     def pull_request_url(env)
       url = env["CI_PULL_REQUEST"]
 
@@ -62,11 +54,22 @@ module Danger
       url
     end
 
+    def client
+      @client ||= CircleAPI.new(@circle_token)
+    end
+
+    def fetch_pull_request_url(repo_slug, build_number)
+      build_json = client.fetch_build(repo_slug, build_number)
+      build_json[:pull_request_urls].first
+    end
+
     def initialize(env)
       self.repo_url = GitRepo.new.origins # CircleCI doesn't provide a repo url env variable :/
 
       pr_url = env["CI_PULL_REQUEST"]
-      unless pr_url
+
+      # If it's not a real URL, use the Circle API
+      unless pr_url && URI.parse(pr_url).kind_of?(URI::HTTP)
         @circle_token = env["CIRCLE_CI_API_TOKEN"]
         pr_url = pull_request_url(env)
       end
