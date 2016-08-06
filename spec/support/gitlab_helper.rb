@@ -4,7 +4,7 @@ module Danger
       def expected_headers
         {
           "Accept" => "application/json",
-          "PRIVATE-TOKEN" => "DANGER_GITLAB_API_TOKEN"
+          "PRIVATE-TOKEN" => stub_env(:gitlab)["DANGER_GITLAB_API_TOKEN"]
         }
       end
 

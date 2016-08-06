@@ -4,7 +4,7 @@ require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/violation"
 
-describe Danger::RequestSources::GitHub, api_provider: :github do
+describe Danger::RequestSources::GitHub do
   describe "the github host" do
     it "sets a default GitHub host" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
