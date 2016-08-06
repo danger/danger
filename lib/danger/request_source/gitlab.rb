@@ -24,7 +24,7 @@ module Danger
         @client ||= Gitlab.client(params)
       end
 
-      def validates?
+      def validates_as_api_source?
         @token && !@token.empty?
       end
 
