@@ -21,7 +21,7 @@ module Danger
         end
       end
 
-      def validates?
+      def validates_as_api_source?
         @token && !@token.empty?
       end
 
