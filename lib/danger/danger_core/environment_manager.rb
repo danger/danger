@@ -22,7 +22,7 @@ module Danger
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)
 
-        request_source = klass.new(self.ci_source, ENV)
+        request_source = klass.new(self.ci_source, env)
         next unless request_source.validates_as_ci?
         next unless request_source.validates?
         self.request_source = request_source
