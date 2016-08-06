@@ -2,9 +2,9 @@
 require "erb"
 require "danger/request_source/request_source"
 
-describe Danger::RequestSources::GitLab, api_provider: :gitlab do
-  let(:env) { stub_env }
-  let(:g) { Danger::RequestSources::GitLab.new(stub_ci, env) }
+describe Danger::RequestSources::GitLab do
+  let(:env) { stub_env(:gitlab) }
+  let(:g) { Danger::RequestSources::GitLab.new(stub_ci(:gitlab), env) }
 
   describe "the GitLab host" do
     it "sets the default GitLab host" do

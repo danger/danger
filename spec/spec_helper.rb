@@ -5,13 +5,13 @@ require "webmock"
 require "webmock/rspec"
 require "json"
 
+require "support/env_helper"
 require "support/gitlab_helper"
-require "support/github_helper"
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
-  config.include Danger::Support::GitLabHelper, api_provider: :gitlab
-  config.include Danger::Support::GitHubHelper, api_provider: :github
+  config.include Danger::Support::EnvHelper
+  config.include Danger::Support::GitLabHelper
 end
 
 # Now that we could be using Danger's plugins in Danger
@@ -40,8 +40,9 @@ def testing_ui
 end
 # rubocop:enable Lint/NestedMethodDefinition
 
-def testing_dangerfile
-  env = Danger::EnvironmentManager.new(stub_env)
+def testing_dangerfile(kind=nil)
+  kind = kind.nil? ? :github : kind.to_symbol
+  env = Danger::EnvironmentManager.new(stub_env(kind))
   dm = Danger::Dangerfile.new(env, testing_ui)
 end
 

@@ -1,35 +1,10 @@
 module Danger
   module Support
     module GitLabHelper
-      def stub_env
-        {
-          "DRONE" => true,
-          "DRONE_REPO" => "k0nserv/danger-test",
-          "DRONE_PULL_REQUEST" => "593728",
-          "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
-        }
-      end
-
-      def stub_ci
-        Danger::Drone.new(stub_env)
-      end
-
-      def stub_request_source
-        Danger::RequestSources::GitLab.new(stub_ci, stub_env)
-      end
-
-      def fixture(file)
-        File.read("spec/fixtures/gitlab_api/#{file}.json")
-      end
-
-      def comment_fixture(file)
-        File.read("spec/fixtures/gitlab_api/#{file}.html")
-      end
-
       def expected_headers
         {
           "Accept" => "application/json",
-          "PRIVATE-TOKEN" => stub_env["DANGER_GITLAB_API_TOKEN"]
+          "PRIVATE-TOKEN" => "DANGER_GITLAB_API_TOKEN"
         }
       end
 
