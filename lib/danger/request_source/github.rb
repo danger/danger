@@ -215,6 +215,8 @@ module Danger
       def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
         head_ref = pr_json[:head][:sha]
         previous_violations ||= []
+        is_markdown_content = emoji.nil?
+
         submit_inline = proc do |m|
           next false unless m.file && m.line
 
@@ -224,7 +226,7 @@ module Danger
           next false if position.nil?
 
           # Once we know we're gonna submit it, we format it
-          if emoji.nil?
+          if is_markdown_content
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "github")
           else
             m = process_markdown(m)
@@ -234,14 +236,14 @@ module Danger
             previous_violations.reject! { |v| messages_are_equivalent(v, m) }
           end
 
-          matching_comments = danger_comments.select do |i|
-            if i[:path] == m.file && i[:commit_id] == head_ref && i[:position] == position
+          matching_comments = danger_comments.select do |comment_data|
+            if comment_data[:path] == m.file && comment_data[:commit_id] == head_ref && comment_data[:position] == position
               # Parse it to avoid problems with strikethrough
-              violation = violations_from_table(i[:body]).first
+              violation = violations_from_table(comment_data[:body]).first
               if violation
                 messages_are_equivalent(violation, m)
               else
-                i[:body] == body
+                comment_data[:body] == body
               end
             else
               false

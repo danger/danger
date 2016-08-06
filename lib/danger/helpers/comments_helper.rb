@@ -1,21 +1,15 @@
 require "kramdown"
+require "danger/helpers/comments_parsing_helper"
 
 module Danger
   module Helpers
     module CommentsHelper
+      # This might be a bit weird, but table_kind_from_title is a shared dependency for
+      # parsing and generating. And rubocop was adamnt about file size so...
+      include Danger::Helpers::CommentsParsingHelper
+
       def markdown_parser(text)
         Kramdown::Document.new(text, input: "GFM")
-      end
-
-      # !@group Extension points
-      # Produces a message-like from a row in a comment table
-      #
-      # @param [String] row
-      #        The content of the row in the table
-      #
-      # @return [Violation or Markdown] the extracted message
-      def parse_message_from_row(row)
-        Violation.new(row, true, nil, nil)
       end
 
       # !@group Extension points
@@ -47,17 +41,6 @@ module Danger
         m1 == m2
       end
 
-      def parse_tables_from_comment(comment)
-        comment.split("</table>")
-      end
-
-      def violations_from_table(table)
-        row_regex = %r{<td data-sticky="true">(?:<del>)?(.*?)(?:</del>)?\s*</td>}im
-        table.scan(row_regex).flatten.map do |row|
-          parse_message_from_row(row.strip)
-        end
-      end
-
       def process_markdown(violation)
         message = violation.message
         message = "#{markdown_link_to_message violation} - #{message}" if violation.file && violation.line
@@ -66,21 +49,6 @@ module Danger
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
         Violation.new(html, violation.sticky, violation.file, violation.line)
-      end
-
-      def parse_comment(comment)
-        tables = parse_tables_from_comment(comment)
-        violations = {}
-        tables.each do |table|
-          next unless table =~ %r{<th width="100%"(.*?)</th>}im
-          title = Regexp.last_match(1)
-          kind = table_kind_from_title(title)
-          next unless kind
-
-          violations[kind] = violations_from_table(table)
-        end
-
-        violations.reject { |_, v| v.empty? }
       end
 
       def table(name, emoji, violations, all_previous_violations)
@@ -104,52 +72,47 @@ module Danger
         }
       end
 
-      def table_kind_from_title(title)
-        if title =~ /error/i
-          :error
-        elsif title =~ /warning/i
-          :warning
-        elsif title =~ /message/i
-          :message
-        end
-      end
-
-      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
+      def apply_template(tables: [], markdowns: [], danger_id: "danger", template: "github")
         require "erb"
 
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}.md.erb")
 
         # erb: http://www.rrn.dk/rubys-erb-templating-system
         # for the extra args: http://stackoverflow.com/questions/4632879/erb-template-removing-the-trailing-line
-        @tables = [
-          table("Error", "no_entry_sign", errors, previous_violations),
-          table("Warning", "warning", warnings, previous_violations),
-          table("Message", "book", messages, previous_violations)
-        ]
+        @tables = tables
         @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
 
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
 
-      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: false, template: "github")
-        md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
-        @tables = [
-          { content: [message], resolved: resolved, emoji: emoji }
-        ]
-        @markdowns = []
-        @danger_id = danger_id
+      def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
+        apply_template(
+          tables: [
+            table("Error", "no_entry_sign", errors, previous_violations),
+            table("Warning", "warning", warnings, previous_violations),
+            table("Message", "book", messages, previous_violations)
+          ],
+          markdowns: markdowns,
+          danger_id: danger_id,
+          template: template
+        )
+      end
 
-        ERB.new(File.read(md_template), 0, "-").result(binding)
+      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: false, template: "github")
+        apply_template(
+          tables: [{ content: [message], resolved: resolved, emoji: emoji }],
+          danger_id: danger_id,
+          template: "#{template}_inline"
+        )
       end
 
       def generate_inline_markdown_body(markdown, danger_id: "danger", template: "github")
-        md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}_inline.md.erb")
-        @tables = []
-        @markdowns = [markdown.message]
-        @danger_id = danger_id
-
-        ERB.new(File.read(md_template), 0, "-").result(binding)
+        apply_template(
+          markdowns: [markdown],
+          danger_id: danger_id,
+          template: "#{template}_inline"
+        )
       end
 
       def generate_description(warnings: nil, errors: nil)
