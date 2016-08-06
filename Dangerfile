@@ -27,7 +27,7 @@ end
 declared_trivial = (github.pr_title + github.pr_body).include?("#trivial") || !has_app_changes
 
 if !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
-  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).")
+  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).", sticky: false)
 end
 
 # Docs are critical, so let's re-run the docs part of the specs and show any issues:
