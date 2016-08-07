@@ -1,5 +1,7 @@
 ## Master
 
+## 2.1.2
+
 * Improvements to `danger init` - orta
 * Circle CI validation improvements - orta
 
