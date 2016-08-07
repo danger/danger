@@ -229,4 +229,45 @@ describe Danger::Helpers::CommentsHelper do
       expect(message).to include("Don't worry, everything is fixable.")
     end
   end
+
+  describe "comment parsing" do
+    it "detects the warning kind" do
+      expect(dummy.table_kind_from_title("1 Warning")).to eq(:warning)
+      expect(dummy.table_kind_from_title("2 Warnings")).to eq(:warning)
+    end
+
+    it "detects the error kind" do
+      expect(dummy.table_kind_from_title("1 Error")).to eq(:error)
+      expect(dummy.table_kind_from_title("2 Errors")).to eq(:error)
+    end
+
+    it "detects the warning kind" do
+      expect(dummy.table_kind_from_title("1 Message")).to eq(:message)
+      expect(dummy.table_kind_from_title("2 Messages")).to eq(:message)
+    end
+
+    it "parses a comment with error" do
+      comment = comment_fixture("comment_with_error")
+      violations = dummy.parse_comment(comment)
+      expect(violations).to eq({ error: ["Some error"] })
+    end
+
+    it "parses a comment with error and warnings" do
+      comment = comment_fixture("comment_with_error_and_warnings")
+      violations = dummy.parse_comment(comment)
+      expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+    end
+
+    it "ignores non-sticky violations when parsing a comment" do
+      comment = comment_fixture("comment_with_non_sticky")
+      violations = dummy.parse_comment(comment)
+      expect(violations).to eq({ warning: ["First warning"] })
+    end
+
+    it "parses a comment with error and warnings removing strike tag" do
+      comment = comment_fixture("comment_with_resolved_violation")
+      violations = dummy.parse_comment(comment)
+      expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+    end
+  end
 end
