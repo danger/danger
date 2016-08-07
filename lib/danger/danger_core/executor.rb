@@ -1,3 +1,6 @@
+require "danger/danger_core/plugin_printer"
+require "danger/danger_core/dangerfile_printer"
+
 module Danger
   class Executor
     def run(env: nil,
@@ -6,7 +9,8 @@ module Danger
             base: nil,
             head: nil,
             dangerfile_path: nil,
-            danger_id: nil)
+            danger_id: nil,
+            verbose: false)
 
       cork ||= Cork::Board.new(silent: false,
                               verbose: false)
@@ -22,21 +26,19 @@ module Danger
         return
       end
 
-      # OK, then we can have some
+      # OK, then we can set ourselves up
       env ||= EnvironmentManager.new(ENV)
       dm ||= Dangerfile.new(env, cork)
 
-      dm.init_plugins
-
-      dm.env.fill_environment_vars
+      env.fill_environment_vars
 
       begin
-        dm.env.ensure_danger_branches_are_setup
+        env.ensure_danger_branches_are_setup
 
         # Offer the chance for a user to specify a branch through the command line
         ci_base = base || EnvironmentManager.danger_base_branch
         ci_head = head || EnvironmentManager.danger_head_branch
-        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+        env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
         dm.parse(Pathname.new(dangerfile_path))
 
@@ -47,10 +49,21 @@ module Danger
         end
 
         post_results(dm, danger_id)
-        dm.print_results
+        print_results(env, cork) if verbose
       ensure
         dm.env.clean_up
       end
+    end
+
+    def print_results(env, cork)
+      # Print out the table of plugin metadata
+      plugin_printer = PluginPrinter.new(env.plugin_host)
+      plugin_printer.print_plugin_metadata(env, cork)
+
+      # Print out the results from the Dangerfile
+      messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? DangerfileMessagingPlugin }
+      printer = DangerfilePrinter.new(messaging, cork)
+      printer.print_results
     end
 
     def post_results(dm, danger_id)
