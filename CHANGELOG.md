@@ -1,5 +1,8 @@
 ## Master
 
+* **BREAKING** Removes the implicit Dangerfile work. This is a WIP. The feature will be back in some form. - orta
+
+
 ## 2.1.2
 
 * Improvements to `danger init` - orta
