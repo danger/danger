@@ -158,7 +158,7 @@ module Danger
 
     # @!group GitHub Misc
     # The hash that represents the PR's JSON. For an example of what this looks like
-    # see the [Danger Fixture'd one](https://raw.githubusercontent.com/danger/danger/master/spec/fixtures/pr_response.json).
+    # see the [Danger Fixture'd one](https://raw.githubusercontent.com/danger/danger/master/spec/fixtures/github_api/pr_response.json).
     # @return [Hash]
     #
     def pr_json
