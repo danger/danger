@@ -51,7 +51,6 @@ describe Danger::Dangerfile do
   describe "initializing plugins" do
     it "should add an instance variable to the dangerfile" do
       class DangerTestPlugin < Danger::Plugin; end
-      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
       dm = testing_dangerfile
 
       expect { dm.test_plugin }.to_not raise_error

@@ -10,13 +10,15 @@ module Danger
     attr_accessor :defined_in_file
 
     def initialize(env_manager, cork_board)
-      require "commonjs"
+      # This is here because the gem might not be included
+      # if you have vanilla Ruby Danger.
       require "therubyracer"
 
       @ui = cork_board
       @env = env_manager
 
-      @runtime = V8::Context.new timeout: 1000 * 60 * 10
+      ten_min = 1000 * 60 * 10
+      @runtime = V8::Context.new timeout: ten_min
       env_manager.setup_plugins(self)
     end
 

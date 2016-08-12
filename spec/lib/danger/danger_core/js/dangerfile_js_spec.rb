@@ -26,7 +26,7 @@ describe Danger::DangerfileJS do
     dm.parse Pathname.new(""), dangerfile_code
   end
 
-  it "raises elegantly with bad ruby code inside the Dangerfile" do
+  it "raises elegantly with bad jsd code inside the Dangerfile" do
     dangerfile_code = "asdas = asdasd + asdasddas"
     dm = testing_dangerfile_js
 

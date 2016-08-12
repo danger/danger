@@ -47,9 +47,8 @@ Gem::Specification.new do |spec|
   # UI wrapper
   spec.add_runtime_dependency "cork", "~> 0.1"
 
-  # JS support - note, debate moving this out into a danger-js gem.
-  spec.add_runtime_dependency "therubyracer", "~> 0.12"
-  spec.add_runtime_dependency "commonjs", "~> 0.2"
+  # JS support, tests would not run otherwise.
+  spec.add_development_dependency "danger-js", "~> 1.0"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
