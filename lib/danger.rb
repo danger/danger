@@ -1,5 +1,6 @@
 require "danger/version"
-require "danger/danger_core/dangerfile"
+require "danger/danger_core/ruby/dangerfile_rb"
+require "danger/danger_core/js/dangerfile_js"
 require "danger/danger_core/environment_manager"
 require "danger/commands/runner"
 require "danger/plugin_support/plugin"
