@@ -10,6 +10,8 @@ module Danger
     attr_accessor :defined_in_file
 
     def initialize(env_manager, cork_board)
+      abort("Sorry - you cannot run JavaScript Dangerfiles on Windows servers".red) if Gem.win_platform?
+
       # This is here because the gem might not be included
       # if you have vanilla Ruby Danger.
       require "therubyracer"

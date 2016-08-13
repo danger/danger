@@ -48,7 +48,9 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "cork", "~> 0.1"
 
   # JS support, tests would not run otherwise.
-  spec.add_development_dependency "danger-js", "~> 1.0"
+  # However, therubyracer does not work on windows, so we have
+  # tests for failing the build in that context.
+  spec.add_development_dependency("danger-js", "~> 1.0") unless Gem.win_platform?
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
