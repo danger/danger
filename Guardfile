@@ -20,4 +20,5 @@ guard :rspec, cmd: "bundle exec rspec" do
   dsl.watch_spec_files_for(ruby.lib_files)
 end
 
+notification :terminal_notifier if `uname` =~ /Darwin/
 guard :rubocop

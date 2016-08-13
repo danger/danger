@@ -60,8 +60,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 0.38"
   spec.add_development_dependency "yard", "~> 0.8"
 
+  # I'm super fancy with testing, all the bells and whistles
+  # use `bundle exec guard` to autolisten for tests
   spec.add_development_dependency "listen", "3.0.7"
   spec.add_development_dependency "guard", "~> 2.14"
   spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "guard-rubocop", "~> 1.2"
+  spec.add_development_dependency "terminal-notifier", "~> 1.6"
+  spec.add_development_dependency "terminal-notifier-guard", "~> 1.6"
 end
