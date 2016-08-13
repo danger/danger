@@ -4,11 +4,11 @@ describe Danger::PluginHost do
   it "should add a plugin to the dangerfile plugins array" do
     Danger::Plugin.clear_external_plugins
 
-    class DangerTestPlugin < Danger::Plugin; end
-    allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerTestPlugin])
+    class DangerHostTestPlugin < Danger::Plugin; end
+    allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerHostTestPlugin])
 
     dm = testing_dangerfile
-    expect(dm.plugins.map(&:class)).to eq([DangerTestPlugin])
+    expect(dm.plugins.map(&:class)).to eq([DangerHostTestPlugin])
   end
 
   it "should have the DangerfileMessagingPlugin as a core plugin" do

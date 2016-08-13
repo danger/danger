@@ -2,7 +2,6 @@ require "danger/danger_core/executor"
 
 describe Danger::Executor do
   describe "finding a Dangerfile" do
-
     it "should add a plugin to the dangerfile plugins array" do
       subject = Danger::Executor.new
       allow(File).to receive(:exist?).with("Dangerfile").and_return(true)

@@ -7,26 +7,25 @@ require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
 
 describe Danger::DangerfileJS do
-  it "runs the ruby code inside the Dangerfile" do
-    dangerfile_code = "message('hi');"
-
-    expect_any_instance_of(Danger::DangerfileMessagingPlugin).to receive(:message).and_return("")
-
-    dm = testing_dangerfile_js
-    dm.parse Pathname.new(""), dangerfile_code
-  end
-
   it "runs the ruby code for external plugins inside the Dangerfile" do
-    dangerfile_code = "git.modified_files();"
+    dangerfile_code = "git.modified_files()"
 
     expect_any_instance_of(Danger::DangerfileGitPlugin).to receive(:modified_files).and_return([])
 
     dm = testing_dangerfile_js
-
     dm.parse Pathname.new(""), dangerfile_code
   end
 
-  it "raises elegantly with bad jsd code inside the Dangerfile" do
+  it "runs a core plugin's ruby code inside the js Dangerfile" do
+    dangerfile_code = "message('hi')"
+
+    expect_any_instance_of(Danger::DangerfileMessagingPlugin).to receive(:message).and_return("OK")
+
+    dm = testing_dangerfile_js
+    dm.parse Pathname.new(""), dangerfile_code
+  end
+
+  it "raises elegantly with bad js code inside the Dangerfile" do
     dangerfile_code = "asdas = asdasd + asdasddas"
     dm = testing_dangerfile_js
 
@@ -37,8 +36,8 @@ describe Danger::DangerfileJS do
 
   describe "initializing plugins" do
     it "should add an instance variable to the dangerfile" do
-      class DangerTestPlugin < Danger::Plugin; end
-      dangerfile_code = "test_plugin"
+      class DangerTestJavascriptPlugin < Danger::Plugin; end
+      dangerfile_code = "test_javascript_plugin"
 
       dm = testing_dangerfile_js
 

@@ -53,8 +53,7 @@ describe Danger::Dangerfile do
       class DangerTestPlugin < Danger::Plugin; end
       dm = testing_dangerfile
 
-      expect { dm.test_plugin }.to_not raise_error
-      expect(dm.test_plugin.class).to eq(DangerTestPlugin)
+      expect(dm.test_plugin).to be_kind_of(DangerTestPlugin)
     end
   end
 

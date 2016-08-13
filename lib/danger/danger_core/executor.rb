@@ -81,6 +81,7 @@ module Danger
       printer.print_results
     end
 
+    # Send the details to the request source
     def post_results(dm, danger_id)
       gh = dm.env.request_source
       violations = dm.violation_report
