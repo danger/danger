@@ -27,7 +27,7 @@ module Danger
 
       # OK, then we can set ourselves up
       env ||= EnvironmentManager.new(ENV)
-      dm ||= dangerfile_for_path(path, env, cork)
+      dm ||= dangerfile_for_path(dangerfile_path, env, cork)
 
       env.fill_environment_vars
 
@@ -75,8 +75,10 @@ module Danger
     # Send the details to the request source
     def post_results(dm, danger_id)
       gh = dm.env.request_source
-      violations = dm.violation_report
-      status = dm.status_report
+      messaging = dm.env.plugin_host.core_plugins.first { |plugin| plugin.is_kind? DangerfileMessagingPlugin }
+
+      violations = messaging.violation_report
+      status = messaging.status_report
 
       gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns], danger_id: danger_id)
     end
