@@ -13,7 +13,6 @@ module Danger
             verbose: false)
 
       cork ||= Cork::Board.new(silent: false, verbose: false)
-      dangerfile_path ||= path_for_implicit_dangerfile
 
       # Could we find a CI source at all?
       unless EnvironmentManager.local_ci_source(ENV)
@@ -55,14 +54,6 @@ module Danger
       end
     end
 
-    # Determines the Dangerfile based on the current folder structure
-    def path_for_implicit_dangerfile
-      ["Dangerfile", "Dangerfile.rb", "Dangerfile.js"].each do |file|
-        return file if File.exist? file
-      end
-      abort("Could not find a Dangerfile to run.".red)
-    end
-
     # Gives you either a Dangerfile for Ruby, or a JS version
     def dangerfile_for_path(path, env, cork)
       klass = path.end_with?("js") ? DangerfileJS : Dangerfile
@@ -76,7 +67,7 @@ module Danger
       plugin_printer.print_plugin_metadata(env, cork)
 
       # Print out the results from the Dangerfile
-      messaging = env.plugin_host.external_plugins.first { |plugin| plugin.is_kind? DangerfileMessagingPlugin }
+      messaging = env.plugin_host.core_plugins.first { |plugin| plugin.is_kind? DangerfileMessagingPlugin }
       printer = DangerfilePrinter.new(messaging, cork)
       printer.print_results
     end

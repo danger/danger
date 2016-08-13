@@ -34,7 +34,6 @@ module Danger
     end
 
     def self.inherited(plugin)
-      puts "INHERITED: #{plugin}"
       Plugin.all_plugins.push(plugin)
     end
 

@@ -35,7 +35,12 @@ module Danger
             value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")
 
           else
-            value = plugin.send(method)
+            begin
+              value = plugin.send(method)
+            rescue
+              value = "N/A"
+            end
+
             # So that we either have one value per row
             # or we have [] for an empty array
             value = value.join("\n") if value.kind_of?(Array) && value.count > 0
