@@ -58,18 +58,11 @@ module Danger
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
 
-      # setup caching for Github calls to hitting the API rate limit too quickly
-      cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
-      cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
-      Octokit.middleware = Faraday::RackBuilder.new do |builder|
-        builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
-        builder.use Octokit::Response::RaiseError
-        builder.adapter Faraday.default_adapter
-      end
+      setup_local_http_cache
 
+      exec = Executor.new
       env = EnvironmentManager.new(ENV)
-      dm = Dangerfile.new(env, cork)
-      dm.init_plugins
+      dm = exec.dangerfile_for_path.new(@dangerfile_path, env, cork)
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
@@ -107,9 +100,10 @@ module Danger
         dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
 
         dm.parse(Pathname.new(@dangerfile_path))
+
         check_and_run_org_dangerfile(dm)
 
-        dm.print_results
+        exec.print_results(env, cork)
       ensure
         dm.env.clean_up
       end
@@ -121,6 +115,17 @@ module Danger
         url = dm.env.request_source.file_url(repository: danger_repo.name, path: "Dangerfile")
         path = dm.plugin.download(url)
         dm.parse(Pathname.new(path))
+      end
+    end
+
+    # setup caching for Github calls to hitting the API rate limit too quickly
+    def setup_local_http_cache
+      cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
+      cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
+      Octokit.middleware = Faraday::RackBuilder.new do |builder|
+        builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
+        builder.use Octokit::Response::RaiseError
+        builder.adapter Faraday.default_adapter
       end
     end
   end

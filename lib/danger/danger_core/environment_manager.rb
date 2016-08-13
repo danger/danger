@@ -44,7 +44,7 @@ module Danger
       request_source.fetch_details
     end
 
-    # The Dangerfile calls this once it's ready'
+    # The Dangerfile calls this once it's finished its init
     def setup_plugins(dangerfile)
       plugin_host.refresh_plugins(dangerfile)
       dangerfile.extend_with_plugins(plugin_host)
