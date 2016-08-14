@@ -43,7 +43,7 @@ EOS
 
 GITHUB_MAX_COMMENT_LENGTH = 65_536
 
-SINGLE_TABLE_COMMENT_NEW_TABLE_IDENTIFIER= <<-EOS.freeze
+SINGLE_TABLE_COMMENT_NEW_TABLE_IDENTIFIER = <<-EOS.freeze
   Other comment content
   <table>
     <thead><tr><th width="50"></th><th data-danger-table="true" width="95%">1 Error</th></tr></thead>
@@ -267,7 +267,7 @@ describe Danger::Helpers::CommentsHelper do
     it "supports markdown code below the summary table" do
       result = dummy.generate_comment(warnings: violations(["ups"]), markdowns: ["### h3"])
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
     end
 
@@ -282,7 +282,7 @@ describe Danger::Helpers::CommentsHelper do
       result = dummy.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -292,7 +292,7 @@ describe Danger::Helpers::CommentsHelper do
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -302,7 +302,7 @@ describe Danger::Helpers::CommentsHelper do
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -311,7 +311,7 @@ describe Danger::Helpers::CommentsHelper do
       result = dummy.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -331,7 +331,7 @@ describe Danger::Helpers::CommentsHelper do
     it "crosses resolved violations and changes the title" do
       previous_violations = { error: ["an error"] }
       result = dummy.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
-      expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">:white_check_mark:')
+      expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">:white_check_mark:')
       expect(result.gsub(/\s+/, "")).to include('<td>:white_check_mark:</td><tddata-sticky="true"><del>anerror</del></td>')
     end
 
@@ -339,7 +339,7 @@ describe Danger::Helpers::CommentsHelper do
       previous_violations = { error: ["an error"] }
       result = dummy.generate_comment(warnings: [], errors: violations(["an error"]), messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to eq(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
     end
 
@@ -347,7 +347,7 @@ describe Danger::Helpers::CommentsHelper do
       previous_violations = { error: ["an error"] }
       result = dummy.generate_comment(warnings: [], errors: violations(["another error"]),
                                    messages: [], previous_violations: previous_violations)
-      expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">1Error</th>')
+      expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th>')
     end
 
     it "needs to include generated_by_danger" do

@@ -1,28 +1,28 @@
 module Danger
   module Support
-    module GitLabHelper
+    module GitHubHelper
       def expected_headers
         {
-          "Accept" => "application/json",
-          "PRIVATE-TOKEN" => stub_env["DANGER_GITLAB_API_TOKEN"]
         }
       end
 
       def stub_env
         {
-          "DRONE" => true,
-          "DRONE_REPO" => "k0nserv/danger-test",
-          "DRONE_PULL_REQUEST" => "593728",
-          "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
+          "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+          "TRAVIS_PULL_REQUEST" => "800",
+          "TRAVIS_REPO_SLUG" => "artsy/eigen",
+          "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d",
+          "DANGER_GITHUB_API_TOKEN" => "hi"
         }
       end
 
       def stub_ci
-        Danger::Drone.new(stub_env)
+        env = { "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800" }
+        Danger::CircleCI.new(env)
       end
 
       def stub_request_source
-        Danger::RequestSources::GitLab.new(stub_ci, stub_env)
+        Danger::RequestSources::GitHub.new(stub_ci, stub_env)
       end
 
       def stub_merge_request(fixture, slug, merge_request_id)
@@ -51,25 +51,6 @@ module Danger
         escaped_slug = CGI.escape(slug)
         url = "https://gitlab.com/api/v3/projects/#{escaped_slug}/merge_requests/#{merge_request_id}/notes"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
-      end
-
-      def with_gitlab_git_repo
-        Dir.mktmpdir do |dir|
-          Dir.chdir dir do
-            `git init`
-            File.open(dir + "/file1", "w") {}
-            `git add .`
-            `git commit -m "ok"`
-
-            `git checkout -b new`
-            File.open(dir + "/file2", "w") {}
-            `git add .`
-            `git commit -m "another"`
-            `git remote add origin git@gitlab.com:k0nserv/danger-test.git`
-
-            yield
-          end
-        end
       end
     end
   end
