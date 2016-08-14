@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th width="50"></th>
-      <th width="100%" data-kind="<%= table[:name] %>">
+      <th width="100%" data-danger-table="true" data-kind="<%= table[:name] %>">
         <%- if table[:count] > 0 -%>
           <%= table[:count] %> <%= table[:name] %><%= "s" unless table[:count] == 1 %>
         <%- else -%>
