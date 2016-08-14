@@ -14,7 +14,8 @@
      </tr>
   </thead>
   <tbody>
-    <%- table[:content].each do |violation| -%>
+    <%- max_num_violations = 700 %>
+    <%- table[:content].take(max_num_violations).each do |violation| -%>
     <tr>
       <td>:<%= table[:emoji] %>:</td>
       <td data-sticky="<%= violation.sticky %>"><%= violation.message %></td>
