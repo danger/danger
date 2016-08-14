@@ -1,4 +1,4 @@
-require 'danger/plugin_support/plugin'
+require "danger/plugin_support/plugin"
 
 module Danger
   class DangerfileGitLabPlugin < Plugin
@@ -91,7 +91,7 @@ module Danger
       @gitlab.client
     end
 
-    [:title, :body, :author, :labels, :json].each  do |suffix|
+    [:title, :body, :author, :labels, :json].each do |suffix|
       alias_method "mr_#{suffix}".to_sym, "pr_#{suffix}".to_sym
     end
   end

@@ -77,15 +77,12 @@ module Danger
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
-        comment_result = {}
+        editable_comments = mr_comments.reject { |comment| comment.body.include?("generated_by_#{danger_id}") == false }
 
-        issues = mr_comments
-        editable_issues = issues.reject { |issue| issue.body.include?("generated_by_#{danger_id}") == false }
-
-        if editable_issues.empty?
+        if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_issues.first.body
+          comment = editable_comments.first.body
           previous_violations = parse_comment(comment)
         end
 
@@ -101,13 +98,13 @@ module Danger
                                  danger_id: danger_id,
                                   template: "gitlab")
 
-          if editable_issues.empty?
-            comment_result = client.create_merge_request_comment(
+          if editable_comments.empty?
+            client.create_merge_request_comment(
               escaped_ci_slug, ci_source.pull_request_id, body
             )
           else
-            original_id = editable_issues.first.id
-            comment_result = client.edit_merge_request_comment(
+            original_id = editable_comments.first.id
+            client.edit_merge_request_comment(
               escaped_ci_slug, ci_source.pull_request_id, original_id, body
             )
           end
@@ -119,7 +116,7 @@ module Danger
           next unless comment.body.include?("generated_by_#{danger_id}")
           next if comment.id == except
           client.delete_merge_request_comment(
-            ci_source.repo_slug,
+            escaped_ci_slug,
             ci_source.pull_request_id,
             comment.id
           )

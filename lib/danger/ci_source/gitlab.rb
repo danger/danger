@@ -2,17 +2,22 @@
 require "uri"
 
 module Danger
+  # ### CI Setup
+  # GitLab CI is currently not supported because GitLab's runners don't expose
+  # the required values in the environment. Namely CI_MERGE_REQUEST_ID does not
+  # exist as of yet, however there is an
+  # [MR](https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5698) fixing this.
+  # If that has been merged and you are using either gitlab.com or a release
+  # with that change this CISource will wokr.
+  #
   class GitlabCI < CI
     def self.validates_as_ci?(env)
       env.key? "GITLAB_CI"
     end
 
     def self.validates_as_pr?(env)
-      env["DRONE_PULL_REQUEST"].to_i > 0
-    end
-
-    def self.validates?(env)
-      return !env["CI_PROJECT_ID"].nil?# && !env["GITLAB_MR_ID"].nil?
+      exists = ["CI_MERGE_REQUEST_ID", "CI_PROJECT_ID", "GITLAB_CI"].all? { |x| env[x] }
+      exists && env["CI_MERGE_REQUEST_ID"].to_i > 0
     end
 
     def supported_request_sources
@@ -20,9 +25,8 @@ module Danger
     end
 
     def initialize(env)
-      # The first one is an extra slash, ignore it
       self.repo_slug = env["CI_PROJECT_ID"]
-      # self.pull_request_id = env["GITLAB_MR_ID"]
+      self.pull_request_id = env["MERGE_REQUEST_ID"]
     end
   end
 end

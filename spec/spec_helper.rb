@@ -1,17 +1,25 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
+# Needs to be required and started before danger
+require "simplecov"
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 require "danger"
 require "webmock"
 require "webmock/rspec"
 require "json"
 
-require "support/env_helper"
 require "support/gitlab_helper"
+require "support/github_helper"
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
-  config.include Danger::Support::EnvHelper
-  config.include Danger::Support::GitLabHelper
+  config.include Danger::Support::GitLabHelper, host: :gitlab
+  config.include Danger::Support::GitHubHelper, host: :github
+  config.run_all_when_everything_filtered = true
+  config.filter_run focus: true
 end
 
 # Now that we could be using Danger's plugins in Danger
@@ -40,9 +48,8 @@ def testing_ui
 end
 # rubocop:enable Lint/NestedMethodDefinition
 
-def testing_dangerfile(kind=nil)
-  kind = kind.nil? ? :github : kind.to_symbol
-  env = Danger::EnvironmentManager.new(stub_env(kind))
+def testing_dangerfile
+  env = Danger::EnvironmentManager.new(stub_env)
   dm = Danger::Dangerfile.new(env, testing_ui)
 end
 

@@ -6,7 +6,7 @@ require "danger/danger_core/plugins/dangerfile_import_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
 
-describe Danger::Dangerfile do
+describe Danger::Dangerfile, host: :github do
   it "keeps track of the original Dangerfile" do
     file = make_temp_file ""
     dm = testing_dangerfile
@@ -126,7 +126,12 @@ describe Danger::Dangerfile do
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+      expect(methods).to eq [
+        :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions,
+        :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files,
+        :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title,
+        :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title
+      ]
     end
 
     it "exposes all external plugin attributes by default" do
@@ -136,7 +141,12 @@ describe Danger::Dangerfile do
 
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :my_thing, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+      expect(methods).to eq [
+        :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions,
+        :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files,
+        :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :my_thing,
+        :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title
+      ]
     end
 
     def sort_data(data)
@@ -192,7 +202,12 @@ describe Danger::Dangerfile do
         # Ensure consistent ordering, and only extract the keys
         data = sort_data(data).map { |d| d.first.to_sym }
 
-        expect(data).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+        expect(data).to eq [
+          :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit,
+          :insertions, :lines_of_code, :modified_files,
+          :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title,
+          :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title
+        ]
       end
     end
   end
