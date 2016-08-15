@@ -23,7 +23,8 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["BUILDKITE_PULL_REQUEST_REPO", "BUILDKITE_PULL_REQUEST"].all? { |x| env[x] }
+      exists = ["BUILDKITE_PULL_REQUEST_REPO", "BUILDKITE_PULL_REQUEST"].all? { |x| env[x] }
+      exists && !env["BUILDKITE_PULL_REQUEST_REPO"].empty?
     end
 
     def initialize(env)

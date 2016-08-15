@@ -1,5 +1,7 @@
 ## Master
 
+* Improve detection of Buildkite's PR context - cysp
+
 ## 2.1.2
 
 * Improvements to `danger init` - orta
