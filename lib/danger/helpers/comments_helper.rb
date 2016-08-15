@@ -102,6 +102,19 @@ module Danger
                       "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
         compliment.sample
       end
+      
+      def character_from_emoji(emoji)
+        emoji.delete! ':'
+        if emoji == "no_entry_sign"
+          "🚫"
+        elsif emoji == "warning"
+          "⚠️"
+        elsif emoji == "book"
+          "📖"
+        elsif emoji == "white_check_mark"
+          "✅"
+        end
+      end
 
       private
 
