@@ -353,6 +353,7 @@ describe Danger::Helpers::CommentsHelper do
       warnings = (1..900).map { |i| "warning #{i}" }
       result = dummy.generate_comment(warnings: violations(warnings), errors: violations([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
+      expect(result).to include("has been truncated")
     end
   end
 
