@@ -23,6 +23,7 @@
     <%- end -%>
     <%- if table[:content].length > max_num_violations -%>
       <tr>
+        <td>:warning:</td>
         <td>
         Danger found <%= table[:content].length %> violations with this PR. Due to GitHub's max issue comment size, the number shown has been truncated to <%= max_num_violations %>.
         </td>
