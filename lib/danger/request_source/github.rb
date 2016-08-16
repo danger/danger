@@ -133,7 +133,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
