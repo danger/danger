@@ -211,9 +211,9 @@ describe Danger::RequestSources::GitHub do
         allow(@g).to receive(:submit_pull_request_status!).and_return(true)
       end
 
-      it "creates an issue if no danger comments exist" do
-        issues = []
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      it "creates a comment if no danger comments exist" do
+        comments = []
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
@@ -222,8 +222,8 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "updates the issue if no danger comments exist" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+        comments = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
@@ -232,8 +232,8 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
-        issues = [{ body: "generated_by_another_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+        comments = [{ body: "generated_by_another_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
@@ -241,26 +241,26 @@ describe Danger::RequestSources::GitHub do
         @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
       end
 
-      it "deletes existing issues if danger doesnt need to say anything" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      it "deletes existing comments if danger doesnt need to say anything" do
+        comments = [{ body: "generated_by_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
 
-      it "deletes existing issues if danger doesnt need to say anything and a custom danger_id is provided" do
-        issues = [{ body: "generated_by_another_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
+        comments = [{ body: "generated_by_another_danger", id: "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [], danger_id: "another_danger")
       end
 
-      it "updates the issue if danger doesnt need to say anything but there are sticky violations" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
+      it "updates the comment if danger doesnt need to say anything but there are sticky violations" do
+        comments = [{ body: "generated_by_danger", id: "12" }]
         allow(@g).to receive(:parse_comment).and_return({ errors: ["an error"] })
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])

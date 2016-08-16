@@ -72,13 +72,13 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
 
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.select { |issue| danger_issue?(issue, danger_id) }
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        editable_comments = comments.select { |comment| danger_comment?(comment, danger_id) }
 
-        if editable_issues.empty?
+        if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_issues.first[:body]
+          comment = editable_comments.first[:body]
           previous_violations = parse_comment(comment)
         end
 
@@ -94,10 +94,10 @@ module Danger
                                  danger_id: danger_id,
                                   template: "github")
 
-          if editable_issues.empty?
+          if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_issues.first[:id]
+            original_id = editable_comments.first[:id]
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -145,11 +145,11 @@ module Danger
 
       # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: "danger")
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        issues.each do |issue|
-          next unless danger_issue?(issue, danger_id)
-          next if issue[:id] == except
-          client.delete_comment(ci_source.repo_slug, issue[:id])
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        comments.each do |comment|
+          next unless danger_comment?(comment, danger_id)
+          next if comment[:id] == except
+          client.delete_comment(ci_source.repo_slug, comment[:id])
         end
       end
 
@@ -197,8 +197,8 @@ module Danger
 
       private
 
-      def danger_issue?(issue, danger_id)
-        issue[:body].include?("generated_by_#{danger_id}")
+      def danger_comment?(comment, danger_id)
+        comment[:body].include?("generated_by_#{danger_id}")
       end
     end
   end
