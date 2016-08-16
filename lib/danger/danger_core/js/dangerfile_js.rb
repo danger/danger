@@ -22,6 +22,16 @@ module Danger
       ten_min = 1000 * 60 * 10
       @runtime = V8::Context.new timeout: ten_min
       env_manager.setup_plugins(self)
+
+      setup_js_env
+    end
+
+    def setup_js_env
+      # Add lodash into the runner, so that there is something to work 
+      # with when using the default objects
+      lodash_path = File.join(Danger.gem_path, "lib/danger/danger_core/js/vendor/lodash.min.js")
+      lodash = File.read(lodash_path)
+      runtime.eval(lodash)
     end
 
     def extend_with_plugins(plugin_host)
