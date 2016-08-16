@@ -191,7 +191,7 @@ module Danger
     #
     # @return [String]
     def html_link(paths, full_path: true)
-      paths = [paths] unless paths.kind_of?(Array)
+      paths = [paths] unless paths.kind_of?(Enumerable)
       commit = head_commit
       repo = pr_json[:head][:repo][:html_url]
 
