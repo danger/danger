@@ -62,7 +62,7 @@ module Danger
 
       exec = Executor.new
       env = EnvironmentManager.new(ENV)
-      dm = exec.dangerfile_for_path.new(@dangerfile_path, env, cork)
+      dm = exec.dangerfile_for_path(@dangerfile_path, env, cork)
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
