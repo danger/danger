@@ -73,7 +73,7 @@ module Danger
         comment_result = {}
 
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
+        editable_issues = issues.select { |issue| danger_issue?(issue, danger_id) }
 
         if editable_issues.empty?
           previous_violations = {}
@@ -133,7 +133,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
@@ -147,7 +147,7 @@ module Danger
       def delete_old_comments!(except: nil, danger_id: "danger")
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
         issues.each do |issue|
-          next unless issue[:body].include?("generated_by_#{danger_id}")
+          next unless danger_issue?(issue, danger_id)
           next if issue[:id] == except
           client.delete_comment(ci_source.repo_slug, issue[:id])
         end
@@ -193,6 +193,12 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+      end
+
+      private
+
+      def danger_issue?(issue, danger_id)
+        issue[:body].include?("generated_by_#{danger_id}")
       end
     end
   end
