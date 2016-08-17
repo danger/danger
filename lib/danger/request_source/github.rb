@@ -1,6 +1,6 @@
 # coding: utf-8
-require 'octokit'
-require 'danger/helpers/comments_helper'
+require "octokit"
+require "danger/helpers/comments_helper"
 
 module Danger
   module RequestSources
@@ -15,9 +15,9 @@ module Danger
         self.support_tokenless_auth = false
 
         Octokit.auto_paginate = true
-        @token = @environment['DANGER_GITHUB_API_TOKEN']
-        if @environment['DANGER_GITHUB_API_HOST']
-          Octokit.api_endpoint = @environment['DANGER_GITHUB_API_HOST']
+        @token = @environment["DANGER_GITHUB_API_TOKEN"]
+        if @environment["DANGER_GITHUB_API_HOST"]
+          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
         end
       end
 
@@ -26,16 +26,16 @@ module Danger
       end
 
       def host
-        @host = @environment['DANGER_GITHUB_HOST'] || 'github.com'
+        @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
       end
 
       def client
-        raise 'No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`' if !@token && !support_tokenless_auth
+        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
         @client ||= Octokit::Client.new(access_token: @token)
       end
 
       def pr_diff
-        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: 'application/vnd.github.v3.diff')
+        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: "application/vnd.github.v3.diff")
       end
 
       def setup_danger_branches
@@ -69,11 +69,11 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
 
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
+        editable_issues = issues.select { |issue| danger_issue?(issue, danger_id) }
 
         if editable_issues.empty?
           previous_violations = {}
@@ -92,7 +92,7 @@ module Danger
                                  markdowns: markdowns,
                        previous_violations: previous_violations,
                                  danger_id: danger_id,
-                                  template: 'github')
+                                  template: "github")
 
           if editable_issues.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
@@ -106,11 +106,11 @@ module Danger
         # Note: this can terminate the entire process.
         submit_pull_request_status!(warnings: warnings,
                                       errors: errors,
-                                 details_url: comment_result['html_url'])
+                                 details_url: comment_result["html_url"])
       end
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
-        status = (errors.count.zero? ? 'success' : 'failure')
+        status = (errors.count.zero? ? "success" : "failure")
         message = generate_description(warnings: warnings, errors: errors)
 
         latest_pr_commit_ref = self.pr_json[:head][:sha]
@@ -122,7 +122,7 @@ module Danger
         begin
           client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
             description: message,
-            context: 'danger/danger',
+            context: "danger/danger",
             target_url: details_url
           })
         rescue
@@ -133,7 +133,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
@@ -144,10 +144,10 @@ module Danger
       end
 
       # Get rid of the previously posted comment, to only have the latest one
-      def delete_old_comments!(except: nil, danger_id: 'danger')
+      def delete_old_comments!(except: nil, danger_id: "danger")
         issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
         issues.each do |issue|
-          next unless issue[:body].include?("generated_by_#{danger_id}")
+          next unless danger_issue?(issue, danger_id)
           next if issue[:id] == except
           client.delete_comment(ci_source.repo_slug, issue[:id])
         end
@@ -190,9 +190,15 @@ module Danger
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
-      def file_url(organisation: nil, repository: nil, branch: 'master', path: nil)
+      def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+      end
+
+      private
+
+      def danger_issue?(issue, danger_id)
+        issue[:body].include?("generated_by_#{danger_id}")
       end
     end
   end

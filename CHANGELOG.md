@@ -1,6 +1,14 @@
 ## Master
 
+## 2.1.3
+
+* Improve detection of Buildkite's PR context - cysp
+* An attempt at fixing a misalignment with what Danger says is inside the diff range, and what people have seen #160 #316 - orta/yimingtang/jamtur01/segiddins
+
+## 2.1.2
+
 * Improvements to `danger init` - orta
+* Circle CI validation improvements - orta
 
 ## 2.1.1
 
