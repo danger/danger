@@ -1,6 +1,8 @@
 ## Master
 
-* Improve detection of PR content on CircleCI.
+## 2.1.4
+
+* Improve detection of PR content on CircleCI. - jamtur01
 
 ## 2.1.3
 
