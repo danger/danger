@@ -1,5 +1,7 @@
 ## Master
 
+* Improve detection of PR content on CircleCI.
+
 ## 2.1.3
 
 * Improve detection of Buildkite's PR context - cysp
