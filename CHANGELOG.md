@@ -12,6 +12,7 @@
 
 * Improve detection of Buildkite's PR context - cysp
 * An attempt at fixing a misalignment with what Danger says is inside the diff range, and what people have seen #160 #316 - orta/yimingtang/jamtur01/segiddins
+* Copyedit the README and vision statement - suchow
 
 ## 2.1.2
 
