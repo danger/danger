@@ -13,3 +13,4 @@ test:
     - git config --global user.email "danger@example.com"
     - git config --global user.name "Danger McShane"
     - bundle exec rake specs
+    - bundle exec danger
