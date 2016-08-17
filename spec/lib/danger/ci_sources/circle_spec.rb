@@ -36,6 +36,11 @@ describe Danger::CircleCI do
     expect(Danger::CircleCI.validates_as_ci?(env)).to be true
   end
 
+  it "doesn't validate_as_pr if ci_pull_request is empty" do
+    env = { "CI_PULL_REQUEST" => "" }
+    expect(Danger::CircleCI.validates_as_pr?(env)).to be false
+  end
+
   it "doesnt validate when circle ci is not found" do
     env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
     expect(Danger::CircleCI.validates_as_ci?(env)).to be false
