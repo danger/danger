@@ -1,5 +1,7 @@
 ## Master
 
+* Lols, more Circle CI stuff, and importantly - more documentation - orta 
+
 ## 2.1.4
 
 * Improve detection of PR content on CircleCI. - jamtur01
