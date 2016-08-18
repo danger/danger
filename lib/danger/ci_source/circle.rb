@@ -23,6 +23,11 @@ module Danger
   # There is no difference here for OSS vs Closed, add your `DANGER_GITHUB_API_TOKEN` to the Environment variable settings page.
   #
   class CircleCI < CI
+    
+    # Side note: CircleCI is complicated. The env vars for PRs are not guaranteed to exist
+    # if the build was triggered from a commit, to look at examples of the different types
+    # of CI states, see this repo: https://github.com/orta/show_circle_env
+
     def self.validates_as_ci?(env)
       env.key? "CIRCLE_BUILD_NUM"
     end
