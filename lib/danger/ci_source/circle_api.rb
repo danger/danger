@@ -2,12 +2,6 @@ require "faraday"
 
 module Danger
   class CircleAPI
-    attr_accessor :circle_token
-
-    def initialize(circle_token = nil)
-      self.circle_token = circle_token
-    end
-
     # Determine if there's a PR attached to this commit,
     # and return a bool
     def pull_request?(env)
@@ -22,7 +16,8 @@ module Danger
 
       if url.nil? && !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
         repo_slug = env["CIRCLE_PROJECT_USERNAME"] + "/" + env["CIRCLE_PROJECT_REPONAME"]
-        url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"])
+        token = env["DANGER_CIRCLE_CI_API_TOKEN"] || env["CIRCLE_CI_API_TOKEN"]
+        url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"], token)
       end
       url
     end
@@ -32,15 +27,15 @@ module Danger
     end
 
     # Ask the API if the commit is inside a PR
-    def fetch_pull_request_url(repo_slug, build_number)
-      build_json = client.fetch_build(repo_slug, build_number)
+    def fetch_pull_request_url(repo_slug, build_number, token)
+      build_json = fetch_build(repo_slug, build_number, token)
       build_json[:pull_request_urls].first
     end
 
     # Make the API call, and parse the JSON
-    def fetch_build(repo_slug, build_number)
+    def fetch_build(repo_slug, build_number, token)
       url = "project/#{repo_slug}/#{build_number}"
-      params = { "circle-token" => circle_token }
+      params = { "circle-token" => token }
       response = client.get url, params, accept: "application/json"
       json = JSON.parse(response.body, symbolize_names: true)
       json

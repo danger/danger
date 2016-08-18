@@ -1,41 +1,62 @@
 require "danger/ci_source/circle_api"
 
 describe Danger::CircleAPI do
-  api_path = "project/artsy/eigen/1500"
-  accept_json = { accept: "application/json" }
+  it "gets out a repo slug, pull request number and commit refs when PR url is not found" do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen",
+      "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
+    }
 
-  before do
-    build_response = fixture("circle_build_response")
-    @mocked_response = Faraday::Response.new(body: build_response, status: 200)
-    @expected_json_response = JSON.parse(build_response, symbolize_names: true)
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
+
+    t = Danger::CircleCI.new(env)
+
+    expect(t.repo_slug).to eql("artsy/eigen")
+    expect(t.pull_request_id).to eql("1130")
   end
 
-  it "has a nil token as default" do
-    api = Danger::CircleAPI.new
-    expect(api.circle_token).to be nil
+  it "uses the new token DANGER_CIRCLE_CI_API_TOKEN if available" do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "DANGER_CIRCLE_CI_API_TOKEN" => "token2",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen"
+    }
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token2").and_return(build_response)
+
+    t = Danger::CircleAPI.new
+    expect(t.pull_request_url(env)).to eql("https://github.com/artsy/eigen/pull/1130")
   end
 
-  it "sets the token on initialize" do
-    api = Danger::CircleAPI.new("123456")
-    expect(api.circle_token).to eql("123456")
+  it "uses Circle CI API to grab the url if available" do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_CI_API_TOKEN" => "token",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen"
+    }
+    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
+
+    t = Danger::CircleAPI.new
+    expect(t.pull_request_url(env)).to eql("https://github.com/artsy/eigen/pull/1130")
   end
 
-  it "creates a client with the correct base url" do
-    api = Danger::CircleAPI.new
-    expect(api.client.url_prefix.to_s).to eql("https://circleci.com/api/v1")
-  end
+  it "uses Circle CI API to and can tell you it's not a PR'" do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "CIRCLE_CI_API_TOKEN" => "token",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen"
+    }
+    build_response = JSON.parse(fixture("circle_build_no_pr_response"), symbolize_names: true)
+    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
-  it "fetches the build info without token" do
-    api = Danger::CircleAPI.new
-    allow(api.client).to receive(:get).with(api_path, { "circle-token" => nil }, accept_json).and_return(@mocked_response)
-
-    expect(api.fetch_build("artsy/eigen", "1500")).to eql(@expected_json_response)
-  end
-
-  it "fetches the build info with token" do
-    api = Danger::CircleAPI.new("123456")
-    allow(api.client).to receive(:get).with(api_path, { "circle-token" => "123456" }, accept_json).and_return(@mocked_response)
-
-    expect(api.fetch_build("artsy/eigen", "1500")).to eql(@expected_json_response)
+    t = Danger::CircleAPI.new
+    expect(t.pull_request?(env)).to be_falsy
   end
 end
