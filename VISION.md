@@ -1,45 +1,43 @@
 ### The Danger Vision
 
-Danger is a long term project, from our current viewpoint her role is:
+Danger is a long-term project. From our current viewpoint, her role is:
 
- * An automated reviewer for your code.
+ * An automated reviewer of your code.
 
-While we initially envisioned that she would work best at providing an API for looking at file differents in `git` - real life usage showed that the domain for easily providing workable automated feedback was far more useful than knowing "did file x change."
+Though we initially envisioned that Danger would provide an API for looking at file diffs in Git, real-life usage showed that it was far more useful to provide workable automated feedback on pull requests.
 
-### How She Does This
+### How She Does It
 
-The core concept is that the Danger project itself creates a system that is extremely easy to build upon. The codebase for Danger should resolve specifically around systems for CI, communication with Peer Review tools and providing APIs to Source Control changes. For example: `Travis CI` - `GitHub` - `git`.
+Danger's core concept is a system that is easy to build upon. The codebase for Danger should resolve specifically around systems for CI (e.g. Travis), communication with Peer Review tools (e.g. GitHub), and providing APIs to Source Control changes (e.g., Git).
 
-These abstractions allow an individual to think about writing a `Dangerfile` as it's own DSL sub-set of the ruby programming language.
-
-This means that decisions on new code integrated into Danger should ask "is this valid for every CI provider, every review system and source control type?" by making this domain so big, we can keep the core of Danger small.
+These abstractions enable an individual to think about writing a `Dangerfile` as its own DSL subset of the Ruby programming language. This means that decisions on new code integrated into Danger should ask "is this valid for every CI provider, every review system, and every source control type?" By making this domain so big, we can keep the core of Danger small.
 
 ### General Aim
 
-Danger should provide a small core, but be as open as possible for others to build upon. This means two major advantages; Danger's maintainers can spend their time on the kernel of Danger, others will have first party access to build tools that the maintainers could never have conceived of. By being conservative for the core, we can provide a solid, dependable framework to work from.
+Danger should provide a small core, but be as open as possible for others to build upon. This affords two major advantages: Danger's maintainers can spend their time on the kernel of Danger, while others have first-party access to create tools that the maintainers could never have conceived of. By being conservative for the core, we can provide a solid, dependable framework to work from.
 
-We want to provide different tools for people to build on Danger via plugins. A plugin can be a gem installed via rubygems or bundler, wherein it will be considered part of the community of Danger plugins. Or it can be a single ruby file which can be accessed via https or git, which make great one-off projects.
+We want to provide different tools for people to build on Danger via plugins. A plugin can be a gem installed via rubygems or bundler, wherein it will be considered part of the community of Danger plugins. Or, it can be a single Ruby file that can be accessed via https or Git, which make great one-off projects.
 
 ### Plugins
 
-We should aim to be as explicit as possible in the Danger Plugin contract, so that it is possible to centralise the infrastructure. It would be a shame to have many people working on the same projects without knowing they're duplicating each other's work. By enforcing standards via the core like, "always use a `danger-` prefix on your gem", "always use rubydoc for code comments" we can build a central search and documentation engine to lower the barriers for consumers to use and share plugins. This technique is used in CocoaPods to ensure [reference material](https://github.com/CocoaPods/guides.cocoapods.org/blob/master/lib/doc/generators.rb#L1) is always up-to-date with [the code](https://github.com/CocoaPods/Core/blob/master/lib/cocoapods-core/podfile/dsl.rb).
+We should aim to be as explicit as possible in the Danger Plugin contract, such that it is possible to centralise the infrastructure. It would be a shame to have many people work on the same project without knowing they're duplicating each other's work. By enforcing standards via the core, such as "always use a `danger-` prefix on your gem" and "always use rubydoc for code comments", we can build a central search and documentation engine to lower the barriers for consumers to use and share plugins. This technique is used in CocoaPods to ensure [reference material](https://github.com/CocoaPods/guides.cocoapods.org/blob/master/lib/doc/generators.rb#L1) is always up-to-date with [the code](https://github.com/CocoaPods/Core/blob/master/lib/cocoapods-core/podfile/dsl.rb).
 
 At the moment, a plugin is comprised of: DSL attributes and plugin-commands.
 
-* **DSL Attributes** - These are ways in which explicit free-form functions can be added to the `Dangerfile` that have a very specific domain knowledge, but that may not be applicable in every case of using the plugin.
+* **DSL Attributes** - These are ways in which explicit free-form functions can be added to the `Dangerfile` that have specific domain knowledge, but that may not be applicable in every case of using the plugin.
 
 * **Plugins Command** - These are ways in which you can provide implicit checks that happen when a plugin is activated in a `Dangerfile`.
 
-For example, if you had a Danger plugin around blogging with [Jekyll](http://jekyllrb.com). You may make checking for 404s on external links a plugin command, as it's applicable everywhere, but make grammar checking on markdown files a DSL attribute because not everyone would want it.
+For example, consider a Danger plugin for blogging with [Jekyll](http://jekyllrb.com). You may make checking for 404s on external links a plugin command, as it's applicable everywhere, but make grammar checking on Markdown files a DSL attribute because not everyone would want it.
 
 ### Communication
 
-So far, a lot of discussion for Danger happens within GitHub issues, and ideally we should strive to keep it that way until Danger becomes big enough that this is a problem. The advantages of this is that all documentation / issues are publicly searchable, and easily linked to source. Tools like Slack and Gitter are great for culture building, but can reduce the transparency of an organization.
+So far, a lot of discussion about Danger happens within GitHub issues. Ideally, we will keep it that way until Danger becomes big enough that this is a problem. The advantages of this is that all documentation and issues are publicly searchable and easily linked to the source code. Tools such as Slack and Gitter are great for building a culture, but can reduce the transparency of an organization.
 
-One way in which we're trying to improve on this is by conforming to the [Moya's Community Continuity document](https://github.com/Moya/contributors) which is about including as many people into the process as possible. While there are definitely gate-keepers around shipping the gem, which goes to the public, giving anyone push access to the source code historically hasn't bitten projects we've worked on.
+One way in which we're trying to improve on this is by conforming to [Moya's Community Continuity document](https://github.com/Moya/contributors), which aims to include as many people into the process as possible. Though there are gate-keepers around shipping the gem, which is released to the public, in our experience giving everyone push access to the source code has not bitten the projects we've worked on.
 
-With a lot of these things though, they're about scale.
+With a lot of these things, though, they're about scale.
 
 ### Contributions
 
-The Danger project should aim to devote a lot of time to making plugin contributors feel like an important part of the team. Examples of where this has worked well is the [jQuery project](https://plugins.jquery.com). We should strive to provide a place for anyone to be able to own a context for working with Danger ( e.g. blogging with Jekyll ) and the aim of the core team should be to work on ways to showcase that to encourage adoption and show off great work. An example of where this worked is the [CocoaPods Quality Index](http://blog.cocoapods.org/CocoaPods.org-Two-point-Five/).
+The Danger project should aim to devote a lot of time to making plugin contributors feel like an important part of the team. Examples of where this has worked well is the [jQuery project](https://plugins.jquery.com). We should strive to provide a place for anyone to be able to own a context for working with Danger (e.g. blogging with Jekyll). The aim of the core team should be to work on ways to showcase that to encourage adoption and show off great work. An example of where this worked is the [CocoaPods Quality Index](http://blog.cocoapods.org/CocoaPods.org-Two-point-Five/).

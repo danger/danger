@@ -17,13 +17,15 @@ Formalize your Pull Request etiquette.
 
 ## What is Danger?
 
-Danger runs after your CI, and gives teams the chance to automate common code review chores.
+Danger runs after your CI, automating your team's conventions surrounding code review.
 
 This provides another logical step in your process, through this Danger can help lint your rote tasks in daily code review.
 
-You can use Danger to codify your teams norms. Leaving humans to think about harder problems.
+You can use Danger to codify your teams norms, leaving humans to think about harder problems.
 
 ## For example?
+
+You can:
 
 * Enforce CHANGELOGs
 * Enforce links to Trello/JIRA in PR/MR bodies
@@ -32,13 +34,13 @@ You can use Danger to codify your teams norms. Leaving humans to think about har
 * Highlight interesting build artifacts
 * Give specific files extra focus 
 
-Danger simply provides the glue to let _you_ build out the rules specific to your team's culture. Offering a lot of useful metadata, and a comprehensive plugin system to share common issues. 
+Danger provides the glue to let _you_ build out the rules specific to your team's culture, offering useful metadata and a comprehensive plugin system to share common issues.
 
 ## Getting Started
 
-Alright. So, actually, you may be in the wrong place. From here on in, this README is going to be for people who are interested in working on / improving on Danger. 
+Alright. So, actually, you may be in the wrong place. From here on in, this README is going to be for people who are interested in working on and improving on Danger.
 
-We keep all of the end-user documentation inside [http://danger.systems](http://danger.systems).
+We keep all of the end-user documentation at [http://danger.systems](http://danger.systems).
 
 Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html). 
 
@@ -57,21 +59,21 @@ This sets everything up and runs all of the tests.
 
 #### Theory
 
-Danger has a [VISION.md](https://github.com/danger/danger/blob/master/VISION.md) file, this sums up the ideas around what Danger is. It's the lower bounds of what Danger means. Orta has written on handling, and creating Danger [on the Artsy blog](http://artsy.github.io/blog/categories/danger/) too.
+Danger has a [VISION.md](https://github.com/danger/danger/blob/master/VISION.md) file, which sums up the ideas around what Danger is. It is the lower bounds of what Danger means. Orta has written on handling and creating Danger [on the Artsy blog](http://artsy.github.io/blog/categories/danger/), too.
 
 #### Documentation
 
-The code you write may end up in the public part of the website, the easiest way to tell is that it is vastly overdocumented. If you are working in a space that looks over-documented, please be extra considerate to add documentation. We expect the consumers of that documentation to be non-rubyists, thus avoid specific jargon and try to provide duplicate overlapping examples.  
+The code you write may end up in the public part of the website — the easiest way to tell is that it is vastly overdocumented. If you are working in a space that looks over-documented, please be extra considerate to add documentation. We expect the consumers of that documentation to be non-rubyists, thus you should avoid specific jargon and try to provide duplicate overlapping examples.  
 
 #### Testing
 
-So far, we've not really figured out the right way to make tests for our CLI commands. When we have done so, they've ended up brittle. So ideally, try to move any logic that would go into a command into separate classes, and test those. We're OK with the command not having coverage, but ideally the classes that make up what it does do.
+So far, we've not really figured out the right way to make tests for our CLI commands. When we have done so, they've ended up being brittle. So, ideally, try to move any logic that would go into a command into separate classes, and test those. We're okay with the command not having coverage, but ideally the classes that make up what it does will.
 
 I'd strongly recommend using `bundle exec guard` to run your tests as you work. Any changes you make in the lib, or specs will have corresponding tests run instantly.
 
 #### Debugging
 
-Ruby is super dynamic, one of the best ways to debug is by using [pry](http://pryrepl.org/). We include pry for developers, when you have a problem copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](http://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
+Ruby is super dynamic. One of the best ways to debug Ruby code is by using [pry](http://pryrepl.org/). We include pry for developers: when you have a problem, copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](http://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
 
 ```ruby
 require 'pry'      
@@ -81,11 +83,11 @@ binding.pry
 ## Tell me of these Plugins
 
 * Follow the [Creating your first plugin](http://danger.systems/guides/creating_your_first_plugin.html) guide
-* Talk through the tech specs here
+* (Talk through the tech specs here.)
 
 ## License, Contributor's Guidelines and Code of Conduct
 
-We try to keep as much discussion as possible in GitHub issues, but also have a pretty inactive slack, if you'd like an invite ping [@Orta](https://twitter.com/orta/) a DM on twitter with your email. It's mostly interesting if you want to stay on top of Danger without all of the emails from GitHub. 
+We try to keep as much discussion as possible in GitHub issues, but also have a pretty inactive Slack --- if you'd like an invite, ping [@Orta](https://twitter.com/orta/) a DM on Twitter with your email. It's mostly interesting if you want to stay on top of Danger without all the emails from GitHub. 
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 
