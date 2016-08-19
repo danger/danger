@@ -1,5 +1,9 @@
 ## Master
 
+## 2.1.6
+
+* Crash fix for `danger init` - marcelofabri
+
 ## 2.1.5
 
 * Lols, more Circle CI stuff, and importantly - more documentation - orta 
