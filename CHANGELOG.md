@@ -2,6 +2,23 @@
 
 * **BREAKING** Removes the implicit Dangerfile work. This is a WIP. The feature will be back in some form. - orta
 
+## 2.1.6
+
+* Crash fix for `danger init` - marcelofabri
+
+## 2.1.5
+
+* Lols, more Circle CI stuff, and importantly - more documentation - orta 
+
+## 2.1.4
+
+* Improve detection of PR content on CircleCI. - jamtur01
+
+## 2.1.3
+
+* Improve detection of Buildkite's PR context - cysp
+* An attempt at fixing a misalignment with what Danger says is inside the diff range, and what people have seen #160 #316 - orta/yimingtang/jamtur01/segiddins
+* Copyedit the README and vision statement - suchow
 
 ## 2.1.2
 

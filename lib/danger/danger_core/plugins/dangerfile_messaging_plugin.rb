@@ -22,7 +22,7 @@ module Danger
   #
   #          fail "This build didn't pass tests"
   #
-  # @example Failing a build, but not keeping it's value around on subsequent runs
+  # @example Failing a build, but not keeping its value around on subsequent runs
   #
   #          fail("This build didn't pass tests", sticky: false)
   #

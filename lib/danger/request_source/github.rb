@@ -72,13 +72,13 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
 
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        editable_comments = comments.select { |comment| danger_comment?(comment, danger_id) }
 
-        if editable_issues.empty?
+        if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_issues.first[:body]
+          comment = editable_comments.first[:body]
           previous_violations = parse_comment(comment)
         end
 
@@ -94,10 +94,10 @@ module Danger
                                  danger_id: danger_id,
                                   template: "github")
 
-          if editable_issues.empty?
+          if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_issues.first[:id]
+            original_id = editable_comments.first[:id]
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -133,7 +133,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
@@ -145,11 +145,11 @@ module Danger
 
       # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: "danger")
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        issues.each do |issue|
-          next unless issue[:body].include?("generated_by_#{danger_id}")
-          next if issue[:id] == except
-          client.delete_comment(ci_source.repo_slug, issue[:id])
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        comments.each do |comment|
+          next unless danger_comment?(comment, danger_id)
+          next if comment[:id] == except
+          client.delete_comment(ci_source.repo_slug, comment[:id])
         end
       end
 
@@ -165,6 +165,12 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+      end
+
+      private
+
+      def danger_comment?(comment, danger_id)
+        comment[:body].include?("generated_by_#{danger_id}")
       end
     end
   end
