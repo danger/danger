@@ -161,34 +161,6 @@ module Danger
         nil
       end
 
-      # @return [Hash] with the information about the repo
-      #   returns nil if the repo is not available
-      def fetch_repository(organisation: nil, repository: nil)
-        organisation ||= self.organisation
-        repository ||= self.ci_source.repo_slug.split("/").last
-        self.client.repo("#{organisation}/#{repository}")
-      rescue Octokit::NotFound
-        nil # repo doesn't exist
-      end
-
-      # @return [Hash] with the information about the repo.
-      #   This will automatically detect if the repo is capitalised
-      #   returns nil if there is no danger repo
-      def fetch_danger_repo(organisation: nil)
-        data = nil
-        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.downcase)
-        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.capitalize)
-        data
-      end
-
-      # @return [Bool] is this repo the danger repo of the org?
-      def danger_repo?(organisation: nil, repository: nil)
-        repo = fetch_repository(organisation: organisation, repository: repository)
-        repo[:name].casecmp(DANGER_REPO_NAME).zero? || repo[:parent] && repo[:parent][:full_name] == "danger/danger"
-      rescue
-        false
-      end
-
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
