@@ -59,6 +59,10 @@ def testing_dangerfile
   dm = Danger::Dangerfile.new(env, testing_ui)
 end
 
+def fixture_txt(file)
+  File.read("spec/fixtures/#{file}.txt")
+end
+
 def fixture(file)
   File.read("spec/fixtures/#{file}.json")
 end

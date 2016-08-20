@@ -2,7 +2,7 @@ require "pathname"
 require "tempfile"
 
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_danger_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
 
@@ -126,7 +126,7 @@ describe Danger::Dangerfile do
     it "exposes no external attributes by default" do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
     end
 
     it "exposes all external plugin attributes by default" do
@@ -136,7 +136,7 @@ describe Danger::Dangerfile do
 
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-      expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :my_thing, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+      expect(methods).to include(:my_thing)
     end
 
     def sort_data(data)

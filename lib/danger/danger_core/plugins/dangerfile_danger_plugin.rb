@@ -10,36 +10,36 @@ module Danger
   # @example Import a plugin available over HTTP
   #
   #          device_grid = "https://raw.githubusercontent.com/fastlane/fastlane/master/danger-device_grid/lib/device_grid/plugin.rb"
-  #          plugin.import device_grid
+  #          danger.import_plugin(device_grid)
   #
   # @example Import from a local file reference
   #
-  #          plugin.import "danger/plugins/watch_plugin.rb"
+  #          danger.import_plugin("danger/plugins/watch_plugin.rb")
   #
   # @example Import all files inside a folder
   #
-  #          plugin.import "danger/plugins/*.rb"
+  #          danger.import_plugin("danger/plugins/*.rb")
   #
   # @see  danger/danger
   # @tags core, plugins
 
-  class DangerfileImportPlugin < Plugin
+  class DangerfileDangerPlugin < Plugin
     # The instance name used in the Dangerfile
     # @return [String]
     #
     def self.instance_name
-      "plugin"
+      "danger"
     end
 
-    # @!group Plugins
-    # Download a local or remote plugin and use it inside the Dangerfile.
+    # @!group Danger
+    # Download a local or remote plugin and make it usable inside the Dangerfile.
     #
     # @param    [String] path_or_url
     #           a local path or a https URL to the Ruby file to import
     #           a danger plugin from.
     # @return   [void]
     #
-    def import(path_or_url)
+    def import_plugin(path_or_url)
       raise "`import` requires a string" unless path_or_url.kind_of?(String)
 
       if path_or_url.start_with?("http")
@@ -49,8 +49,25 @@ module Danger
       end
     end
 
+    # @!group Danger
+    # Download and execute a remote Dangerfile.
+    #
+    # @param    [String] repo slug
+    #           A slug that represents the repo where the Dangerfile is.
+    # @return   [void]
+    #
+    def import_dangerfile(slug)
+      raise "`import` requires a string" unless slug.kind_of?(String)
+      org, repo = slug.split("/")
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: "master", path: "Dangerfile")
+      local_path = import_url(download_url)
+      dangerfile.parse(Pathname.new(local_path))
+    end
+
+    private
+
     # @!group Plugins
-    # Download a local or remote plugin or Dangerfile
+    # Download a local or remote plugin or Dangerfile.
     # This method will not import the file for you, use plugin.import instead
     #
     # @param    [String] path_or_url
@@ -74,8 +91,6 @@ module Danger
       File.write(path, content.body)
       return path
     end
-
-    private
 
     # @!group Plugins
     # Download a remote plugin and use it locally.

@@ -1,6 +1,34 @@
 ## Master
 
 * add `file` and `line` optional parameters to methods on the messaging plugin
+* **BREAKING** Removes the implicit Dangerfile support. - orta
+
+  The implicit support was a feature that would check for an `[org]/danger`
+  repo, and automatically parse that Dangerfile. Think it was a bit too magic,
+  and the only person who I know is using it, said they think it should have 
+  been this way from the start. I'm cool with this.
+
+  To handle the replacement, we've added a new object to the DSL.
+  This is the `danger` API. It has two responsibilities at the moment,
+  downloading a Dangerfile:
+
+  ```ruby
+  danger.import_dangerfile = "artsy/danger"
+  ```
+
+  and importing local plugins:
+
+  ```ruby
+  danger.import_plugin [path_or_url]
+  ```
+
+  Which the astute may have remembered used to be the purview of `plugin.import`.
+  Which is now removed, in favour of the `danger.import_plugin`. Think there's more
+  space for improvement inside the context of `danger` than `plugin`.
+
+  I also removed `plugin.download` - couldn't see a use for it inside a Dangerfile. Happy
+  to change that, if it's being used it.
+
 ## 2.1.6
 
 * Crash fix for `danger init` - marcelofabri
