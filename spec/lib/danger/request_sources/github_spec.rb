@@ -4,7 +4,7 @@ require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/violation"
 
-describe Danger::RequestSources::GitHub do
+describe Danger::RequestSources::GitHub, host: :github do
   describe "the github host" do
     it "sets a default GitHub host" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
@@ -21,7 +21,7 @@ describe Danger::RequestSources::GitHub do
     it "allows the GitHub API host to be overridden" do
       api_endpoint = "https://git.club-mateusa.com/api/v3/"
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_HOST" => api_endpoint }
-      Danger::RequestSources::GitHub.new(stub_ci, gh_env)
+      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
       expect(Octokit.api_endpoint).to eql(api_endpoint)
     end
   end

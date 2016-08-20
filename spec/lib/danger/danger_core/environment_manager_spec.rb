@@ -8,14 +8,18 @@ describe Danger::EnvironmentManager do
 
   it "stores travis in the source" do
     number = 123
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane", "TRAVIS_PULL_REQUEST" => number.to_s }
+    env = { "DANGER_GITHUB_API_TOKEN" => "abc123",
+            "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+            "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane",
+            "TRAVIS_PULL_REQUEST" => number.to_s }
     e = Danger::EnvironmentManager.new(env)
     expect(e.ci_source.pull_request_id).to eq(number.to_s)
   end
 
   it "stores circle in the source" do
     number = 800
-    env = { "CIRCLE_BUILD_NUM" => "true",
+    env = { "DANGER_GITHUB_API_TOKEN" => "abc123",
+            "CIRCLE_BUILD_NUM" => "true",
             "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/#{number}",
             "CIRCLE_PROJECT_USERNAME" => "orta",
             "CIRCLE_PROJECT_REPONAME" => "thing" }
@@ -24,7 +28,8 @@ describe Danger::EnvironmentManager do
   end
 
   it "creates a GitHub attr" do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+    env = { "DANGER_GITHUB_API_TOKEN" => "abc123",
+            "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
             "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane",
             "TRAVIS_PULL_REQUEST" => 123.to_s }
     e = Danger::EnvironmentManager.new(env)

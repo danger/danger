@@ -1,7 +1,7 @@
 require "danger/danger_core/environment_manager"
 require "danger/danger_core/plugins/dangerfile_import_plugin"
 
-describe Danger::Dangerfile::DSL do
+describe Danger::Dangerfile::DSL, host: :github do
   describe "#import" do
     before do
       # Normally this happens during launch, but tests will clear this out
