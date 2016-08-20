@@ -1,6 +1,6 @@
 # coding: utf-8
-require 'octokit'
-require 'danger/helpers/comments_helper'
+require "octokit"
+require "danger/helpers/comments_helper"
 
 module Danger
   module RequestSources
@@ -15,9 +15,9 @@ module Danger
         self.support_tokenless_auth = false
 
         Octokit.auto_paginate = true
-        @token = @environment['DANGER_GITHUB_API_TOKEN']
-        if @environment['DANGER_GITHUB_API_HOST']
-          Octokit.api_endpoint = @environment['DANGER_GITHUB_API_HOST']
+        @token = @environment["DANGER_GITHUB_API_TOKEN"]
+        if @environment["DANGER_GITHUB_API_HOST"]
+          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
         end
       end
 
@@ -26,16 +26,16 @@ module Danger
       end
 
       def host
-        @host = @environment['DANGER_GITHUB_HOST'] || 'github.com'
+        @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
       end
 
       def client
-        raise 'No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`' if !@token && !support_tokenless_auth
+        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
         @client ||= Octokit::Client.new(access_token: @token)
       end
 
       def pr_diff
-        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: 'application/vnd.github.v3.diff')
+        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: "application/vnd.github.v3.diff")
       end
 
       def setup_danger_branches
@@ -69,16 +69,16 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
 
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        editable_comments = comments.select { |comment| danger_comment?(comment, danger_id) }
 
-        if editable_issues.empty?
+        if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_issues.first[:body]
+          comment = editable_comments.first[:body]
           previous_violations = parse_comment(comment)
         end
 
@@ -115,12 +115,12 @@ module Danger
                                  markdowns: comment_markdowns,
                        previous_violations: previous_violations,
                                  danger_id: danger_id,
-                                  template: 'github')
+                                  template: "github")
 
-          if editable_issues.empty?
+          if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_issues.first[:id]
+            original_id = editable_comments.first[:id]
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -129,11 +129,11 @@ module Danger
         # Note: this can terminate the entire process.
         submit_pull_request_status!(warnings: warnings,
                                       errors: errors,
-                                 details_url: comment_result['html_url'])
+                                 details_url: comment_result["html_url"])
       end
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
-        status = (errors.count.zero? ? 'success' : 'failure')
+        status = (errors.count.zero? ? "success" : "failure")
         message = generate_description(warnings: warnings, errors: errors)
 
         latest_pr_commit_ref = self.pr_json[:head][:sha]
@@ -145,7 +145,7 @@ module Danger
         begin
           client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
             description: message,
-            context: 'danger/danger',
+            context: "danger/danger",
             target_url: details_url
           })
         rescue
@@ -156,7 +156,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
@@ -167,16 +167,16 @@ module Danger
       end
 
       # Get rid of the previously posted comment, to only have the latest one
-      def delete_old_comments!(except: nil, danger_id: 'danger')
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        issues.each do |issue|
-          next unless issue[:body].include?("generated_by_#{danger_id}")
-          next if issue[:id] == except
-          client.delete_comment(ci_source.repo_slug, issue[:id])
+      def delete_old_comments!(except: nil, danger_id: "danger")
+        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+        comments.each do |comment|
+          next unless danger_comment?(comment, danger_id)
+          next if comment[:id] == except
+          client.delete_comment(ci_source.repo_slug, comment[:id])
         end
       end
 
-      def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: 'danger')
+      def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
         filter = proc do |v|
           v.file && v.line
         end
@@ -189,9 +189,9 @@ module Danger
         danger_comments = pr_comments.select { |comment| comment[:body].include?("generated_by_#{danger_id}") }
         non_danger_comments = pr_comments - danger_comments
 
-        submit_inline_comments_for_kind!('warning', warnings, diff_lines, danger_comments, previous_violations[:warning], danger_id: danger_id)
-        submit_inline_comments_for_kind!('no_entry_sign', errors, diff_lines, danger_comments, previous_violations[:error], danger_id: danger_id)
-        submit_inline_comments_for_kind!('book', messages, diff_lines, danger_comments, previous_violations[:message], danger_id: danger_id)
+        submit_inline_comments_for_kind!("warning", warnings, diff_lines, danger_comments, previous_violations[:warning], danger_id: danger_id)
+        submit_inline_comments_for_kind!("no_entry_sign", errors, diff_lines, danger_comments, previous_violations[:error], danger_id: danger_id)
+        submit_inline_comments_for_kind!("book", messages, diff_lines, danger_comments, previous_violations[:message], danger_id: danger_id)
         submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
 
         # submit removes from the array all comments that are still in force
@@ -199,7 +199,7 @@ module Danger
         danger_comments.each do |comment|
           violation = violations_from_table(comment[:body]).first
           if !violation.nil? && violation.sticky
-            body = generate_inline_comment_body('white_check_mark', violation, danger_id: danger_id, resolved: true, template: "github")
+            body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "github")
             client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
           else
             # We remove non-sticky violations that have no replies
@@ -297,7 +297,7 @@ module Danger
           # file_line is set once we find the hunk the line is in
           # we need to count how many lines in new file we have
           # so we do it one by one ignoring the deleted lines
-          if !file_line.nil? && !line.start_with?('-')
+          if !file_line.nil? && !line.start_with?("-")
             break if file_line == message.line
             file_line += 1
           end
@@ -381,9 +381,15 @@ module Danger
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
-      def file_url(organisation: nil, repository: nil, branch: 'master', path: nil)
+      def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+      end
+
+      private
+
+      def danger_comment?(comment, danger_id)
+        comment[:body].include?("generated_by_#{danger_id}")
       end
     end
   end

@@ -32,10 +32,20 @@ describe Danger::Buildkite do
     expect(t.pull_request_id).to eql("14")
   end
 
-  it "doesn't continue when the build is not a pull request" do
+  it "doesn't validate_as_pr if pull_request_repo is missing" do
     env = {
       "BUILDKITE" => "true",
       "BUILDKITE_PULL_REQUEST_REPO" => nil,
+      "BUILDKITE_PULL_REQUEST" => "false"
+    }
+    expect(Danger::Buildkite.validates_as_ci?(env)).to be true
+    expect(Danger::Buildkite.validates_as_pr?(env)).to be false
+  end
+
+  it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+    env = {
+      "BUILDKITE" => "true",
+      "BUILDKITE_PULL_REQUEST_REPO" => "",
       "BUILDKITE_PULL_REQUEST" => "false"
     }
     expect(Danger::Buildkite.validates_as_ci?(env)).to be true

@@ -90,7 +90,7 @@ module Danger
       ui.say "Here are great resources for creative commons images of robots:"
       ui.link "https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9"
       ui.link "https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359"
-      ui.pause ""
+      ui.pause 1
 
       if considered_an_oss_repo?
         ui.say "#{@bot_name} does not need privilidged access to your repo or org. This is because Danger will only"
