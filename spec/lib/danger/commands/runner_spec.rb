@@ -5,7 +5,7 @@ module Command
       allow(ENV).to receive(:[]).with("DANGER_USE_LOCAL_GIT").and_return(nil)
       allow(ENV).to receive(:[]).with("DANGER_GITHUB_HOST").and_return("")
       allow(ENV).to receive(:[]).with("DANGER_GITHUB_API_TOKEN").and_return("11")
-      allow(ENV).to receive(:[]).with("DANGER_GITHUB_API_HOST").and_return(nil)
+      allow(ENV).to receive(:[]).with("DANGER_GITHUB_API_BASE_URL").and_return(nil)
 
       # We'll take the first CI Source
       allow(ENV).to receive(:[]).with("BUILDKITE").and_return("SURE")

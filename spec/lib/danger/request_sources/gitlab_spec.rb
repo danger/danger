@@ -22,8 +22,8 @@ describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(g.endpoint).to eql("https://gitlab.com/api/v3")
     end
 
-    it "allows the GitLab API endpoint to be overidden" do
-      env["DANGER_GITLAB_API_ENDPOINT"] = "https://gitlab.example.com/api/v3"
+    it "allows the GitLab API endpoint to be overidden with `DANGER_GITLAB_API_BASE_URL`" do
+      env["DANGER_GITLAB_API_BASE_URL"] = "https://gitlab.example.com/api/v3"
       expect(g.endpoint).to eql("https://gitlab.example.com/api/v3")
     end
   end
@@ -39,7 +39,7 @@ describe Danger::RequestSources::GitLab, host: :gitlab do
     end
 
     it "respects overriding the API endpoint" do
-      env["DANGER_GITLAB_API_ENDPOINT"] = "https://gitlab.example.com/api/v3"
+      env["DANGER_GITLAB_API_BASE_URL"] = "https://gitlab.example.com/api/v3"
       expect(g.client.endpoint).to eql("https://gitlab.example.com/api/v3")
     end
   end

@@ -16,8 +16,8 @@ module Danger
 
         Octokit.auto_paginate = true
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
-        if @environment["DANGER_GITHUB_API_HOST"]
-          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
+        if api_url
+          Octokit.api_endpoint = api_url
         end
       end
 
@@ -31,6 +31,13 @@ module Danger
 
       def host
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      end
+
+      def api_url
+        # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
+        # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
+        # correctly named variable.
+        @environment["DANGER_GITHUB_API_HOST"] || @environment["DANGER_GITHUB_API_BASE_URL"]
       end
 
       def client

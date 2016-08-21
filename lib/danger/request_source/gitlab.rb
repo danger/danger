@@ -33,7 +33,7 @@ module Danger
       end
 
       def endpoint
-        @endpoint ||= @environment["DANGER_GITLAB_API_ENDPOINT"] || "https://gitlab.com/api/v3"
+        @endpoint ||= @environment["DANGER_GITLAB_API_BASE_URL"] || "https://gitlab.com/api/v3"
       end
 
       def host

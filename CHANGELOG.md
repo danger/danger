@@ -1,5 +1,10 @@
 ## Master
 
+* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
+  Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
+  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
+
+
 * GitLab support - k0nserv / deanpcmad / hjanuschka
 
   This started back in February, and is now shipping. 
