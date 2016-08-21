@@ -1,11 +1,6 @@
 ## Master
 
-* Adapt CI Sources that support GitLab - k0nserv
-
-* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
-  Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
-  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
-
+## 3.0
 
 * GitLab support - k0nserv / deanpcmad / hjanuschka
 
@@ -36,6 +31,9 @@
   ```
 
   A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
+
+* Adapt CI Sources that support GitLab - k0nserv
+
 * **BREAKING** Removes the implicit Dangerfile support. - orta
 
   The implicit support was a feature that would check for an `[org]/danger`
@@ -63,6 +61,10 @@
 
   I also removed `plugin.download` - couldn't see a use for it inside a Dangerfile. Happy
   to change that, if it's being used it.
+
+* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
+  Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
+  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
 
 ## 2.1.6
 
