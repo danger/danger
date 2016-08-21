@@ -37,7 +37,7 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "doesnt validate when require env variables are not set" do
+      it "doesn't validate when require env variables are not set" do
         expect(described_class.validates_as_ci?(invalid_env)).to be false
       end
     end
@@ -47,7 +47,7 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn not validate if `ghprPullId` is missing" do
+      it "doesn't validate if `ghprPullId` is missing" do
         valid_env["ghprPullId"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
@@ -72,7 +72,7 @@ describe Danger::Jenkins do
     end
 
     describe ".validates_as_ci?" do
-      it "validates when requierd env variables are set" do
+      it "validates when required env variables are set" do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
@@ -86,7 +86,7 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "doesnt validate when require env variables are not set" do
+      it "doesn't validate when require env variables are not set" do
         expect(described_class.validates_as_ci?(invalid_env)).to be false
       end
     end
@@ -96,7 +96,7 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn not validate if `gitlabMergeRequestId` is missing" do
+      it "doesn't validate if `gitlabMergeRequestId` is missing" do
         valid_env["gitlabMergeRequestId"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
