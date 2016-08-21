@@ -79,17 +79,20 @@ module Danger
         self.issue_json = client.get(href)
       end
 
+      def issue_comments
+        @comments ||= client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+                            .map { |comment| Comment.from_github(comment) }
+      end
+
       # Sending data to GitHub
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
-
-        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_comments = comments.select { |comment| danger_comment?(comment, danger_id) }
+        editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
         if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_comments.first[:body]
+          comment = editable_comments.first.body
           previous_violations = parse_comment(comment)
         end
 
@@ -108,7 +111,7 @@ module Danger
           if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_comments.first[:id]
+            original_id = editable_comments.first.id
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -156,11 +159,10 @@ module Danger
 
       # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: "danger")
-        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        comments.each do |comment|
-          next unless danger_comment?(comment, danger_id)
-          next if comment[:id] == except
-          client.delete_comment(ci_source.repo_slug, comment[:id])
+        issue_comments.each do |comment|
+          next unless comment.generated_by_danger?(danger_id)
+          next if comment.id == except
+          client.delete_comment(ci_source.repo_slug, comment.id)
         end
       end
 
@@ -176,12 +178,6 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
-      end
-
-      private
-
-      def danger_comment?(comment, danger_id)
-        comment[:body].include?("generated_by_#{danger_id}")
       end
     end
   end
