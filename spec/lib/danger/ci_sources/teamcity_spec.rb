@@ -12,10 +12,22 @@ describe Danger::TeamCity do
     expect(subject.repo_slug).to eql("foo/bar")
   end
 
+  it "gets out a gitlab repo slug" do
+    env = { "GITLAB_REPO_SLUG" => "foo/bar" }
+    subject = Danger::TeamCity.new(env)
+    expect(subject.repo_slug).to eql("foo/bar")
+  end
+
   it "gets out a pull request id" do
     env = { "GITHUB_PULL_REQUEST_ID" => "42" }
     subject = Danger::TeamCity.new(env)
     expect(subject.pull_request_id).to eql(42)
+  end
+
+  it "gets out a pull request id" do
+    env = { "GITLAB_PULL_REQUEST_ID" => "41" }
+    subject = Danger::TeamCity.new(env)
+    expect(subject.pull_request_id).to eql(41)
   end
 
   it "gets out a repo url" do
