@@ -41,4 +41,11 @@ describe Danger::EnvironmentManager do
     expect(Danger::EnvironmentManager.local_ci_source(env)).to be_truthy
     expect(Danger::EnvironmentManager.pr?(env)).to eq(false)
   end
+
+  it "uses local git repo and github when running locally" do
+    env = { "DANGER_USE_LOCAL_GIT" => "true" }
+    e = Danger::EnvironmentManager.new(env)
+    expect(e.ci_source).to be_truthy
+    expect(e.request_source).to be_truthy
+  end
 end
