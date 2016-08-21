@@ -14,6 +14,7 @@ describe Danger::RequestSources::GitLab, host: :gitlab do
 
     it "allows the GitLab host to be overidden" do
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
+      expect(g.host).to eql("gitlab.example.com")
     end
   end
 
