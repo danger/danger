@@ -13,8 +13,7 @@ module Danger
   #
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
-  # ### GitLab
-  #
+  # #### GitLab
   # You will want to be using the [GitLab Plugin](https://github.com/jenkinsci/gitlab-plugin)
   # in order to ensure that you have the build environment set up for MR integration.
   #
@@ -22,7 +21,11 @@ module Danger
   #
   # ### Token Setup
   #
+  # #### GitHub
   # As you own the machine, it's up to you to add the environment variable for the `DANGER_GITHUB_API_TOKEN`.
+  #
+  # #### GitLab
+  # As you own the machine, it's up to you to add the environment variable for the `DANGER_GITLAB_API_TOKEN`.
   #
   class Jenkins < CI
     def self.validates_as_ci?(env)
