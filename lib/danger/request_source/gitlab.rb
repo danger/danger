@@ -47,6 +47,7 @@ module Danger
 
       def mr_comments
         @comments ||= client.merge_request_comments(escaped_ci_slug, ci_source.pull_request_id)
+                            .map { |comment| Comment.from_gitlab(comment) }
       end
 
       def escaped_ci_slug
@@ -77,7 +78,7 @@ module Danger
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
-        editable_comments = mr_comments.reject { |comment| comment.body.include?("generated_by_#{danger_id}") == false }
+        editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
         if editable_comments.empty?
           previous_violations = {}
@@ -113,7 +114,7 @@ module Danger
 
       def delete_old_comments!(except: nil, danger_id: "danger")
         mr_comments.each do |comment|
-          next unless comment.body.include?("generated_by_#{danger_id}")
+          next unless comment.generated_by_danger?(danger_id)
           next if comment.id == except
           client.delete_merge_request_comment(
             escaped_ci_slug,
