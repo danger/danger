@@ -14,7 +14,11 @@ module Danger
   #
   # @example Ensure that labels have been applied to the MR
   #
-  #          fail "Please add labels to this MR" if gitlab.labels.empty?
+  #          fail "Please add labels to this MR" if gitlab.mr_labels.empty?
+  #
+  # @example Ensure that all MRs have an assignee
+  #
+  #          warn "This MR does not have any assignees yet." unless gitlab.mr_json["assignee"]
   #
   # @example Ensure there is a summary for a MR
   #
@@ -38,10 +42,6 @@ module Danger
   #
   #          message "Welcome, Danger." if gitlab.mr_author == "dangermcshane"
   #
-  # @example Ensure that all MRs have an assignee
-  #
-  #          warn "This MR does not have any assignees yet." unless gitlab.mr_json["assignee"]
-  #
   # @example Send a message with links to a collection of specific files
   #
   #          if git.modified_files.include? "config/*.js"
@@ -52,15 +52,6 @@ module Danger
   # @example Highlight with a clickable link if a Package.json is changed
   #
   #         warn "#{gitlab.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
-  #
-  # @example Note an issue with a particular line on a file using the #L[num] syntax, e.g. `#L23`
-  #
-  #         linter_json = `my_linter lint "file"`
-  #         results = JSON.parse linter_json
-  #         unless results.empty?
-  #           file, line, warning = result.first
-  #           warn "#{gitlab.html_link("#{file}#L#{line}")} has linter issue: #{warning}."
-  #         end
   #
   #
   # @see  danger/danger
@@ -174,11 +165,12 @@ module Danger
       same_repo = mr_json[:project_id] == mr_json[:source_project_id]
       sender_repo = ci_source.repo_slug.split("/").first + "/" + mr_json[:author][:username]
       repo = same_repo ? ci_source.repo_slug : sender_repo
+      host = @gitlab.host
 
       paths = paths.map do |path|
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        create_link("#{repo}/blob/#{commit}#{url_path}", text)
+        create_link("https://#{host}/#{repo}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2

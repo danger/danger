@@ -1,5 +1,35 @@
 ## Master
 
+* GitLab support - k0nserv / deanpcmad / hjanuschka
+
+  This started back in February, and is now shipping. 
+  Documentation has been updated on the [Getting Started](http://danger.systems/guides/getting_started.html#creating-a-bot-account-for-danger-to-use) for those interested in the setup.
+
+  This adds a new object to the DSL, `gitlab` which offers the following API:
+
+  ```ruby
+  gitlab.mr_title # The title of the Merge Request 
+
+  gitlab.mr_body # The body text of the Merge Request
+
+  gitlab.mr_author # The username of the author of the Merge Request
+
+  gitlab.mr_labels # The labels assigned to the Merge Request
+
+  gitlab.branch_for_merge # The branch to which the MR is going to be merged into
+
+  gitlab.base_commit # The base commit to which the MR is going to be merged as a parent
+
+  gitlab.head_commit # The head commit to which the MR is requesting to be merged from
+
+  gitlab.mr_json # The hash that represents the MR's JSON
+  api # Provides access to the GitLab API client used inside Danger
+
+  gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository. 
+  ```
+
+  A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
+
 ## 2.1.6
 
 * Crash fix for `danger init` - marcelofabri
