@@ -1,8 +1,10 @@
 ## Master
 
+## 3.0.1
+
 * Crash fix for `danger local` - hanneskaeufler
 
-## 3.0
+## 3.0.0
 
 * GitLab support - k0nserv / deanpcmad / hjanuschka
 
