@@ -53,7 +53,7 @@ module Danger
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
       end
 
-      def with_gitlab_git_repo
+      def with_git_repo
         Dir.mktmpdir do |dir|
           Dir.chdir dir do
             `git init`
