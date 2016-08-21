@@ -22,7 +22,7 @@ describe Danger::TeamCity do
     end
 
     describe ".validates_as_ci?" do
-      it "validates when requierd env variables are set" do
+      it "validates when required env variables are set" do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
@@ -36,7 +36,7 @@ describe Danger::TeamCity do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "doesnt validate when require env variables are not set" do
+      it "doesn't validate when require env variables are not set" do
         expect(described_class.validates_as_ci?(invalid_env)).to be false
       end
     end
@@ -46,7 +46,7 @@ describe Danger::TeamCity do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn not validate if `GITHUB_PULL_REQUEST_ID` is missing" do
+      it "doesn't validate if `GITHUB_PULL_REQUEST_ID` is missing" do
         valid_env["GITHUB_PULL_REQUEST_ID"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
@@ -80,7 +80,7 @@ describe Danger::TeamCity do
     end
 
     describe ".validates_as_ci?" do
-      it "validates when requierd env variables are set" do
+      it "validates when required env variables are set" do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
@@ -94,7 +94,7 @@ describe Danger::TeamCity do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "doesnt validate when require env variables are not set" do
+      it "doesn't validate when required env variables are not set" do
         expect(described_class.validates_as_ci?(invalid_env)).to be false
       end
     end
@@ -104,7 +104,7 @@ describe Danger::TeamCity do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn not validate if `GITLAB_PULL_REQUEST_ID` is missing" do
+      it "doesn't validate if `GITLAB_PULL_REQUEST_ID` is missing" do
         valid_env["GITLAB_PULL_REQUEST_ID"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end

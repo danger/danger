@@ -1,5 +1,7 @@
 ## Master
 
+* Spelling and grammar fixes. - connorshea
+
 ## 3.0.1
 
 * Crash fix for `danger local` - hanneskaeufler
