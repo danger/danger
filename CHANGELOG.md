@@ -1,5 +1,7 @@
 ## Master
 
+* Adapt CI Sources that support GitLab - k0nserv
+
 * Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
   Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
   comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
