@@ -14,7 +14,7 @@ module Danger
   #
   # @example Ensure that labels have been used on the PR
   #
-  #          fail "Please add labels to this PR" if github.labels.empty?
+  #          fail "Please add labels to this PR" if github.pr_labels.empty?
   #
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
