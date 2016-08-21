@@ -31,6 +31,9 @@
   ```
 
   A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
+
+* Adapt CI Sources that support GitLab - k0nserv
+
 * **BREAKING** Removes the implicit Dangerfile support. - orta
 
   The implicit support was a feature that would check for an `[org]/danger`
