@@ -1,6 +1,6 @@
 require "danger/scm_source/git_repo"
 
-describe Danger::GitRepo do
+describe Danger::GitRepo, host: :github do
   describe "Return Types" do
     before do
       @tmp_dir = Dir.mktmpdir

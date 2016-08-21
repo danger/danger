@@ -21,6 +21,10 @@ module Danger
         end
       end
 
+      def validates_as_api_source?
+        @token && !@token.empty?
+      end
+
       def scm
         @scm ||= GitRepo.new
       end
