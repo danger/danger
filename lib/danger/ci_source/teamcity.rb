@@ -23,7 +23,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["GITHUB_PULL_REQUEST_ID", "GITHUB_REPO_URL", "GITHUB_REPO_SLUG"].all? { |x| env[x] }
+      ["GITHUB_PULL_REQUEST_ID", "GITHUB_REPO_URL", "GITHUB_REPO_SLUG"].all? { |x| env[x] } || ["GITLAB_REPO_SLUG", "GITLAB_PULL_REQUEST_ID", "GITLAB_REPO_SLUG"].all? { |x| env[x] }
     end
 
     def supported_request_sources
@@ -34,9 +34,9 @@ module Danger
       # NB: Unfortunately TeamCity doesn't provide these variables
       # automatically so you have to add these variables manually to your
       # project or build configuration
-      self.repo_slug       = env["GITHUB_REPO_SLUG"]
-      self.pull_request_id = env["GITHUB_PULL_REQUEST_ID"].to_i
-      self.repo_url        = env["GITHUB_REPO_URL"]
+      self.repo_slug       = env["GITHUB_REPO_SLUG"] || env["GITLAB_REPO_SLUG"]
+      self.pull_request_id = (env["GITHUB_PULL_REQUEST_ID"] || env["GITLAB_PULL_REQUEST_ID"]).to_i
+      self.repo_url        = env["GITHUB_REPO_URL"] || env["GITLAB_REPO_SLUG"]
     end
   end
 end

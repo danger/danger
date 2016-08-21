@@ -20,6 +20,7 @@ module Danger
       git.exec command
     end
 
+    # TODO: Support `danger local` for GitLab
     def supported_request_sources
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end

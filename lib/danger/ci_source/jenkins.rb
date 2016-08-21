@@ -6,9 +6,10 @@ module Danger
 
   # ### CI Setup
   #
-  # Ah Jenkins, so many memories. So, if you're using Jenkins, you're hosting your own environment. You
+  # Ah Jenkins, so many memories. So, if you're using Jenkins, you're hosting your own environment. For GitHub you
   # will want to be using the [GitHub pull request builder plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin)
-  # in order to ensure that you have the build environment set up for PR integration.
+  # in order to ensure that you have the build environment set up for PR integration. For GitLab, consult the
+  # [GitLab - Jenkins](http://docs.gitlab.com/ee/integration/jenkins.html) documentation.
   #
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
@@ -26,7 +27,7 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab]
     end
 
     def initialize(env)
