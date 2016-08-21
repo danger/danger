@@ -1,5 +1,7 @@
 ## Master
 
+* Crash fix for `danger local` - hanneskaeufler
+
 ## 3.0
 
 * GitLab support - k0nserv / deanpcmad / hjanuschka
