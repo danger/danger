@@ -5,7 +5,7 @@ module Danger
   # https://jenkins-ci.org
 
   # ### CI Setup
-  # Ah Jenkins, so many memories. So, if you're using Jenkins, you're hosting your own environment. You
+  # Ah Jenkins, so many memories. So, if you're using Jenkins, you're hosting your own environment.
   #
   # #### GitHub
   # You will want to be using the [GitHub pull request builder plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin)
@@ -15,14 +15,14 @@ module Danger
   #
   # ### GitLab
   #
-  # You will want to be using the [GitLabe Plugin](https://github.com/jenkinsci/gitlab-plugin)
-  # in order to ensure that you have the build environment set up for PR integration.
+  # You will want to be using the [GitLab Plugin](https://github.com/jenkinsci/gitlab-plugin)
+  # in order to ensure that you have the build environment set up for MR integration.
   #
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
   # ### Token Setup
   #
-  # As you own the machine, it's up to you to add the enviroment variable for the `DANGER_GITHUB_API_TOKEN`.
+  # As you own the machine, it's up to you to add the environment variable for the `DANGER_GITHUB_API_TOKEN`.
   #
   class Jenkins < CI
     def self.validates_as_ci?(env)
