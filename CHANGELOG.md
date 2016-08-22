@@ -1,6 +1,8 @@
 ## Master
 
 * Spelling and grammar fixes. - connorshea
+* More crash fixes for `danger local`, maybe we need more tests here - orta
+
 
 ## 3.0.1
 
