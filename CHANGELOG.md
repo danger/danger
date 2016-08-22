@@ -1,5 +1,8 @@
 ## Master
 
+* Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
+
+
 ## 3.0.2
 
 * Spelling and grammar fixes. - connorshea

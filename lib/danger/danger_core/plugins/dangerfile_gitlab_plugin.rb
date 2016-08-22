@@ -109,6 +109,15 @@ module Danger
       @gitlab.mr_json.labels
     end
 
+    # @!group MR Content
+    # The unified diff produced by GitLab for this PR
+    # see [Unified diff](https://en.wikipedia.org/wiki/Diff_utility#Unified_format)
+    # @return [String]
+    #
+    def mr_diff
+      @gitlab.mr_diff
+    end
+
     # @!group MR Commit Metadata
     # The branch to which the MR is going to be merged into
     # @return [String]
@@ -177,7 +186,7 @@ module Danger
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
-    [:title, :body, :author, :labels, :json].each do |suffix|
+    [:title, :body, :author, :labels, :json, :diff].each do |suffix|
       alias_method "pr_#{suffix}".to_sym, "mr_#{suffix}".to_sym
     end
 
