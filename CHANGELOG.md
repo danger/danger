@@ -1,5 +1,7 @@
 ## Master
 
+## 3.0.2
+
 * Spelling and grammar fixes. - connorshea
 * More crash fixes for `danger local`, maybe we need more tests here - orta
 
