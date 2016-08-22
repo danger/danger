@@ -50,6 +50,11 @@ module Danger
                             .map { |comment| Comment.from_gitlab(comment) }
       end
 
+      def mr_diff
+        @mr_diff ||= client.merge_request_changes(escaped_ci_slug, ci_source.pull_request_id)
+                           .changes.map { |change| change["diff"] }.join("\n")
+      end
+
       def escaped_ci_slug
         @escaped_ci_slug ||= CGI.escape(ci_source.repo_slug)
       end

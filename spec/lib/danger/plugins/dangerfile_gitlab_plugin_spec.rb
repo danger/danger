@@ -15,12 +15,11 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   end
 
   [
-    { method: :pr_title, expected_result: "Add a" },
-    { method: :pr_body, expected_result: "The descriptions is here\r\n\r\n\u003e Danger: ignore \"Developer specific files shouldn't be changed\"\r\n\r\n\u003e Danger: ignore \"Testing\"" },
-    { method: :pr_author, expected_result: "k0nserv" },
-    { method: :pr_labels, expected_result: ["test-label"] },
+    { method: :mr_title, expected_result: "Add a" },
+    { method: :mr_body, expected_result: "The descriptions is here\r\n\r\n\u003e Danger: ignore \"Developer specific files shouldn't be changed\"\r\n\r\n\u003e Danger: ignore \"Testing\"" },
+    { method: :mr_author, expected_result: "k0nserv" },
+    { method: :mr_labels, expected_result: ["test-label"] },
     { method: :branch_for_merge, expected_result: "master" }
-
   ].each do |data|
     method = data[:method]
     expected = data[:expected_result]
@@ -35,11 +34,28 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
   end
 
-  describe "#pr_json" do
+  describe "#mr_diff" do
+    before do
+      stub_merge_request_changes(
+        "merge_request_593728_changes_response",
+        "k0nserv/danger-test",
+        593_728
+      )
+    end
+
+    it "sets the mr_diff" do
+      with_gitlab_git_repo do
+        expect(plugin.mr_diff).to include("Danger rocks!")
+        expect(plugin.mr_diff).to include("Test message please ignore")
+      end
+    end
+  end
+
+  describe "#mr_json" do
     it "is set" do
       with_gitlab_git_repo do
         dangerfile.env.request_source.fetch_details
-        expect(plugin.pr_json).not_to be_nil
+        expect(plugin.mr_json).not_to be_nil
       end
     end
 
