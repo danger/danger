@@ -50,8 +50,8 @@ module Danger
     end
 
     def self.pull_request_id(env)
-      if env["ghprPullId"]
-        env["ghprPullId"]
+      if env["ghprbPullId"]
+        env["ghprbPullId"]
       else
         env["gitlabMergeRequestId"]
       end
