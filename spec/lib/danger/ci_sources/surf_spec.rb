@@ -1,38 +1,59 @@
 require "danger/ci_source/surf"
 
 describe Danger::Surf do
-  it "validates when all Surf environment vars are set" do
-    env = { "SURF_REPO" => "https://github.com/surf-build/surf",
-            "SURF_NWO" => "surf-build/surf" }
-
-    expect(Danger::Surf.validates_as_ci?(env)).to be true
-  end
-
-  it "doesnt validate when Surf aint around" do
-    env = { "CIRCLE" => "true" }
-    expect(Danger::Surf.validates_as_ci?(env)).to be false
-  end
-
-  it "gets the pull request ID" do
-    env = { "SURF_PR_NUM" => "2" }
-    t = Danger::Surf.new(env)
-    expect(t.pull_request_id).to eql("2")
-  end
-
-  it "gets the repo address" do
-    env = { "SURF_NWO" => "orta/danger" }
-    t = Danger::Surf.new(env)
-    expect(t.repo_slug).to eql("orta/danger")
-  end
-
-  it "gets out a repo slug and pull request number" do
-    env = {
-      "SURF_PR_NUM" => "800",
-      "SURF_NWO" => "artsy/eigen",
-      "SURF_REPO" => "https://github.com/artsy/eigen"
+  let(:valid_env) do
+    {
+      "SURF_REPO" => "https://github.com/surf-build/surf",
+      "SURF_NWO" => "surf-build/surf",
+      "SURF_PR_NUM" => "29"
     }
-    t = Danger::Surf.new(env)
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("800")
+  end
+
+  let(:invalid_env) do
+    {
+      "CIRCLE" => "true"
+    }
+  end
+
+  let(:source) { described_class.new(valid_env) }
+
+  describe ".validates_as_ci?" do
+    it "validates when the expected valid_env variables are set" do
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "does not validated when some expected valid_env variables are missing" do
+      expect(described_class.validates_as_ci?(invalid_env)).to be false
+    end
+  end
+
+  describe ".validates_as_pr?" do
+    it "validates when the expected valid_env variables are set" do
+      expect(described_class.validates_as_pr?(valid_env)).to be true
+    end
+
+    it "does not validated when some expected valid_env variables are missing" do
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
+    end
+  end
+
+  describe "#new" do
+    it "sets the pull_request_id" do
+      expect(source.pull_request_id).to eq("29")
+    end
+
+    it "sets the repo_slug" do
+      expect(source.repo_slug).to eq("surf-build/surf")
+    end
+
+    it "sets the repo_url" do
+      expect(source.repo_url).to eq("https://github.com/surf-build/surf")
+    end
+  end
+
+  describe "#supported_request_sources" do
+    it "supports GitHub" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
+    end
   end
 end
