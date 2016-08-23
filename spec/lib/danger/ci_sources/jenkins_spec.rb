@@ -18,7 +18,7 @@ describe Danger::Jenkins do
 
   context "with GitHub" do
     before do
-      valid_env["ghprPullId"] = "1234"
+      valid_env["ghprbPullId"] = "1234"
       valid_env["GIT_URL"] = "https://github.com/danger/danger.git"
     end
 
@@ -27,13 +27,13 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "validates even when `ghprPullId` is missing" do
-        valid_env["ghprPullId"] = nil
+      it "validates even when `ghprbPullId` is missing" do
+        valid_env["ghprbPullId"] = nil
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      it "validates even when `ghprPullId` is empty" do
-        valid_env["ghprPullId"] = ""
+      it "validates even when `ghprbPullId` is empty" do
+        valid_env["ghprbPullId"] = ""
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
@@ -47,13 +47,13 @@ describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn't validate if `ghprPullId` is missing" do
-        valid_env["ghprPullId"] = nil
+      it "doesn't validate if `ghprbPullId` is missing" do
+        valid_env["ghprbPullId"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
 
       it "doesn't validate_as_pr if pull_request_repo is the empty string" do
-        valid_env["ghprPullId"] = ""
+        valid_env["ghprbPullId"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
     end
