@@ -1,10 +1,9 @@
 ## Master
 
-* Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
-
 ## 3.0.3
 
-* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the Github Pull Request Builder plugin. - vittoriom
+* Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
+* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin. - vittoriom
 
 ## 3.0.2
 
