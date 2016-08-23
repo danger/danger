@@ -1,75 +1,112 @@
 require "danger/ci_source/circle"
 
 describe Danger::CircleCI do
-  legit_pr = "https://github.com/orta/thing/pulls/45"
-  not_legit_pr = "https://github.com/orta"
+  let(:legit_pr) { "https://github.com/artsy/eigen/pulls/800" }
+  let(:not_legit_pr) { "https://github.com/orta" }
 
-  it "validates when circle all env vars are set" do
-    env = { "CIRCLE_BUILD_NUM" => "true",
-            "CI_PULL_REQUEST" => legit_pr,
-            "CIRCLE_PROJECT_USERNAME" => "orta",
-            "CIRCLE_PROJECT_REPONAME" => "thing" }
-    expect(Danger::CircleCI.validates_as_ci?(env)).to be true
-  end
-
-  it "validates when circle env var is found and it has a bad PR url" do
-    env = { "CIRCLE_BUILD_NUM" => "true",
-            "CI_PULL_REQUEST" => not_legit_pr,
-            "CIRCLE_PROJECT_USERNAME" => "orta",
-            "CIRCLE_PROJECT_REPONAME" => "thing" }
-    expect(Danger::CircleCI.validates_as_ci?(env)).to be true
-  end
-
-  it "doesnt get a PR id when it has a bad PR url" do
-    env = { "CIRCLE_BUILD_NUM" => "true",
-            "CI_PULL_REQUEST" => not_legit_pr,
-            "CIRCLE_PROJECT_USERNAME" => "orta",
-            "CIRCLE_PROJECT_REPONAME" => "thing" }
-    expect { Danger::CircleCI.new(env) }.to raise_error RuntimeError
-  end
-
-  it "does validate when circle env var is found and it has no PR url" do
-    env = { "CIRCLE_BUILD_NUM" => "true",
-            "CIRCLE_PROJECT_USERNAME" => "orta",
-            "CIRCLE_PROJECT_REPONAME" => "thing" }
-    expect(Danger::CircleCI.validates_as_ci?(env)).to be true
-  end
-
-  it "doesn't validate_as_pr if ci_pull_request is empty" do
-    env = { "CI_PULL_REQUEST" => "" }
-    expect(Danger::CircleCI.validates_as_pr?(env)).to be false
-  end
-
-  it "doesnt validate when circle ci is not found" do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
-    expect(Danger::CircleCI.validates_as_ci?(env)).to be false
-  end
-
-  it "gets out a repo slug and pull request number" do
-    env = {
-      "CIRCLE_BUILD_NUM" => "true",
-      "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/800",
-      "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
-    }
-    t = Danger::CircleCI.new(env)
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("800")
-  end
-
-  it "gets out a repo slug, pull request number and commit refs when PR url is not found" do
-    env = {
+  let(:valid_env) do
+    {
       "CIRCLE_BUILD_NUM" => "1500",
+      "CI_PULL_REQUEST" => legit_pr,
       "CIRCLE_PROJECT_USERNAME" => "artsy",
       "CIRCLE_PROJECT_REPONAME" => "eigen",
-      "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
+      "CIRCLE_REPOSITORY_URL" => "git@github.com:artsy/eigen.git"
     }
+  end
 
-    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
-    allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
+  let(:invalid_env) do
+    {
+      "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true"
+    }
+  end
 
-    t = Danger::CircleCI.new(env)
+  let(:source) { described_class.new(valid_env) }
 
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("1130")
+  describe ".validates_as_ci?" do
+    it "validates when all required env variables are set" do
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "validates when the `CI_PULL_REQUEST` is missing" do
+      valid_env["CI_PULL_REQUEST"] = nil
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "validates when the `CI_PULL_REQUEST` is not legit" do
+      valid_env["CI_PULL_REQUEST"] = not_legit_pr
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "does not validate when all required env variables are not set" do
+      expect(described_class.validates_as_ci?(invalid_env)).to be false
+    end
+  end
+
+  describe ".validates_as_pr?" do
+    it "validates when required env variables are set" do
+      expect(described_class.validates_as_pr?(valid_env)).to be true
+    end
+
+    context "with missing `CI_PULL_REQUEST`" do
+      before do
+        valid_env["CI_PULL_REQUEST"] = nil
+        valid_env["CIRCLE_CI_API_TOKEN"] = "testtoken"
+        build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+        allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "testtoken").and_return(build_response)
+      end
+
+      it "validates when required env variables are set" do
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+    end
+
+    it "does not validate if `CI_PULL_REQUEST` is empty" do
+      valid_env["CI_PULL_REQUEST"] = ""
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
+    end
+
+    it "doest not validate when required env variables are not set" do
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
+    end
+  end
+
+  describe "#new" do
+    it "does not get a PR id when it has a bad PR url" do
+      valid_env["CI_PULL_REQUEST"] = not_legit_pr
+      expect { source }.to raise_error RuntimeError
+    end
+
+    it "sets the repo_slug" do
+      expect(source.repo_slug).to eq("artsy/eigen")
+    end
+
+    it "sets the pull_request_id" do
+      expect(source.pull_request_id).to eq("800")
+    end
+
+    it "sets the repo_url" do
+      expect(source.repo_url).to eq("git@github.com:artsy/eigen.git")
+    end
+
+    context "with missing `CI_PULL_REQUEST`" do
+      before do
+        build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+        allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
+      end
+
+      it "sets the repo_slug" do
+        expect(source.repo_slug).to eq("artsy/eigen")
+      end
+
+      it "sets the pull_request_id" do
+        expect(source.pull_request_id).to eq("800")
+      end
+    end
+  end
+
+  describe "#supported_request_sources" do
+    it "supports GitHub" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
+    end
   end
 end

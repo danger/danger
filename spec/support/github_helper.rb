@@ -24,6 +24,25 @@ module Danger
       def stub_request_source
         Danger::RequestSources::GitHub.new(stub_ci, stub_env)
       end
+
+      def with_git_repo
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            File.open(dir + "/file1", "w") {}
+            `git add .`
+            `git commit -m "ok"`
+
+            `git checkout -b new`
+            File.open(dir + "/file2", "w") {}
+            `git add .`
+            `git commit -m "another"`
+            `git remote add origin git@github.com:artsy/eigen`
+
+            yield
+          end
+        end
+      end
     end
   end
 end
