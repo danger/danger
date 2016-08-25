@@ -1,5 +1,7 @@
 ## Master
 
+* Show appropriate error message when GitHub repo was moved - KrauseFx
+
 ## 3.0.3
 
 * Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
@@ -107,7 +109,6 @@
 ## 2.1.1
 
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
-* Show appropriate error message when GitHub repo was moved - KrauseFx
 * Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
 * Replaces `redcarpet` through `kramdown` to avoid jruby foo - LeFnord
 
