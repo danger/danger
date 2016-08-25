@@ -1,6 +1,7 @@
 ## Master
 
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
+* Show appropriate error message when GitHub repo was moved - KrauseFx
 
 ## 2.1.0
 

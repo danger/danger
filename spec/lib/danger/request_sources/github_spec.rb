@@ -48,6 +48,14 @@ describe Danger::RequestSources::GitHub do
       expect(@g.issue_json).to be_truthy
     end
 
+    it "raises an exception when the repo was moved from the git remote" do
+      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return({ message: "Moved Permanently" })
+
+      expect do
+        @g.fetch_details
+      end.to raise_error("Repo moved or renamed, make sure to update the git remote".red)
+    end
+
     it "sets the ignored violations" do
       @g.fetch_details
       expect(@g.ignored_violations).to eql(["Developer Specific file shouldn't be changed",
