@@ -52,7 +52,6 @@ module Danger
           raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
         end
       end
-
       self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
       sha = pr_merge.split(" ")[0]
       parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")

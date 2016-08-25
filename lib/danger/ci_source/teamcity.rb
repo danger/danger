@@ -9,34 +9,71 @@ module Danger
   #
   # ### Token + Environment Setup
   #
+  # #### GitHub
+  #
   # As this is self-hosted, you will need to add the `DANGER_GITHUB_API_TOKEN` to your build user's ENV. The alternative
   # is to pass in the token as a prefix to the command `DANGER_GITHUB_API_TOKEN="123" bundle exec danger`.
   #
   # However, you will need to find a way to add the environment vars: `GITHUB_REPO_SLUG`, `GITHUB_PULL_REQUEST_ID` and
   # `GITHUB_REPO_URL`. These are not added by default. You could do this via the GitHub API potentially.
   #
+  # #### GitLab
+  #
+  # As this is self-hosted, you will need to add the `DANGER_GITLAB_API_TOKEN` to your build user's ENV. The alternative
+  # is to pass in the token as a prefix to the command `DANGER_GITLAB_API_TOKEN="123" bundle exec danger`.
+  #
+  # However, you will need to find a way to add the environment vars: `GITLAB_REPO_SLUG`, `GITLAB_PULL_REQUEST_ID` and
+  # `GITLAB_REPO_URL`. These are not added by default. You could do this via the GitLab API potentially.
+  #
   # We would love some advice on improving this setup.
   #
   class TeamCity < CI
+    class << self
+      def validates_as_github_pr?(env)
+        ["GITHUB_PULL_REQUEST_ID", "GITHUB_REPO_URL", "GITHUB_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
+      end
+
+      def validates_as_gitlab_pr?(env)
+        ["GITLAB_REPO_SLUG", "GITLAB_PULL_REQUEST_ID", "GITLAB_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
+      end
+    end
+
     def self.validates_as_ci?(env)
       env.key? "TEAMCITY_VERSION"
     end
 
     def self.validates_as_pr?(env)
-      ["GITHUB_PULL_REQUEST_ID", "GITHUB_REPO_URL", "GITHUB_REPO_SLUG"].all? { |x| env[x] }
+      validates_as_github_pr?(env) || validates_as_gitlab_pr?(env)
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab]
     end
 
     def initialize(env)
       # NB: Unfortunately TeamCity doesn't provide these variables
       # automatically so you have to add these variables manually to your
       # project or build configuration
+
+      if self.class.validates_as_github_pr?(env)
+        extract_github_variables!(env)
+      elsif self.class.validates_as_gitlab_pr?(env)
+        extract_gitlab_variables!(env)
+      end
+    end
+
+    private
+
+    def extract_github_variables!(env)
       self.repo_slug       = env["GITHUB_REPO_SLUG"]
       self.pull_request_id = env["GITHUB_PULL_REQUEST_ID"].to_i
       self.repo_url        = env["GITHUB_REPO_URL"]
+    end
+
+    def extract_gitlab_variables!(env)
+      self.repo_slug       = env["GITLAB_REPO_SLUG"]
+      self.pull_request_id = env["GITLAB_PULL_REQUEST_ID"].to_i
+      self.repo_url        = env["GITLAB_REPO_URL"]
     end
   end
 end

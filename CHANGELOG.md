@@ -1,7 +1,115 @@
 ## Master
 
+## 3.0.3
+
+* Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
+* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin. - vittoriom
+
+## 3.0.2
+
+* Spelling and grammar fixes. - connorshea
+* More crash fixes for `danger local`, maybe we need more tests here - orta
+
+
+## 3.0.1
+
+* Crash fix for `danger local` - hanneskaeufler
+
+## 3.0.0
+
+* GitLab support - k0nserv / deanpcmad / hjanuschka
+
+  This started back in February, and is now shipping. 
+  Documentation has been updated on the [Getting Started](http://danger.systems/guides/getting_started.html#creating-a-bot-account-for-danger-to-use) for those interested in the setup.
+
+  This adds a new object to the DSL, `gitlab` which offers the following API:
+
+  ```ruby
+  gitlab.mr_title # The title of the Merge Request 
+
+  gitlab.mr_body # The body text of the Merge Request
+
+  gitlab.mr_author # The username of the author of the Merge Request
+
+  gitlab.mr_labels # The labels assigned to the Merge Request
+
+  gitlab.branch_for_merge # The branch to which the MR is going to be merged into
+
+  gitlab.base_commit # The base commit to which the MR is going to be merged as a parent
+
+  gitlab.head_commit # The head commit to which the MR is requesting to be merged from
+
+  gitlab.mr_json # The hash that represents the MR's JSON
+  api # Provides access to the GitLab API client used inside Danger
+
+  gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository. 
+  ```
+
+  A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
+
+* Adapt CI Sources that support GitLab - k0nserv
+
+* **BREAKING** Removes the implicit Dangerfile support. - orta
+
+  The implicit support was a feature that would check for an `[org]/danger`
+  repo, and automatically parse that Dangerfile. Think it was a bit too magic,
+  and the only person who I know is using it, said they think it should have 
+  been this way from the start. I'm cool with this.
+
+  To handle the replacement, we've added a new object to the DSL.
+  This is the `danger` API. It has two responsibilities at the moment,
+  downloading a Dangerfile:
+
+  ```ruby
+  danger.import_dangerfile = "artsy/danger"
+  ```
+
+  and importing local plugins:
+
+  ```ruby
+  danger.import_plugin [path_or_url]
+  ```
+
+  Which the astute may have remembered used to be the purview of `plugin.import`.
+  Which is now removed, in favour of the `danger.import_plugin`. Think there's more
+  space for improvement inside the context of `danger` than `plugin`.
+
+  I also removed `plugin.download` - couldn't see a use for it inside a Dangerfile. Happy
+  to change that, if it's being used it.
+
+* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
+  Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
+  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
+
+## 2.1.6
+
+* Crash fix for `danger init` - marcelofabri
+
+## 2.1.5
+
+* Lols, more Circle CI stuff, and importantly - more documentation - orta 
+
+## 2.1.4
+
+* Improve detection of PR content on CircleCI. - jamtur01
+
+## 2.1.3
+
+* Improve detection of Buildkite's PR context - cysp
+* An attempt at fixing a misalignment with what Danger says is inside the diff range, and what people have seen #160 #316 - orta/yimingtang/jamtur01/segiddins
+* Copyedit the README and vision statement - suchow
+
+## 2.1.2
+
+* Improvements to `danger init` - orta
+* Circle CI validation improvements - orta
+
+## 2.1.1
+
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
 * Show appropriate error message when GitHub repo was moved - KrauseFx
+* Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
+* Replaces `redcarpet` through `kramdown` to avoid jruby foo - LeFnord
 
 ## 2.1.0
 
@@ -18,7 +126,7 @@
 
 * Updates the `danger init` template to 2.0 syntax - orta
 
-## 2.0
+## 2.0.0
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
 

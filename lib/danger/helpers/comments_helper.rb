@@ -1,10 +1,10 @@
-require "redcarpet"
+require "kramdown"
 
 module Danger
   module Helpers
     module CommentsHelper
-      def markdown_parser
-        @markdown_parser ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(hard_wrap: true), no_intra_emphasis: true)
+      def markdown_parser(text)
+        Kramdown::Document.new(text, input: "GFM")
       end
 
       def parse_tables_from_comment(comment)
@@ -17,9 +17,10 @@ module Danger
       end
 
       def process_markdown(violation)
-        html = markdown_parser.render(violation.message)
+        html = markdown_parser(violation.message).to_html
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
+
         Violation.new(html, violation.sticky)
       end
 
@@ -27,8 +28,9 @@ module Danger
         tables = parse_tables_from_comment(comment)
         violations = {}
         tables.each do |table|
-          next unless table =~ %r{<th width="100%"(.*?)</th>}im
-          title = Regexp.last_match(1)
+          match = danger_table?(table)
+          next unless match
+          title = match[1]
           kind = table_kind_from_title(title)
           next unless kind
 
@@ -99,6 +101,44 @@ module Danger
         compliment = ["Well done.", "Congrats.", "Woo!",
                       "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
         compliment.sample
+      end
+
+      private
+
+      GITHUB_OLD_REGEX = %r{<th width="100%"(.*?)</th>}im
+      NEW_REGEX = %r{<th.*data-danger-table="true"(.*?)</th>}im
+
+      def danger_table?(table)
+        # The old GitHub specific method relied on
+        # the width of a `th` element to find the table
+        # title and determine if it was a danger table.
+        # The new method uses a more robust data-danger-table
+        # tag instead.
+        match = GITHUB_OLD_REGEX.match(table)
+        return match if match
+
+        return NEW_REGEX.match(table)
+      end
+
+      class Comment
+        attr_reader :id, :body
+
+        def initialize(id, body)
+          @id = id
+          @body = body
+        end
+
+        def self.from_github(comment)
+          self.new(comment[:id], comment[:body])
+        end
+
+        def self.from_gitlab(comment)
+          self.new(comment.id, comment.body)
+        end
+
+        def generated_by_danger?(danger_id)
+          body.include?("generated_by_#{danger_id}")
+        end
       end
     end
   end

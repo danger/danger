@@ -16,7 +16,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] }
+      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] && !env[x].empty? }
     end
 
     def supported_request_sources
