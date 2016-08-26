@@ -64,6 +64,10 @@ module Danger
 
       def fetch_details
         self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
+        if self.pr_json[:message] == "Moved Permanently"
+          raise "Repo moved or renamed, make sure to update the git remote".red
+        end
+
         fetch_issue_details(self.pr_json)
         self.ignored_violations = ignored_violations_from_pr(self.pr_json)
       end
