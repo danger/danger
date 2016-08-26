@@ -8,7 +8,7 @@ module Danger
   # exist as of yet, however there is an
   # [MR](https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/5698) fixing this.
   # If that has been merged and you are using either gitlab.com or a release
-  # with that change this CISource will wokr.
+  # with that change this CISource will work.
   #
   class GitLabCI < CI
     def self.validates_as_ci?(env)

@@ -31,9 +31,9 @@ module Danger
     attr_accessor :json, :markdown
     def run
       file_resolver = PluginFileResolver.new(@refs)
-      paths = file_resolver.resolve_to_paths
+      data = file_resolver.resolve
 
-      parser = PluginParser.new(paths)
+      parser = PluginParser.new(data[:paths])
       parser.parse
 
       self.json = JSON.parse(parser.to_json_string)
