@@ -60,7 +60,9 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
         delete_old_comments(danger_id: danger_id)
         
-        comment = generate_comment(warnings: warnings,
+        comment = generate_description(warnings: warnings, errors: errors)
+        comment += "\n\n"
+        comment += generate_comment(warnings: warnings,
                                      errors: errors,
                                    messages: messages,
                                   markdowns: markdowns,
