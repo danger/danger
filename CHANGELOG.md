@@ -1,5 +1,7 @@
 ## Master
 
+* Show appropriate error message when GitHub repo was moved - KrauseFx
+
 ## 3.0.3
 
 * Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
