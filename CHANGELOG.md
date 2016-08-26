@@ -1,6 +1,7 @@
 ## Master
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
+* `danger plugins json [gem]` will now give gem metadata too - orta
 
 ## 3.0.3
 
