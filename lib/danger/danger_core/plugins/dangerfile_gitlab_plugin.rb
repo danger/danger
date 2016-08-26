@@ -26,7 +26,7 @@ module Danger
   #
   # @example Only accept MRs to the develop branch
   #
-  #          fail "Please re-submit this MR to develop, we may have already fixed your issue." if gitlab.branch_for_base != "develop"
+  #          fail "Please re-submit this MR to develop, we may have already fixed your issue." if gitlab.branch_for_merge != "develop"
   #
   # @example Note when MRs don't reference a milestone, which goes away when it does
   #
