@@ -38,13 +38,7 @@ module Danger
       end
 
       def fetch_details
-        uri = URI(pr_api_endpoint)
-        req = Net::HTTP::Get.new(uri.request_uri)
-        req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
-          http.request(req)
-        end
-        self.pr_json = JSON.parse(res.body, symbolize_names: true)
+        self.pr_json = get_json(URI(pr_api_endpoint))
       end
 
       def setup_danger_branches
@@ -62,12 +56,9 @@ module Danger
       def organisation
         nil
       end
-
+      
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
-        # TODO use a template
-        # TODO parse and update old comments
-        # TODO use tasks for errors?
-
+        delete_old_comments(danger_id: danger_id)
         
         comment = generate_comment(warnings: warnings,
                                      errors: errors,
@@ -77,14 +68,44 @@ module Danger
                                   danger_id: danger_id,
                                    template: "bitbucket_server")
 
-        uri = URI("#{pr_api_endpoint}/comments")
+        post(URI("#{pr_api_endpoint}/comments"), {text: comment}.to_json)
+      end
+
+      def delete_old_comments(danger_id: 'danger')
+        uri = URI("#{pr_api_endpoint}/activities?limit=1000")
+        comments = get_json(uri)[:values]
+          .select { |v| v[:action] == "COMMENTED" }
+          .map { |v| v[:comment] }
+          .select { |c| c[:text] =~ /generated_by_#{danger_id}/ }
+          .each { |c| delete(URI("#{pr_api_endpoint}/comments/#{c[:id]}?version=#{c[:version]}")) }
+      end
+
+      def get_json(uri)
+        req = Net::HTTP::Get.new(uri.request_uri, {'Content-Type' =>'application/json'})
+        req.basic_auth @username, @password
+        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+          http.request(req)
+        end
+        JSON.parse(res.body, symbolize_names: true)
+      end
+
+      def post(uri, body)
         req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' =>'application/json'})
         req.basic_auth @username, @password
-        req.body = {text: comment}.to_json
+        req.body = body
         res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
           http.request(req)
         end
       end
+      
+      def delete(uri)
+        req = Net::HTTP::Delete.new(uri.request_uri, {'Content-Type' =>'application/json'})
+        req.basic_auth @username, @password
+        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+          http.request(req)
+        end
+      end
+      
     end
   end
 end
