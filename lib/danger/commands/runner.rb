@@ -26,7 +26,7 @@ module Danger
     self.plugin_prefixes = %w(claide danger)
 
     def initialize(argv)
-      dangerfile = argv.option("dangerfile", "Dangerfile")
+      dangerfile = argv.option("dangerfile", self.class.path_for_implicit_dangerfile)
       @dangerfile_path = dangerfile if File.exist? dangerfile
       @base = argv.option("base")
       @head = argv.option("head")
@@ -43,6 +43,14 @@ module Danger
       end
     end
 
+    # Determines the Dangerfile based on the current folder structure
+    def self.path_for_implicit_dangerfile
+      ["Dangerfile", "Dangerfile.rb", "Dangerfile.js"].each do |file|
+        return file if File.exist? file
+      end
+      abort("Could not find a Dangerfile to run.".red)
+    end
+
     def self.options
       [
         ["--base=[master|dev|stable]", "A branch/tag/commit to use as the base of the diff"],
@@ -56,7 +64,8 @@ module Danger
       Executor.new.run(base: @base,
                        head: @head,
                        dangerfile_path: @dangerfile_path,
-                       danger_id: @danger_id)
+                       danger_id: @danger_id,
+                       verbose: @verbose)
     end
   end
 end

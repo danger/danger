@@ -105,6 +105,8 @@
 ## 2.1.2
 
 * Improvements to `danger init` - orta
+* Underlying Danger under-the-hood changes to prepare for supporting JS Dangerfiles - orta
+  - If you see any weirdness around the plugin attributes table, or verbose output, it's from this. 
 * Circle CI validation improvements - orta
 
 ## 2.1.1

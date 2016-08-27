@@ -53,6 +53,11 @@ def testing_dangerfile
   dm = Danger::Dangerfile.new(env, testing_ui)
 end
 
+def testing_dangerfile_js
+  env = Danger::EnvironmentManager.new(stub_env)
+  dm = Danger::DangerfileJS.new(env, testing_ui)
+end
+
 def fixture_txt(file)
   File.read("spec/fixtures/#{file}.txt")
 end

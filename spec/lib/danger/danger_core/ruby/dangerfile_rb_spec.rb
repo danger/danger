@@ -1,11 +1,6 @@
 require "pathname"
 require "tempfile"
 
-require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_danger_plugin"
-require "danger/danger_core/plugins/dangerfile_git_plugin"
-require "danger/danger_core/plugins/dangerfile_github_plugin"
-
 describe Danger::Dangerfile, host: :github do
   it "keeps track of the original Dangerfile" do
     file = make_temp_file ""
@@ -46,5 +41,25 @@ describe Danger::Dangerfile, host: :github do
     expect(results[:messages]).to eql(["A message"])
     expect(results[:errors]).to eql(["An error"])
     expect(results[:warnings]).to eql(["A warning"])
+  end
+
+  describe "initializing plugins" do
+    it "should add an instance variable to the dangerfile" do
+      class DangerTestPlugin < Danger::Plugin; end
+      dm = testing_dangerfile
+
+      expect(dm.test_plugin).to be_kind_of(DangerTestPlugin)
+    end
+  end
+
+  describe "exposing plugins" do
+    it "exposes core plugins" do
+      subject = Danger::PluginHost.new
+
+      dm = testing_dangerfile
+      subject.refresh_plugins(dm)
+
+      expect(dm.instance_variables).to include(:@danger, :@git, :@github)
+    end
   end
 end

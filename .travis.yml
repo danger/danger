@@ -22,5 +22,6 @@ script:
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
   - bundle exec rake spec
-  - bundle exec danger --verbose
+  - bundle exec danger --danger_id=rb --verbose
+  - bundle exec danger --dangerfile=Dangerfile.js --danger_id=js --verbose
   - bundle exec danger init --mousey --impatient

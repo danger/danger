@@ -58,18 +58,11 @@ module Danger
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
       ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
 
-      # setup caching for Github calls to hitting the API rate limit too quickly
-      cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
-      cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
-      Octokit.middleware = Faraday::RackBuilder.new do |builder|
-        builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
-        builder.use Octokit::Response::RaiseError
-        builder.adapter Faraday.default_adapter
-      end
+      setup_local_http_cache
 
+      exec = Executor.new
       env = EnvironmentManager.new(ENV)
-      dm = Dangerfile.new(env, cork)
-      dm.init_plugins
+      dm = exec.dangerfile_for_path(@dangerfile_path, env, cork)
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
@@ -110,6 +103,26 @@ module Danger
         dm.print_results
       ensure
         dm.env.clean_up
+      end
+    end
+
+    # Check to see if there's a Dangerfile in the organisation, and run it if so
+    def check_and_run_org_dangerfile(dm)
+      if dm.env.request_source.organisation && !dm.env.request_source.danger_repo? && (danger_repo = dm.env.request_source.fetch_danger_repo)
+        url = dm.env.request_source.file_url(repository: danger_repo.name, path: "Dangerfile")
+        path = dm.plugin.download(url)
+        dm.parse(Pathname.new(path))
+      end
+    end
+
+    # setup caching for Github calls to hitting the API rate limit too quickly
+    def setup_local_http_cache
+      cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
+      cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
+      Octokit.middleware = Faraday::RackBuilder.new do |builder|
+        builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
+        builder.use Octokit::Response::RaiseError
+        builder.adapter Faraday.default_adapter
       end
     end
   end
