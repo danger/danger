@@ -39,13 +39,8 @@ module Danger
         ci_head = head || EnvironmentManager.danger_head_branch
         env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
+        # Parse the local Dangerfile
         dm.parse(Pathname.new(dangerfile_path))
-
-        if dm.env.request_source.organisation && !dm.env.request_source.danger_repo? && (danger_repo = dm.env.request_source.fetch_danger_repo)
-          url = dm.env.request_source.file_url(repository: danger_repo.name, path: "Dangerfile")
-          path = dm.plugin.download(url)
-          dm.parse(Pathname.new(path))
-        end
 
         post_results(dm, danger_id)
         print_results(env, cork) if verbose

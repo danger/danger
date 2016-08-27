@@ -1,7 +1,8 @@
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_danger_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
+require "danger/danger_core/plugins/dangerfile_gitlab_plugin"
 
 require "danger/danger_core/plugin_printer"
 
@@ -27,7 +28,7 @@ module Danger
 
     # The ones that everything would break without
     def self.essential_plugin_classes
-      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin]
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin]
     end
 
     def initialize

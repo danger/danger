@@ -37,9 +37,9 @@ module Danger
 
     def run
       file_resolver = PluginFileResolver.new(@refs)
-      paths = file_resolver.resolve_to_paths
+      data = file_resolver.resolve
 
-      parser = PluginParser.new(paths, verbose: true)
+      parser = PluginParser.new(data[:paths], verbose: true)
       parser.parse
       json = parser.to_json
 

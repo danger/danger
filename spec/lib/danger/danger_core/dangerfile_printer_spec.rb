@@ -1,6 +1,6 @@
 require "danger/danger_core/dangerfile_printer"
 
-describe Danger::DangerfilePrinter do
+describe Danger::DangerfilePrinter, host: :github do
   describe "#print_results" do
     it "Prints out 3 lists" do
       code = "message 'A message'\n" \

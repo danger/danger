@@ -27,7 +27,7 @@ module Danger
     end
 
     def setup_js_env
-      # Add lodash into the runner, so that there is something to work 
+      # Add lodash into the runner, so that there is something to work
       # with when using the default objects
       lodash_path = File.join(Danger.gem_path, "lib/danger/danger_core/js/vendor/lodash.min.js")
       lodash = File.read(lodash_path)

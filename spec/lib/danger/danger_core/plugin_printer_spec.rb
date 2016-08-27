@@ -11,7 +11,7 @@
 require "danger/danger_core/plugin_host"
 require "danger/danger_core/plugin_printer"
 
-describe Danger::PluginPrinter do
+describe Danger::PluginPrinter, host: :github do
   before do
     Danger::Plugin.clear_external_plugins
 
@@ -30,7 +30,7 @@ describe Danger::PluginPrinter do
   # These are things that require scoped access
   it "exposes no external attributes by default" do
     methods = @subject.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-    expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+    expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
   end
 
   it "exposes all external plugin attributes by default" do
@@ -43,7 +43,9 @@ describe Danger::PluginPrinter do
     @subject = @host.printer
 
     methods = @subject.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
-    expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :download, :head_commit, :html_link, :import, :insertions, :lines_of_code, :modified_files, :my_thing, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
+    expect(methods).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :my_thing,
+
+                           :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title]
   end
 
   describe "table metadata" do
@@ -92,7 +94,7 @@ describe Danger::PluginPrinter do
       # Ensure consistent ordering, and only extract the keys
       data = sort_data(data).map { |d| d.first.to_sym }
 
-      expect(data).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit, :insertions, :lines_of_code, :modified_files, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :something]
+      expect(data).to eq [:added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :something]
     end
   end
 

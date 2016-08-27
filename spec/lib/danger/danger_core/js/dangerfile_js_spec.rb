@@ -1,19 +1,14 @@
 require "pathname"
 require "tempfile"
 
-require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_import_plugin"
-require "danger/danger_core/plugins/dangerfile_git_plugin"
-require "danger/danger_core/plugins/dangerfile_github_plugin"
-
 if Gem.win_platform?
-  describe Danger::DangerfileJS do
+  describe Danger::DangerfileJS, host: :github do
     it "raises when you init in Windows" do
       expect { testing_dangerfile_js }.to raise_error SystemExit
     end
   end
 else
-  describe Danger::DangerfileJS do
+  describe Danger::DangerfileJS, host: :github do
     it "runs the ruby code for external plugins inside the Dangerfile" do
       dangerfile_code = "git.modified_files()"
 

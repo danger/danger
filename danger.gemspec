@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
 
   # This is a transitive of octokit, but making it explicit
   # as we use it as our HTTP client
-  spec.add_runtime_dependency "faraday", "~> 0"
+  spec.add_runtime_dependency "faraday", "~> 0.9"
   spec.add_runtime_dependency "faraday-http-cache", "~> 1.0"
 
   # Markdown rendering
@@ -46,6 +46,7 @@ Gem::Specification.new do |spec|
 
   # UI wrapper
   spec.add_runtime_dependency "cork", "~> 0.1"
+  spec.add_runtime_dependency "gitlab", "~> 3.7.0"
 
   # JS support, tests would not run otherwise.
   # However, therubyracer does not work on windows, so we have
@@ -70,4 +71,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rubocop", "~> 1.2"
   spec.add_development_dependency "terminal-notifier", "~> 1.6"
   spec.add_development_dependency "terminal-notifier-guard", "~> 1.6"
+  spec.add_development_dependency "simplecov", "~> 0.12.0"
 end

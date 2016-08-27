@@ -14,7 +14,7 @@ module Danger
   #
   # @example Ensure that labels have been used on the PR
   #
-  #          fail "Please add labels to this PR" if github.labels.empty?
+  #          fail "Please add labels to this PR" if github.pr_labels.empty?
   #
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
@@ -203,6 +203,10 @@ module Danger
 
       return paths.first if paths.count < 2
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
+    end
+
+    [:title, :body, :author, :labels, :json].each do |suffix|
+      alias_method "mr_#{suffix}".to_sym, "pr_#{suffix}".to_sym
     end
 
     private

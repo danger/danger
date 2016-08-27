@@ -16,9 +16,13 @@ module Danger
 
         Octokit.auto_paginate = true
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
-        if @environment["DANGER_GITHUB_API_HOST"]
-          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
+        if api_url
+          Octokit.api_endpoint = api_url
         end
+      end
+
+      def validates_as_api_source?
+        (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
       end
 
       def scm
@@ -27,6 +31,13 @@ module Danger
 
       def host
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      end
+
+      def api_url
+        # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
+        # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
+        # correctly named variable.
+        @environment["DANGER_GITHUB_API_HOST"] || @environment["DANGER_GITHUB_API_BASE_URL"]
       end
 
       def client
@@ -53,6 +64,10 @@ module Danger
 
       def fetch_details
         self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
+        if self.pr_json[:message] == "Moved Permanently"
+          raise "Repo moved or renamed, make sure to update the git remote".red
+        end
+
         fetch_issue_details(self.pr_json)
         self.ignored_violations = ignored_violations_from_pr(self.pr_json)
       end
@@ -68,17 +83,20 @@ module Danger
         self.issue_json = client.get(href)
       end
 
+      def issue_comments
+        @comments ||= client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+                            .map { |comment| Comment.from_github(comment) }
+      end
+
       # Sending data to GitHub
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
+        editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_issues = issues.reject { |issue| issue[:body].include?("generated_by_#{danger_id}") == false }
-
-        if editable_issues.empty?
+        if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_issues.first[:body]
+          comment = editable_comments.first.body
           previous_violations = parse_comment(comment)
         end
 
@@ -94,10 +112,10 @@ module Danger
                                  danger_id: danger_id,
                                   template: "github")
 
-          if editable_issues.empty?
+          if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_issues.first[:id]
+            original_id = editable_comments.first.id
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -133,7 +151,7 @@ module Danger
             # We need to fail the actual build here
             is_private = pr_json[:base][:repo][:private]
             if is_private
-              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR set a PR status.")
+              abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)}.")
             end
@@ -145,11 +163,10 @@ module Danger
 
       # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: "danger")
-        issues = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        issues.each do |issue|
-          next unless issue[:body].include?("generated_by_#{danger_id}")
-          next if issue[:id] == except
-          client.delete_comment(ci_source.repo_slug, issue[:id])
+        issue_comments.each do |comment|
+          next unless comment.generated_by_danger?(danger_id)
+          next if comment.id == except
+          client.delete_comment(ci_source.repo_slug, comment.id)
         end
       end
 
@@ -159,34 +176,6 @@ module Danger
         return matched[1] if matched && matched[1]
       rescue
         nil
-      end
-
-      # @return [Hash] with the information about the repo
-      #   returns nil if the repo is not available
-      def fetch_repository(organisation: nil, repository: nil)
-        organisation ||= self.organisation
-        repository ||= self.ci_source.repo_slug.split("/").last
-        self.client.repo("#{organisation}/#{repository}")
-      rescue Octokit::NotFound
-        nil # repo doesn't exist
-      end
-
-      # @return [Hash] with the information about the repo.
-      #   This will automatically detect if the repo is capitalised
-      #   returns nil if there is no danger repo
-      def fetch_danger_repo(organisation: nil)
-        data = nil
-        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.downcase)
-        data ||= fetch_repository(organisation: organisation, repository: DANGER_REPO_NAME.capitalize)
-        data
-      end
-
-      # @return [Bool] is this repo the danger repo of the org?
-      def danger_repo?(organisation: nil, repository: nil)
-        repo = fetch_repository(organisation: organisation, repository: repository)
-        repo[:name].casecmp(DANGER_REPO_NAME).zero? || repo[:parent] && repo[:parent][:full_name] == "danger/danger"
-      rescue
-        false
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded

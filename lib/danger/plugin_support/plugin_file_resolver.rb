@@ -10,10 +10,11 @@ module Danger
       @refs = references
     end
 
-    def resolve_to_paths
+    def resolve
       # When given existing paths, map to absolute & existing paths
       if !@refs.nil? and @refs.select { |ref| File.file? ref }.any?
-        @refs.select { |ref| File.file? ref }.map { |path| File.expand_path(path) }
+        paths = @refs.select { |ref| File.file? ref }.map { |path| File.expand_path(path) }
+        { paths: paths, gems: [] }
 
       # When given a list of gems
       elsif @refs and @refs.kind_of? Array
@@ -36,12 +37,29 @@ module Danger
 
             # the paths are relative to our current Chdir
             relative_paths = gem_names.flat_map { |plugin| Dir.glob("vendor/gems/ruby/*/gems/#{plugin}*/lib/**/**/**/**.rb") }
-            relative_paths.map { |path| File.join(dir, path) }
+            paths = relative_paths.map { |path| File.join(dir, path) }
+
+            spec_paths = gem_names.flat_map { |plugin| Dir.glob("vendor/gems/ruby/*/specifications/#{plugin}*.gemspec").first }
+            real_gems = spec_paths.map { |path| Gem::Specification.load path }
+
+            plugin_metadata = real_gems.map do |gem|
+              {
+                name: gem.name,
+                gem: gem.name,
+                author: gem.authors,
+                url: gem.homepage,
+                description: gem.summary,
+                license: gem.license || "Unknown",
+                version: gem.version.to_s
+              }
+            end
+            { paths: paths, gems: plugin_metadata }
           end
         end
       # When empty, imply you want to test the current lib folder as a plugin
       else
-        Dir.glob(File.join(".", "lib/**/*.rb")).map { |path| File.expand_path(path) }
+        paths = Dir.glob(File.join(".", "lib/**/*.rb")).map { |path| File.expand_path(path) }
+        { paths: paths, gems: [] }
       end
     end
   end

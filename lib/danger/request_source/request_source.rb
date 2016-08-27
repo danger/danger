@@ -23,6 +23,10 @@ module Danger
         !!self.scm.origins.match(%r{#{Regexp.escape self.host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
       end
 
+      def validates_as_api_source?
+        raise "Subclass and overwrite validates_as_api_source?"
+      end
+
       def scm
         @scm ||= nil
       end
@@ -49,18 +53,6 @@ module Danger
 
       def organisation
         raise "Subclass and overwrite organisation"
-      end
-
-      def fetch_repository(_organisation: nil, _repository: nil)
-        raise "Subclass and overwrite fetch_repository"
-      end
-
-      def fetch_danger_repo(_organisation: nil)
-        raise "Subclass and overwrite fetch_danger_repo"
-      end
-
-      def danger_repo?(_organisation: nil, _repository: nil)
-        raise "Subclass and overwrite danger_repo?"
       end
 
       def file_url(_organisation: nil, _repository: nil, _branch: "master", _path: nil)

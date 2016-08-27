@@ -13,11 +13,11 @@ module Danger
   #
   class Surf < CI
     def self.validates_as_ci?(env)
-      return ["SURF_REPO", "SURF_NWO"].all? { |x| env[x] }
+      return ["SURF_REPO", "SURF_NWO"].all? { |x| env[x] && !env[x].empty? }
     end
 
-    def self.validates_as_pr?(_)
-      true
+    def self.validates_as_pr?(env)
+      validates_as_ci?(env)
     end
 
     def supported_request_sources

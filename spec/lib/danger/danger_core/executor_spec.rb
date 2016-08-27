@@ -1,6 +1,6 @@
 require "danger/danger_core/executor"
 
-describe Danger::Executor do
+describe Danger::Executor, host: :github do
   describe "choosing the  Dangerfile" do
     it "it creates a JS Dangerfile when given a JS filepath" do
       subject = Danger::Executor.new

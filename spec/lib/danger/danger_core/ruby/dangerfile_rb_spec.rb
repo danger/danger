@@ -1,12 +1,7 @@
 require "pathname"
 require "tempfile"
 
-require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_import_plugin"
-require "danger/danger_core/plugins/dangerfile_git_plugin"
-require "danger/danger_core/plugins/dangerfile_github_plugin"
-
-describe Danger::Dangerfile do
+describe Danger::Dangerfile, host: :github do
   it "keeps track of the original Dangerfile" do
     file = make_temp_file ""
     dm = testing_dangerfile
@@ -64,7 +59,7 @@ describe Danger::Dangerfile do
       dm = testing_dangerfile
       subject.refresh_plugins(dm)
 
-      expect(dm.instance_variables).to include(:@plugin, :@git, :@github)
+      expect(dm.instance_variables).to include(:@danger, :@git, :@github)
     end
   end
 end

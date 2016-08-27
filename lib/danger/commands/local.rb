@@ -100,10 +100,7 @@ module Danger
         dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
 
         dm.parse(Pathname.new(@dangerfile_path))
-
-        check_and_run_org_dangerfile(dm)
-
-        exec.print_results(env, cork)
+        dm.print_results
       ensure
         dm.env.clean_up
       end

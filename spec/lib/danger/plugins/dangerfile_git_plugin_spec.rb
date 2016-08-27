@@ -18,7 +18,7 @@ def run_in_repo_with_diff
 end
 
 module Danger
-  describe DangerfileGitPlugin do
+  describe DangerfileGitPlugin, host: :github do
     it "fails init if the dangerfile's request source is not a GitRepo" do
       dm = testing_dangerfile
       dm.env.scm = []
