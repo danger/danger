@@ -216,14 +216,63 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
     end
 
-    let(:main_issue_id) { 76537315 }
-    let(:inline_issue_id_1) { 76537316 }
-    let(:inline_issue_id_2) { 76535362 }
+    let(:main_issue_id) { 76_535_362 }
+    let(:inline_issue_id_1) { 76_537_315 }
+    let(:inline_issue_id_2) { 76_537_316 }
 
     describe "inline issues" do
+      before do
+        issues = JSON.parse(fixture("github_api/inline_comments"), symbolize_names: true)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        diff = diff_fixture("github_api/inline_comments_pr_diff")
+        allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff)
+
+        @g.fetch_details
+        allow(@g).to receive(:submit_pull_request_status!)
+      end
+
       it "deletes all inline comments if there are no violations at all" do
-        comments = JSON.parse(fixture("github_api/inline_comments"), symbolize_names: true)
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+
+      it "adds new comments inline" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        # I think needing this is a bug
+        # as it's an empty markdown string
+        # Should probably be a delete
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", main_issue_id, anything).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
+      it "crosses out sticky comments" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        # I think needing this is a bug
+        # as it's an empty markdown string
+        # Should probably be a delete
+        expect(@g.client).to receive(:update_comment).with("artsy/eigen", main_issue_id, anything).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
+      # This isn't in yet'
+      xit "removes inline comments if they are not included" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
 
         # Main
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
@@ -233,7 +282,8 @@ describe Danger::RequestSources::GitHub, host: :github do
 
         allow(@g).to receive(:submit_pull_request_status!)
 
-        @g.update_pull_request!(warnings: [], errors: [], messages: [])
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
     end
   end
