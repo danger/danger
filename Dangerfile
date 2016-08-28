@@ -67,3 +67,8 @@ end
 junit.parse "junit-results.xml"
 junit.headers = [:file, :name]
 junit.report
+
+# Integration test for the moment
+warn("Testing inline docs", file: "CHANGELOG.md", line: 1, sticky: false)
+# Outside of normal scope
+warn("Testing outside of changeset", file: "danger.gemspec", line: 13)
