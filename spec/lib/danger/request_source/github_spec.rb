@@ -100,23 +100,6 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
     end
 
-    # TODO: Move to the plugin
-    #
-    xdescribe "DSL Attributes" do
-      it "sets the right commit sha" do
-        @g.fetch_details
-
-        expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
-        expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
-        expect(@g.pr_json[:base][:ref]).to eql(@g.branch_for_merge)
-      end
-
-      it "sets the right labels" do
-        @g.fetch_details
-        expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
-      end
-    end
-
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
         message = @g.generate_description(warnings: [], errors: [])
@@ -230,6 +213,27 @@ describe Danger::RequestSources::GitHub, host: :github do
         expect(v.file).to eq("CHANGELOG.md")
         expect(v.line).to eq(1)
         expect(v.message).to include("Testing inline docs")
+      end
+    end
+
+    let(:main_issue_id) { 76537315 }
+    let(:inline_issue_id_1) { 76537316 }
+    let(:inline_issue_id_2) { 76535362 }
+
+    describe "inline issues" do
+      it "deletes all inline comments if there are no violations at all" do
+        comments = JSON.parse(fixture("github_api/inline_comments"), symbolize_names: true)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+
+        # Main
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        # Inline Issues
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
     end
   end

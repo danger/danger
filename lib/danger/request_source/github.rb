@@ -147,7 +147,7 @@ module Danger
         # Note: this can terminate the entire process.
         submit_pull_request_status!(warnings: warnings,
                                       errors: errors,
-                                 details_url: comment_result["html_url"])
+                                 details_url: comment_result[:html_url])
       end
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
