@@ -16,9 +16,13 @@ module Danger
 
         Octokit.auto_paginate = true
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
-        if @environment["DANGER_GITHUB_API_HOST"]
-          Octokit.api_endpoint = @environment["DANGER_GITHUB_API_HOST"]
+        if api_url
+          Octokit.api_endpoint = api_url
         end
+      end
+
+      def validates_as_api_source?
+        (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
       end
 
       def scm
@@ -27,6 +31,13 @@ module Danger
 
       def host
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      end
+
+      def api_url
+        # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
+        # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
+        # correctly named variable.
+        @environment["DANGER_GITHUB_API_HOST"] || @environment["DANGER_GITHUB_API_BASE_URL"]
       end
 
       def client
@@ -53,6 +64,10 @@ module Danger
 
       def fetch_details
         self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
+        if self.pr_json[:message] == "Moved Permanently"
+          raise "Repo moved or renamed, make sure to update the git remote".red
+        end
+
         fetch_issue_details(self.pr_json)
         self.ignored_violations = ignored_violations_from_pr(self.pr_json)
       end
@@ -68,17 +83,20 @@ module Danger
         self.issue_json = client.get(href)
       end
 
+      def issue_comments
+        @comments ||= client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+                            .map { |comment| Comment.from_github(comment) }
+      end
+
       # Sending data to GitHub
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         comment_result = {}
-
-        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        editable_comments = comments.select { |comment| danger_comment?(comment, danger_id) }
+        editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
         if editable_comments.empty?
           previous_violations = {}
         else
-          comment = editable_comments.first[:body]
+          comment = editable_comments.first.body
           previous_violations = parse_comment(comment)
         end
 
@@ -120,7 +138,7 @@ module Danger
           if editable_comments.empty?
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_comments.first[:id]
+            original_id = editable_comments.first.id
             comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
           end
         end
@@ -168,11 +186,10 @@ module Danger
 
       # Get rid of the previously posted comment, to only have the latest one
       def delete_old_comments!(except: nil, danger_id: "danger")
-        comments = client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        comments.each do |comment|
-          next unless danger_comment?(comment, danger_id)
-          next if comment[:id] == except
-          client.delete_comment(ci_source.repo_slug, comment[:id])
+        issue_comments.each do |comment|
+          next unless comment.generated_by_danger?(danger_id)
+          next if comment.id == except
+          client.delete_comment(ci_source.repo_slug, comment.id)
         end
       end
 
@@ -356,12 +373,6 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
         organisation ||= self.organisation
         "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
-      end
-
-      private
-
-      def danger_comment?(comment, danger_id)
-        comment[:body].include?("generated_by_#{danger_id}")
       end
     end
   end

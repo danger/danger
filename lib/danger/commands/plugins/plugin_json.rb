@@ -19,8 +19,6 @@ module Danger
 
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a JSON format.
-      Note: Before 1.0, it will also parse the represented JSON to validate whether http://danger.systems would
-      show the plugin on the website.
     DESC
 
     self.arguments = [
@@ -29,12 +27,20 @@ module Danger
 
     def run
       file_resolver = PluginFileResolver.new(@refs)
-      paths = file_resolver.resolve_to_paths
+      data = file_resolver.resolve
 
-      parser = PluginParser.new(paths)
+      parser = PluginParser.new(data[:paths])
       parser.parse
-      json = parser.to_json_string
-      cork.puts json
+      json = parser.to_json
+
+      # Append gem metadata into every plugin
+      data[:gems].each do |gem_data|
+        json.each do |plugin|
+          plugin[:gem_metadata] = gem_data if plugin[:gem] == gem_data[:gem]
+        end
+      end
+
+      cork.puts json.to_json
     end
   end
 end

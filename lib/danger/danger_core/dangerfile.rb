@@ -7,6 +7,7 @@ require "danger/danger_core/plugins/dangerfile_messaging_plugin"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
+require "danger/danger_core/plugins/dangerfile_gitlab_plugin"
 
 module Danger
   class Dangerfile
@@ -34,7 +35,7 @@ module Danger
 
     # The ones that everything would break without
     def self.essential_plugin_classes
-      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin]
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin]
     end
 
     # Both of these methods exist on all objects

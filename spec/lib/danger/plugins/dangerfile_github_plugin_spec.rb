@@ -1,5 +1,5 @@
 module Danger
-  describe DangerfileGitHubPlugin do
+  describe DangerfileGitHubPlugin, host: :github do
     describe "dsl" do
       before do
         dm = testing_dangerfile

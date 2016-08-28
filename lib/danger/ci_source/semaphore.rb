@@ -4,7 +4,8 @@ module Danger
   # ### CI Setup
   #
   # For Semaphor you will want to go to the settings page of the project. Inside "Build Settings"
-  # you should add `bundle exec danger` to the Setup thread.
+  # you should add `bundle exec danger` to the Setup thread. Note that Semaphore only provides
+  # the build environment variables necessary for Danger on PRs across forks.
   #
   # ### Token Setup
   #
@@ -16,7 +17,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] }
+      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] && !env[x].empty? }
     end
 
     def supported_request_sources

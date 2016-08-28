@@ -21,7 +21,8 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      env["XCS_BOT_NAME"].include? "BuildaBot"
+      value = env["XCS_BOT_NAME"]
+      !value.nil? && value.include?("BuildaBot")
     end
 
     def supported_request_sources

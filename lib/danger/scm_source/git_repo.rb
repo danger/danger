@@ -23,7 +23,7 @@ module Danger
     end
 
     def origins
-      exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
+      exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1].chomp
     end
   end
 end

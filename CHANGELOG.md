@@ -1,6 +1,58 @@
 ## Master
 
 * add `file` and `line` optional parameters to methods on the messaging plugin
+* Show appropriate error message when GitHub repo was moved - KrauseFx
+* `danger plugins json [gem]` will now give gem metadata too - orta
+
+## 3.0.3
+
+* Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
+* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin. - vittoriom
+
+## 3.0.2
+
+* Spelling and grammar fixes. - connorshea
+* More crash fixes for `danger local`, maybe we need more tests here - orta
+
+
+## 3.0.1
+
+* Crash fix for `danger local` - hanneskaeufler
+
+## 3.0.0
+
+* GitLab support - k0nserv / deanpcmad / hjanuschka
+
+  This started back in February, and is now shipping. 
+  Documentation has been updated on the [Getting Started](http://danger.systems/guides/getting_started.html#creating-a-bot-account-for-danger-to-use) for those interested in the setup.
+
+  This adds a new object to the DSL, `gitlab` which offers the following API:
+
+  ```ruby
+  gitlab.mr_title # The title of the Merge Request 
+
+  gitlab.mr_body # The body text of the Merge Request
+
+  gitlab.mr_author # The username of the author of the Merge Request
+
+  gitlab.mr_labels # The labels assigned to the Merge Request
+
+  gitlab.branch_for_merge # The branch to which the MR is going to be merged into
+
+  gitlab.base_commit # The base commit to which the MR is going to be merged as a parent
+
+  gitlab.head_commit # The head commit to which the MR is requesting to be merged from
+
+  gitlab.mr_json # The hash that represents the MR's JSON
+  api # Provides access to the GitLab API client used inside Danger
+
+  gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository. 
+  ```
+
+  A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
+
+* Adapt CI Sources that support GitLab - k0nserv
+
 * **BREAKING** Removes the implicit Dangerfile support. - orta
 
   The implicit support was a feature that would check for an `[org]/danger`
@@ -28,6 +80,10 @@
 
   I also removed `plugin.download` - couldn't see a use for it inside a Dangerfile. Happy
   to change that, if it's being used it.
+
+* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
+  Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
+  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
 
 ## 2.1.6
 

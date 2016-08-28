@@ -145,7 +145,7 @@ module Danger
     def current_repo_slug
       @git = GitRepo.new
       repo_matches = @git.origins.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-      repo_matches[2] || "[Your/Repo]"
+      (repo_matches[2] || "[Your/Repo]").strip
     end
 
     def setup_danger_ci
@@ -234,7 +234,7 @@ module Danger
         ui.say "I'll give you a minute to read it..."
         ui.wait_for_return
 
-        ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
+        ui.say "On danger/danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
         ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
