@@ -213,5 +213,24 @@ describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
     end
+
+    describe "#parse_message_from_row" do
+      it "handles pulling out links that include the file / line when in the main Danger comment" do
+        body = '<a href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1">CHANGELOG.md#L1</a> - Testing inline docs'
+
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("- Testing inline docs")
+      end
+
+      it "handles pulling out file info from an inline Danger comment" do
+        body = '<span data-href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1"/>Testing inline docs'
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("Testing inline docs")
+      end
+    end
   end
 end

@@ -256,7 +256,8 @@ module Danger
           if is_markdown_content
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "github")
           else
-            m = process_markdown(m)
+            # Hide the inline link behind a span
+            m = process_markdown(m, true)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "github")
             # A comment might be in previous_violations because only now it's part of the unified diff
             # We remove from the array since it won't have a place in the table anymore
@@ -345,8 +346,9 @@ module Danger
         position unless file_line.nil?
       end
 
+      # See the tests for examples of data coming in looks like
       def parse_message_from_row(row)
-        message_regexp = %r{(<a href="https://github.com/#{ci_source.repo_slug}/blob/[0-9a-z]+/(?<file>[^#]+)#L(?<line>[0-9]+)">[^<]*</a> - )?(?<message>.*?)}im
+        message_regexp = %r{(<(a |span data-)href="https://github.com/#{ci_source.repo_slug}/blob/[0-9a-z]+/(?<file>[^#]+)#L(?<line>[0-9]+)"(>[^<]*</a> - |/>))?(?<message>.*?)}im
         match = message_regexp.match(row)
 
         if match[:line]
@@ -357,8 +359,14 @@ module Danger
         Violation.new(row, true, match[:file], line)
       end
 
-      def markdown_link_to_message(message)
-        "[#{message.file}#L#{message.line}](https://github.com/#{ci_source.repo_slug}/blob/#{pr_json[:head][:sha]}/#{message.file}#L#{message.line})"
+      def markdown_link_to_message(message, hide_link)
+        url = "https://github.com/#{ci_source.repo_slug}/blob/#{pr_json[:head][:sha]}/#{message.file}#L#{message.line}"
+
+        if hide_link
+          "<span data-href=\"#{url}\"/>"
+        else
+          "[#{message.file}#L#{message.line}](#{url}) - "
+        end
       end
 
       # @return [String] The organisation name, is nil if it can't be detected

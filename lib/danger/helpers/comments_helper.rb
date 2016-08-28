@@ -21,9 +21,10 @@ module Danger
       # vendor specific link.
       #
       # @param [Violation or Markdown] message
+      # @param [Bool] Should hide any generated link created
       #
       # @return [String] The Markdown compatible link
-      def markdown_link_to_message(message)
+      def markdown_link_to_message(message, _)
         "#{messages.file}#L#{message.line}"
       end
 
@@ -43,9 +44,9 @@ module Danger
         m1 == m2
       end
 
-      def process_markdown(violation)
+      def process_markdown(violation, hide_link = false)
         message = violation.message
-        message = "#{markdown_link_to_message violation} - #{message}" if violation.file && violation.line
+        message = "#{markdown_link_to_message(violation, hide_link)}#{message}" if violation.file && violation.line
 
         html = markdown_parser(message).to_html
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
