@@ -15,7 +15,7 @@ module Danger
     end
 
     def exec(string)
-      `git #{string}`.strip
+      `LANG=en_US.UTF-8 git #{string}`.strip
     end
 
     def head_commit
