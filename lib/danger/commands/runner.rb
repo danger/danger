@@ -53,7 +53,7 @@ module Danger
     end
 
     def run
-      Executor.new.run(base: @base,
+      Executor.new(ENV).run(base: @base,
                        head: @head,
                        dangerfile_path: @dangerfile_path,
                        danger_id: @danger_id)
