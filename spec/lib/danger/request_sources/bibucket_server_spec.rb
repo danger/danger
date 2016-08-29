@@ -11,12 +11,6 @@ describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server do
     end
   end
 
-  describe "#pr_api_endpoint" do
-    it "sets the pr_api_endpoint by the `host` and the ci_source's `repo_slug` and `pull_request_id`" do
-      expect(bs.pr_api_endpoint).to eql("https://stash.example.com/rest/api/1.0/projects/ios/repos/fancyapp/pull-requests/2080")
-    end
-  end
-
   describe "#validates_as_api_source" do
     it "validates_as_api_source for non empty `DANGER_BITBUCKETSERVER_USERNAME` and `DANGER_BITBUCKETSERVER_PASSWORD`" do
       expect(bs.validates_as_api_source?).to be true
