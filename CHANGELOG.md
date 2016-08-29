@@ -2,6 +2,7 @@
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
+* Crash fix for `bundle exec danger` - hanneskaeufler
 
 ## 3.0.3
 

@@ -1,5 +1,9 @@
 module Danger
   class Executor
+    def initialize(system_env)
+      @system_env = system_env
+    end
+
     def run(env: nil,
             dm: nil,
             cork: nil,
@@ -12,18 +16,18 @@ module Danger
                               verbose: false)
 
       # Could we find a CI source at all?
-      unless EnvironmentManager.local_ci_source(ENV)
-        abort("Could not find the type of CI for Danger to run on.".red) unless ci_klass
+      unless EnvironmentManager.local_ci_source(@system_env)
+        abort("Could not find the type of CI for Danger to run on.".red)
       end
 
       # Could we determine that the CI source is inside a PR?
-      unless EnvironmentManager.pr?(ENV)
+      unless EnvironmentManager.pr?(@system_env)
         cork.puts "Not a Pull Request - skipping `danger` run".yellow
         return
       end
 
       # OK, then we can have some
-      env ||= EnvironmentManager.new(ENV)
+      env ||= EnvironmentManager.new(@system_env)
       dm ||= Dangerfile.new(env, cork)
 
       dm.init_plugins
