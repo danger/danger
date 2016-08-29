@@ -13,7 +13,7 @@ module Danger
 
       # Could we find a CI source at all?
       unless EnvironmentManager.local_ci_source(ENV)
-        abort("Could not find the type of CI for Danger to run on.".red) unless ci_klass
+        abort("Could not find the type of CI for Danger to run on.".red)
       end
 
       # Could we determine that the CI source is inside a PR?
