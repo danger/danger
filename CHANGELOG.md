@@ -2,6 +2,7 @@
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
+* Switch messaging's sticky to default to `false` - Bogren
 
 ## 3.0.3
 

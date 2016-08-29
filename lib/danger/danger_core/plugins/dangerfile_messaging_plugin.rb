@@ -7,7 +7,7 @@ module Danger
   #
   # The message within which Danger communicates back is amended on each run in a session.
   #
-  # Each of `message`, `warn` and `fail` have a `sticky` flag, `true` by default, which
+  # Each of `message`, `warn` and `fail` have a `sticky` flag, `false` by default, which
   # means that the message will be crossed out instead of being removed. If it's not use on
   # subsequent runs.
   #
@@ -81,7 +81,7 @@ module Danger
     #           defaults to `true`.
     # @return   [void]
     #
-    def message(message, sticky: true)
+    def message(message, sticky: false)
       @messages << Violation.new(message, sticky)
     end
 
@@ -95,7 +95,7 @@ module Danger
     #           defaults to `true`.
     # @return   [void]
     #
-    def warn(message, sticky: true)
+    def warn(message, sticky: false)
       return if should_ignore_violation(message)
       @warnings << Violation.new(message, sticky)
     end
@@ -110,7 +110,7 @@ module Danger
     #           defaults to `true`.
     # @return   [void]
     #
-    def fail(message, sticky: true)
+    def fail(message, sticky: false)
       return if should_ignore_violation(message)
       @errors << Violation.new(message, sticky)
     end
