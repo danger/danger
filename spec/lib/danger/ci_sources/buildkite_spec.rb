@@ -4,6 +4,7 @@ describe Danger::Buildkite do
   let(:valid_env) do
     {
       "BUILDKITE" => "true",
+      "BUILDKITE_REPO" => "git@github.com:Danger/danger.git",
       "BUILDKITE_PULL_REQUEST_REPO" => "git@github.com:KrauseFx/danger.git",
       "BUILDKITE_PULL_REQUEST" => "12"
     }
@@ -16,7 +17,7 @@ describe Danger::Buildkite do
   let(:source) { described_class.new(valid_env) }
 
   describe ".validates_as_ci?" do
-    it "validates when requierd env variables are set" do
+    it "validates when required env variables are set" do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
@@ -54,12 +55,12 @@ describe Danger::Buildkite do
   describe "#new" do
     describe "repo slug" do
       it "gets out a repo slug from a git+ssh repo" do
-        expect(source.repo_slug).to eql("KrauseFx/danger")
+        expect(source.repo_slug).to eql("Danger/danger")
       end
 
       it "gets out a repo slug from a https repo" do
-        valid_env["BUILDKITE_PULL_REQUEST_REPO"] = "https://github.com/KrauseFx/danger.git"
-        expect(source.repo_slug).to eql("KrauseFx/danger")
+        valid_env["BUILDKITE_REPO"] = "https://github.com/Danger/danger.git"
+        expect(source.repo_slug).to eql("Danger/danger")
       end
     end
 

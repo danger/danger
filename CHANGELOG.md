@@ -3,6 +3,7 @@
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
 * Crash fix for `bundle exec danger` - hanneskaeufler
+* Fix Buildkite repo slug URL generation - phillfarrugia
 
 ## 3.0.3
 
