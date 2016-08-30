@@ -17,21 +17,23 @@ module Danger
   #
   class Bitrise < CI
     def self.validates_as_ci?(env)
-      env.key? "BITRISE_BUILD_URL"
+      env.key? "BITRISE_IO"
     end
 
     def self.validates_as_pr?(env)
-      return true if env["BITRISE_PULL_REQUEST"] && !env["BITRISE_PULL_REQUEST"].empty?
+      return !env["BITRISE_PULL_REQUEST"].to_s.empty?
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab]
     end
 
     def initialize(env)
-      self.repo_slug = env["BITRISE_BUILD_SLUG"]
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
+
+      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+      self.repo_slug = repo_matches[2] unless repo_matches.nil?
     end
   end
 end
