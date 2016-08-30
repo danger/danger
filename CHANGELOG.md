@@ -4,6 +4,7 @@
 * `danger plugins json [gem]` will now give gem metadata too - orta
 * Crash fix for `bundle exec danger` - hanneskaeufler
 * Fix Buildkite repo slug URL generation - phillfarrugia
+* Added support for [Bitrise](http://bitrise.io) - kylejm
 
 ## 3.0.3
 
