@@ -1,4 +1,6 @@
-## Master
+## master
+
+## 3.1.0
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
