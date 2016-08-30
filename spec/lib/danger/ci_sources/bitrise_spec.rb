@@ -25,6 +25,11 @@ describe Danger::Bitrise do
     it "does not validate when the required env variables are not set" do
       expect(described_class.validates_as_pr?(invalid_env)).to be false
     end
+
+    it "does not validate when there isn't a PR" do
+      valid_env["BITRISE_PULL_REQUEST"] = nil
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
   end
 
   describe ".validates_as_ci?" do
@@ -34,6 +39,11 @@ describe Danger::Bitrise do
 
     it "does not validate when the required env variables are not set" do
       expect(described_class.validates_as_ci?(invalid_env)).to be false
+    end
+
+    it "validates even when there is no PR" do
+      valid_env["BITRISE_PULL_REQUEST"] = nil
+      expect(described_class.validates_as_ci?(valid_env)).to be true
     end
   end
 
