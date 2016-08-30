@@ -2,11 +2,11 @@ require "danger/danger_core/environment_manager"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
 
 describe Danger::Dangerfile::DSL, host: :github do
-  describe "#import" do
-    before do
-      @dm = testing_dangerfile
-    end
+  before do
+    @dm = testing_dangerfile
+  end
 
+  describe "#import" do
     describe "#import_local" do
       it "supports exact paths" do
         @dm.danger.import_plugin("spec/fixtures/plugins/example_exact_path.rb")
@@ -50,6 +50,19 @@ describe Danger::Dangerfile::DSL, host: :github do
           @dm.danger.import_plugin("http://unencrypted.org")
         end.to raise_error("URL is not https, for security reasons `danger` only supports encrypted requests")
       end
+    end
+  end
+
+  describe "#import_dangerfile" do
+    it "sets a message inside an imported Dangerfile" do
+      outer_dangerfile = "danger.import_dangerfile('example/example')"
+      inner_dangerfile = "message('OK')"
+
+      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
+      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
+
+      @dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(@dm.status_report[:messages]).to eq(["OK"])
     end
   end
 end
