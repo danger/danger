@@ -35,7 +35,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_url = env["BUILDKITE_PULL_REQUEST_REPO"]
+      self.repo_url = env["BUILDKITE_REPO"]
       self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
 
       repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
