@@ -36,6 +36,7 @@
 * Crash fix for `bundle exec danger` - hanneskaeufler
 * Fix Buildkite repo slug URL generation - phillfarrugia
 * Added support for [Bitrise](http://bitrise.io) - kylejm
+* Set LANG variable to en_US.UTF-8 before running git commands - bogren
 
 ## 3.0.3
 
