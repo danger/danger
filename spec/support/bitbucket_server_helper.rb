@@ -1,7 +1,6 @@
 module Danger
   module Support
     module BitbucketServerHelper
-
       def stub_env
         {
           "DANGER_BITBUCKETSERVER_HOST" => "stash.example.com",

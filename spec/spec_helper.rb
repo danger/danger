@@ -13,7 +13,7 @@ require "json"
 
 require "support/gitlab_helper"
 require "support/github_helper"
-require 'support/bitbucket_server_helper'
+require "support/bitbucket_server_helper"
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"

@@ -8,15 +8,15 @@ module Danger
       attr_accessor :pr_json
 
       def initialize(ci_source, environment)
-         self.ci_source = ci_source
-         self.environment = environment
+        self.ci_source = ci_source
+        self.environment = environment
 
-         project, slug = ci_source.repo_slug.split("/")
-         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
+        project, slug = ci_source.repo_slug.split("/")
+        @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
       end
 
       def validates_as_ci?
-        # TODO ???
+        # TODO: ???
         true
       end
 
@@ -33,7 +33,7 @@ module Danger
       end
 
       def fetch_details
-        self.pr_json = @api.get_pr_json
+        self.pr_json = @api.fetch_pr_json
       end
 
       def setup_danger_branches
@@ -52,7 +52,7 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: 'danger')
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
         delete_old_comments(danger_id: danger_id)
 
         comment = generate_description(warnings: warnings, errors: errors)
@@ -68,8 +68,8 @@ module Danger
         @api.post_comment(comment)
       end
 
-      def delete_old_comments(danger_id: 'danger')
-        @api.get_last_comments.each do |c|
+      def delete_old_comments(danger_id: "danger")
+        @api.fetch_last_comments.each do |c|
           @api.delete_comment(c[:id], c[:version]) if c[:text] =~ /generated_by_#{danger_id}/
         end
       end

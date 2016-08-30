@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'danger/plugin_support/plugin'
+require "danger/plugin_support/plugin"
 
 module Danger
   class DangerfileBitbucketServerPlugin < Plugin

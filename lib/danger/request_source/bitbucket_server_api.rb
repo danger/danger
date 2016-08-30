@@ -17,14 +17,14 @@ module Danger
         @username && !@username.empty? && @password && !@password.empty?
       end
 
-      def get_pr_json
+      def fetch_pr_json
         uri = URI(pr_api_endpoint)
-        get_json(uri)
+        fetch_json(uri)
       end
 
-      def get_last_comments
+      def fetch_last_comments
         uri = URI("#{pr_api_endpoint}/activities?limit=1000")
-        get_json(uri)[:values].select { |v| v[:action] == "COMMENTED" }.map { |v| v[:comment] }
+        fetch_json(uri)[:values].select { |v| v[:action] == "COMMENTED" }.map { |v| v[:comment] }
       end
 
       def delete_comment(id, version)
@@ -34,34 +34,34 @@ module Danger
 
       def post_comment(text)
         uri = URI("#{pr_api_endpoint}/comments")
-        body = {text: text}.to_json
+        body = { text: text }.to_json
         post(uri, body)
       end
 
       private
 
-      def get_json(uri)
-        req = Net::HTTP::Get.new(uri.request_uri, {'Content-Type' =>'application/json'})
+      def fetch_json(uri)
+        req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
         JSON.parse(res.body, symbolize_names: true)
       end
 
       def post(uri, body)
-        req = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' =>'application/json'})
+        req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
         req.body = body
-        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
       end
 
       def delete(uri)
-        req = Net::HTTP::Delete.new(uri.request_uri, {'Content-Type' =>'application/json'})
+        req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
       end
