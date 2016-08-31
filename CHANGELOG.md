@@ -7,6 +7,7 @@
 * Crash fix for `bundle exec danger` - hanneskaeufler
 * Fix Buildkite repo slug URL generation - phillfarrugia
 * Added support for [Bitrise](http://bitrise.io) - kylejm
+* Add Bitbucket Server aka. Stash integration - heeaad
 
 ## 3.0.3
 
