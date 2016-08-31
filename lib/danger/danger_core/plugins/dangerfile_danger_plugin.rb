@@ -60,8 +60,8 @@ module Danger
       raise "`import` requires a string" unless slug.kind_of?(String)
       org, repo = slug.split("/")
       download_url = env.request_source.file_url(organisation: org, repository: repo, branch: "master", path: "Dangerfile")
-      local_path = import_url(download_url)
-      dangerfile.parse(Pathname.new(local_path))
+      local_path = download(download_url)
+      @dangerfile.parse(Pathname.new(local_path))
     end
 
     private

@@ -1,5 +1,7 @@
 ## master
 
+* Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
+
 ## 3.1.0
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
