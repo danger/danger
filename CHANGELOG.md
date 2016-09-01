@@ -1,5 +1,7 @@
 ## master
 
+## 3.1.1
+
 * Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
 
 ## 3.1.0
