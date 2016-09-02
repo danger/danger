@@ -54,12 +54,44 @@ describe Danger::Dangerfile::DSL, host: :github do
   end
 
   describe "#import_dangerfile" do
-    it "sets a message inside an imported Dangerfile" do
+    it "defaults to org/repo and warns of deprecation" do
       outer_dangerfile = "danger.import_dangerfile('example/example')"
       inner_dangerfile = "message('OK')"
 
       url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
       stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
+
+      @dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(@dm.status_report[:warnings]).to eq(["Use `import_dangerfile(github: 'example/example')` instead of `import_dangerfile 'example/example'`."])
+      expect(@dm.status_report[:messages]).to eq(["OK"])
+    end
+
+    it "github: 'repo/name'" do
+      outer_dangerfile = "danger.import_dangerfile(github: 'example/example')"
+      inner_dangerfile = "message('OK')"
+
+      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
+      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
+
+      @dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(@dm.status_report[:messages]).to eq(["OK"])
+    end
+
+    it "path: 'path'" do
+      outer_dangerfile = "danger.import_dangerfile(path: 'foo/bar')"
+      inner_dangerfile = "message('OK')"
+
+      expect(File).to receive(:open).with(Pathname.new("foo/bar/Dangerfile"), "r:utf-8").and_return(inner_dangerfile)
+      @dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(@dm.status_report[:messages]).to eq(["OK"])
+    end
+
+    it "gem: 'name'" do
+      outer_dangerfile = "danger.import_dangerfile(gem: 'example')"
+      inner_dangerfile = "message('OK')"
+
+      expect(File).to receive(:open).with(Pathname.new("/gems/foo/bar/Dangerfile"), "r:utf-8").and_return(inner_dangerfile)
+      expect(Gem::Specification).to receive_message_chain(:find_by_name, :gem_dir).and_return("/gems/foo/bar")
 
       @dm.parse(Pathname.new("."), outer_dangerfile)
       expect(@dm.status_report[:messages]).to eq(["OK"])
