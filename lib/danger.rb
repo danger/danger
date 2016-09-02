@@ -5,7 +5,6 @@ require "danger/commands/runner"
 require "danger/plugin_support/plugin"
 require "danger/core_ext/string"
 require "danger/danger_core/executor"
-require "danger/services/home_keeper"
 
 require "claide"
 require "colored"
@@ -28,9 +27,17 @@ module Danger
     return Gem::Specification.find_by_name(gem_name).gem_dir
   end
 
-  def self.setup!
-    HomeKeeper.create_latest_version_file!
+  # @return [String] Latest version of Danger on https://rubygems.org
+  def self.danger_outdated?
+    require "danger/clients/rubygems_client"
+    latest_version = RubyGemsClient.latest_danger_version
+
+    if Gem::Version.new(latest_version) > Gem::Version.new(Danger::VERSION)
+      latest_version
+    else
+      false
+    end
+  rescue Exception => _e
+    false
   end
 end
-
-Danger.setup!

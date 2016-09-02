@@ -66,8 +66,8 @@ module Danger
 
         m = "\n[!] "
         m << description
-        if HomeKeeper.danger_outdated?
-          m << ". Updating the Danger gem might fix the issue.\n"
+        if latest_version = Danger.danger_outdated?
+          m << upgrade_message(latest_version)
         end
         m = m.red if m.respond_to?(:red)
 
@@ -104,6 +104,12 @@ module Danger
         description = description.sub(/#{Regexp.quote trace_line}:\s*/, "")
       end
       [trace_line, description]
+    end
+
+    def upgrade_message(latest_version)
+      ". Updating the Danger gem might fix the issue. "\
+      "Your Danger version: #{Danger::VERSION}, "\
+      "latest Danger version: #{latest_version}\n"
     end
   end
 end
