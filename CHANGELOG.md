@@ -1,5 +1,7 @@
 ## master
 
+* Add Bitbucket Server aka. Stash integration - heeaad
+
 ## 3.1.1
 
 * Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
@@ -12,7 +14,6 @@
 * Crash fix for `bundle exec danger` - hanneskaeufler
 * Fix Buildkite repo slug URL generation - phillfarrugia
 * Added support for [Bitrise](http://bitrise.io) - kylejm
-* Add Bitbucket Server aka. Stash integration - heeaad
 
 ## 3.0.3
 
