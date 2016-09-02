@@ -66,7 +66,9 @@ module Danger
 
         m = "\n[!] "
         m << description
-        m << ". Updating the Danger gem might fix the issue.\n"
+        if HomeKeeper.is_danger_outdated?
+          m << ". Updating the Danger gem might fix the issue.\n"
+        end
         m = m.red if m.respond_to?(:red)
 
         return m unless backtrace && dsl_path && contents
