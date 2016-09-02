@@ -98,9 +98,8 @@ module Danger
       end
 
       def random_compliment
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
-        compliment.sample
+        ["Well done.", "Congrats.", "Woo!",
+         "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."].sample
       end
 
       private
