@@ -5,6 +5,7 @@ require "danger/commands/runner"
 require "danger/plugin_support/plugin"
 require "danger/core_ext/string"
 require "danger/danger_core/executor"
+require "danger/services/home_keeper"
 
 require "claide"
 require "colored"
@@ -26,4 +27,11 @@ module Danger
     end
     return Gem::Specification.find_by_name(gem_name).gem_dir
   end
+
+  def self.setup!
+    HomeKeeper.check_home_permission!
+    HomeKeeper.create_latest_version_file!
+  end
 end
+
+Danger.setup!
