@@ -29,7 +29,6 @@ module Danger
   end
 
   def self.setup!
-    HomeKeeper.check_home_permission!
     HomeKeeper.create_latest_version_file!
   end
 end

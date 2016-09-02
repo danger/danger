@@ -1,46 +1,27 @@
 require "danger/services/home_keeper"
 
 describe Danger::HomeKeeper do
-  describe ".check_home_permission!" do
-    context "home directory is not writable" do
-      it "raise error and mentioned in error message" do
-        allow(File).to receive(:writable?) { false }
-
-        expect { described_class.check_home_permission! }.to raise_error(
-          Danger::HomeDirectoyError,
-          /is not writable/
-        )
-      end
-    end
-
-    context "home directory isn't a directory" do
-      it "raise error and mentioned in error message" do
-        allow(File).to receive(:directory?) { false }
-
-        expect { described_class.check_home_permission! }.to raise_error(
-          Danger::HomeDirectoyError,
-          /is not a directory/
-        )
-      end
-    end
-
-    context "home directory is writable and a directory" do
-      it "works" do
-        allow(File).to receive(:writable?) { true }
-        allow(File).to receive(:directory?) { true }
-
-        expect { described_class.check_home_permission! }.not_to raise_error
-      end
-    end
-  end
-
   describe ".create_latest_version_file!" do
-    it "writes a version string to danger file" do
-      allow(Danger::RubyGemsClient).to receive(:latest_danger_version) { "3.1.1" }
+    context "when has home permission" do
+      before { allow(described_class).to receive(:home_permission?) { true } }
 
-      expect(IO).to receive(:write)
+      it "writes a version string to danger file" do
+        allow(Danger::RubyGemsClient).to receive(:latest_danger_version) { "3.1.1" }
 
-      described_class.create_latest_version_file!
+        expect(IO).to receive(:write)
+
+        described_class.create_latest_version_file!
+      end
+    end
+
+    context "when doesn't has home permission" do
+      before { allow(described_class).to receive(:home_permission?) { false } }
+
+      it "writes a version string to danger file" do
+        expect(IO).not_to receive(:write)
+
+        described_class.create_latest_version_file!
+      end
     end
   end
 
