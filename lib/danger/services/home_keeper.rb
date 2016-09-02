@@ -14,11 +14,11 @@ module Danger
     end
 
     def self.create_latest_version_file!
-      IO.write danger_version_file_path, RubyGemsClient.get_latest_danger_version
+      IO.write danger_version_file_path, RubyGemsClient.latest_danger_version
     end
 
-    def self.is_danger_outdated?
-      return false if !File.exist?(danger_version_file_path)
+    def self.danger_outdated?
+      return false unless File.exist?(danger_version_file_path)
 
       Gem::Version.new(latest_danger_version) > Gem::Version.new(Danger::VERSION)
     end

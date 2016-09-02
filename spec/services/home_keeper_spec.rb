@@ -36,7 +36,7 @@ describe Danger::HomeKeeper do
 
   describe ".create_latest_version_file!" do
     it "writes a version string to danger file" do
-      allow(Danger::RubyGemsClient).to receive(:get_latest_danger_version) { "3.1.1" }
+      allow(Danger::RubyGemsClient).to receive(:latest_danger_version) { "3.1.1" }
 
       expect(IO).to receive(:write)
 
@@ -44,12 +44,12 @@ describe Danger::HomeKeeper do
     end
   end
 
-  describe ".is_danger_outdated?" do
+  describe ".danger_outdated?" do
     context "with dummy version" do
       it "returns false" do
         allow(IO).to receive(:read) { "0.0.0" }
 
-        result = described_class.is_danger_outdated?
+        result = described_class.danger_outdated?
 
         expect(result).to be false
       end
@@ -60,7 +60,7 @@ describe Danger::HomeKeeper do
         allow(IO).to receive(:read) { "10.0.0" }
         stub_const("Danger::VERSION", "1.0.0")
 
-        result = described_class.is_danger_outdated?
+        result = described_class.danger_outdated?
 
         expect(result).to be false
       end
@@ -71,7 +71,7 @@ describe Danger::HomeKeeper do
         allow(IO).to receive(:read) { "1.0.0" }
         stub_const("Danger::VERSION", "10.0.0")
 
-        result = described_class.is_danger_outdated?
+        result = described_class.danger_outdated?
 
         expect(result).to be false
       end

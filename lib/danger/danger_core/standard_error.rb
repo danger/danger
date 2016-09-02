@@ -66,7 +66,7 @@ module Danger
 
         m = "\n[!] "
         m << description
-        if HomeKeeper.is_danger_outdated?
+        if HomeKeeper.danger_outdated?
           m << ". Updating the Danger gem might fix the issue.\n"
         end
         m = m.red if m.respond_to?(:red)
