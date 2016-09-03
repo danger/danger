@@ -37,7 +37,7 @@ module Danger
     else
       false
     end
-  rescue Exception => _e
+  rescue StandardError => _e
     false
   end
 end

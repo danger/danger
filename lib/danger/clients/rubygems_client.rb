@@ -7,7 +7,7 @@ module Danger
       require "json"
       json = JSON.parse(Faraday.get(API_URL).body)
       json.fetch("version") { DUMMY_VERSION }
-    rescue Exception => _e
+    rescue StandardError => _e
       DUMMY_VERSION
     end
   end
