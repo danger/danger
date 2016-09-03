@@ -158,12 +158,15 @@ module Danger
     def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
-      repo = pr_json[:fromRef][:repository][:project][:links][:self].flat_map { |l| l[:href] }.first
+      repo = pr_json[:fromRef][:repository][:links][:self].flat_map { |l| l[:href] }.first
 
       paths = paths.map do |path|
+        path, line = path.split("#")
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        create_link("#{repo}/blob/#{commit}#{url_path}", text)
+        url_path.gsub!(" ", "%20")
+        line_ref = line ? "##{line}" : ""
+        create_link("#{repo}/browse/#{url_path}?at=#{commit}#{line_ref}", text)
       end
 
       return paths.first if paths.count < 2
