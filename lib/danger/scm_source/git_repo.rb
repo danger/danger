@@ -15,9 +15,10 @@ module Danger
     end
 
     def exec(string)
-      # See #476
-      ENV["LANG"] = "en_US.UTF-8"
-      `git #{string}`.strip
+      require "open3"
+      Open3.popen3(default_env, "git #{string}") do |_in, stdout, _err, _wait|
+        stdout.read.rstrip
+      end
     end
 
     def head_commit
@@ -26,6 +27,12 @@ module Danger
 
     def origins
       exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1].chomp
+    end
+
+    private
+
+    def default_env
+      { "LANG" => "en_US.UTF-8" }
     end
   end
 end
