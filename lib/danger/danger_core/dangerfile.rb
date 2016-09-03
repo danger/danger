@@ -123,12 +123,9 @@ module Danger
           when :pr_json
             value = "[Skipped]"
 
-          when :pr_body
-            value = plugin.send(method)
-            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")
-
           else
             value = plugin.send(method)
+            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")  if value.kind_of?(String)
             # So that we either have one value per row
             # or we have [] for an empty array
             value = value.join("\n") if value.kind_of?(Array) && value.count > 0
@@ -158,7 +155,9 @@ module Danger
 
       ui.section("Info:") do
         ui.puts
-        ui.puts Terminal::Table.new(params)
+        table = Terminal::Table.new(params)
+        table.align_column(0, :right)
+        ui.puts table
         ui.puts
       end
     end
