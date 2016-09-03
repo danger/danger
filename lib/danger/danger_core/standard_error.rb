@@ -63,10 +63,11 @@ module Danger
     def message
       @message ||= begin
         trace_line, description = parse_line_number_from_description
+        latest_version = Danger.danger_outdated?
 
         m = "\n[!] "
         m << description
-        if latest_version = Danger.danger_outdated?
+        if latest_version
           m << upgrade_message(latest_version)
         end
         m = m.red if m.respond_to?(:red)
