@@ -13,11 +13,13 @@ require "json"
 
 require "support/gitlab_helper"
 require "support/github_helper"
+require "support/bitbucket_server_helper"
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
   config.include Danger::Support::GitLabHelper, host: :gitlab
   config.include Danger::Support::GitHubHelper, host: :github
+  config.include Danger::Support::BitbucketServerHelper, host: :bitbucket_server
   config.run_all_when_everything_filtered = true
   config.filter_run focus: true
 end

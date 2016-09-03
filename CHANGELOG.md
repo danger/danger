@@ -1,5 +1,6 @@
 ## master
 
+* Add Bitbucket Server aka. Stash integration - heeaad
 * Deprecated `import_dangerfile(String)` in favor of `import_dangerfile(Hash)` - dblock
 
   The new `import_dangerfile` method supports loading Dangerfile from Github.
