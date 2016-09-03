@@ -1,6 +1,28 @@
 ## master
 
 * Add Bitbucket Server aka. Stash integration - heeaad
+* Deprecated `import_dangerfile(String)` in favor of `import_dangerfile(Hash)` - dblock
+
+  The new `import_dangerfile` method supports loading Dangerfile from Github.
+
+  ```ruby
+  danger.import_dangerfile github: 'ruby-grape/danger'
+  ```
+
+  You can package a Dangerfile in a gem, add it to Gemfile and import it.
+
+  ```ruby
+  danger.import_dangerfile gem: 'ruby-grape-danger'
+  ```
+
+  Use a local path for testing Dangerfile changes.
+
+  ```ruby
+  danger.import_dangerfile path: '/Users/me/source/ruby-grape/danger'
+  ```
+
+  See [#504](https://github.com/danger/danger/pull/504) for details.
+* Prints updated danger message when installed danger is outdated - JuanitoFatas
 
 ## 3.1.1
 
@@ -18,7 +40,7 @@
 ## 3.0.3
 
 * Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
-* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin. - vittoriom
+* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin - vittoriom
 
 ## 3.0.2
 
