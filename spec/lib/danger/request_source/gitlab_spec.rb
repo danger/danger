@@ -172,7 +172,7 @@ describe Danger::RequestSources::GitLab, host: :gitlab do
             messages: [],
             previous_violations: {
               warning: [],
-              error: ["Test error"],
+              error: violations(["Test error"]),
               message: []
             },
             template: "gitlab"

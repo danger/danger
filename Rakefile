@@ -28,3 +28,8 @@ task :spec_docs do
   sh "danger plugins lint #{core_plugins.join ' '}"
   sh "danger systems ci_docs"
 end
+
+desc "I do this so often now, better to just handle it here"
+task :guard do |task|
+  sh "bundle exec guard"
+end

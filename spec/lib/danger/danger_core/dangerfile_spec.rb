@@ -60,9 +60,9 @@ describe Danger::Dangerfile, host: :github do
 
       dm.parse Pathname.new(""), code
 
-      expect(dm).to receive(:print_list).with("Errors:".red, ["Another error", "An error"])
-      expect(dm).to receive(:print_list).with("Warnings:".yellow, ["Another warning", "A warning"])
-      expect(dm).to receive(:print_list).with("Messages:", ["A message"])
+      expect(dm).to receive(:print_list).with("Errors:".red, violations(["Another error", "An error"], sticky: true))
+      expect(dm).to receive(:print_list).with("Warnings:".yellow, violations(["Another warning", "A warning"], sticky: true))
+      expect(dm).to receive(:print_list).with("Messages:", violations(["A message"], sticky: true))
 
       dm.print_results
     end

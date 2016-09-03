@@ -1,6 +1,6 @@
 # coding: utf-8
 require "danger/helpers/comments_helper"
-require "danger/danger_core/violation"
+require "danger/danger_core/messages/violation"
 
 SINGLE_TABLE_COMMENT = <<-EOS.freeze
   Other comment content
@@ -24,9 +24,7 @@ MULTI_TABLE_COMMENT = <<-EOS.freeze
     <td>
       <g-emoji alias="no_entry_sign" fallback-src="https://example.com/1f6ab.png">🚫</g-emoji
     </td>
-    <td data-sticky="true"><p>Please include a CHANGELOG entry.
-    You can find it at
-    <a href="https://github.com/danger/danger/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</p>
+    <td data-sticky="true"><p>Please include a CHANGELOG entry. You can find it at <a href="https://github.com/danger/danger/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</p>
     </td></tr></tbody>
   </table>
   <table>
@@ -113,7 +111,9 @@ describe Danger::Helpers::CommentsHelper do
       violations = dummy.violations_from_table(SINGLE_TABLE_COMMENT)
 
       expect(violations.size).to be(1)
-      expect(violations.first).to eq("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>")
+      expect(violations.first).to eq(
+        violation("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
+      )
     end
   end
 
@@ -125,8 +125,10 @@ describe Danger::Helpers::CommentsHelper do
       expect(violations[:warning].size).to be(1)
       expect(violations[:message]).to be_nil
 
-      expect(violations[:error][0]).to include("Please include a CHANGELOG")
-      expect(violations[:warning][0]).to include("External contributor has edited")
+      expect(violations[:error][0]).to eq(
+        violation("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
+      )
+      expect(violations[:warning][0]).to eq(violation("<p>External contributor has edited the Gemspec</p>", sticky: true))
     end
 
     it "handles data-danger-table to identify danger tables" do
@@ -136,14 +138,14 @@ describe Danger::Helpers::CommentsHelper do
       expect(violations[:warning]).to be_nil
       expect(violations[:message]).to be_nil
 
-      expect(violations[:error][0]).to include("Please include a CHANGELOG")
+      expect(violations[:error].first.message).to include("Please include a CHANGELOG")
     end
   end
 
   describe "#table" do
-    let(:violation_1) { Danger::Violation.new("**Violation 1**", false) }
+    let(:violation_1) { violation("**Violation 1**") }
     let(:violation_2) do
-      Danger::Violation.new("A [link](https://example.com)", true)
+      violation("A [link](https://example.com)", sticky: true)
     end
 
     it "produces table data" do
@@ -192,10 +194,10 @@ describe Danger::Helpers::CommentsHelper do
   describe "#generate_comment" do
     it "produces the expected comment" do
       comment = dummy.generate_comment(
-        warnings: [Danger::Violation.new("This is a warning", false)],
-        errors: [Danger::Violation.new("This is an error", true)],
-        messages: [Danger::Violation.new("This is a message", false)],
-        markdowns: ["*Raw markdown*"],
+        warnings: [violation("This is a warning")],
+        errors: [violation("This is an error", sticky: true)],
+        messages: [violation("This is a message")],
+        markdowns: [markdown("*Raw markdown*")],
         danger_id: "my_danger_id",
         template: "github"
       )
@@ -216,7 +218,7 @@ describe Danger::Helpers::CommentsHelper do
 
     it "produces the expected comment when there are newlines" do
       comment = dummy.generate_comment(
-        warnings: [Danger::Violation.new("This is a warning\nin two lines", false)],
+        warnings: [violation("This is a warning\nin two lines")],
         errors: [],
         messages: [],
         markdowns: [],
@@ -265,14 +267,14 @@ describe Danger::Helpers::CommentsHelper do
     end
 
     it "supports markdown code below the summary table" do
-      result = dummy.generate_comment(warnings: violations(["ups"]), markdowns: ["### h3"])
+      result = dummy.generate_comment(warnings: violations(["ups"]), markdowns: violations(["### h3"]))
       expect(result.gsub(/\s+/, "")).to eq(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
     end
 
     it "supports markdown only without a table" do
-      result = dummy.generate_comment(markdowns: ["### h3"])
+      result = dummy.generate_comment(markdowns: violations(["### h3"]))
       expect(result.gsub(/\s+/, "")).to eq(
         '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
       )
@@ -317,26 +319,26 @@ describe Danger::Helpers::CommentsHelper do
     end
 
     it "deduplicates previous violations" do
-      previous_violations = { error: ["an error", "an error"] }
+      previous_violations = { error: violations(["an error", "an error"]) }
       result = dummy.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
       expect(result.scan("an error").size).to eq(1)
     end
 
     it "includes a random compliment" do
-      previous_violations = { error: ["an error"] }
+      previous_violations = { error: violations(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
       expect(result).to match(/:white_check_mark: \w+?/)
     end
 
     it "crosses resolved violations and changes the title" do
-      previous_violations = { error: ["an error"] }
+      previous_violations = { error: violations(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">:white_check_mark:')
       expect(result.gsub(/\s+/, "")).to include('<td>:white_check_mark:</td><tddata-sticky="true"><del>anerror</del></td>')
     end
 
     it "uncrosses violations that were on the list and happened again" do
-      previous_violations = { error: ["an error"] }
+      previous_violations = { error: violations(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: violations(["an error"]), messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to eq(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
@@ -344,7 +346,7 @@ describe Danger::Helpers::CommentsHelper do
     end
 
     it "counts only unresolved violations on the title" do
-      previous_violations = { error: ["an error"] }
+      previous_violations = { error: violations(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: violations(["another error"]),
                                    messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th>')
@@ -362,13 +364,13 @@ describe Danger::Helpers::CommentsHelper do
     end
 
     it "sets data-sticky to true when a violation is sticky" do
-      sticky_warning = Danger::Violation.new("my warning", true)
+      sticky_warning = Danger::Violation.new("my warning", true, nil, nil)
       result = dummy.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to include('tddata-sticky="true"')
     end
 
     it "sets data-sticky to false when a violation is not sticky" do
-      non_sticky_warning = Danger::Violation.new("my warning", false)
+      non_sticky_warning = Danger::Violation.new("my warning", false, nil, nil)
       result = dummy.generate_comment(warnings: [non_sticky_warning], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to include('tddata-sticky="false"')
     end
@@ -399,26 +401,30 @@ describe Danger::Helpers::CommentsHelper do
 
     it "parses a comment with error" do
       comment = comment_fixture("comment_with_error")
-      violations = dummy.parse_comment(comment)
-      expect(violations).to eq({ error: ["Some error"] })
+      results = dummy.parse_comment(comment)
+      expect(results[:error].map(&:message)).to eq(["Some error"])
     end
 
     it "parses a comment with error and warnings" do
       comment = comment_fixture("comment_with_error_and_warnings")
-      violations = dummy.parse_comment(comment)
-      expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+      results = dummy.parse_comment(comment)
+
+      expect(results[:error].map(&:message)).to eq(["Some error"])
+      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
     end
 
     it "ignores non-sticky violations when parsing a comment" do
       comment = comment_fixture("comment_with_non_sticky")
-      violations = dummy.parse_comment(comment)
-      expect(violations).to eq({ warning: ["First warning"] })
+      results = dummy.parse_comment(comment)
+      expect(results[:warning].map(&:message)).to eq(["First warning"])
     end
 
     it "parses a comment with error and warnings removing strike tag" do
       comment = comment_fixture("comment_with_resolved_violation")
-      violations = dummy.parse_comment(comment)
-      expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+      results = dummy.parse_comment(comment)
+
+      expect(results[:error].map(&:message)).to eq(["Some error"])
+      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
     end
   end
 end

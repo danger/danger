@@ -2,7 +2,7 @@
 require "danger/request_source/request_source"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
-require "danger/danger_core/violation"
+require "danger/danger_core/messages/violation"
 
 describe Danger::RequestSources::GitHub, host: :github do
   describe "the github host" do
@@ -100,23 +100,6 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
     end
 
-    # TODO: Move to the plugin
-    #
-    xdescribe "DSL Attributes" do
-      it "sets the right commit sha" do
-        @g.fetch_details
-
-        expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
-        expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
-        expect(@g.pr_json[:base][:ref]).to eql(@g.branch_for_merge)
-      end
-
-      it "sets the right labels" do
-        @g.fetch_details
-        expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
-      end
-    end
-
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
         message = @g.generate_description(warnings: [], errors: [])
@@ -192,6 +175,8 @@ describe Danger::RequestSources::GitHub, host: :github do
         comments = [{ body: "generated_by_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
@@ -199,18 +184,109 @@ describe Danger::RequestSources::GitHub, host: :github do
       it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
         comments = [{ body: "generated_by_another_danger", id: "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
-
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
+
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
         @g.update_pull_request!(warnings: [], errors: [], messages: [], danger_id: "another_danger")
       end
 
-      it "updates the comment if danger doesnt need to say anything but there are sticky violations" do
-        comments = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g).to receive(:parse_comment).and_return({ errors: ["an error"] })
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+      # it "updates the comment if danger doesnt need to say anything but there are sticky violations" do
+      #   comments = [{ body: "generated_by_danger", id: "12" }]
+      #   allow(@g).to receive(:parse_comment).and_return({ errors: ["an error"] })
+      #   allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
+      #   expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
+      #   @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      # end
+    end
+
+    describe "#parse_message_from_row" do
+      it "handles pulling out links that include the file / line when in the main Danger comment" do
+        body = '<a href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1">CHANGELOG.md#L1</a> - Testing inline docs'
+
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("- Testing inline docs")
+      end
+
+      it "handles pulling out file info from an inline Danger comment" do
+        body = '<span data-href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1"/>Testing inline docs'
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("Testing inline docs")
+      end
+    end
+
+    let(:main_issue_id) { 76_535_362 }
+    let(:inline_issue_id_1) { 76_537_315 }
+    let(:inline_issue_id_2) { 76_537_316 }
+
+    describe "inline issues" do
+      before do
+        issues = JSON.parse(fixture("github_api/inline_comments"), symbolize_names: true)
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        diff = diff_fixture("github_api/inline_comments_pr_diff")
+        allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff)
+
+        @g.fetch_details
+        allow(@g).to receive(:submit_pull_request_status!)
+      end
+
+      it "deletes all inline comments if there are no violations at all" do
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      end
+
+      it "adds new comments inline" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
+      it "crosses out sticky comments" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
+      it "removes inline comments if they are not included" do
+        issues = [{ body: "generated_by_another_danger", id: "12" }]
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        # Main
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        # Inline Issues
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
     end
   end

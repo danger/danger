@@ -204,7 +204,8 @@ module Danger
 
     def print_results
       status = status_report
-      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count.zero?
+      violations = violation_report
+      return if (violations[:errors] + violations[:warnings] + violations[:messages] + status[:markdowns]).count.zero?
 
       ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|
@@ -217,14 +218,15 @@ module Danger
                   else
                     formatted
                   end
-          rows = status[key]
+          rows = violations[key]
           print_list(title, rows)
         end
 
         if status[:markdowns].count > 0
-          ui.section("Markdown:") do
+          ui.title("Markdown:") do
             status[:markdowns].each do |current_markdown|
-              ui.puts current_markdown
+              ui.puts "#{current_markdown.file}\#L#{current_markdown.line}" if current_markdown.file && current_markdown.line
+              ui.puts current_markdown.message
             end
           end
         end
@@ -236,7 +238,13 @@ module Danger
     def print_list(title, rows)
       ui.title(title) do
         rows.each do |row|
-          ui.puts("- [ ] #{row}")
+          if row.file && row.line
+            path = "#{row.file}\#L#{row.line}: "
+          else
+            path = ""
+          end
+
+          ui.puts("- [ ] #{path}#{row.message}")
         end
       end unless rows.empty?
     end
