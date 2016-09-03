@@ -21,6 +21,7 @@
   ```
 
   See [#504](https://github.com/danger/danger/pull/504) for details.
+* Prints updated danger message when installed danger is outdated - JuanitoFatas
 
 ## 3.1.1
 
