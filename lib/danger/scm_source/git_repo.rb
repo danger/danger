@@ -4,20 +4,25 @@ require "git"
 
 module Danger
   class GitRepo
-    attr_accessor :diff, :log
+    attr_accessor :diff, :log, :folder
 
     def diff_for_folder(folder, from: "master", to: "HEAD")
-      repo = Git.open folder
+      self.folder = folder
+      repo = Git.open self.folder
 
       merge_base = repo.merge_base(from, to)
+      ensure_merge_base_exists!(merge_base)
+
       self.diff = repo.diff(merge_base.to_s, to)
       self.log = repo.log.between(from, to)
     end
 
     def exec(string)
       require "open3"
-      Open3.popen2(default_env, "git #{string}") do |_stdin, stdout, _wait_thr|
-        stdout.read.rstrip
+      Dir.chdir(self.folder || ".") do
+        Open3.popen2(default_env, "git #{string}") do |_stdin, stdout, _wait_thr|
+          stdout.read.rstrip
+        end
       end
     end
 
@@ -33,6 +38,10 @@ module Danger
 
     def default_env
       { "LANG" => "en_US.UTF-8" }
+    end
+
+    def ensure_merge_base_exists!(commitish)
+      exec "fetch" if exec("--no-pager show #{commitish}").empty?
     end
   end
 end
