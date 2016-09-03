@@ -22,6 +22,24 @@ describe Danger do
     end
   end
 
+  describe ".gem_path" do
+    context "when danger gem found" do
+      it "returns danger gem path" do
+        result = Danger.gem_path
+
+        expect(result).to match(/danger/)
+      end
+    end
+
+    context "when danger gem folder not found" do
+      it "raises an error" do
+        allow(Gem::Specification).to receive(:find_all_by_name) { [] }
+
+        expect { Danger.gem_path }.to raise_error("Couldn't find gem directory for 'danger'")
+      end
+    end
+  end
+
   describe ".danger_outdated?" do
     it "latest danger > local danger version" do
       allow(Danger::RubyGemsClient).to receive(:latest_danger_version) { "2.0.0" }

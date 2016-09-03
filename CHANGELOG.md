@@ -63,6 +63,7 @@
   See [#504](https://github.com/danger/danger/pull/504) for details.
 * Prints updated danger message when installed danger is outdated - JuanitoFatas
 * Remove a variable assignment in comments_helper.rb - JuanitoFatas
+* Minor improvement to Danger.gem_path - JuanitoFatas
 
 ## 3.1.1
 
