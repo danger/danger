@@ -1,5 +1,7 @@
 ## master
 
+* Improved the width handling for the output of the `danger local` table - orta 
+
 ## 3.2.0
 
 * add `file` and `line` optional parameters to methods on the messaging plugin - champo
