@@ -77,6 +77,17 @@ describe Danger::Dangerfile::DSL, host: :github do
       expect(@dm.status_report[:messages]).to eq(["OK"])
     end
 
+    it "gitlab: 'repo/name'" do
+      outer_dangerfile = "danger.import_dangerfile(gitlab: 'example/example')"
+      inner_dangerfile = "message('OK')"
+
+      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
+      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
+
+      @dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(@dm.status_report[:messages]).to eq(["OK"])
+    end
+
     it "path: 'path'" do
       outer_dangerfile = "danger.import_dangerfile(path: 'foo/bar')"
       inner_dangerfile = "message('OK')"

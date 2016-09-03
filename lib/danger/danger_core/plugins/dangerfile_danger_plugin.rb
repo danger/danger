@@ -1,11 +1,8 @@
 require "danger/plugin_support/plugin"
 
 module Danger
-  # One way to support internal plugins is via `plugin.import` this gives you
-  # the chance to quickly iterate without the need for building rubygems. As such,
-  # it does not have the stringent rules around documentation expected of a public plugin.
-  # It's worth noting, that you can also have plugins inside `./danger_plugins` and they
-  # will be automatically imported into your Dangerfile at launch.
+  # A way to interact with Danger herself. Offering APIs to import plugins,
+  # and Dangerfiles from muliple sources.
   #
   # @example Import a plugin available over HTTP
   #
@@ -19,6 +16,18 @@ module Danger
   # @example Import all files inside a folder
   #
   #          danger.import_plugin("danger/plugins/*.rb")
+  #
+  # @example Run a Dangerfile from inside a sub-folder
+  #
+  #          danger.import_dangerfile(file: "danger/Dangerfile.private")
+  #
+  # @example Run a Dangerfile from inside a gem
+  #
+  #          danger.import_dangerfile(gem: "ruby-grape-danger")
+  #
+  # @example Run a Dangerfile from inside a repo
+  #
+  #          danger.import_dangerfile(gitlab: "ruby-grape/danger")
   #
   # @see  danger/danger
   # @tags core, plugins
@@ -53,7 +62,8 @@ module Danger
     # Import a Dangerfile.
     #
     # @param    [Hash] opts
-    # @option opts [String] :github Github path
+    # @option opts [String] :github GitHub repo
+    # @option opts [String] :gitlab GitLab repo
     # @option opts [String] :gem Gem name
     # @option opts [String] :path Path to Dangerfile
     # @return   [void]
@@ -62,8 +72,8 @@ module Danger
         warn "Use `import_dangerfile(github: '#{opts}')` instead of `import_dangerfile '#{opts}'`."
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
-        if opts.key?(:github)
-          import_dangerfile_from_github(opts[:github])
+        if opts.key?(:github) || opts.key?(:gitlab)
+          import_dangerfile_from_github(opts[:github] || opts[:gitlab])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
