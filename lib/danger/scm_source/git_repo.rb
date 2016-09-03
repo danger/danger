@@ -15,7 +15,9 @@ module Danger
     end
 
     def exec(string)
-      `LANG=en_US.UTF-8 git #{string}`.strip
+      # See #476
+      ENV["LANG"] = "en_US.UTF-8"
+      `git #{string}`.strip
     end
 
     def head_commit
