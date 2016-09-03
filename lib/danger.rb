@@ -18,13 +18,14 @@ Dir[File.expand_path("danger/*source/*.rb", File.dirname(__FILE__))].each do |fi
 end
 
 module Danger
+  GEM_NAME = "danger".freeze
+
   # @return [String] The path to the local gem directory
   def self.gem_path
-    gem_name = "danger"
-    unless Gem::Specification.find_all_by_name(gem_name).any?
+    if Gem::Specification.find_all_by_name(GEM_NAME).empty?
       raise "Couldn't find gem directory for 'danger'"
     end
-    return Gem::Specification.find_by_name(gem_name).gem_dir
+    return Gem::Specification.find_by_name(GEM_NAME).gem_dir
   end
 
   # @return [String] Latest version of Danger on https://rubygems.org
