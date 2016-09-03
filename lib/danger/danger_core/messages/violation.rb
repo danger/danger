@@ -19,6 +19,10 @@ module Danger
         other.line == line
     end
 
+    def inline?
+      return (file.nil? && line.nil?) == false
+    end
+
     def to_s
       extra = []
       extra << "sticky: true" if sticky

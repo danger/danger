@@ -100,39 +100,44 @@ module Danger
           previous_violations = parse_comment(comment)
         end
 
-        if previous_violations.empty? && (warnings + errors + messages + markdowns).empty?
+        main_violations = (warnings + errors + messages + markdowns).reject(&:inline?)
+        inline_violations = (warnings + errors + messages + markdowns).select(&:inline?)
+
+        if previous_violations.empty? && main_violations.empty?
           # Just remove the comment, if there's nothing to say.
           delete_old_comments!(danger_id: danger_id)
-        else
+        end
 
-          cmp = proc do |a, b|
-            next -1 unless a.file
-            next 1 unless b.file
+        cmp = proc do |a, b|
+          next -1 unless a.file
+          next 1 unless b.file
 
-            next a.line <=> b.line if a.file == b.file
-            next a.file <=> b.file
-          end
+          next a.line <=> b.line if a.file == b.file
+          next a.file <=> b.file
+        end
 
-          # Sort to group inline comments by file
-          # We copy because we need to mutate this arrays for inlines
-          comment_warnings = warnings.sort(&cmp)
-          comment_errors = errors.sort(&cmp)
-          comment_messages = messages.sort(&cmp)
-          comment_markdowns = markdowns.sort(&cmp)
+        # Sort to group inline comments by file
+        # We copy because we need to mutate this arrays for inlines
+        comment_warnings = warnings.sort(&cmp)
+        comment_errors = errors.sort(&cmp)
+        comment_messages = messages.sort(&cmp)
+        comment_markdowns = markdowns.sort(&cmp)
 
-          submit_inline_comments!(warnings: comment_warnings,
-                                    errors: comment_errors,
-                                  messages: comment_messages,
-                                 markdowns: comment_markdowns,
-                       previous_violations: previous_violations,
-                                 danger_id: danger_id)
+        submit_inline_comments!(warnings: comment_warnings,
+                                  errors: comment_errors,
+                                messages: comment_messages,
+                                markdowns: comment_markdowns,
+                      previous_violations: previous_violations,
+                                danger_id: danger_id)
 
+        # If there are still violations to show
+        unless main_violations.empty?
           body = generate_comment(warnings: comment_warnings,
                                     errors: comment_errors,
                                   messages: comment_messages,
-                                 markdowns: comment_markdowns,
-                       previous_violations: previous_violations,
-                                 danger_id: danger_id,
+                                  markdowns: comment_markdowns,
+                        previous_violations: previous_violations,
+                                  danger_id: danger_id,
                                   template: "github")
 
           if editable_comments.empty?
@@ -194,12 +199,8 @@ module Danger
       end
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        filter = proc do |v|
-          v.file && v.line
-        end
-
         # Avoid doing any fetchs if there's no inline comments
-        return if (warnings + errors + messages).select(&filter).empty?
+        return if (warnings + errors + messages).select(&:inline?).empty?
 
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
