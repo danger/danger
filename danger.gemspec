@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = Danger::DESCRIPTION
   spec.description   = "Stop Saying 'You Forgot To…' in Code Review"
-  spec.homepage      = "http://github.com/danger/danger"
+  spec.homepage      = "https://github.com/danger/danger"
 
   spec.files         = Dir["lib/**/*"] + %w(bin/danger README.md LICENSE)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
