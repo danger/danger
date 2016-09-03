@@ -40,7 +40,7 @@ module Danger
     # @return   [void]
     #
     def import_plugin(path_or_url)
-      raise "`import` requires a string" unless path_or_url.kind_of?(String)
+      raise "`import_plugin` requires a string" unless path_or_url.kind_of?(String)
 
       if path_or_url.start_with?("http")
         import_url(path_or_url)
@@ -50,21 +50,76 @@ module Danger
     end
 
     # @!group Danger
-    # Download and execute a remote Dangerfile.
+    # Import a Dangerfile.
     #
-    # @param    [String] repo slug
-    #           A slug that represents the repo where the Dangerfile is.
+    # @param    [Hash] opts
+    # @option opts [String] :github Github path
+    # @option opts [String] :gem Gem name
+    # @option opts [String] :path Path to Dangerfile
     # @return   [void]
-    #
-    def import_dangerfile(slug)
-      raise "`import` requires a string" unless slug.kind_of?(String)
-      org, repo = slug.split("/")
-      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: "master", path: "Dangerfile")
-      local_path = import_url(download_url)
-      dangerfile.parse(Pathname.new(local_path))
+    def import_dangerfile(opts)
+      if opts.kind_of?(String)
+        warn "Use `import_dangerfile(github: '#{opts}')` instead of `import_dangerfile '#{opts}'`."
+        import_dangerfile_from_github(opts)
+      elsif opts.kind_of?(Hash)
+        if opts.key?(:github)
+          import_dangerfile_from_github(opts[:github])
+        elsif opts.key?(:path)
+          import_dangerfile_from_path(opts[:path])
+        elsif opts.key?(:gem)
+          import_dangerfile_from_gem(opts[:gem])
+        else
+          raise "`import` requires a Hash with either :github or :gem"
+        end
+      else
+        raise "`import` requires a Hash" unless opts.kind_of?(Hash)
+      end
     end
 
     private
+
+    # @!group Danger
+    # Read and execute a local Dangerfile.
+    #
+    # @param    [String] path
+    #           A path to a Dangerfile.
+    # @return   [void]
+    #
+    def import_dangerfile_from_path(path)
+      raise "`import_dangerfile_from_path` requires a string" unless path.kind_of?(String)
+      local_path = File.join(path, "Dangerfile")
+      @dangerfile.parse(Pathname.new(local_path))
+    end
+
+    # @!group Danger
+    # Read and execute a Dangerfile from a gem.
+    #
+    # @param    [String] name
+    #           The name of the gem that contains a Dangerfile.
+    # @return   [void]
+    #
+    def import_dangerfile_from_gem(name)
+      raise "`import_dangerfile_from_gem` requires a string" unless name.kind_of?(String)
+      spec = Gem::Specification.find_by_name(name)
+      import_dangerfile_from_path(spec.gem_dir)
+    rescue Gem::MissingSpecError
+      raise "`import_dangerfile_from_gem` tried to load `#{name}` and failed, did you forget to include it in your Gemfile?"
+    end
+
+    # @!group Danger
+    # Download and execute a remote Dangerfile.
+    #
+    # @param    [String] slug
+    #           A slug that represents the repo where the Dangerfile is.
+    # @return   [void]
+    #
+    def import_dangerfile_from_github(slug)
+      raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
+      org, repo = slug.split("/")
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: "master", path: "Dangerfile")
+      local_path = download(download_url)
+      @dangerfile.parse(Pathname.new(local_path))
+    end
 
     # @!group Plugins
     # Download a local or remote plugin or Dangerfile.

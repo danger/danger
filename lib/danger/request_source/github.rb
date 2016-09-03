@@ -101,8 +101,6 @@ module Danger
         end
 
         main_violations = (warnings + errors + messages + markdowns).reject(&:inline?)
-        inline_violations = (warnings + errors + messages + markdowns).select(&:inline?)
-
         if previous_violations.empty? && main_violations.empty?
           # Just remove the comment, if there's nothing to say.
           delete_old_comments!(danger_id: danger_id)

@@ -1,13 +1,48 @@
-## Master
+## master
+
+* Add Bitbucket Server aka. Stash integration - heeaad
+* Deprecated `import_dangerfile(String)` in favor of `import_dangerfile(Hash)` - dblock
+
+  The new `import_dangerfile` method supports loading Dangerfile from Github.
+
+  ```ruby
+  danger.import_dangerfile github: 'ruby-grape/danger'
+  ```
+
+  You can package a Dangerfile in a gem, add it to Gemfile and import it.
+
+  ```ruby
+  danger.import_dangerfile gem: 'ruby-grape-danger'
+  ```
+
+  Use a local path for testing Dangerfile changes.
+
+  ```ruby
+  danger.import_dangerfile path: '/Users/me/source/ruby-grape/danger'
+  ```
+
+  See [#504](https://github.com/danger/danger/pull/504) for details.
+* Prints updated danger message when installed danger is outdated - JuanitoFatas
+
+## 3.1.1
+
+* Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
+* Remove a variable assignment in comments_helper.rb - JuanitoFatas
+
+## 3.1.0
 
 * add `file` and `line` optional parameters to methods on the messaging plugin
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
+* Crash fix for `bundle exec danger` - hanneskaeufler
+* Fix Buildkite repo slug URL generation - phillfarrugia
+* Added support for [Bitrise](http://bitrise.io) - kylejm
+* Set LANG variable to en_US.UTF-8 before running git commands - bogren
 
 ## 3.0.3
 
 * Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
-* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin. - vittoriom
+* Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin - vittoriom
 
 ## 3.0.2
 
@@ -23,13 +58,13 @@
 
 * GitLab support - k0nserv / deanpcmad / hjanuschka
 
-  This started back in February, and is now shipping. 
+  This started back in February, and is now shipping.
   Documentation has been updated on the [Getting Started](http://danger.systems/guides/getting_started.html#creating-a-bot-account-for-danger-to-use) for those interested in the setup.
 
   This adds a new object to the DSL, `gitlab` which offers the following API:
 
   ```ruby
-  gitlab.mr_title # The title of the Merge Request 
+  gitlab.mr_title # The title of the Merge Request
 
   gitlab.mr_body # The body text of the Merge Request
 
@@ -46,7 +81,7 @@
   gitlab.mr_json # The hash that represents the MR's JSON
   api # Provides access to the GitLab API client used inside Danger
 
-  gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository. 
+  gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository.
   ```
 
   A lot of thanks for the GitLab team also, who helped handle updates for one of our dependencies.
@@ -57,7 +92,7 @@
 
   The implicit support was a feature that would check for an `[org]/danger`
   repo, and automatically parse that Dangerfile. Think it was a bit too magic,
-  and the only person who I know is using it, said they think it should have 
+  and the only person who I know is using it, said they think it should have
   been this way from the start. I'm cool with this.
 
   To handle the replacement, we've added a new object to the DSL.
@@ -81,7 +116,7 @@
   I also removed `plugin.download` - couldn't see a use for it inside a Dangerfile. Happy
   to change that, if it's being used it.
 
-* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv  
+* Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv
   Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
   comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
 
@@ -91,7 +126,7 @@
 
 ## 2.1.5
 
-* Lols, more Circle CI stuff, and importantly - more documentation - orta 
+* Lols, more Circle CI stuff, and importantly - more documentation - orta
 
 ## 2.1.4
 

@@ -12,6 +12,10 @@ module Danger
       env.key? "DANGER_USE_LOCAL_GIT"
     end
 
+    def self.validates_as_pr?(_env)
+      false
+    end
+
     def git
       @git ||= GitRepo.new
     end

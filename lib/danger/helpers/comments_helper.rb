@@ -76,7 +76,7 @@ module Danger
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
         resolved_violations = previous_violations.reject do |pv|
-          content.select { |v| messages_are_equivalent(v, pv) }.count > 0
+          content.count { |v| messages_are_equivalent(v, pv) } > 0
         end
 
         resolved_messages = resolved_violations.map(&:message).uniq
@@ -147,9 +147,21 @@ module Danger
       end
 
       def random_compliment
-        compliment = ["Well done.", "Congrats.", "Woo!",
-                      "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."]
-        compliment.sample
+        ["Well done.", "Congrats.", "Woo!",
+         "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."].sample
+      end
+
+      def character_from_emoji(emoji)
+        emoji.delete! ":"
+        if emoji == "no_entry_sign"
+          "🚫"
+        elsif emoji == "warning"
+          "⚠️"
+        elsif emoji == "book"
+          "📖"
+        elsif emoji == "white_check_mark"
+          "✅"
+        end
       end
 
       private
