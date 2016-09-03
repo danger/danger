@@ -1,3 +1,5 @@
+## master
+
 ## 3.2.0
 
 * add `file` and `line` optional parameters to methods on the messaging plugin - champo
@@ -13,10 +15,10 @@
  will have the comments added inline. This makes changes to a lot of the logic inside the github
  API, so we'd love bug reports (or PRs! :D) on things like "I expected this comment to be deleted."
 
- On other platforms, it will ignore the `file` and `line` parameters. 
+ On other platforms, it will ignore the `file` and `line` parameters.
 
 * Add Bitbucket Server aka. Stash integration - heeaad
-  
+
   This adds a new object to the DSL, `bitbucket_server` which offers the following API:
 
   ```ruby
@@ -117,7 +119,7 @@
   gitlab.head_commit # The head commit to which the MR is requesting to be merged from
 
   gitlab.mr_json # The hash that represents the MR's JSON
-  
+
   gitlab.api # Provides access to the GitLab API client used inside Danger
 
   gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository.
