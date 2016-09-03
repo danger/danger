@@ -1,6 +1,45 @@
-## master
+## 3.2.0
+
+* add `file` and `line` optional parameters to methods on the messaging plugin - champo
+
+ This means that if you'd like to comment specifically on a line in a file inside the diff, you
+ can use an API like:
+
+ ```ruby
+ message("Please add your name to the CHANGELOG", file: "CHANGELOG.md", line: 4)
+ ```
+
+ If you are using GitHub (who are the only ones with an API that supports line comments) you
+ will have the comments added inline. This makes changes to a lot of the logic inside the github
+ API, so we'd love bug reports (or PRs! :D) on things like "I expected this comment to be deleted."
+
+ On other platforms, it will ignore the `file` and `line` parameters. 
 
 * Add Bitbucket Server aka. Stash integration - heeaad
+  
+  This adds a new object to the DSL, `bitbucket_server` which offers the following API:
+
+  ```ruby
+  bitbucket_server.pr_title # The title of the Pull Request
+
+  bitbucket_server.mr_body # The body text of the Pull Request
+
+  bitbucket_server.mr_author # The username of the author of the Pull Request
+
+  bitbucket_server.mr_labels # The labels assigned to the Pull Request
+
+  bitbucket_server.branch_for_merge # The branch to which the PR is going to be merged into
+
+  bitbucket_server.base_commit # The base commit to which the PR is going to be merged as a parent
+
+  bitbucket_server.head_commit # The head commit to which the PR is requesting to be merged from
+
+  bitbucket_server.mr_json # The hash that represents the PR's JSON
+
+  bitbucket_server.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository.
+  ```
+
+
 * Deprecated `import_dangerfile(String)` in favor of `import_dangerfile(Hash)` - dblock
 
   The new `import_dangerfile` method supports loading Dangerfile from Github.
@@ -31,7 +70,6 @@
 
 ## 3.1.0
 
-* add `file` and `line` optional parameters to methods on the messaging plugin
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
 * Crash fix for `bundle exec danger` - hanneskaeufler
@@ -79,7 +117,8 @@
   gitlab.head_commit # The head commit to which the MR is requesting to be merged from
 
   gitlab.mr_json # The hash that represents the MR's JSON
-  api # Provides access to the GitLab API client used inside Danger
+  
+  gitlab.api # Provides access to the GitLab API client used inside Danger
 
   gitlab.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository.
   ```
