@@ -62,11 +62,11 @@
 
   See [#504](https://github.com/danger/danger/pull/504) for details.
 * Prints updated danger message when installed danger is outdated - JuanitoFatas
+* Remove a variable assignment in comments_helper.rb - JuanitoFatas
 
 ## 3.1.1
 
 * Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
-* Remove a variable assignment in comments_helper.rb - JuanitoFatas
 
 ## 3.1.0
 
