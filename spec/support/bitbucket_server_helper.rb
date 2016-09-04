@@ -25,6 +25,25 @@ module Danger
         url = "https://stash.example.com/rest/api/1.0/projects/ios/repos/fancyapp/pull-requests/2080"
         WebMock.stub_request(:get, url).to_return(raw_file)
       end
+
+      def with_git_repo
+        Dir.mktmpdir do |dir|
+          Dir.chdir dir do
+            `git init`
+            File.open(dir + "/file1", "w") {}
+            `git add .`
+            `git commit -m "ok"`
+
+            `git checkout -b new`
+            File.open(dir + "/file2", "w") {}
+            `git add .`
+            `git commit -m "another"`
+            `git remote add origin git@stash.example.com:artsy/eigen`
+
+            yield
+          end
+        end
+      end
     end
   end
 end

@@ -2,6 +2,12 @@
 
 * Improved the width handling for the output of the `danger local` table - orta 
 * Added a check for the merge inflection point inside the diff, and will fetch it if needed - orta 
+* Improved the width handling for the output of the `danger local` table - orta
+* Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
+* Mask password on BitbucketServerAPI object - JuanitoFatas
+* Add `scm_provider` to the DSL allowing users and plugins ot check which scm provider is being used when running danger - K0nserv
+* Deprecated `branch_for_merge` for GitLab. Use `branch_for_base` instead. - K0nserv
+* Added `branch_for_base` and `branch_for_head` for GitLab. - K0nserv
 
 ## 3.2.0
 

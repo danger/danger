@@ -13,6 +13,16 @@ module Danger
         self.pr_api_endpoint = "https://#{host}/rest/api/1.0/projects/#{project}/repos/#{slug}/pull-requests/#{pull_request_id}"
       end
 
+      def inspect
+        inspected = super
+
+        if @password
+          inspected = inspected.sub! @password, "********".freeze
+        end
+
+        inspected
+      end
+
       def credentials_given?
         @username && !@username.empty? && @password && !@password.empty?
       end

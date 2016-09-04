@@ -4,52 +4,52 @@ module Danger
   # Handles interacting with GitLab inside a Dangerfile. Provides a few functions which wrap `mr_json` and also
   # through a few standard functions to simplify your code.
   #
-  # @example Warn when an MR is classed as work in progress
+  # @example Warn when an MR is classed as work in progress.
   #
   #          warn "MR is classed as Work in Progress" if gitlab.mr_title.include? "[WIP]"
   #
-  # @example Declare a MR to be simple to avoid specific Danger rules
+  # @example Declare a MR to be simple to avoid specific Danger rules.
   #
   #          declared_trivial = (gitlab.mr_title + gitlab.mr_body).include?("#trivial")
   #
-  # @example Ensure that labels have been applied to the MR
+  # @example Ensure that labels have been applied to the MR.
   #
   #          fail "Please add labels to this MR" if gitlab.mr_labels.empty?
   #
-  # @example Ensure that all MRs have an assignee
+  # @example Ensure that all MRs have an assignee.
   #
   #          warn "This MR does not have any assignees yet." unless gitlab.mr_json["assignee"]
   #
-  # @example Ensure there is a summary for a MR
+  # @example Ensure there is a summary for a MR.
   #
-  #          fail "Please provide a summary in the Pull Request description" if gitlab.mr_body.length < 5
+  #          fail "Please provide a summary in the Merge Request description" if gitlab.mr_body.length < 5
   #
-  # @example Only accept MRs to the develop branch
+  # @example Only accept MRs to the develop branch.
   #
   #          fail "Please re-submit this MR to develop, we may have already fixed your issue." if gitlab.branch_for_merge != "develop"
   #
-  # @example Note when MRs don't reference a milestone, which goes away when it does
+  # @example Note when MRs don't reference a milestone, which goes away when it does.
   #
   #          has_milestone = gitlab.mr_json["milestone"] != nil
   #          warn("This MR does not refer to an existing milestone", sticky: false) unless has_milestone
   #
-  # @example Note when a MR cannot be manually merged, which goes away when you can
+  # @example Note when a MR cannot be manually merged, which goes away when you can.
   #
   #          can_merge = gitlab.mr_json["mergeable"]
   #          warn("This MR cannot be merged yet.", sticky: false) unless can_merge
   #
-  # @example Highlight when a celebrity makes a pull request
+  # @example Highlight when a celebrity makes a merge request.
   #
   #          message "Welcome, Danger." if gitlab.mr_author == "dangermcshane"
   #
-  # @example Send a message with links to a collection of specific files
+  # @example Send a message with links to a collection of specific files.
   #
   #          if git.modified_files.include? "config/*.js"
   #            config_files = git.modified_files.select { |path| path.include? "config/" }
   #            message "This MR changes #{ gitlab.html_link(config_files) }"
   #          end
   #
-  # @example Highlight with a clickable link if a Package.json is changed
+  # @example Highlight with a clickable link if a Package.json is changed.
   #
   #         warn "#{gitlab.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
   #
@@ -110,7 +110,7 @@ module Danger
     end
 
     # @!group MR Content
-    # The unified diff produced by GitLab for this PR
+    # The unified diff produced by GitLab for this MR
     # see [Unified diff](https://en.wikipedia.org/wiki/Diff_utility#Unified_format)
     # @return [String]
     #
@@ -120,10 +120,27 @@ module Danger
 
     # @!group MR Commit Metadata
     # The branch to which the MR is going to be merged into
+    # @deprecated Please use {#branch_for_base} instead
     # @return [String]
     #
     def branch_for_merge
+      branch_for_base
+    end
+
+    # @!group PR Commit Metadata
+    # The branch to which the PR is going to be merged into.
+    # @return [String]
+    #
+    def branch_for_base
       @gitlab.mr_json.target_branch
+    end
+
+    # @!group PR Commit Metadata
+    # The branch to which the PR is going to be merged from.
+    # @return [String]
+    #
+    def branch_for_head
+      @gitlab.mr_json.source_branch
     end
 
     # @!group MR Commit Metadata
@@ -153,8 +170,11 @@ module Danger
 
     # @!group GitLab Misc
     # Provides access to the GitLab API client used inside Danger. Making
-    # it easy to use the GitLab API inside a Dangerfile.
+    # it easy to use the GitLab API inside a Dangerfile. See the gitlab
+    # gem's [documentation](http://www.rubydoc.info/gems/gitlab/Gitlab/Client)
+    # for accessible methods.
     # @return [GitLab::Client]
+    #
     def api
       @gitlab.client
     end
@@ -168,6 +188,7 @@ module Danger
     #           Shows the full path as the link's text, defaults to `true`.
     #
     # @return [String]
+    #
     def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
