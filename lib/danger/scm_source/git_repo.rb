@@ -10,9 +10,11 @@ module Danger
       self.folder = folder
       repo = Git.open self.folder
 
+      ensure_commitish_exists!(from)
+      ensure_commitish_exists!(to)
       merge_base = repo.merge_base(from, to)
-      ensure_merge_base_exists!(merge_base)
 
+      ensure_commitish_exists!(merge_base)
       self.diff = repo.diff(merge_base.to_s, to)
       self.log = repo.log.between(from, to)
     end
@@ -40,7 +42,7 @@ module Danger
       { "LANG" => "en_US.UTF-8" }
     end
 
-    def ensure_merge_base_exists!(commitish)
+    def ensure_commitish_exists!(commitish)
       exec "fetch" if exec("--no-pager show #{commitish}").empty?
     end
   end
