@@ -17,12 +17,6 @@ module Danger
   #
   #          fail "Please add labels to this PR" if bitbucket_server.pr_labels.empty?
   #
-  # @example Check if a user is in a specific bitbucket_server org, and message them if so
-  #
-  #          unless bitbucket_server.api.organization_member?('danger', bitbucket_server.pr_author)
-  #            message "@#{bitbucket_server.pr_author} is not a contributor yet, would you like to join the Danger org?"
-  #          end
-  #
   # @example Ensure there is a summary for a PR
   #
   #          fail "Please provide a summary in the Pull Request description" if bitbucket_server.pr_body.length < 5
