@@ -2,6 +2,7 @@
 
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
+* Mask password on BitbucketServerAPI object - JuanitoFatas
 
 ## 3.2.0
 
