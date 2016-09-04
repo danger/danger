@@ -267,8 +267,8 @@ describe Danger::RequestSources::GitHub, host: :github do
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
 
-        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
-        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+        m = Danger::Markdown.new("Sure thing", "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 
       it "removes inline comments if they are not included" do
