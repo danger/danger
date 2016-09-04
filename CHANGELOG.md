@@ -3,6 +3,7 @@
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 * Mask password on BitbucketServerAPI object - JuanitoFatas
+* Add `scm_provider` to the DSL allowing users and plugins ot check which scm provider is being used when running danger - K0nserv
 
 ## 3.2.0
 

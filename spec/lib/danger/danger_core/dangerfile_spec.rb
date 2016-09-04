@@ -127,7 +127,8 @@ describe Danger::Dangerfile, host: :github do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
       expect(methods).to eq [
-        :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title
+        :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files,
+        :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :scm_provider
       ]
     end
 
@@ -198,7 +199,7 @@ describe Danger::Dangerfile, host: :github do
           :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit,
           :insertions, :lines_of_code, :modified_files,
           :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title,
-          :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title
+          :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :scm_provider
         ]
       end
     end
