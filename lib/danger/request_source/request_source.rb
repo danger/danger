@@ -18,9 +18,9 @@ module Danger
         raise "Subclass and overwrite initialize"
       end
 
-      # What does this do?
+      # @return [Boolean] whether scm.origins is a valid git repository or not
       def validates_as_ci?
-        !!self.scm.origins.match(%r{#{Regexp.escape self.host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+        !!self.scm.origins.match(%r{#{Regexp.escape self.host}(:|/)(.+/.+?)(?:\.git)?$})
       end
 
       def validates_as_api_source?
