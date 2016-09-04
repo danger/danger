@@ -19,7 +19,9 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     { method: :mr_body, expected_result: "The descriptions is here\r\n\r\n\u003e Danger: ignore \"Developer specific files shouldn't be changed\"\r\n\r\n\u003e Danger: ignore \"Testing\"" },
     { method: :mr_author, expected_result: "k0nserv" },
     { method: :mr_labels, expected_result: ["test-label"] },
-    { method: :branch_for_merge, expected_result: "master" }
+    { method: :branch_for_merge, expected_result: "master" },
+    { method: :branch_for_base, expected_result: "master" },
+    { method: :branch_for_head, expected_result: "mr-test" }
   ].each do |data|
     method = data[:method]
     expected = data[:expected_result]

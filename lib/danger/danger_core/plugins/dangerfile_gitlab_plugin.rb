@@ -120,10 +120,27 @@ module Danger
 
     # @!group MR Commit Metadata
     # The branch to which the MR is going to be merged into
+    # @deprecated Please use {#branch_for_base} instead
     # @return [String]
     #
     def branch_for_merge
+      branch_for_base
+    end
+
+    # @!group PR Commit Metadata
+    # The branch to which the PR is going to be merged into.
+    # @return [String]
+    #
+    def branch_for_base
       @gitlab.mr_json.target_branch
+    end
+
+    # @!group PR Commit Metadata
+    # The branch to which the PR is going to be merged from.
+    # @return [String]
+    #
+    def branch_for_head
+      @gitlab.mr_json.source_branch
     end
 
     # @!group MR Commit Metadata
