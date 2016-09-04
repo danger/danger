@@ -1,6 +1,7 @@
 ## master
 
-* Improved the width handling for the output of the `danger local` table - orta 
+* Improved the width handling for the output of the `danger local` table - orta
+* Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 
 ## 3.2.0
 
