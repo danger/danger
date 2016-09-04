@@ -86,6 +86,24 @@ module Danger
       end
     end
 
+    # @!group Danger
+    # Returns the name of the current SCM Provider being used.
+    # @return [Symbol] The name of the SCM Provider used for the active repository.
+    def scm_provider
+      return :unknown unless env.request_source
+
+      case env.request_source
+      when Danger::RequestSources::GitHub
+        :github
+      when Danger::RequestSources::GitLab
+        :gitlab
+      when Danger::RequestSources::BitbucketServer
+        :bitbucket_server
+      else
+        :unknown
+      end
+    end
+
     private
 
     # @!group Danger
