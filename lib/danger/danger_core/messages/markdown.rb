@@ -17,6 +17,10 @@ module Danger
         other.line == line
     end
 
+    def inline?
+      return (file.nil? && line.nil?) == false
+    end
+
     def to_s
       extra = []
       extra << "file: #{file}" unless file.nil?
