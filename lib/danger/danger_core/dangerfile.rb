@@ -125,7 +125,7 @@ module Danger
 
           else
             value = plugin.send(method)
-            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n") if value.kind_of?(String)
+            value = wrap_text(value) if value.kind_of?(String)
             # So that we either have one value per row
             # or we have [] for an empty array
             value = value.join("\n") if value.kind_of?(Array) && value.count > 0
@@ -246,6 +246,13 @@ module Danger
           ui.puts("- [ ] #{path}#{row.message}")
         end
       end unless rows.empty?
+    end
+
+    def wrap_text(text, width = 80)
+      text.gsub(/.{,#{width}}/) do |line|
+        line.strip!
+        "#{line}\n"
+      end
     end
   end
 end

@@ -27,7 +27,7 @@ describe Danger do
       it "returns danger gem path" do
         result = Danger.gem_path
 
-        expect(result).to match(/danger/)
+        expect(result).to match(/danger/i)
       end
     end
 
