@@ -180,7 +180,7 @@ module Danger
         text = full_path ? path : File.basename(path)
         url_path.gsub!(" ", "%20")
         line_ref = line ? "##{line}" : ""
-        yield("#{repo}/browse/#{url_path}?at=#{commit}#{line_ref}", text)
+        yield("#{repo}#{url_path}?at=#{commit}#{line_ref}", text)
       end
 
       return paths.first if paths.count < 2
