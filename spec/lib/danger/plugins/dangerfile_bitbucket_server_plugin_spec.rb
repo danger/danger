@@ -62,7 +62,7 @@ describe Danger::DangerfileBitbucketServerPlugin, host: :bitbucket_server do
     end
 
     describe "#html_link" do
-      it "creates a usable link" do
+      it "creates a usable html link" do
         expect(plugin.html_link("Classes/Main Categories/Feed/FeedViewController.m")).to include(
           "<a href='https://stash.example.com/projects/IOS/repos/fancyapp/browse/browse//Classes/Main%20Categories/Feed/FeedViewController.m?at=c50b3f61e90dac6a00b7d0c92e415a4348bb280a'>Classes/Main Categories/Feed/FeedViewController.m</a>"
         )
@@ -71,6 +71,14 @@ describe Danger::DangerfileBitbucketServerPlugin, host: :bitbucket_server do
       it "handles #XX line numbers in the same format a the other plugins" do
         expect(plugin.html_link("Classes/Main Categories/Feed/FeedViewController.m#100")).to include(
           "<a href='https://stash.example.com/projects/IOS/repos/fancyapp/browse/browse//Classes/Main%20Categories/Feed/FeedViewController.m?at=c50b3f61e90dac6a00b7d0c92e415a4348bb280a#100'>Classes/Main Categories/Feed/FeedViewController.m</a>"
+        )
+      end
+    end
+
+    describe "#markdown_link" do
+      it "creates a usable markdown link" do
+        expect(plugin.markdown_link("Classes/Main Categories/Feed/FeedViewController.m")).to include(
+          "[Classes/Main Categories/Feed/FeedViewController.m](https://stash.example.com/projects/IOS/repos/fancyapp/browse/browse//Classes/Main%20Categories/Feed/FeedViewController.m?at=c50b3f61e90dac6a00b7d0c92e415a4348bb280a)"
         )
       end
     end
