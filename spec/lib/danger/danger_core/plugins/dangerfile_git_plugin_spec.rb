@@ -99,6 +99,27 @@ module Danger
           end
         end
       end
+
+      describe "getting stats for a specific file" do
+        it "returns nil when specific stats do not exist" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            expect(@dsl.stats_for_file("file_nope_no_way")).to be_nil
+          end
+        end
+
+        it "gets a specific diff" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            stats = @dsl.stats_for_file("file2")
+            expect(stats).to_not be_nil
+            expect(stats[:insertions]).to_not be_nil
+            expect(stats[:deletions]).to_not be_nil
+          end
+        end
+      end
     end
   end
 end
