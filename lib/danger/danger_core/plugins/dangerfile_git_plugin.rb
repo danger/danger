@@ -114,5 +114,13 @@ module Danger
     def diff_for_file(file)
       modified_files.include?(file) ? @git.diff[file] : nil
     end
+
+    # @!group Git Metadata
+    # Statistics for a specific file in this diff
+    # @return {:insertions => [Fixnum], :deletions => [Fixnum]} or nil
+    #
+    def stats_for_file(file)
+      modified_files.include?(file) ? @git.diff.stats[:files][file] : nil
+    end
   end
 end
