@@ -1,13 +1,15 @@
 ## master
+
+* Add `danger gem` - dblock
 * Link to https://danger.systems/ in Bitbucket Server comments - HeEAaD
 * Add `markdown_link` for the Bitbucket Server plugin - HeEAaD
 * Updated Bitrise documentation about env vars - kylejm
 
 ## 3.2.1
 
-* Fix for markdown accidentally crashing Danger when sending a message #520 - orta 
-* Improved the width handling for the output of the `danger local` table - orta 
-* Added a check for the merge inflection point inside the diff, and will fetch it if needed - orta 
+* Fix for markdown accidentally crashing Danger when sending a message #520 - orta
+* Improved the width handling for the output of the `danger local` table - orta
+* Added a check for the merge inflection point inside the diff, and will fetch it if needed - orta
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 * Mask password on BitbucketServerAPI object - JuanitoFatas
