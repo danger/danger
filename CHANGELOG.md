@@ -2,6 +2,7 @@
 * Link to https://danger.systems/ in Bitbucket Server comments - HeEAaD
 * Add `markdown_link` for the Bitbucket Server plugin - HeEAaD
 * Updated Bitrise documentation about env vars - kylejm
+* Fix `html_link` for gitlab - hanneskaeufler
 
 ## 3.2.1
 

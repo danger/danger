@@ -64,7 +64,6 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     it "has the expected keys" do
       with_git_repo do
         dangerfile.env.request_source.fetch_details
-        json = plugin.pr_json
 
         [
           :id, :iid, :project_id, :title, :description, :state, :created_at,
@@ -77,6 +76,15 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
           key_present = plugin.pr_json.key?(key.to_s)
           expect(key_present).to be_truthy, "Expected key #{key} not found"
         end
+      end
+    end
+  end
+
+  describe "#html_link" do
+    it "should render a html link to the given file" do
+      with_git_repo do
+        dangerfile.env.request_source.fetch_details
+        expect(plugin.html_link("CHANGELOG.md")).to eql("<a href='https://gitlab.com/k0nserv/danger-test/blob/345e74fabb2fecea93091e8925b1a7a208b48ba6/CHANGELOG.md'>CHANGELOG.md</a>")
       end
     end
   end
