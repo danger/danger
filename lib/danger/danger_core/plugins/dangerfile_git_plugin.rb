@@ -117,7 +117,7 @@ module Danger
 
     # @!group Git Metadata
     # Statistics for a specific file in this diff
-    # @return [Hash] with keys `:insertions`, `:deletions` giving line counts, or nil if the file has no changes or does not exist
+    # @return [Hash] with keys `:insertions`, `:deletions` giving line counts, and `:before`, `:after` giving file contents, or nil if the file has no changes or does not exist
     #
     def info_for_file(file)
       return nil unless modified_files.include?(file)
