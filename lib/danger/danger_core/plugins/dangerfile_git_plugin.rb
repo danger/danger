@@ -119,7 +119,7 @@ module Danger
     # Statistics for a specific file in this diff
     # @return [Hash] with keys `:insertions`, `:deletions` giving line counts, or nil if the file has no changes or does not exist
     #
-    def stats_for_file(file)
+    def info_for_file(file)
       modified_files.include?(file) ? @git.diff.stats[:files][file] : nil
     end
   end
