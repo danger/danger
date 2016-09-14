@@ -64,7 +64,6 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     it "has the expected keys" do
       with_git_repo do
         dangerfile.env.request_source.fetch_details
-        json = plugin.pr_json
 
         [
           :id, :iid, :project_id, :title, :description, :state, :created_at,
