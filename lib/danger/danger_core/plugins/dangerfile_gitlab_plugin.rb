@@ -192,9 +192,9 @@ module Danger
     def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
-      same_repo = mr_json[:project_id] == mr_json[:source_project_id]
-      sender_repo = ci_source.repo_slug.split("/").first + "/" + mr_json[:author][:username]
-      repo = same_repo ? ci_source.repo_slug : sender_repo
+      same_repo = mr_json["project_id"] == mr_json["source_project_id"]
+      sender_repo = env.ci_source.repo_slug.split("/").first + "/" + mr_author
+      repo = same_repo ? env.ci_source.repo_slug : sender_repo
       host = @gitlab.host
 
       paths = paths.map do |path|
