@@ -120,7 +120,15 @@ module Danger
     # @return [Hash] with keys `:insertions`, `:deletions` giving line counts, or nil if the file has no changes or does not exist
     #
     def info_for_file(file)
-      modified_files.include?(file) ? @git.diff.stats[:files][file] : nil
+      return nil unless modified_files.include?(file)
+      stats = @git.diff.stats[:files][file]
+      diff = @git.diff[file]
+      {
+        :insertions => stats[:insertions],
+        :deletions => stats[:deletions],
+        :before => diff.blob(:src).contents,
+        :after => diff.blob(:dst).contents
+      }
     end
   end
 end

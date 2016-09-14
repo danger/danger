@@ -5,6 +5,7 @@ def run_in_repo_with_diff
     Dir.chdir dir do
       `git init`
       File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
+      File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
       `git commit -m "adding file1"`
       `git checkout -b new-branch`
@@ -117,6 +118,34 @@ module Danger
             expect(info).to_not be_nil
             expect(info[:insertions]).to_not be_nil
             expect(info[:deletions]).to_not be_nil
+            expect(info[:before]).to_not be_nil
+            expect(info[:after]).to_not be_nil
+          end
+        end
+
+        context "the info for file2" do
+          before(:each) do
+            run_in_repo_with_diff do |git|
+              diff = git.diff("master")
+              allow(@repo).to receive(:diff).and_return(diff)
+              @info = @dsl.info_for_file("file2")
+            end
+          end
+
+          it "reports :insertions" do
+            expect(@info[:insertions]).to equal(1)
+          end
+
+          it "reports :deletions" do
+            expect(@info[:deletions]).to equal(2)
+          end
+
+          it "reports :before" do
+            expect(@info[:before]).to eq("Shorts.\nShoes.")
+          end
+
+          it "reports :after" do
+            expect(@info[:after]).to eq("Pants!")
           end
         end
       end
