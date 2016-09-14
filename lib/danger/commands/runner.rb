@@ -16,6 +16,7 @@ module Danger
     require "danger/commands/plugins/plugin_lint"
     require "danger/commands/plugins/plugin_json"
     require "danger/commands/plugins/plugin_readme"
+    require "danger/commands/plugins/plugin_gem"
 
     attr_accessor :cork
 
