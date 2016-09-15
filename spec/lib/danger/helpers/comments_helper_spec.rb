@@ -364,13 +364,13 @@ describe Danger::Helpers::CommentsHelper do
     end
 
     it "sets data-sticky to true when a violation is sticky" do
-      sticky_warning = Danger::Violation.new("my warning", true, nil, nil)
+      sticky_warning = Danger::Violation.new("my warning", true)
       result = dummy.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to include('tddata-sticky="true"')
     end
 
     it "sets data-sticky to false when a violation is not sticky" do
-      non_sticky_warning = Danger::Violation.new("my warning", false, nil, nil)
+      non_sticky_warning = Danger::Violation.new("my warning", false)
       result = dummy.generate_comment(warnings: [non_sticky_warning], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to include('tddata-sticky="false"')
     end

@@ -72,7 +72,7 @@ def diff_fixture(file)
 end
 
 def violation(message, sticky: false)
-  Danger::Violation.new(message, sticky, nil, nil)
+  Danger::Violation.new(message, sticky)
 end
 
 def violations(messages, sticky: false)
@@ -80,7 +80,7 @@ def violations(messages, sticky: false)
 end
 
 def markdown(message)
-  Danger::Markdown.new(message, nil, nil)
+  Danger::Markdown.new(message)
 end
 
 def markdowns(messages)
