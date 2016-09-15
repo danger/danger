@@ -1,6 +1,7 @@
 ## master
 
 * Add `git.info_for_file("some/file.txt")`: line counts and before/after file contents - tikitu
+* Remove `String#danger_class` - Juanito Fatas
 
 ## 3.2.2
 
@@ -11,9 +12,9 @@
 
 ## 3.2.1
 
-* Fix for markdown accidentally crashing Danger when sending a message #520 - orta 
-* Improved the width handling for the output of the `danger local` table - orta 
-* Added a check for the merge inflection point inside the diff, and will fetch it if needed - orta 
+* Fix for markdown accidentally crashing Danger when sending a message #520 - orta
+* Improved the width handling for the output of the `danger local` table - orta
+* Added a check for the merge inflection point inside the diff, and will fetch it if needed - orta
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 * Mask password on BitbucketServerAPI object - JuanitoFatas
