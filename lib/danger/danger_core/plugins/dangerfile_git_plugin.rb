@@ -124,10 +124,10 @@ module Danger
       stats = @git.diff.stats[:files][file]
       diff = @git.diff[file]
       {
-        :insertions => stats[:insertions],
-        :deletions => stats[:deletions],
-        :before => diff.blob(:src).contents,
-        :after => diff.blob(:dst).contents
+        insertions: stats[:insertions],
+        deletions: stats[:deletions],
+        before: diff.blob(:src).contents,
+        after: diff.blob(:dst).contents
       }
     end
   end
