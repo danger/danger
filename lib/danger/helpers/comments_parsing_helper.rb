@@ -9,7 +9,7 @@ module Danger
       #
       # @return [Violation or Markdown] the extracted message
       def parse_message_from_row(row)
-        Violation.new(row, true, nil, nil)
+        Violation.new(row, true)
       end
 
       def parse_tables_from_comment(comment)
