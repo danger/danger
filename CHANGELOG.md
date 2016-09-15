@@ -1,5 +1,7 @@
 ## master
 
+* Add `git.info_for_file("some/file.txt")`: line counts and before/after file contents - tikitu
+
 ## 3.2.2
 
 * Link to https://danger.systems/ in Bitbucket Server comments - HeEAaD

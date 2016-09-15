@@ -5,6 +5,7 @@ def run_in_repo_with_diff
     Dir.chdir dir do
       `git init`
       File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
+      File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
       `git commit -m "adding file1"`
       `git checkout -b new-branch`
@@ -96,6 +97,29 @@ module Danger
             diff = git.diff("master")
             allow(@repo).to receive(:diff).and_return(diff)
             expect(@dsl.diff_for_file("file2")).to_not be_nil
+          end
+        end
+      end
+
+      describe "getting info for a specific file" do
+        it "returns nil when specific info does not exist" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            expect(@dsl.info_for_file("file_nope_no_way")).to be_nil
+          end
+        end
+
+        it "returns file info when it exists" do
+          run_in_repo_with_diff do |git|
+            diff = git.diff("master")
+            allow(@repo).to receive(:diff).and_return(diff)
+            info = @dsl.info_for_file("file2")
+            expect(info).to_not be_nil
+            expect(info[:insertions]).to equal(1)
+            expect(info[:deletions]).to equal(2)
+            expect(info[:before]).to eq("Shorts.\nShoes.")
+            expect(info[:after]).to eq("Pants!")
           end
         end
       end
