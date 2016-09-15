@@ -1,10 +1,4 @@
 describe String do
-  describe "#danger_class" do
-    it "converts properly" do
-      expect("example_class".danger_class).to eq("ExampleClass")
-    end
-  end
-
   describe "#danger_pluralize" do
     examples = [
       { count: 0, string: "0 errors" },

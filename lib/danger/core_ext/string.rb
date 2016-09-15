@@ -1,8 +1,4 @@
 class String
-  def danger_class
-    split("_").collect!(&:capitalize).join
-  end
-
   def danger_pluralize(count)
     "#{count} #{self}#{'s' unless count == 1}"
   end
