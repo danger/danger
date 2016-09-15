@@ -110,42 +110,16 @@ module Danger
           end
         end
 
-        it "gets a specific diff" do
+        it "returns file info when it exists" do
           run_in_repo_with_diff do |git|
             diff = git.diff("master")
             allow(@repo).to receive(:diff).and_return(diff)
             info = @dsl.info_for_file("file2")
             expect(info).to_not be_nil
-            expect(info[:insertions]).to_not be_nil
-            expect(info[:deletions]).to_not be_nil
-            expect(info[:before]).to_not be_nil
-            expect(info[:after]).to_not be_nil
-          end
-        end
-
-        context "the info for file2" do
-          before(:each) do
-            run_in_repo_with_diff do |git|
-              diff = git.diff("master")
-              allow(@repo).to receive(:diff).and_return(diff)
-              @info = @dsl.info_for_file("file2")
-            end
-          end
-
-          it "reports :insertions" do
-            expect(@info[:insertions]).to equal(1)
-          end
-
-          it "reports :deletions" do
-            expect(@info[:deletions]).to equal(2)
-          end
-
-          it "reports :before" do
-            expect(@info[:before]).to eq("Shorts.\nShoes.")
-          end
-
-          it "reports :after" do
-            expect(@info[:after]).to eq("Pants!")
+            expect(info[:insertions]).to equal(1)
+            expect(info[:deletions]).to equal(2)
+            expect(info[:before]).to eq("Shorts.\nShoes.")
+            expect(info[:after]).to eq("Pants!")
           end
         end
       end
