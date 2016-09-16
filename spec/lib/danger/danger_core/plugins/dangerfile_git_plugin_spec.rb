@@ -8,7 +8,7 @@ def run_in_repo_with_diff
       File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
       `git commit -m "adding file1"`
-      `git checkout -b new-branch`
+      `git checkout -b new-branch --quiet`
       File.open(dir + "/file2", "w") { |f| f.write "Pants!" }
       `git add .`
       `git commit -m "adding file2"`

@@ -97,7 +97,7 @@ def with_git_repo(origin: origin = "git@github.com:artsy/eigen")
       `git add .`
       `git commit -m "ok"`
 
-      `git checkout -b new`
+      `git checkout -b new --quiet`
       File.open(dir + "/file2", "w") {}
       `git add .`
       `git commit -m "another"`

@@ -21,7 +21,7 @@ describe Danger::GitRepo, host: :github do
         File.open(@tmp_dir + "/file", "w") {}
         `git add .`
         `git commit -m "ok"`
-        `git checkout -b new`
+        `git checkout -b new --quiet`
         File.open(@tmp_dir + "/file2", "w") {}
         `git add .`
         `git commit -m "another"`
@@ -45,7 +45,7 @@ describe Danger::GitRepo, host: :github do
         File.open(@tmp_dir + "/file", "w") {}
         `git add .`
         `git commit -m "ok"`
-        `git checkout -b new`
+        `git checkout -b new --quiet`
         File.open(@tmp_dir + "/file2", "w") {}
         `git add .`
         `git commit -m "another"`
@@ -77,7 +77,7 @@ describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
 
-          `git checkout -b new`
+          `git checkout -b new --quiet`
           File.open(dir + "/file2", "w") {}
           `git add .`
           `git commit -m "another"`
@@ -98,7 +98,7 @@ describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
 
-          `git checkout -b new`
+          `git checkout -b new --quiet`
           File.delete(dir + "/file")
           `git add . --all`
           `git commit -m "another"`
@@ -119,7 +119,7 @@ describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
 
-          `git checkout -b new`
+          `git checkout -b new --quiet`
           File.open(dir + "/file", "a") { |file| file.write("ok\nmorestuff") }
           `git add .`
           `git commit -m "another"`
@@ -142,7 +142,7 @@ describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
 
-          `git checkout -b new`
+          `git checkout -b new --quiet`
           File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
           `git add .`
           `git commit -m "another"`
@@ -163,7 +163,7 @@ describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
 
-          `git checkout -b new`
+          `git checkout -b new --quiet`
           File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n5\n") }
           `git add .`
           `git commit -m "another"`
@@ -185,7 +185,7 @@ describe Danger::GitRepo, host: :github do
             `git add .`
             `git commit -m "ok"`
 
-            `git checkout -b new`
+            `git checkout -b new --quiet`
             File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
             `git add .`
             `git commit -m "another"`
