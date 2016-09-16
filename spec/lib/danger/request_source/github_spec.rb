@@ -26,9 +26,8 @@ describe Danger::RequestSources::GitHub, host: :github do
         expect(Octokit.api_endpoint).to eql(api_endpoint)
       end
 
-      # Old variable for backwards compatibility
-      it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_HOST`" do
-        api_endpoint = "https://git.club-mateusa.com/api/v3/"
+      it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_HOST` for backwards compatibility" do
+        api_endpoint = "https://git.club-mateusa.com/api/v4/"
         gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_HOST" => api_endpoint }
         Danger::RequestSources::GitHub.new(stub_ci, gh_env)
         expect(Octokit.api_endpoint).to eql(api_endpoint)
