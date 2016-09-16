@@ -99,6 +99,8 @@ module Danger
         :gitlab
       when Danger::RequestSources::BitbucketServer
         :bitbucket_server
+      when Danger::RequestSources::BitbucketCloud
+        :bitbucket_cloud
       else
         :unknown
       end
