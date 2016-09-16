@@ -1,6 +1,7 @@
 # coding: utf-8
 require "gitlab"
 require "danger/helpers/comments_helper"
+require "danger/helpers/comment"
 
 module Danger
   module RequestSources

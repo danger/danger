@@ -4,6 +4,7 @@
 * Remove `String#danger_class` - Juanito Fatas
 * Set defaults for file and line args of Violation#new & Markdown#new - Juanito Fatas
 * Add docs to `String#danger_pluralize` & `String#danger_underscore` - Juanito Fatas
+* Refactor Comment class out of CommentsHelper - Juanito Fatas
 
 ## 3.2.2
 
