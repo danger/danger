@@ -1,11 +1,18 @@
 ## master
 
+## 3.3.0
+
+* Add support for Bitbucket Cloud - Wolfgang Damm
+  This adds a new object to the DSL, `bitbucket_cloud` which offers the same API as Bitbucket Server!
+  To use it, ensure `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_PASSWORD` are in your
+  Jenkins environment, and you should be good to go.
+
 * Add `git.info_for_file("some/file.txt")`: line counts and before/after file contents - tikitu
 * Remove `String#danger_class` - Juanito Fatas
 * Set defaults for file and line args of Violation#new & Markdown#new - Juanito Fatas
 * Add docs to `String#danger_pluralize` & `String#danger_underscore` - Juanito Fatas
 * Refactor Comment class out of CommentsHelper - Juanito Fatas
-* Add support for Bitbucket Cloud - Wolfgang Damm
+
 
 ## 3.2.2
 
