@@ -22,7 +22,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_BASE_URL`" do
         api_endpoint = "https://git.club-mateusa.com/api/v3/"
         gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_BASE_URL" => api_endpoint }
-        g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
+        Danger::RequestSources::GitHub.new(stub_ci, gh_env)
         expect(Octokit.api_endpoint).to eql(api_endpoint)
       end
 
@@ -30,7 +30,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_HOST`" do
         api_endpoint = "https://git.club-mateusa.com/api/v3/"
         gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_HOST" => api_endpoint }
-        g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
+        Danger::RequestSources::GitHub.new(stub_ci, gh_env)
         expect(Octokit.api_endpoint).to eql(api_endpoint)
       end
     end
