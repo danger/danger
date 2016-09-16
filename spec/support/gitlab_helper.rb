@@ -52,25 +52,6 @@ module Danger
         url = "https://gitlab.com/api/v3/projects/#{escaped_slug}/merge_requests/#{merge_request_id}/notes"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
       end
-
-      def with_git_repo
-        Dir.mktmpdir do |dir|
-          Dir.chdir dir do
-            `git init`
-            File.open(dir + "/file1", "w") {}
-            `git add .`
-            `git commit -m "ok"`
-
-            `git checkout -b new`
-            File.open(dir + "/file2", "w") {}
-            `git add .`
-            `git commit -m "another"`
-            `git remote add origin git@gitlab.com:k0nserv/danger-test.git`
-
-            yield
-          end
-        end
-      end
     end
   end
 end

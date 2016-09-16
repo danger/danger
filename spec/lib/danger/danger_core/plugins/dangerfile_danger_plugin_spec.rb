@@ -110,7 +110,7 @@ describe Danger::Dangerfile::DSL, host: :github do
   describe "#scm_provider" do
     context "GitHub", host: :github do
       it "is `:github`" do
-        with_git_repo do
+        with_git_repo(origin: "git@github.com:artsy/eigen") do
           expect(dm.danger.scm_provider).to eq(:github)
         end
       end
@@ -118,7 +118,7 @@ describe Danger::Dangerfile::DSL, host: :github do
 
     context "GitLab", host: :gitlab do
       it "is `:gitlab`" do
-        with_git_repo do
+        with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
           expect(dm.danger.scm_provider).to eq(:gitlab)
         end
       end
@@ -126,7 +126,7 @@ describe Danger::Dangerfile::DSL, host: :github do
 
     context "Bitbucket Server", host: :bitbucket_server do
       it "is `:bitbucket_server`" do
-        with_git_repo do
+        with_git_repo(origin: "git@stash.example.com:artsy/eigen") do
           expect(dm.danger.scm_provider).to eq(:bitbucket_server)
         end
       end
