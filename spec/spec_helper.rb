@@ -89,7 +89,7 @@ def markdowns(messages)
   messages.map { |s| markdown(s) }
 end
 
-def with_git_repo(origin: origin = "git@github.com:artsy/eigen")
+def with_git_repo(origin: "git@github.com:artsy/eigen")
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
       `git init`
