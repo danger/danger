@@ -3,6 +3,7 @@
 ## 3.3.0
 
 * Add support for Bitbucket Cloud - Wolfgang Damm
+
   This adds a new object to the DSL, `bitbucket_cloud` which offers the same API as Bitbucket Server!
   To use it, ensure `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_PASSWORD` are in your
   Jenkins environment, and you should be good to go.
