@@ -28,7 +28,7 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
 
     describe "##{method}" do
       it "sets the correct #{method}" do
-        with_git_repo do
+        with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
           dangerfile.env.request_source.fetch_details
           expect(plugin.send(method)).to eq(expected)
         end
@@ -46,7 +46,7 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
 
     it "sets the mr_diff" do
-      with_git_repo do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         expect(plugin.mr_diff).to include("Danger rocks!")
         expect(plugin.mr_diff).to include("Test message please ignore")
       end
@@ -55,14 +55,14 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
 
   describe "#mr_json" do
     it "is set" do
-      with_git_repo do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         dangerfile.env.request_source.fetch_details
         expect(plugin.mr_json).not_to be_nil
       end
     end
 
     it "has the expected keys" do
-      with_git_repo do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         dangerfile.env.request_source.fetch_details
 
         [
@@ -82,7 +82,7 @@ describe Danger::DangerfileGitLabPlugin, host: :gitlab do
 
   describe "#html_link" do
     it "should render a html link to the given file" do
-      with_git_repo do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         dangerfile.env.request_source.fetch_details
         expect(plugin.html_link("CHANGELOG.md")).to eql("<a href='https://gitlab.com/k0nserv/danger-test/blob/345e74fabb2fecea93091e8925b1a7a208b48ba6/CHANGELOG.md'>CHANGELOG.md</a>")
       end

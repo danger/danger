@@ -8,11 +8,11 @@ def run_in_repo(has_pr = true)
       File.open(dir + "/file1", "w") {}
       `git add .`
       `git commit -m "adding file1"`
-      `git checkout -b new-branch`
+      `git checkout -b new-branch --quiet`
       File.open(dir + "/file2", "w") {}
       `git add .`
       `git commit -m "adding file2"`
-      `git checkout master`
+      `git checkout master --quiet`
 
       if has_pr
         `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
@@ -106,11 +106,11 @@ describe Danger::LocalGitRepo do
       context "multiple PRs" do
         def add_another_pr
           # Add a new PR merge commit
-          `git checkout -b new-branch2`
+          `git checkout -b new-branch2 --quiet`
           File.open("file3", "w") {}
           `git add .`
           `git commit -m "adding file2"`
-          `git checkout master`
+          `git checkout master --quiet`
           `git merge new-branch2 --no-ff -m "Merge pull request #1235 from new-branch"`
         end
 

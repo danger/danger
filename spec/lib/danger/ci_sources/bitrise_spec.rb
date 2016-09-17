@@ -57,7 +57,7 @@ describe Danger::Bitrise do
     end
 
     it "sets the repo_url", host: :github do
-      with_git_repo do
+      with_git_repo(origin: "git@github.com:artsy/eigen") do
         expect(source.repo_url).to eq("git@github.com:artsy/eigen")
       end
     end
