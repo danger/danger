@@ -52,12 +52,18 @@ module Danger
       end
     end
 
-    def post_results(dm, danger_id)
-      gh = dm.env.request_source
-      violations = dm.violation_report
-      status = dm.status_report
+    def post_results(danger_file, danger_id)
+      request_source = danger_file.env.request_source
+      violations = danger_file.violation_report
+      status = danger_file.status_report
 
-      gh.update_pull_request!(warnings: violations[:warnings], errors: violations[:errors], messages: violations[:messages], markdowns: status[:markdowns], danger_id: danger_id)
+      request_source.update_pull_request!(
+        warnings: violations[:warnings],
+        errors: violations[:errors],
+        messages: violations[:messages],
+        markdowns: status[:markdowns],
+        danger_id: danger_id
+      )
     end
   end
 end
