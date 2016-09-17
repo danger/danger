@@ -41,7 +41,7 @@ module Danger
     def initialize(env = {})
       repo_slug = RemoteFinder.new(
         github_host: env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-        remote_logs: run_git("remote show origin -n")
+        remote_logs: run_git("remote show origin -n".freeze)
       ).call
 
       pull_request_id, sha = MergedPullRequestFinder.new(

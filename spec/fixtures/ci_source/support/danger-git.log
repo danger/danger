@@ -1,0 +1,50 @@
+bde9ea7 Merge pull request #557 from danger/hk-spec-improvements
+4a86be0 fix ruby keyword argument syntax
+028fecb silence git output in specs
+e2ccd73 extract `with_git_repo` to spec_helper, be more explicit about git origin
+3f8645a use different url to allow spec to fail
+49f08b9 remove useless local variable
+9c84248 Update CHANGELOG.md
+0cd9198 Prepare for 3.3.0 (#556)
+d86321e Adds support for bitbucket cloud (#555)
+bf94ad0 Save Comment class out of CommentsHelper (#554)
+f43e6f1 Add docs for String #danger_pluralize & #danger_underscore (#551)
+6910c8a Remove unknown passings of nils (#552)
+cb48cc3 Remove unused danger_class method (#550)
+e965d64 Enable trim_trailing_whitespace for all files [ci skip] (#549)
+774d69b Add per-file info (insertions, deletions, before/after contents) (#542)
+13cc27e Prepare for 3.2.2 (#547)
+bfea803 Hk issue 543 (#546)
+4fb9179 Updating bitrise docs (#541)
+11f2107 Add `markdown_link` for the Bitbucket Server plugin (#537)
+07e5b52 Link to https://danger.systems rather than http://example.com (#536)
+d0905e9 [Dangerfile] Simplify text wrapping code (#531)
+becbabd CHANGELOG update for 321 (#530)
+ccd9cbc Fix for markdown crashing DM - fixes #520 (#529)
+81ce67b Add a check for the merge inflection points existing (#517)
+580ce6b [GitLab] Update branch accessors (#528)
+272c9f6 [Core] Provide a way to check the active scm host (#527)
+796f858 Merge pull request #526 from danger/patch/bitbucket-server-api-inspect-protection
+0a8ad84 Mask password when inspect BitbucketServerAPI
+7004f31 Update comment and remove unused referred name (#525)
+4d31448 Remove Bitbucket example that isn't possible (no api method), fix some terminology in the GitLab documentation. (#524)
+03a2b06 Improve handling of tables (#516)
+3b4ad47 Merge pull request #515 from danger/danger_import_docs
+9ff97c6 Improve docs for the core Danger plugin
+e7cfcdc Merge pull request #513 from danger/patch/danger/gem_path
+11d39e7 Merge pull request #514 from danger/patch/gemspec-homepage
+2cb1a4f Merge branch 'master' into patch/danger/gem_path
+dc4e96b Merge pull request #512 from danger/doc/fix-changelog
+193c164 Use https homepage url on rubygems.org
+6defddd Minor improvements to Danger.gem_path
+b70626b Add back the master section of CHANGELOG.md [ci skip]
+ca4e9a3 Merge pull request #511 from danger/release_230
+f7a49af Fix an CHANGELOG item [ci skip]
+19152e3 Update the CHANGELOG for the next release
+dec7ac7 Merge pull request #412 from danger/line_comment
+446e1cf Merge branch 'master' of https://github.com/danger/danger into line_comment
+517782a Merge pull request #485 from danger/git-english-env
+9edd7f3 Remove the main comment when there's no non-inline comments to post
+2686ca0 Use different command for windows & non-windows
+90f5e65 Use Open3::popen2 instead since we don't care about the error
+993e630 Use Open3#popen3 to run command with our ENV set
