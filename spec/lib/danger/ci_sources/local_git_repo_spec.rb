@@ -31,7 +31,6 @@ describe Danger::LocalGitRepo do
   let(:valid_env) do
     {
       "DANGER_USE_LOCAL_GIT" => "true",
-      "LOCAL_GIT_PR_ID" => "1234"
     }
   end
 
