@@ -1,4 +1,6 @@
 # https://www.jetbrains.com/teamcity/
+require "danger/request_sources/github"
+require "danger/request_sources/gitlab"
 
 module Danger
   # ### CI Setup

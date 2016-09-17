@@ -1,4 +1,6 @@
 # http://readme.drone.io/usage/variables/
+require "danger/request_sources/github"
+require "danger/request_sources/gitlab"
 
 module Danger
   # ### CI Setup

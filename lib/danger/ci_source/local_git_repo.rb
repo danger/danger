@@ -4,6 +4,7 @@ require "git"
 require "uri"
 require "danger/ci_source/support/remote_finder"
 require "danger/ci_source/support/merged_pull_request_finder"
+require "danger/request_sources/github"
 
 module Danger
   # ignore
