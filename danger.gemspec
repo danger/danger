@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec_junit_formatter", "~> 0.2"
   spec.add_development_dependency "webmock", "~> 2.1"
   spec.add_development_dependency "pry", "~> 0.10"
+  spec.add_development_dependency "pry-byebug"
 
   spec.add_development_dependency "rubocop", "~> 0.38"
   spec.add_development_dependency "yard", "~> 0.8"
