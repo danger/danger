@@ -1,5 +1,5 @@
 # coding: utf-8
-require "danger/request_source/request_source"
+require "danger/request_sources/bitbucket_cloud"
 
 describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
   let(:env) { stub_env }

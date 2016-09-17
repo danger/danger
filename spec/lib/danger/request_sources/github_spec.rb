@@ -1,5 +1,5 @@
 # coding: utf-8
-require "danger/request_source/request_source"
+require "danger/request_sources/github"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/messages/violation"

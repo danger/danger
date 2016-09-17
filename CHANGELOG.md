@@ -1,6 +1,7 @@
 ## master
 
 * "danger local" can find squash-and-merge-type Pull Request - Juanito Fatas
+* Fix request_sources files and specs location - Juanito Fatas
 
 ## 3.3.0
 

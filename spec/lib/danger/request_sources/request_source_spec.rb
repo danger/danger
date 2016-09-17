@@ -1,4 +1,4 @@
-require "danger/request_source/github"
+require "danger/request_sources/github"
 
 describe Danger::RequestSources::RequestSource, host: :github do
   describe "the base request source" do
