@@ -1,7 +1,7 @@
 # coding: utf-8
 require "erb"
 
-require "danger/request_source/request_source"
+require "danger/request_sources/gitlab"
 
 describe Danger::RequestSources::GitLab, host: :gitlab do
   let(:env) { stub_env }
