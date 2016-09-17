@@ -1,4 +1,6 @@
 # http://devcenter.bitrise.io/docs/available-environment-variables
+require "danger/request_sources/github"
+require "danger/request_sources/gitlab"
 
 module Danger
   # ### CI Setup
