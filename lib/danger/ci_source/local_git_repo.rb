@@ -2,6 +2,7 @@
 
 require "git"
 require "uri"
+require "danger/ci_source/support/remote_finder"
 require "danger/ci_source/support/merged_pull_request_finder"
 
 module Danger
@@ -29,28 +30,29 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
+    def print_repo_slug_warning
+      puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
+    end
+
+    def parents(sha)
+      @parents ||= run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
+    end
+
     def initialize(env = {})
-      github_host = env["DANGER_GITHUB_HOST"] || "github.com"
-
-      # get the remote URL
-      remote = run_git("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
-      if remote
-        remote_url_matches = remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
-        if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
-          self.repo_slug = remote_url_matches["repo_slug"]
-        else
-          puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise."
-        end
-      end
-
-      pull_request_id, sha = MergedPullRequestFinder.new(
-        specific_pull_request_id: env["LOCAL_GIT_PR_ID"], git: git
+      repo_slug = RemoteFinder.new(
+        github_host: env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+        remote_logs: run_git("remote show origin -n")
       ).call
 
+      pull_request_id, sha = MergedPullRequestFinder.new(
+        specific_pull_request_id: env["LOCAL_GIT_PR_ID"],
+        git_logs: run_git("log --oneline -50".freeze)
+      ).call
+
+      self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning
       self.pull_request_id = pull_request_id
-      parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
-      self.base_commit = parents[0]
-      self.head_commit = parents[1]
+      self.base_commit = parents(sha)[0]
+      self.head_commit = parents(sha)[1]
     end
   end
 end

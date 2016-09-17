@@ -1,8 +1,8 @@
 module Danger
   class MergedPullRequestFinder
-    def initialize(specific_pull_request_id:, git:)
+    def initialize(specific_pull_request_id:, git_logs:)
       @specific_pull_request_id = specific_pull_request_id
-      @git = git
+      @git_logs = git_logs
     end
 
     def call
@@ -13,20 +13,11 @@ module Danger
 
     private
 
-    attr_reader :specific_pull_request_id, :git
-
-    def run_git(command)
-      git.exec(command)
-    end
+    attr_reader :specific_pull_request_id, :git_logs
 
     # @return [String] "#42"
     def pull_request_ref
       specific_pull_request_id ? "##{specific_pull_request_id}" : "".freeze
-    end
-
-    # @return [Array] Recent 50 commit logs in oneliner
-    def git_logs
-      @git_logs ||= run_git("log --oneline -50".freeze)
     end
 
     # @return [String] Log line of format: "Merge pull request #42"
