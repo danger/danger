@@ -40,13 +40,13 @@ module Danger
 
     def initialize(env = {})
       repo_slug = RemoteFinder.new(
-        github_host: env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-        remote_logs: run_git("remote show origin -n".freeze)
+        env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+        run_git("remote show origin -n".freeze)
       ).call
 
       pull_request_id, sha = MergedPullRequestFinder.new(
-        specific_pull_request_id: env["LOCAL_GIT_PR_ID"] || "",
-        git_logs: run_git("log --oneline -50".freeze)
+        env["LOCAL_GIT_PR_ID"] || "",
+        run_git("log --oneline -50".freeze)
       ).call
 
       self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning

@@ -3,8 +3,8 @@ require "danger/ci_source/support/merged_pull_request_finder"
 describe Danger::MergedPullRequestFinder do
   def finder(pull_request_id: "", logs: nil)
     described_class.new(
-      specific_pull_request_id: pull_request_id,
-      git_logs: logs
+      pull_request_id,
+      logs
     )
   end
 

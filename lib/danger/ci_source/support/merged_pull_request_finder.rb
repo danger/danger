@@ -1,6 +1,6 @@
 module Danger
   class MergedPullRequestFinder
-    def initialize(specific_pull_request_id:, git_logs:)
+    def initialize(specific_pull_request_id, git_logs)
       @specific_pull_request_id = specific_pull_request_id
       @git_logs = git_logs
     end

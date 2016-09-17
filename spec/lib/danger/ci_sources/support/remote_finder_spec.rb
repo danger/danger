@@ -4,7 +4,7 @@ describe Danger::RemoteFinder do
   describe "#call" do
     it "returns repo slug from logs" do
       remote_logs = IO.read("spec/fixtures/ci_source/support/remote.log")
-      finder = described_class.new(github_host: "github.com", remote_logs: remote_logs)
+      finder = described_class.new("github.com", remote_logs)
 
       result = finder.call
 
@@ -14,7 +14,7 @@ describe Danger::RemoteFinder do
     context "specify GitHub Enterprise URL" do
       it "returns repo slug from logs" do
         remote_logs = IO.read("spec/fixtures/ci_source/support/enterprise-remote.log")
-        finder = described_class.new(github_host: "artsyhub.com", remote_logs: remote_logs)
+        finder = described_class.new("artsyhub.com", remote_logs)
 
         result = finder.call
 
