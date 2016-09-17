@@ -17,4 +17,19 @@ describe Danger::Executor do
       Danger::Executor.new(env).run(cork: cork)
     end
   end
+
+  describe "#post_results" do
+    it "invokes update_pull_request! on request source" do
+      request_source = double("Danger::RequestSources::GitHub")
+      danger_file = spy("Dangerfile")
+      danger_id = "orta"
+      allow(danger_file).to receive_message_chain(:env, :request_source) do
+        request_source
+      end
+
+      expect(request_source).to receive(:update_pull_request!)
+
+      described_class.new({}).post_results(danger_file, danger_id)
+    end
+  end
 end
