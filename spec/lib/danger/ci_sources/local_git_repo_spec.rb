@@ -30,7 +30,7 @@ end
 describe Danger::LocalGitRepo do
   let(:valid_env) do
     {
-      "DANGER_USE_LOCAL_GIT" => "true",
+      "DANGER_USE_LOCAL_GIT" => "true"
     }
   end
 
