@@ -1,5 +1,7 @@
 ## master
 
+* "danger local" can find squash-and-merge-type Pull Request - Juanito Fatas
+
 ## 3.3.0
 
 * Add support for Bitbucket Cloud - Wolfgang Damm

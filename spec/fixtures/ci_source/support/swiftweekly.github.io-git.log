@@ -1,0 +1,50 @@
+129045f Flesh out issue 38 (#89)
+300780c [38] draft update
+8f0f2d2 [38] Add accepted proposals 0139 & 0140 (#87)
+8c85645 Update 2016-09-15-issue-38.md
+65dfb06 Update Dangerfile
+684eeff Clarify publishing times in CONTRIBUTING.md (#81)
+19369ac [38] Add ClangImporter refactor (#83)
+81c2705 Update 2016-09-15-issue-38.md
+10b1ec7 Update new_draft.sh
+50b40c8 Add "TODO" and Apple projects to ignored Proselint words (#78)
+038d71c [38] Add Jesse's work on the SE Status Page (#85)
+9fb1cf5 [38] Add extended SE-0138 (#84)
+86238a7 Merge branch 'master' of https://github.com/SwiftWeekly/swiftweekly.github.io
+45a666b bundle install. fix/cleanup gems
+acc5a1b Fix code tag (#80)
+c4dde6d Typo fix (#82)
+3f7047a [38] Add blurb on CI cross-testing (#77)
+8f8d576 [38] Add cmpcodesize starter tasks (#76)
+8178b7e Merge branch 'master' of https://github.com/SwiftWeekly/swiftweekly.github.io
+2606da6 [37] oops. note iOS and OSX release dates
+bc865bb Update CONTRIBUTING.md
+78a707f Update CONTRIBUTING.md
+e4af163 [38] initial draft
+c537b81 [37] publish issue 37 (#73)
+e08e251 update ignored words in proselint
+f674bd8 [37] draft update
+a2776ec update ignored words
+ae8c9e0 update danger setup
+2e4da93 setup danger + proselint
+74de0a0 implement Jekyll SEO tag. close #38
+7849827 [37] draft update
+9a217c7 [37] draft update
+793517c [37] Remove returned proposals section (#69)
+704cc04 Update CONTRIBUTING.md
+6dac1a5 Update CONTRIBUTING.md
+b5fba45 [37] Add proposal SE-0140 (#67)
+d1e788b [37] Add two proposals in review (#66)
+7b2e552 Update CONTRIBUTING.md
+2901fbd [37] initial draft
+ef50aea publish issue 36
+3ad7efb [36] draft update
+f7b8ae3 [36] draft update
+9bae552 [36] draft update
+fb4bf4d [36] Add Apple event details (#65)
+e89f085 [36] initial draft
+84fd626 publish issue 35
+0fb9734 Update CONTRIBUTING.md
+71e960e Added info on Robotary (#62)
+76a1671 [35] draft update
+5fc8803 [35] Add -driver-time-compilation (#61)

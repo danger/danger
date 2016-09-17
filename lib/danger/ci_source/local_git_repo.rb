@@ -2,6 +2,8 @@
 
 require "git"
 require "uri"
+require "danger/ci_source/support/remote_finder"
+require "danger/ci_source/support/merged_pull_request_finder"
 
 module Danger
   # ignore
@@ -28,39 +30,29 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
+    def print_repo_slug_warning
+      puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
+    end
+
+    def parents(sha)
+      @parents ||= run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
+    end
+
     def initialize(env = {})
-      github_host = env["DANGER_GITHUB_HOST"] || "github.com"
+      repo_slug = RemoteFinder.new(
+        env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+        run_git("remote show origin -n".freeze)
+      ).call
 
-      # get the remote URL
-      remote = run_git("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
-      if remote
-        remote_url_matches = remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
-        if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
-          self.repo_slug = remote_url_matches["repo_slug"]
-        else
-          puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise."
-        end
-      end
+      pull_request_id, sha = MergedPullRequestFinder.new(
+        env["LOCAL_GIT_PR_ID"] || "",
+        run_git("log --oneline -50".freeze)
+      ).call
 
-      specific_pr = env["LOCAL_GIT_PR_ID"]
-      pr_ref = specific_pr ? "##{specific_pr}" : ""
-      pr_command = "log --merges --oneline"
-
-      # get the most recent PR merge
-      pr_merge = run_git(pr_command.strip).lines.grep(Regexp.new("Merge pull request " + pr_ref))[0]
-
-      if pr_merge.to_s.empty?
-        if specific_pr
-          raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
-        else
-          raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
-        end
-      end
-      self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
-      sha = pr_merge.split(" ")[0]
-      parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
-      self.base_commit = parents[0]
-      self.head_commit = parents[1]
+      self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning
+      self.pull_request_id = pull_request_id
+      self.base_commit = parents(sha)[0]
+      self.head_commit = parents(sha)[1]
     end
   end
 end
