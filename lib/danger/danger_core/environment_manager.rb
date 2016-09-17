@@ -28,7 +28,7 @@ module Danger
         self.request_source = request_source
       end
 
-      raise "Could not find a Request Source for #{ci_klass}".red unless self.request_source
+      raise "Could not find a Request Source for #{ci_klass}\nCI: #{ci_source.inspect}".red unless self.request_source
       self.scm = self.request_source.scm
     end
 
