@@ -1,7 +1,7 @@
 require "spec_helper"
 require "danger/ci_source/local_git_repo"
 
-def run_in_repo(has_pr = true)
+def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
       `git init`
@@ -14,8 +14,12 @@ def run_in_repo(has_pr = true)
       `git commit -m "adding file2"`
       `git checkout master --quiet`
 
-      if has_pr
+      if merge_pr
         `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
+      end
+
+      if squash_and_merge_pr
+        `git merge new-branch --no-ff -m "New branch (#1234)"`
       end
 
       yield
@@ -26,7 +30,8 @@ end
 describe Danger::LocalGitRepo do
   let(:valid_env) do
     {
-      "DANGER_USE_LOCAL_GIT" => "true"
+      "DANGER_USE_LOCAL_GIT" => "true",
+      "LOCAL_GIT_PR_ID" => "1234"
     }
   end
 
@@ -137,17 +142,19 @@ describe Danger::LocalGitRepo do
 
       context "no PRs" do
         it "raise an exception" do
-          run_in_repo(false) do
+          run_in_repo(merge_pr: false) do
             expect { source }.to raise_error RuntimeError
           end
         end
       end
-    end
-  end
 
-  describe "#supported_request_sources" do
-    it "supports GitHub" do
-      expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
+      context "squash and merge PR" do
+        it "works" do
+          run_in_repo(merge_pr: false, squash_and_merge_pr: true) do
+            expect(source.pull_request_id).to eq "1234"
+          end
+        end
+      end
     end
   end
 end
