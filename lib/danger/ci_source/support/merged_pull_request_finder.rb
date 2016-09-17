@@ -22,14 +22,14 @@ module Danger
 
     # @return [String] Log line of format: "Merge pull request #42"
     def most_recent_merged_pull_request
-      @last_merged_pull_request ||= begin
+      @most_recent_merged_pull_request ||= begin
         git_logs.lines.grep(/Merge pull request #{pull_request_ref}/)[0]
       end
     end
 
     # @return [String] Log line of format: "description (#42)"
     def most_recent_squash_and_merged_pull_request
-      @last_merged_pull_request ||= begin
+      @most_recent_squash_and_merged_pull_request ||= begin
         git_logs.lines.grep(/#{pull_request_ref}/)[0]
       end
     end
