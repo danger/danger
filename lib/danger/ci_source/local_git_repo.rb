@@ -2,6 +2,7 @@
 
 require "git"
 require "uri"
+require "danger/ci_source/support/merged_pull_request_finder"
 
 module Danger
   # ignore
@@ -42,32 +43,12 @@ module Danger
         end
       end
 
-      specific_pr = env["LOCAL_GIT_PR_ID"]
-      pr_ref = specific_pr ? "##{specific_pr}" : ""
-      logs = "log --oneline"
+      pull_request_id, sha = MergedPullRequestFinder.new(
+        specific_pull_request_id: env["LOCAL_GIT_PR_ID"], git: git
+      ).call
 
-      # get the most recent PR merge
-      pr_merge = begin
-        if pr_ref.empty?
-          nil
-        elsif merge_pr = run_git(logs.strip).lines.grep(Regexp.new("Merge pull request " + pr_ref))[0]
-          merge_pr
-        elsif squash_merge = run_git(logs.strip).lines.grep(/#{pr_ref}/)[0]
-          squash_merge
-        end
-      end
-
-      if pr_merge.to_s.empty?
-        if specific_pr
-          raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
-        else
-          raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
-        end
-      end
-
-      self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
-      sha = pr_merge.split(" ")[0]
-      parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
+      self.pull_request_id = pull_request_id
+      parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
       self.base_commit = parents[0]
       self.head_commit = parents[1]
     end
