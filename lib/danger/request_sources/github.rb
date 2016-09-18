@@ -52,8 +52,8 @@ module Danger
 
       def setup_danger_branches
         # we can use a github specific feature here:
-        base_commit = self.pr_json[:base][:sha]
-        head_commit = self.pr_json[:head][:sha]
+        base_commit = self.pr_json["base"]["sha"]
+        head_commit = self.pr_json["head"]["sha"]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
@@ -65,7 +65,7 @@ module Danger
 
       def fetch_details
         self.pr_json = client.pull_request(ci_source.repo_slug, ci_source.pull_request_id)
-        if self.pr_json[:message] == "Moved Permanently"
+        if self.pr_json["message"] == "Moved Permanently"
           raise "Repo moved or renamed, make sure to update the git remote".red
         end
 
@@ -74,13 +74,13 @@ module Danger
       end
 
       def ignored_violations_from_pr(pr_json)
-        pr_body = pr_json[:body]
+        pr_body = pr_json["body"]
         return [] if pr_body.nil?
         pr_body.chomp.scan(/>\s*danger\s*:\s*ignore\s*"(.*)"/i).flatten
       end
 
       def fetch_issue_details(pr_json)
-        href = pr_json[:_links][:issue][:href]
+        href = pr_json["_links"]["issue"]["href"]
         self.issue_json = client.get(href)
       end
 
@@ -151,14 +151,13 @@ module Danger
         # Note: this can terminate the entire process.
         submit_pull_request_status!(warnings: warnings,
                                       errors: errors,
-                                 details_url: comment_result[:html_url])
+                                 details_url: comment_result["html_url"])
       end
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
         status = (errors.count.zero? ? "success" : "failure")
         message = generate_description(warnings: warnings, errors: errors)
-
-        latest_pr_commit_ref = self.pr_json[:head][:sha]
+        latest_pr_commit_ref = self.pr_json["head"]["sha"]
 
         if latest_pr_commit_ref.empty? || latest_pr_commit_ref.nil?
           raise "Couldn't find a commit to update its status".red
@@ -176,7 +175,7 @@ module Danger
           # use a read-only GitHub account
           if errors.count > 0
             # We need to fail the actual build here
-            is_private = pr_json[:base][:repo][:private]
+            is_private = pr_json["base"]["repo"]["private"]
             if is_private
               abort("\nDanger has failed this build. \nFound #{'error'.danger_pluralize(errors.count)} and I don't have write access to the PR to set a PR status.")
             else
@@ -203,32 +202,32 @@ module Danger
 
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        danger_comments = pr_comments.select { |comment| comment[:body].include?("generated_by_#{danger_id}") }
+        danger_comments = pr_comments.select { |comment| comment["body"].include?("generated_by_#{danger_id}") }
         non_danger_comments = pr_comments - danger_comments
 
-        submit_inline_comments_for_kind!("warning", warnings, diff_lines, danger_comments, previous_violations[:warning], danger_id: danger_id)
-        submit_inline_comments_for_kind!("no_entry_sign", errors, diff_lines, danger_comments, previous_violations[:error], danger_id: danger_id)
-        submit_inline_comments_for_kind!("book", messages, diff_lines, danger_comments, previous_violations[:message], danger_id: danger_id)
+        submit_inline_comments_for_kind!("warning", warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
+        submit_inline_comments_for_kind!("no_entry_sign", errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
+        submit_inline_comments_for_kind!("book", messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
         submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
 
         # submit removes from the array all comments that are still in force
         # so we strike out all remaining ones
         danger_comments.each do |comment|
-          violation = violations_from_table(comment[:body]).first
+          violation = violations_from_table(comment["body"]).first
           if !violation.nil? && violation.sticky
             body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "github")
-            client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
+            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
           else
             # We remove non-sticky violations that have no replies
             # Since there's no direct concept of a reply in GH, we simply consider
             # the existance of non-danger comments in that line as replies
             replies = non_danger_comments.select do |potential|
-              potential[:path] == comment[:path] &&
-                potential[:position] == comment[:position] &&
-                potential[:commit_id] == comment[:commit_id]
+              potential["path"] == comment["path"] &&
+                potential["position"] == comment["position"] &&
+                potential["commit_id"] == comment["commit_id"]
             end
 
-            client.delete_pull_request_comment(ci_source.repo_slug, comment[:id]) if replies.empty?
+            client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
           end
         end
       end
@@ -240,7 +239,7 @@ module Danger
       end
 
       def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
-        head_ref = pr_json[:head][:sha]
+        head_ref = pr_json["head"]["sha"]
         previous_violations ||= []
         is_markdown_content = emoji.nil?
 
@@ -265,13 +264,13 @@ module Danger
           end
 
           matching_comments = danger_comments.select do |comment_data|
-            if comment_data[:path] == m.file && comment_data[:commit_id] == head_ref && comment_data[:position] == position
+            if comment_data["path"] == m.file && comment_data["commit_id"] == head_ref && comment_data["position"] == position
               # Parse it to avoid problems with strikethrough
-              violation = violations_from_table(comment_data[:body]).first
+              violation = violations_from_table(comment_data["body"]).first
               if violation
                 messages_are_equivalent(violation, m)
               else
-                comment_data[:body] == body
+                comment_data["body"] == body
               end
             else
               false
@@ -287,7 +286,7 @@ module Danger
 
             # Update the comment to remove the strikethrough if present
             comment = matching_comments.first
-            client.update_pull_request_comment(ci_source.repo_slug, comment[:id], body)
+            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
           end
 
           # Remove this element from the array
@@ -360,7 +359,7 @@ module Danger
       end
 
       def markdown_link_to_message(message, hide_link)
-        url = "https://github.com/#{ci_source.repo_slug}/blob/#{pr_json[:head][:sha]}/#{message.file}#L#{message.line}"
+        url = "https://github.com/#{ci_source.repo_slug}/blob/#{pr_json["head"]["sha"]}/#{message.file}#L#{message.line}"
 
         if hide_link
           "<span data-href=\"#{url}\"/>"
@@ -371,7 +370,7 @@ module Danger
 
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
-        matched = self.issue_json[:repository_url].match(%r{repos\/(.*)\/})
+        matched = self.issue_json["repository_url"].match(%r{repos\/(.*)\/})
         return matched[1] if matched && matched[1]
       rescue
         nil

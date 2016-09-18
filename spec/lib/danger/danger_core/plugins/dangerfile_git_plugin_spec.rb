@@ -7,11 +7,11 @@ def run_in_repo_with_diff
       File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
       File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
-      `git commit -m "adding file1"`
+      `git commit -m "adding file1 & file2"`
       `git checkout -b new-branch --quiet`
       File.open(dir + "/file2", "w") { |f| f.write "Pants!" }
       `git add .`
-      `git commit -m "adding file2"`
+      `git commit -m "update file2"`
       g = Git.open(".")
       yield g
     end

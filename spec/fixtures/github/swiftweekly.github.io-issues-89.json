@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io/issues/89",
+  "repository_url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io",
+  "labels_url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io/issues/89/labels{/name}",
+  "comments_url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io/issues/89/comments",
+  "events_url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io/issues/89/events",
+  "html_url": "https://github.com/SwiftWeekly/swiftweekly.github.io/pull/89",
+  "id": 177094902,
+  "number": 89,
+  "title": "Flesh out issue 38",
+  "user": {
+    "login": "jpsim",
+    "id": 474794,
+    "avatar_url": "https://avatars.githubusercontent.com/u/474794?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jpsim",
+    "html_url": "https://github.com/jpsim",
+    "followers_url": "https://api.github.com/users/jpsim/followers",
+    "following_url": "https://api.github.com/users/jpsim/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jpsim/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jpsim/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jpsim/subscriptions",
+    "organizations_url": "https://api.github.com/users/jpsim/orgs",
+    "repos_url": "https://api.github.com/users/jpsim/repos",
+    "events_url": "https://api.github.com/users/jpsim/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jpsim/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "labels": [
+
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2016-09-15T05:52:11Z",
+  "updated_at": "2016-09-15T17:04:02Z",
+  "closed_at": "2016-09-15T16:59:01Z",
+  "pull_request": {
+    "url": "https://api.github.com/repos/SwiftWeekly/swiftweekly.github.io/pulls/89",
+    "html_url": "https://github.com/SwiftWeekly/swiftweekly.github.io/pull/89",
+    "diff_url": "https://github.com/SwiftWeekly/swiftweekly.github.io/pull/89.diff",
+    "patch_url": "https://github.com/SwiftWeekly/swiftweekly.github.io/pull/89.patch"
+  },
+  "body": "Based on suggestions from #75, #79 and from scanning the mailing lists and commits in the last week to the main apple repos. @jessesquires @modocache @BasThomas if you have time to look through this, I'd appreciate your feedback! Thanks for your help writing this issue 😄 ",
+  "closed_by": {
+    "login": "jessesquires",
+    "id": 2301114,
+    "avatar_url": "https://avatars.githubusercontent.com/u/2301114?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jessesquires",
+    "html_url": "https://github.com/jessesquires",
+    "followers_url": "https://api.github.com/users/jessesquires/followers",
+    "following_url": "https://api.github.com/users/jessesquires/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jessesquires/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jessesquires/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jessesquires/subscriptions",
+    "organizations_url": "https://api.github.com/users/jessesquires/orgs",
+    "repos_url": "https://api.github.com/users/jessesquires/repos",
+    "events_url": "https://api.github.com/users/jessesquires/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jessesquires/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}

@@ -40,10 +40,10 @@ describe Danger::RequestSources::GitHub, host: :github do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"))
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("github_api/issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"))
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
@@ -58,7 +58,7 @@ describe Danger::RequestSources::GitHub, host: :github do
     end
 
     it "raises an exception when the repo was moved from the git remote" do
-      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return({ message: "Moved Permanently" })
+      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return({ "message" => "Moved Permanently" })
 
       expect do
         @g.fetch_details
@@ -127,7 +127,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "fails when no head commit is set" do
-        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        @g.pr_json = { "base" => { "sha" => "" }, "head" => { "sha" => "" } }
         expect do
           @g.submit_pull_request_status!
         end.to raise_error("Couldn't find a commit to update its status".red)
@@ -136,7 +136,7 @@ describe Danger::RequestSources::GitHub, host: :github do
 
     describe "issue creation" do
       before do
-        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        @g.pr_json = { "base" => { "sha" => "" }, "head" => { "sha" => "" } }
         allow(@g).to receive(:submit_pull_request_status!).and_return(true)
       end
 
@@ -151,7 +151,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist" do
-        comments = [{ body: "generated_by_danger", id: "12" }]
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
@@ -161,7 +161,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
-        comments = [{ body: "generated_by_another_danger", id: "12" }]
+        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
@@ -171,7 +171,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything" do
-        comments = [{ body: "generated_by_danger", id: "12" }]
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
@@ -181,7 +181,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
-        comments = [{ body: "generated_by_another_danger", id: "12" }]
+        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
 
@@ -224,7 +224,7 @@ describe Danger::RequestSources::GitHub, host: :github do
 
     describe "inline issues" do
       before do
-        issues = JSON.parse(fixture("github_api/inline_comments"), symbolize_names: true)
+        issues = JSON.parse(fixture("github_api/inline_comments"))
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
         diff = diff_fixture("github_api/inline_comments_pr_diff")
@@ -271,7 +271,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "removes inline comments if they are not included" do
-        issues = [{ body: "generated_by_another_danger", id: "12" }]
+        issues = [{ "body" => "generated_by_another_danger", "id" => "12" }]
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
 
         allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
