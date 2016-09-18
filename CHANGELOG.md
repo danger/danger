@@ -4,7 +4,7 @@
 * Fix request_sources files and specs location - Juanito Fatas
 * Fix request_sources references in CI subclasses - Juanito Fatas
 * trying to fix danger bugs - Juanito Fatas
-* fix Danger breaks when files are moved - Juanito Fatas
+* Fix Danger breaks when files are moved - Juanito Fatas
 
 ## 3.3.0
 

@@ -79,22 +79,22 @@ describe Danger::Executor do
   end
 
   def to_json(raw)
-    JSON.parse raw
+    JSON.parse(raw)
   end
 
   def swiftweekly_pr_89_as_json(head_sha, base_sha)
-    pr_json = to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-pulls-89.json")
+    pr_json = to_json(IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-pulls-89.json"))
     pr_json["base"]["sha"] = base_sha
     pr_json["head"]["sha"] = head_sha
     pr_json
   end
 
   def swiftweekly_issues_89_as_json
-    to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89.json")
+    to_json(IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89.json"))
   end
 
   def swiftweekly_issue_89_comments_as_json
-    to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89-comments.json")
+    to_json(IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89-comments.json"))
   end
 
   it "works" do
@@ -111,9 +111,7 @@ describe Danger::Executor do
         allow(fake_client).to receive(:create_status) { true }
 
         pretend_we_are_in_the_travis do
-          Danger::Executor.new(ENV).run(
-            dangerfile_path: "Dangerfile"
-          )
+          Danger::Executor.new(ENV).run(dangerfile_path: "Dangerfile")
         end
       end
     end
