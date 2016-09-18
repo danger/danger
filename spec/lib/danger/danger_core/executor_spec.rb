@@ -118,4 +118,12 @@ describe Danger::Executor do
       end
     end
   end
+
+  after do
+    module Danger
+      class Dangerfile
+        undef_method :prose
+      end
+    end
+  end
 end
