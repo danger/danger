@@ -21,7 +21,7 @@ module Danger
 end
 
 describe Danger::Executor do
-  let!(:spec_root) { Dir.pwd }
+  let!(:project_root) { Dir.pwd }
 
   def prepare_fake_swiftweekly_repository(dir)
     head_sha = base_sha = nil
@@ -29,7 +29,7 @@ describe Danger::Executor do
     Dir.chdir dir do
       `echo "# SwiftWeekly" >> README.md`
       `mkdir _drafts _posts`
-      FileUtils.cp "#{spec_root}/spec/fixtures/github/Dangerfile", dir
+      FileUtils.cp "#{project_root}/spec/fixtures/github/Dangerfile", dir
       `git init`
       `git add .`
       `git commit -m "first commit"`
@@ -83,18 +83,18 @@ describe Danger::Executor do
   end
 
   def swiftweekly_pr_89_as_json(head_sha, base_sha)
-    pr_json = to_json IO.read("#{spec_root}/spec/fixtures/github/swiftweekly.github.io-pulls-89.json")
+    pr_json = to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-pulls-89.json")
     pr_json["base"]["sha"] = base_sha
     pr_json["head"]["sha"] = head_sha
     pr_json
   end
 
   def swiftweekly_issues_89_as_json
-    to_json IO.read("#{spec_root}/spec/fixtures/github/swiftweekly.github.io-issues-89.json")
+    to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89.json")
   end
 
   def swiftweekly_issue_89_comments_as_json
-    to_json IO.read("#{spec_root}/spec/fixtures/github/swiftweekly.github.io-issues-89-comments.json")
+    to_json IO.read("#{project_root}/spec/fixtures/github/swiftweekly.github.io-issues-89-comments.json")
   end
 
   it "works" do
