@@ -359,7 +359,7 @@ module Danger
       end
 
       def markdown_link_to_message(message, hide_link)
-        url = "https://github.com/#{ci_source.repo_slug}/blob/#{pr_json["head"]["sha"]}/#{message.file}#L#{message.line}"
+        url = "https://github.com/#{ci_source.repo_slug}/blob/#{pr_json['head']['sha']}/#{message.file}#L#{message.line}"
 
         if hide_link
           "<span data-href=\"#{url}\"/>"

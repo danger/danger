@@ -51,7 +51,7 @@ describe Danger::Executor do
       `git add .`
       `git commit -m "move issue 38 to _posts"`
 
-      shas =`git log --oneline`.scan(/\b[0-9a-f]{5,40}\b/)
+      shas = `git log --oneline`.scan(/\b[0-9a-f]{5,40}\b/)
       head_sha = shas.first
       base_sha = shas.last
     end
@@ -68,7 +68,7 @@ describe Danger::Executor do
     ENV["HAS_JOSH_K_SEAL_OF_APPROVAL"] = "true"
     ENV["TRAVIS_PULL_REQUEST"] = "42"
     ENV["TRAVIS_REPO_SLUG"] = "danger/danger"
-    ENV["DANGER_GITHUB_API_TOKEN"] = "1234567890"*4
+    ENV["DANGER_GITHUB_API_TOKEN"] = "1234567890" * 4 # octokit token is of size 40
 
     yield
   ensure
