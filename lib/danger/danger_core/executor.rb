@@ -40,6 +40,7 @@ module Danger
         # Offer the chance for a user to specify a branch through the command line
         ci_base = base || EnvironmentManager.danger_base_branch
         ci_head = head || EnvironmentManager.danger_head_branch
+
         dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
 
         # Parse the local Dangerfile

@@ -4,7 +4,7 @@ module Danger
       before do
         dm = testing_dangerfile
         @dsl = DangerfileGitHubPlugin.new dm
-        pr_response = JSON.parse(fixture("github_api/pr_response"), symbolize_names: true)
+        pr_response = JSON.parse(fixture("github_api/pr_response"))
         allow(@dsl).to receive(:pr_json).and_return(pr_response)
       end
 

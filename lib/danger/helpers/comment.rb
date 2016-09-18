@@ -8,7 +8,7 @@ module Danger
     end
 
     def self.from_github(comment)
-      self.new(comment[:id], comment[:body])
+      self.new(comment["id"], comment["body"])
     end
 
     def self.from_gitlab(comment)

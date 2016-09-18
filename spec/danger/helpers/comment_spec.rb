@@ -3,7 +3,7 @@ require "danger/helpers/comment"
 describe Danger::Comment do
   describe ".from_github" do
     it "initializes with GitHub comment data structure" do
-      github_comment = { id: 42, body: "github comment" }
+      github_comment = { "id" => 42, "body" => "github comment" }
 
       result = described_class.from_github(github_comment)
 
