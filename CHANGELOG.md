@@ -1,5 +1,7 @@
 ## master
 
+* Use danger_id as context for Github status - Thiago Felix
+
 ## 3.3.1
 
 * "danger local" can find squash-and-merge-type Pull Request - Juanito Fatas
