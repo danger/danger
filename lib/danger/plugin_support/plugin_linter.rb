@@ -130,9 +130,9 @@ module Danger
     # Generates a link to see an example of said rule
     #
     def link(ref)
-      if ref.kind_of? Range
+      if ref.kind_of?(Range)
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
-      elsif ref.kind_of? Fixnum
+      elsif ref.kind_of?(Integer)
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue
       else
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb".blue

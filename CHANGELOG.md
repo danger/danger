@@ -1,6 +1,7 @@
 ## master
 
 * Increase the number of commits `danger local` to search for merged PR - Juanito Fatas
+* Fix rubocop offenses in plugin_linter.rb - Juanito Fatas
 
 ## 3.3.1
 
