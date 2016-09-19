@@ -134,7 +134,7 @@ describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "uses danger_id as context of status" do
-        options = hash_including(:context => "danger/special_context")
+        options = hash_including("context" => "danger/special_context")
         expect(@g.client).to receive(:create_status).with(any_args, options).and_return({})
 
         @g.pr_json = { "head" => { "sha" => "pr_commit_ref" } }
