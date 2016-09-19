@@ -3,7 +3,7 @@
 has_app_changes = !git.modified_files.grep(/lib/).empty?
 has_test_changes = !git.modified_files.grep(/spec/).empty?
 
-if has_app_changes && !has_test_changes
+if has_app_changes && !has_test_changes && git.modified_files != ["lib/danger/version.rb"]
   warn("Tests were not updated", sticky: false)
 end
 
