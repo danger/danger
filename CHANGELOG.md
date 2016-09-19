@@ -1,6 +1,6 @@
 ## master
 
-* Use danger_id as context for Github status - Thiago Felix
+* Use danger_id as context for GitHub status - Thiago Felix
 
 ## 3.3.1
 
