@@ -8,6 +8,9 @@ if has_app_changes && !has_test_changes && !is_version_bump
   warn("Tests were not updated", sticky: false)
 end
 
+# Thanks other people!
+message(":tada:") if is_version_bump && github.pr_author != "orta"
+
 # Make a note about contributors not in the organization
 unless github.api.organization_member?('danger', github.pr_author)
   message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
