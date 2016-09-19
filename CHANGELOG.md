@@ -1,5 +1,7 @@
 ## master
 
+* Simplify initialization of Octokit client in request_sources/github.rb - Juanito Fatas
+
 ## 3.3.2
 
 * Use danger_id as context for GitHub status - Thiago Felix
