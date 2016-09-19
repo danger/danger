@@ -1,5 +1,6 @@
 ## master
 
+* Use danger_id as context for GitHub status - Thiago Felix
 * Increase the number of commits `danger local` to search for merged PR - Juanito Fatas
 * Fix rubocop offenses in plugin_linter.rb - Juanito Fatas
 

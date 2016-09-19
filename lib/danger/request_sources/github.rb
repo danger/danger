@@ -151,10 +151,11 @@ module Danger
         # Note: this can terminate the entire process.
         submit_pull_request_status!(warnings: warnings,
                                       errors: errors,
-                                 details_url: comment_result["html_url"])
+                                 details_url: comment_result["html_url"],
+                                   danger_id: danger_id)
       end
 
-      def submit_pull_request_status!(warnings: [], errors: [], details_url: [])
+      def submit_pull_request_status!(warnings: [], errors: [], details_url: [], danger_id: "danger")
         status = (errors.count.zero? ? "success" : "failure")
         message = generate_description(warnings: warnings, errors: errors)
         latest_pr_commit_ref = self.pr_json["head"]["sha"]
@@ -166,7 +167,7 @@ module Danger
         begin
           client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
             description: message,
-            context: "danger/danger",
+            context: "danger/#{danger_id}",
             target_url: details_url
           })
         rescue
