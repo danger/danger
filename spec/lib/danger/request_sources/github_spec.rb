@@ -132,6 +132,14 @@ describe Danger::RequestSources::GitHub, host: :github do
           @g.submit_pull_request_status!
         end.to raise_error("Couldn't find a commit to update its status".red)
       end
+
+      it "uses danger_id as context of status" do
+        options = hash_including(:context => "danger/special_context")
+        expect(@g.client).to receive(:create_status).with(any_args, options).and_return({})
+
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" } }
+        @g.submit_pull_request_status!(danger_id: "special_context")
+      end
     end
 
     describe "issue creation" do
