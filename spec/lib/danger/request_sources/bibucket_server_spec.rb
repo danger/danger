@@ -5,6 +5,12 @@ describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server do
   let(:env) { stub_env }
   let(:bs) { Danger::RequestSources::BitbucketServer.new(stub_ci, env) }
 
+  describe "#new" do
+    it "should not raise uninitialized constant error" do
+      expect { described_class.new(stub_ci, env) }.not_to raise_error(NameError)
+    end
+  end
+
   describe "#host" do
     it "sets the host specified by `DANGER_BITBUCKETSERVER_HOST`" do
       expect(bs.host).to eql("stash.example.com")

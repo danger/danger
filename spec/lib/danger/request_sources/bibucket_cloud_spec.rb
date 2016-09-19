@@ -5,6 +5,12 @@ describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
   let(:env) { stub_env }
   let(:bs) { Danger::RequestSources::BitbucketCloud.new(stub_ci, env) }
 
+  describe "#new" do
+    it "should not raise uninitialized constant error" do
+      expect { described_class.new(stub_ci, env) }.not_to raise_error(NameError)
+    end
+  end
+
   describe "#validates_as_api_source" do
     it "validates_as_api_source for non empty `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_PASSWORD`" do
       expect(bs.validates_as_api_source?).to be true
