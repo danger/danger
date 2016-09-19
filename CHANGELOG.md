@@ -1,5 +1,7 @@
 ## master
 
+* Increase the number of commits `danger local` to search for merged PR - Juanito Fatas
+
 ## 3.3.1
 
 * "danger local" can find squash-and-merge-type Pull Request - Juanito Fatas
