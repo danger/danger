@@ -15,11 +15,7 @@ module Danger
         self.environment = environment
         self.support_tokenless_auth = false
 
-        Octokit.auto_paginate = true
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
-        if api_url
-          Octokit.api_endpoint = api_url
-        end
       end
 
       def validates_as_api_source?
@@ -34,16 +30,23 @@ module Danger
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
       end
 
+      # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
+      # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
+      # correctly named variable.
       def api_url
-        # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
-        # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
-        # correctly named variable.
-        @environment["DANGER_GITHUB_API_HOST"] || @environment["DANGER_GITHUB_API_BASE_URL"]
+        @environment.fetch("DANGER_GITHUB_API_HOST") do
+          @environment.fetch("DANGER_GITHUB_API_BASE_URL") do
+            "https://api.github.com/".freeze
+          end
+        end
       end
 
       def client
         raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
-        @client ||= Octokit::Client.new(access_token: @token)
+
+        @client ||= begin
+          Octokit::Client.new(access_token: @token, auto_paginate: true, api_endpoint: api_url)
+        end
       end
 
       def pr_diff
