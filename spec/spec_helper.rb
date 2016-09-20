@@ -24,6 +24,8 @@ RSpec.configure do |config|
   config.include Danger::Support::BitbucketCloudHelper, host: :bitbucket_cloud
   config.run_all_when_everything_filtered = true
   config.filter_run focus: true
+  config.order = :random
+  Kernel.srand config.seed
 end
 
 # Now that we could be using Danger's plugins in Danger
