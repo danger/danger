@@ -8,6 +8,13 @@ module Danger
       include Danger::Helpers::CommentsHelper
       attr_accessor :pr_json
 
+      def self.env_vars
+        [
+          "DANGER_BITBUCKETCLOUD_USERNAME",
+          "DANGER_BITBUCKETCLOUD_PASSWORD",
+        ]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment

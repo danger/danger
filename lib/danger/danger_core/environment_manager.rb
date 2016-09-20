@@ -28,7 +28,7 @@ module Danger
         self.request_source = request_source
       end
 
-      raise "Could not find a Request Source for #{ci_klass}\nCI: #{ci_source.inspect}".red unless self.request_source
+      raise_error_for_no_request_source unless self.request_source
       self.scm = self.request_source.scm
     end
 
@@ -66,6 +66,42 @@ module Danger
 
     def self.danger_base_branch
       "danger_base"
+    end
+
+    def raise_error_for_no_request_source
+      title = ""
+      subtitle = ""
+      repo = ci_source.repo_url
+      case repo
+      when repo =~ /github/
+        title = "For your GitHub repo, you need to expose:" + RequestSources::GitHub.env_vars.join(", ").yellow
+      when repo =~ /gitlab/
+        title = "For your GitLab repo, you need to expose:" + RequestSources::GitLab.env_vars.join(", ").yellow
+
+      when repo =~ /bitbucket.org/
+        title = "For your BitBucket repo, you need to expose:" + RequestSources::BitbucketCloud.env_vars.join(", ").yellow
+      else
+        available = RequestSources::RequestSource.available_request_sources.map do |klass|
+        " - #{klass}, #{klass.env_vars.join(', ').yellow}"
+        end
+        title = "For Danger to run on this project, you need to expose some of following the ENV vars\n#{available.join('\n')}"
+      end
+
+      if ci_source.class == Danger::Travis
+        subtitle = "If you have an open source project, you should ensure 'Display value in build log' enabled, so that PRs from forks work."
+      end
+
+      repo_url.
+
+      keys = env.keys
+
+      "Could not find an API for "
+
+      # loop through all the API clients
+      # indicate their env vars
+      # ensure them that we know that you're on travis or whatever
+      #
+      # raise "Could not find a Request Source for #{ci_klass}\nCI: #{ci_source.inspect}".red
     end
   end
 end

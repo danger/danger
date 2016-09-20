@@ -10,6 +10,10 @@ module Danger
 
       attr_accessor :pr_json, :issue_json, :support_tokenless_auth
 
+      def self.env_vars
+        ["DANGER_GITHUB_API_TOKEN"]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
