@@ -28,7 +28,7 @@ module Danger
   #
   # @example Warn when somebody tries to add nokogiri to the project
   #
-  #          diff = git.diff_for_file["Gemfile.lock"]
+  #          diff = git.diff_for_file("Gemfile.lock")
   #          if diff && diff.patch =~ "nokogiri"
   #            warn 'Please do not add nokogiri to the project. Thank you.'
   #          end
