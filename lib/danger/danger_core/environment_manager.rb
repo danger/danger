@@ -3,7 +3,7 @@ require "danger/request_sources/request_source"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :request_source, :scm
+    attr_accessor :ci_source, :request_source, :scm, :ui
 
     # Finds a Danger::CI class based on the ENV
     def self.local_ci_source(env)
@@ -15,9 +15,10 @@ module Danger
       local_ci_source(env).validates_as_pr?(env)
     end
 
-    def initialize(env)
+    def initialize(env, ui)
       ci_klass = self.class.local_ci_source(env)
       self.ci_source = ci_klass.new(env)
+      self.ui = ui
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)
@@ -28,7 +29,7 @@ module Danger
         self.request_source = request_source
       end
 
-      raise_error_for_no_request_source unless self.request_source
+      raise_error_for_no_request_source(env, ui) unless self.request_source
       self.scm = self.request_source.scm
     end
 
@@ -68,40 +69,45 @@ module Danger
       "danger_base"
     end
 
-    def raise_error_for_no_request_source
-      title = ""
-      subtitle = ""
+    def raise_error_for_no_request_source(env, ui)
       repo = ci_source.repo_url
-      case repo
-      when repo =~ /github/
-        title = "For your GitHub repo, you need to expose:" + RequestSources::GitHub.env_vars.join(", ").yellow
-      when repo =~ /gitlab/
-        title = "For your GitLab repo, you need to expose:" + RequestSources::GitLab.env_vars.join(", ").yellow
+      source = nil, title = "", subtitle = ""
 
-      when repo =~ /bitbucket.org/
-        title = "For your BitBucket repo, you need to expose:" + RequestSources::BitbucketCloud.env_vars.join(", ").yellow
+      if repo =~ /github/
+        source = RequestSources::GitHub
+      elsif repo =~ /gitlab/
+        source = RequestSources::GitLab
+      elsif repo =~ /bitbucket.org/
+        source = RequestSources::BitbucketCloud
+      else
+        source = nil
+      end
+
+      if source
+        source_name = source.to_s.sub("Danger::RequestSources::", "")
+        title = "For your #{source_name} repo, you need to expose: " + source.env_vars.join(", ").yellow
+        subtitle = "You may also need: #{source.optional_env_vars.join(', ')}" if source.optional_env_vars.any?
       else
         available = RequestSources::RequestSource.available_request_sources.map do |klass|
-        " - #{klass}, #{klass.env_vars.join(', ').yellow}"
+          source_name = klass.to_s.sub("Danger::RequestSources::", "")
+          " - #{source_name}: #{klass.env_vars.join(', ').yellow}"
         end
-        title = "For Danger to run on this project, you need to expose some of following the ENV vars\n#{available.join('\n')}"
+        title = "For Danger to run on this project, you need to expose a set of following the ENV vars:\n#{available.join("\n")}"
       end
 
-      if ci_source.class == Danger::Travis
-        subtitle = "If you have an open source project, you should ensure 'Display value in build log' enabled, so that PRs from forks work."
+      if env["TRAVIS_SECURE_ENV_VARS"] == "true"
+        subtitle += "\nTravis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work."
+        subtitle += "\nThis also means that people can see this token, so this account should have no write access to repos."
       end
 
-      repo_url.
+      ui.title "Could not set up API to Code Review site for Danger\n"
+      ui.puts title
+      ui.puts subtitle
 
-      keys = env.keys
-
-      "Could not find an API for "
-
-      # loop through all the API clients
-      # indicate their env vars
-      # ensure them that we know that you're on travis or whatever
-      #
-      # raise "Could not find a Request Source for #{ci_klass}\nCI: #{ci_source.inspect}".red
+      ui.puts "\nFound these keys in your ENV: #{env.keys.join(', ')}."
+      ui.puts "\nFailing the build, Danger cannot run without API access."
+      ui.puts "You can see more information at http://danger.systems/guides/getting_started.html"
+      exit 1
     end
   end
 end

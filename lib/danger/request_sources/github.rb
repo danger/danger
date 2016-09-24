@@ -14,6 +14,10 @@ module Danger
         ["DANGER_GITHUB_API_TOKEN"]
       end
 
+      def self.optional_env_vars
+        ["DANGER_GITHUB_HOST", "DANGER_GITHUB_API_BASE_URL"]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment

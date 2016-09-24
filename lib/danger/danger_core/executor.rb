@@ -27,7 +27,7 @@ module Danger
       end
 
       # OK, then we can have some
-      env ||= EnvironmentManager.new(@system_env)
+      env ||= EnvironmentManager.new(@system_env, cork)
       dm ||= Dangerfile.new(env, cork)
 
       dm.init_plugins

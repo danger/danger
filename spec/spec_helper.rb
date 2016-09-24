@@ -55,7 +55,7 @@ end
 # rubocop:enable Lint/NestedMethodDefinition
 
 def testing_dangerfile
-  env = Danger::EnvironmentManager.new(stub_env)
+  env = Danger::EnvironmentManager.new(stub_env, testing_ui)
   dm = Danger::Dangerfile.new(env, testing_ui)
 end
 

@@ -1,7 +1,5 @@
-require "bundler/gem_tasks"
-require "rubocop/rake_task"
-
 begin
+  require "bundler/gem_tasks"
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:specs)
 rescue LoadError
@@ -17,6 +15,7 @@ task :spec do
   Rake::Task["spec_docs"].invoke
 end
 
+require "rubocop/rake_task"
 desc "Run RuboCop on the lib/specs directory"
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.patterns = Dir.glob(["lib/**/*.rb", "spec/**/*.rb"]) - Dir.glob(["spec/fixtures/**/*", "lib/danger/plugin_support/plugin_parser.rb"])

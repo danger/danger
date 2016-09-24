@@ -5,6 +5,14 @@ module Danger
 
       attr_accessor :ci_source, :environment, :scm, :host, :ignored_violations
 
+      def self.env_vars
+        raise "Subclass and overwrite self.env_vars"
+      end
+
+      def self.optional_env_vars
+        []
+      end
+
       def self.inherited(child_class)
         available_request_sources.add child_class
         super
