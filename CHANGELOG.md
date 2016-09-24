@@ -1,5 +1,8 @@
 ## master
 
+* Simplify initialization of Octokit client in request_sources/github.rb - Juanito Fatas
+* Ensure commits exist inside the local git repo before using them for diffs - orta
+
 ## 3.3.2
 
 * Use danger_id as context for GitHub status - Thiago Felix

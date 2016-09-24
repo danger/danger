@@ -36,14 +36,14 @@ module Danger
       exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1].chomp
     end
 
+    def ensure_commitish_exists!(commitish)
+      exec "fetch" if exec("--no-pager show #{commitish}").empty?
+    end
+
     private
 
     def default_env
       { "LANG" => "en_US.UTF-8" }
-    end
-
-    def ensure_commitish_exists!(commitish)
-      exec "fetch" if exec("--no-pager show #{commitish}").empty?
     end
   end
 end
