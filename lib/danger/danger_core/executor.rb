@@ -10,28 +10,21 @@ module Danger
             base: nil,
             head: nil,
             dangerfile_path: nil,
-            danger_id: nil)
+            danger_id: nil,
+            fail_on_errors: nil)
 
-      cork ||= Cork::Board.new(silent: false,
-                              verbose: false)
+      # Create a silent Cork instance if cork is nil, as it's like a test
+      cork ||= Cork::Board.new(silent: false, verbose: false)
 
-      # Could we find a CI source at all?
-      unless EnvironmentManager.local_ci_source(@system_env)
-        abort("Could not find the type of CI for Danger to run on.".red)
-      end
-
-      # Could we determine that the CI source is inside a PR?
-      unless EnvironmentManager.pr?(@system_env)
-        cork.puts "Not a Pull Request - skipping `danger` run".yellow
-        return
-      end
+      #
+      validate_ci
+      return unless validate_pr
 
       # OK, then we can have some
       env ||= EnvironmentManager.new(@system_env, cork)
       dm ||= Dangerfile.new(env, cork)
 
       dm.init_plugins
-
       dm.env.fill_environment_vars
 
       begin
@@ -51,6 +44,23 @@ module Danger
       ensure
         dm.env.clean_up
       end
+
+      exit(1) if fail_on_errors && dm.failed?
+    end
+
+    def validate_ci
+      # Could we find a CI source at all?
+      unless EnvironmentManager.local_ci_source(@system_env)
+        abort("Could not find the type of CI for Danger to run on.".red)
+      end
+    end
+
+    def validate_pr?
+    # Could we determine that the CI source is inside a PR?
+      unless EnvironmentManager.pr?(@system_env)
+        cork.puts "Not a Pull Request - skipping `danger` run".yellow
+      end
+      EnvironmentManager.pr?(@system_env)
     end
 
     def post_results(danger_file, danger_id)

@@ -54,7 +54,8 @@ module Command
           base: nil,
           head: nil,
           dangerfile_path: "Dangerfile",
-          danger_id: "danger"
+          danger_id: "danger",
+          fail_on_errors: false
         })
         Danger::Runner.run([])
       end
