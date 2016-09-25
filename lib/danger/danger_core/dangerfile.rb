@@ -233,6 +233,10 @@ module Danger
       end
     end
 
+    def failed?
+      violation_report[:errors].count > 0
+    end
+
     private
 
     def print_list(title, rows)

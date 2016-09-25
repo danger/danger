@@ -8,10 +8,12 @@ module Danger
     require "claide_plugin"
     @subcommands << CLAide::Command::Plugins
     CLAide::Plugins.config =
-      CLAide::Plugins::Configuration.new("Danger",
-                                         "danger",
-                                         "https://raw.githubusercontent.com/danger/danger.systems/master/plugins-search-generated.json",
-                                         "https://github.com/danger/danger-plugin-template")
+      CLAide::Plugins::Configuration.new(
+        "Danger",
+        "danger",
+        "https://raw.githubusercontent.com/danger/danger.systems/master/plugins-search-generated.json",
+        "https://github.com/danger/danger-plugin-template"
+      )
 
     require "danger/commands/plugins/plugin_lint"
     require "danger/commands/plugins/plugin_json"
@@ -30,6 +32,7 @@ module Danger
       @dangerfile_path = dangerfile if File.exist? dangerfile
       @base = argv.option("base")
       @head = argv.option("head")
+      @fail_on_errors = argv.option("fail-on-errors", false)
       @danger_id = argv.option("danger_id", "danger")
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
@@ -47,16 +50,20 @@ module Danger
       [
         ["--base=[master|dev|stable]", "A branch/tag/commit to use as the base of the diff"],
         ["--head=[master|dev|stable]", "A branch/tag/commit to use as the head"],
+        ["--fail-on-errors=<true|false>", "Should always fail the build process, defaults to false"],
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
         ["--danger_id=<id>", "The identifier of this Danger instance"]
       ].concat(super)
     end
 
     def run
-      Executor.new(ENV).run(base: @base,
-                       head: @head,
-                       dangerfile_path: @dangerfile_path,
-                       danger_id: @danger_id)
+      Executor.new(ENV).run(
+        base: @base,
+        head: @head,
+        dangerfile_path: @dangerfile_path,
+        danger_id: @danger_id,
+        fail_on_errors: @fail_on_errors
+      )
     end
   end
 end
