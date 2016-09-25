@@ -127,4 +127,37 @@ describe Danger::Executor do
 end
 
 describe Danger::Executor do
+  let(:valid_env) do
+    {
+    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
+    "TRAVIS_PULL_REQUEST" => "800",
+    "TRAVIS_REPO_SLUG" => "artsy/eigen"
+  }
+  end
+
+  let(:invalid_env) do
+    { "CIRCLE" => "true" }
+  end
+
+  describe "#validate_is_ci" do
+    it "aborts when the env is empty" do
+      e = Danger::Executor.new(invalid_env)
+
+      expect { e.validate_is_ci }.to raise_error(SystemExit)
+    end
+
+    it "passes when there is a legit CI for Danger" do
+      e = Danger::Executor.new(valid_env)
+      expect { e.validate_is_ci }.not_to raise_error
+    end
+  end
+
+  describe "#validate_is_pr?" do
+    xit "fails when the env is empty" do
+      # Need to set up the CI sources
+      env = {}
+      e = Danger::Executor.new(env)
+      expect(e.validate_is_pr?).to eq(false)
+    end
+  end
 end
