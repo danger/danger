@@ -87,10 +87,13 @@ describe Danger::Dangerfile, host: :github do
     end
   end
 
+  # Sidenote: If you're writing tests that touch the plugin infrastructure at runtime
+  # you're going to have a bad time if they share the class name. Make them unique.
+
   describe "initializing plugins" do
     it "should add a plugin to the @plugins array" do
-      class DangerTestPlugin < Danger::Plugin; end
-      allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerTestPlugin])
+      class DangerTestAddingToArrayPlugin < Danger::Plugin; end
+      allow(Danger::Plugin).to receive(:all_plugins).and_return([DangerTestAddingToArrayPlugin])
       dm = testing_dangerfile
       allow(dm).to receive(:core_dsls).and_return([])
       dm.init_plugins
@@ -99,14 +102,14 @@ describe Danger::Dangerfile, host: :github do
     end
 
     it "should add an instance variable to the dangerfile" do
-      class DangerTestPlugin < Danger::Plugin; end
-      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestPlugin])
+      class DangerTestAddingInstanceVarPlugin < Danger::Plugin; end
+      allow(ObjectSpace).to receive(:each_object).and_return([DangerTestAddingInstanceVarPlugin])
       dm = testing_dangerfile
       allow(dm).to receive(:core_dsls).and_return([])
       dm.init_plugins
 
-      expect { dm.test_plugin }.to_not raise_error
-      expect(dm.test_plugin.class).to eq(DangerTestPlugin)
+      expect { dm.test_adding_instance_var_plugin }.to_not raise_error
+      expect(dm.test_adding_instance_var_plugin.class).to eq(DangerTestAddingInstanceVarPlugin)
     end
   end
 
