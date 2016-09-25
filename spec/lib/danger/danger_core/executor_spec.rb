@@ -125,3 +125,6 @@ describe Danger::Executor do
     end
   end
 end
+
+describe Danger::Executor do
+end
