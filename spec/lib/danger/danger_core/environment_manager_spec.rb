@@ -51,12 +51,12 @@ describe Danger::EnvironmentManager do
 
   context "Without API tokens" do
     it "handles providing useful github info when the repo url is github" do
-      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gh_env, ui)
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
 
       expect do
-        e.raise_error_for_no_request_source(gh_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       expect(ui.string).to include("For your GitHub repo, you need to expose: DANGER_GITHUB_API_TOKEN")
@@ -64,39 +64,39 @@ describe Danger::EnvironmentManager do
     end
 
     it "handles providing useful gitlab info when the repo url is gitlab" do
-      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gl_env, ui)
-      e.ci_source.repo_url = "https://gitlab.com/danger-systems/danger.systems"
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
+      danger_em.ci_source.repo_url = "https://gitlab.com/danger-systems/danger.systems"
 
       expect do
-        e.raise_error_for_no_request_source(gl_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       expect(ui.string).to include("For your GitLab repo, you need to expose: DANGER_GITLAB_API_TOKEN")
     end
 
     it "handles providing useful bitbucket info when the repo url is bitbuckety" do
-      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gl_env, ui)
-      e.ci_source.repo_url = "https://bitbucket.org/ios/fancyapp"
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
+      danger_em.ci_source.repo_url = "https://bitbucket.org/ios/fancyapp"
 
       expect do
-        e.raise_error_for_no_request_source(gl_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       expect(ui.string).to include("For your BitbucketCloud repo, you need to expose: DANGER_BITBUCKETCLOUD_USERNAME, DANGER_BITBUCKETCLOUD_PASSWORD")
     end
 
     it "handles throwing out all kinds of info when the repo url isnt recognised" do
-      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gl_env, ui)
-      e.ci_source.repo_url = "https://orta.io/my/thing"
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
+      danger_em.ci_source.repo_url = "https://orta.io/my/thing"
 
       expect do
-        e.raise_error_for_no_request_source(gl_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       messages = [
@@ -112,26 +112,26 @@ describe Danger::EnvironmentManager do
     end
 
     it "includes all your env var keys" do
-      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "RANDO_KEY" => "secret" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "RANDO_KEY" => "secret" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gl_env, ui)
-      e.ci_source.repo_url = "https://orta.io/my/thing"
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
+      danger_em.ci_source.repo_url = "https://orta.io/my/thing"
 
       expect do
-        e.raise_error_for_no_request_source(gl_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       expect(ui.string).to include("Found these keys in your ENV: DANGER_GITHUB_API_TOKEN, HAS_JOSH_K_SEAL_OF_APPROVAL, RANDO_KEY.")
     end
 
     it "prints travis note in subtitle" do
-      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "RANDO_KEY" => "secret", "TRAVIS_SECURE_ENV_VARS" => "true" }
+      req_src_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "RANDO_KEY" => "secret", "TRAVIS_SECURE_ENV_VARS" => "true" }
       ui = testing_ui
-      e = Danger::EnvironmentManager.new(gl_env, ui)
-      e.ci_source.repo_url = "https://orta.io/my/thing"
+      danger_em = Danger::EnvironmentManager.new(req_src_env, ui)
+      danger_em.ci_source.repo_url = "https://orta.io/my/thing"
 
       expect do
-        e.raise_error_for_no_request_source(gl_env, ui)
+        danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
       expect(ui.string).to include("Travis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work.")
