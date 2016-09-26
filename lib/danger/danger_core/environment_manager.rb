@@ -70,44 +70,51 @@ module Danger
     end
 
     def raise_error_for_no_request_source(env, ui)
-      repo = ci_source.repo_url
-      source = nil, title = "", subtitle = ""
+      title, subtitle = extract_title_and_subtitle_from_source(ci_source.repo_url)
+      subtitle += travis_note if env["TRAVIS_SECURE_ENV_VARS"] == "true"
 
-      if repo =~ /github/
-        source = RequestSources::GitHub
-      elsif repo =~ /gitlab/
-        source = RequestSources::GitLab
-      elsif repo =~ /bitbucket.org/
-        source = RequestSources::BitbucketCloud
-      else
-        source = nil
+      ui_display_no_request_source_error_message(ui, env, title, subtitle)
+
+      exit(1)
+    end
+
+    private
+
+    def get_repo_source(repo_url)
+      if repo_url =~ /github/i
+        RequestSources::GitHub
+      elsif repo_url =~ /gitlab/i
+        RequestSources::GitLab
+      elsif repo_url =~ /bitbucket\.(org|com)/i
+        RequestSources::BitbucketCloud
       end
+    end
+
+    def extract_title_and_subtitle_from_source(repo_url)
+      source = get_repo_source(repo_url)
 
       if source
-        source_name = source.to_s.sub("Danger::RequestSources::", "")
-        title = "For your #{source_name} repo, you need to expose: " + source.env_vars.join(", ").yellow
+        title = "For your #{source.source_name} repo, you need to expose: " + source.env_vars.join(", ").yellow
         subtitle = "You may also need: #{source.optional_env_vars.join(', ')}" if source.optional_env_vars.any?
       else
-        available = RequestSources::RequestSource.available_request_sources.map do |klass|
-          source_name = klass.to_s.sub("Danger::RequestSources::", "")
-          " - #{source_name}: #{klass.env_vars.join(', ').yellow}"
-        end
-        title = "For Danger to run on this project, you need to expose a set of following the ENV vars:\n#{available.join("\n")}"
+        title = "For Danger to run on this project, you need to expose a set of following the ENV vars:\n#{RequestSources::RequestSource.available_source_names_and_envs.join("\n")}"
       end
 
-      if env["TRAVIS_SECURE_ENV_VARS"] == "true"
-        subtitle += "\nTravis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work."
-        subtitle += "\nThis also means that people can see this token, so this account should have no write access to repos."
-      end
+      [title, (subtitle || "")]
+    end
 
-      ui.title "Could not set up API to Code Review site for Danger\n"
+    def ui_display_no_request_source_error_message(ui, env, title, subtitle)
+      ui.title "Could not set up API to Code Review site for Danger\n".freeze
       ui.puts title
       ui.puts subtitle
+      ui.puts "\nFound these keys in your ENV: #{env.keys.join(', '.freeze)}."
+      ui.puts "\nFailing the build, Danger cannot run without API access.".freeze
+      ui.puts "You can see more information at http://danger.systems/guides/getting_started.html".freeze
+    end
 
-      ui.puts "\nFound these keys in your ENV: #{env.keys.join(', ')}."
-      ui.puts "\nFailing the build, Danger cannot run without API access."
-      ui.puts "You can see more information at http://danger.systems/guides/getting_started.html"
-      exit 1
+    def travis_note
+      "\nTravis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work." \
+      "\nThis also means that people can see this token, so this account should have no write access to repos."
     end
   end
 end
