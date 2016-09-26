@@ -123,5 +123,18 @@ describe Danger::EnvironmentManager do
 
       expect(ui.string).to include("Found these keys in your ENV: DANGER_GITHUB_API_TOKEN, HAS_JOSH_K_SEAL_OF_APPROVAL, RANDO_KEY.")
     end
+
+    it "prints travis note in subtitle" do
+      gl_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true", "RANDO_KEY" => "secret", "TRAVIS_SECURE_ENV_VARS" => "true" }
+      ui = testing_ui
+      e = Danger::EnvironmentManager.new(gl_env, ui)
+      e.ci_source.repo_url = "https://orta.io/my/thing"
+
+      expect do
+        e.raise_error_for_no_request_source(gl_env, ui)
+      end.to raise_error(SystemExit)
+
+      expect(ui.string).to include("Travis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work.")
+    end
   end
 end
