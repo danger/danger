@@ -2,6 +2,7 @@
 
 * Simplify initialization of Octokit client in request_sources/github.rb - Juanito Fatas
 * Ensure commits exist inside the local git repo before using them for diffs - orta
+* Big improvements to the warning around no API tokens being found - orta
 
 ## 3.3.2
 

@@ -5,6 +5,14 @@ module Danger
 
       attr_accessor :ci_source, :environment, :scm, :host, :ignored_violations
 
+      def self.env_vars
+        raise "Subclass and overwrite self.env_vars"
+      end
+
+      def self.optional_env_vars
+        []
+      end
+
       def self.inherited(child_class)
         available_request_sources.add child_class
         super
@@ -12,6 +20,16 @@ module Danger
 
       def self.available_request_sources
         @available_request_sources ||= Set.new
+      end
+
+      def self.source_name
+        to_s.sub("Danger::RequestSources::".freeze, "".freeze)
+      end
+
+      def self.available_source_names_and_envs
+        available_request_sources.map do |klass|
+          " - #{klass.source_name}: #{klass.env_vars.join(', '.freeze).yellow}"
+        end
       end
 
       def initialize(_ci_source, _environment)

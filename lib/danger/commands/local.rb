@@ -67,7 +67,7 @@ module Danger
         builder.adapter Faraday.default_adapter
       end
 
-      env = EnvironmentManager.new(ENV)
+      env = EnvironmentManager.new(ENV, cork)
       dm = Dangerfile.new(env, cork)
       dm.init_plugins
 

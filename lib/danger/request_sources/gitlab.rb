@@ -9,6 +9,14 @@ module Danger
       include Danger::Helpers::CommentsHelper
       attr_accessor :mr_json, :commits_json
 
+      def self.env_vars
+        ["DANGER_GITLAB_API_TOKEN"]
+      end
+
+      def self.optional_env_vars
+        ["DANGER_GITLAB_HOST", "DANGER_GITLAB_API_BASE_URL"]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
