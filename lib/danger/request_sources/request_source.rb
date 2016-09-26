@@ -22,6 +22,16 @@ module Danger
         @available_request_sources ||= Set.new
       end
 
+      def self.source_name
+        to_s.sub("Danger::RequestSources::".freeze, "".freeze)
+      end
+
+      def self.available_source_names_and_envs
+        available_request_sources.map do |klass|
+          " - #{klass.source_name}: #{klass.env_vars.join(', '.freeze).yellow}"
+        end
+      end
+
       def initialize(_ci_source, _environment)
         raise "Subclass and overwrite initialize"
       end
