@@ -13,7 +13,7 @@ module Danger
             danger_id: nil,
             fail_on_errors: nil)
 
-      # Create a silent Cork instance if cork is nil, as it's like a test
+      # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
 
       # Run some validations
