@@ -3,6 +3,7 @@ require "danger/danger_core/environment_manager"
 describe Danger::EnvironmentManager do
   it "does not return a CI source with no ENV deets" do
     env = { "KEY" => "VALUE" }
+
     expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
   end
 
@@ -12,8 +13,9 @@ describe Danger::EnvironmentManager do
             "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
             "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane",
             "TRAVIS_PULL_REQUEST" => number.to_s }
-    e = Danger::EnvironmentManager.new(env, testing_ui)
-    expect(e.ci_source.pull_request_id).to eq(number.to_s)
+    danger_em = Danger::EnvironmentManager.new(env, testing_ui)
+
+    expect(danger_em.ci_source.pull_request_id).to eq(number.to_s)
   end
 
   it "stores circle in the source" do
@@ -23,8 +25,9 @@ describe Danger::EnvironmentManager do
             "CI_PULL_REQUEST" => "https://github.com/artsy/eigen/pull/#{number}",
             "CIRCLE_PROJECT_USERNAME" => "orta",
             "CIRCLE_PROJECT_REPONAME" => "thing" }
-    e = Danger::EnvironmentManager.new(env, testing_ui)
-    expect(e.ci_source.pull_request_id).to eq(number.to_s)
+    danger_em = Danger::EnvironmentManager.new(env, testing_ui)
+
+    expect(danger_em.ci_source.pull_request_id).to eq(number.to_s)
   end
 
   it "creates a GitHub attr" do
@@ -32,21 +35,24 @@ describe Danger::EnvironmentManager do
             "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
             "TRAVIS_REPO_SLUG" => "KrauseFx/fastlane",
             "TRAVIS_PULL_REQUEST" => 123.to_s }
-    e = Danger::EnvironmentManager.new(env, testing_ui)
-    expect(e.request_source).to be_truthy
+    danger_em = Danger::EnvironmentManager.new(env, testing_ui)
+
+    expect(danger_em.request_source).to be_truthy
   end
 
   it "skips push runs and only runs for pull requests" do
     env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
+
     expect(Danger::EnvironmentManager.local_ci_source(env)).to be_truthy
     expect(Danger::EnvironmentManager.pr?(env)).to eq(false)
   end
 
   it "uses local git repo and github when running locally" do
     env = { "DANGER_USE_LOCAL_GIT" => "true" }
-    e = Danger::EnvironmentManager.new(env, testing_ui)
-    expect(e.ci_source).to be_truthy
-    expect(e.request_source).to be_truthy
+    danger_em = Danger::EnvironmentManager.new(env, testing_ui)
+
+    expect(danger_em.ci_source).to be_truthy
+    expect(danger_em.request_source).to be_truthy
   end
 
   context "Without API tokens" do
