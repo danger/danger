@@ -93,7 +93,7 @@ module Danger
       ui.pause 1
 
       if considered_an_oss_repo?
-        ui.say "#{@bot_name} does not need privilidged access to your repo or org. This is because Danger will only"
+        ui.say "#{@bot_name} does not need privileged access to your repo or org. This is because Danger will only"
         ui.say "be writing comments, and you do not need special access for that."
       else
         ui.say "#{@bot_name} will need access to your repo. Simply because the code is not available for the public"
