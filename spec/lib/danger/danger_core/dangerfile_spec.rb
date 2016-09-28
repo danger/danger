@@ -211,14 +211,34 @@ describe Danger::Dangerfile, host: :github do
   describe "#post_results" do
     it "delegates to corresponding request source" do
       env_manager = double("Danger::EnvironmentManager", pr?: true)
-      allow(env_manager).to receive_message_chain(:scm, :class) { Danger::GitRepo }
       request_source = double("Danger::RequestSources::GitHub")
+
+      allow(env_manager).to receive_message_chain(:scm, :class) { Danger::GitRepo }
       allow(env_manager).to receive(:request_source) { request_source }
+
       dm = Danger::Dangerfile.new(env_manager, testing_ui)
 
       expect(request_source).to receive(:update_pull_request!)
 
       dm.post_results("danger-identifier")
+    end
+  end
+
+  describe "#setup_for_running" do
+    it "ensure branches setup and generate diff" do
+      env_manager = double("Danger::EnvironmentManager", pr?: true)
+      scm = double("Danger::GitRepo", class: Danger::GitRepo)
+      request_source = double("Danger::RequestSources::GitHub")
+
+      allow(env_manager).to receive(:scm) { scm }
+      allow(env_manager).to receive(:request_source) { request_source }
+
+      dm = Danger::Dangerfile.new(env_manager, testing_ui)
+
+      expect(env_manager).to receive(:ensure_danger_branches_are_setup)
+      expect(scm).to receive(:diff_for_folder)
+
+      dm.setup_for_running("custom_danger_base", "custom_danger_head")
     end
   end
 end

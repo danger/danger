@@ -28,7 +28,8 @@ module Danger
 
       begin
         # Sets up the git environment
-        setup_for_running dm, base, head
+        dm.setup_for_running(base_branch(base), head_branch(head))
+
         # Parse the local Dangerfile
         dm.parse Pathname.new(dangerfile_path)
 
@@ -49,18 +50,6 @@ module Danger
       # allowing execution to continue, this behavior isn't always
       # optimal for everyone.
       exit(1) if fail_on_errors && dm.failed?
-    end
-
-    # Sets up, and runs the git environment for the diff,
-    # and offers the chance for a user to specify custom branches
-    # through the command line
-    def setup_for_running(dangerfile, base, head)
-      dangerfile.env.ensure_danger_branches_are_setup
-
-      ci_base = base || EnvironmentManager.danger_base_branch
-      ci_head = head || EnvironmentManager.danger_head_branch
-
-      dangerfile.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
     end
 
     def validate!
@@ -84,6 +73,14 @@ module Danger
       unless EnvironmentManager.pr?(system_env)
         abort("Not a Pull Request - skipping `danger` run".yellow)
       end
+    end
+
+    def base_branch(user_specified_base_branch)
+      user_specified_base_branch || EnvironmentManager.danger_base_branch
+    end
+
+    def head_branch(user_specified_head_branch)
+      user_specified_head_branch || EnvironmentManager.danger_head_branch
     end
   end
 end
