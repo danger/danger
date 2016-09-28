@@ -119,12 +119,12 @@ describe Danger::LocalGitRepo do
         end
 
         it "handles finding the resulting PR" do
-          run_in_repo do
+          run_in_repo(merge_pr: true) do
             add_another_pr
 
             env = { "DANGER_USE_LOCAL_GIT" => "true", "LOCAL_GIT_PR_ID" => "1234" }
             t = Danger::LocalGitRepo.new(env)
-            expect(t.pull_request_id).to eql("1234")
+            expect(t.pull_request_id).to eq("1234")
           end
         end
       end
@@ -134,7 +134,7 @@ describe Danger::LocalGitRepo do
           run_in_repo do
             valid_env["LOCAL_GIT_PR_ID"] = "1238"
 
-            expect { source }.to raise_error RuntimeError
+            expect { source }.to raise_error RuntimeError, "Could not find the Pull Request (1238) inside the git history for this repo."
           end
         end
       end
@@ -142,7 +142,7 @@ describe Danger::LocalGitRepo do
       context "no PRs" do
         it "raise an exception" do
           run_in_repo(merge_pr: false) do
-            expect { source }.to raise_error RuntimeError
+            expect { source }.to raise_error RuntimeError, "No recent Pull Requests found for this repo, danger requires at least one Pull Request for the local mode."
           end
         end
       end

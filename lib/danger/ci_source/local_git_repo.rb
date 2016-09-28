@@ -46,7 +46,7 @@ module Danger
       ).call
 
       pull_request_id, sha = MergedPullRequestFinder.new(
-        env["LOCAL_GIT_PR_ID"] || "",
+        env.fetch("LOCAL_GIT_PR_ID") { "" },
         run_git("log --oneline -1000000".freeze)
       ).call
 
