@@ -237,6 +237,18 @@ module Danger
       violation_report[:errors].count > 0
     end
 
+    def post_results(danger_id)
+      violations = violation_report
+
+      env.request_source.update_pull_request!(
+        warnings: violations[:warnings],
+        errors: violations[:errors],
+        messages: violations[:messages],
+        markdowns: status_report[:markdowns],
+        danger_id: danger_id
+      )
+    end
+
     private
 
     def print_list(title, rows)

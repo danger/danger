@@ -207,4 +207,18 @@ describe Danger::Dangerfile, host: :github do
       end
     end
   end
+
+  describe "#post_results" do
+    it "delegates to corresponding request source" do
+      env_manager = double("Danger::EnvironmentManager", pr?: true)
+      allow(env_manager).to receive_message_chain(:scm, :class) { Danger::GitRepo }
+      request_source = double("Danger::RequestSources::GitHub")
+      allow(env_manager).to receive(:request_source) { request_source }
+      dm = Danger::Dangerfile.new(env_manager, testing_ui)
+
+      expect(request_source).to receive(:update_pull_request!)
+
+      dm.post_results("danger-identifier")
+    end
+  end
 end
