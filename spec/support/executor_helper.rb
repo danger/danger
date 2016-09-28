@@ -1,10 +1,12 @@
+# rubocop:disable Metrics/ModuleLength
+
 module Danger
   module Support
     module ExecutorHelper
       def with_bitrise_setup_and_is_a_pull_request
         system_env = {
           "BITRISE_IO" => "true",
-          "BITRISE_PULL_REQUEST" => "42",
+          "BITRISE_PULL_REQUEST" => "42"
         }
 
         yield(system_env)
@@ -14,7 +16,7 @@ module Danger
         system_env = {
           "BUILDKITE" => "true",
           "BUILDKITE_PULL_REQUEST_REPO" => "true",
-          "BUILDKITE_PULL_REQUEST" => "42",
+          "BUILDKITE_PULL_REQUEST" => "42"
         }
 
         yield(system_env)
@@ -57,7 +59,7 @@ module Danger
         system_env = {
           "GITLAB_CI" => "true",
           "CI_MERGE_REQUEST_ID" => "42",
-          "CI_PROJECT_ID" => "danger/danger",
+          "CI_PROJECT_ID" => "danger/danger"
         }
 
         yield(system_env)
@@ -141,7 +143,7 @@ module Danger
 
       def with_xcodeserver_setup_and_is_a_pull_request
         system_env = {
-          "XCS_BOT_NAME" => "Danger BuildaBot",
+          "XCS_BOT_NAME" => "Danger BuildaBot"
         }
 
         yield(system_env)
