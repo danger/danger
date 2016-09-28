@@ -16,6 +16,10 @@ describe Danger::MergedPullRequestFinder do
     IO.read("spec/fixtures/ci_source/support/swiftweekly.github.io-git.log")
   end
 
+  def two_kinds_of_merge_log
+    IO.read("spec/fixtures/ci_source/support/two-kinds-of-merge-both-present.log")
+  end
+
   describe "#call" do
     context "not specified Pull Request ID" do
       context "merge pull request type Pull Request" do
@@ -54,6 +58,15 @@ describe Danger::MergedPullRequestFinder do
           expect(pull_request_id).to eq "77"
           expect(sha).to eq "3f7047a"
         end
+      end
+    end
+
+    context "merged and squash-and-merged both present" do
+      it "returns the most recent one" do
+        pull_request_id, sha = finder(pull_request_id: "2", logs: two_kinds_of_merge_log).call
+
+        expect(pull_request_id).to eq "2"
+        expect(sha).to eq "9f8c75a"
       end
     end
   end
