@@ -2,9 +2,6 @@ module Danger
   class Executor
     def initialize(system_env)
       @system_env = system_env
-
-      # Run some validations
-      validate!
     end
 
     def run(env: nil,
@@ -17,6 +14,9 @@ module Danger
             fail_on_errors: nil)
       # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
+
+      # Run some validations
+      validate!(cork)
 
       # OK, we now know that Danger can run in this enviroment
       env ||= EnvironmentManager.new(system_env, cork)
@@ -52,9 +52,9 @@ module Danger
       exit(1) if fail_on_errors && dm.failed?
     end
 
-    def validate!
+    def validate!(cork)
       validate_ci!
-      validate_pr!
+      validate_pr!(cork)
     end
 
     private
@@ -69,9 +69,10 @@ module Danger
     end
 
     # Could we determine that the CI source is inside a PR?
-    def validate_pr!
+    def validate_pr!(cork)
       unless EnvironmentManager.pr?(system_env)
-        abort("Not a Pull Request - skipping `danger` run".yellow)
+        cork.puts "Not a Pull Request - skipping `danger` run".yellow
+        exit(0)
       end
     end
 

@@ -6,56 +6,57 @@ describe Danger::Executor, use: :executor_helper do
     context "with CI + is a PR" do
       it "not raises error on Bitrise" do
         with_bitrise_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Buildkite" do
         with_buildkite_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Circle" do
         with_circle_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Circle API" do
         with_circleapi_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Drone" do
         with_drone_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on GitLab CI" do
         with_gitlabci_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Jenkins (GitHub)" do
         with_jenkins_setup_github_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Jenkins (GitLab)" do
         with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.not_to raise_error
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Local Git Repo" do
         with_localgitrepo_setup do |system_env|
-          expect { described_class.new(system_env) }.to \
-            raise_error(SystemExit, /Not a Pull Request - skipping `danger` run/)
+          ui = testing_ui
+          expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
+          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
         end
       end
 
@@ -99,17 +100,18 @@ describe Danger::Executor, use: :executor_helper do
     context "without CI" do
       it "raises error with clear message" do
         we_dont_have_ci_setup do |system_env|
-          expect { described_class.new(system_env) }.to \
+          expect { described_class.new(system_env).run }.to \
             raise_error(SystemExit, /Could not find the type of CI for Danger to run on./)
         end
       end
     end
 
     context "NOT a PR" do
-      it "raises error with clear message" do
+      it "exits with clear message" do
         not_a_pull_request do |system_env|
-          expect { described_class.new(system_env) }.to \
-            raise_error(SystemExit, /Not a Pull Request - skipping `danger` run/)
+          ui = testing_ui
+          expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
+          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
         end
       end
     end
