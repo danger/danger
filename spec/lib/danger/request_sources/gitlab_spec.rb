@@ -107,14 +107,14 @@ describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(g).to receive(:base_commit).and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
 
       expect(g.scm).to receive(:exec)
-        .with("--no-pager show 345e74fabb2fecea93091e8925b1a7a208b48ba6")
+        .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6")
         .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
 
       expect(g.scm).to receive(:exec)
         .with("branch danger_head 345e74fabb2fecea93091e8925b1a7a208b48ba6")
 
       expect(g.scm).to receive(:exec)
-        .with("--no-pager show 0e4db308b6579f7cc733e5a354e026b272e1c076")
+        .with("rev-parse --quiet --verify 0e4db308b6579f7cc733e5a354e026b272e1c076")
         .and_return("0e4db308b6579f7cc733e5a354e026b272e1c076")
 
       expect(g.scm).to receive(:exec)
