@@ -38,7 +38,9 @@ module Danger
         dm.parse Pathname.new(dangerfile_path)
 
         # Push results to the API
-        post_results dm, danger_id
+        # Pass along the details of the run to the request source
+        # to send back to the code review site.
+        dm.post_results(danger_id)
 
         # Print results in the terminal
         dm.print_results
@@ -76,22 +78,6 @@ module Danger
     # Could we determine that the CI source is inside a PR?
     def validate_is_pr?
       EnvironmentManager.pr?(@system_env)
-    end
-
-    # Pass along the details of the run to the request source
-    # to send back to the code review site.
-    def post_results(danger_file, danger_id)
-      request_source = danger_file.env.request_source
-      violations = danger_file.violation_report
-      status = danger_file.status_report
-
-      request_source.update_pull_request!(
-        warnings: violations[:warnings],
-        errors: violations[:errors],
-        messages: violations[:messages],
-        markdowns: status[:markdowns],
-        danger_id: danger_id
-      )
     end
   end
 end
