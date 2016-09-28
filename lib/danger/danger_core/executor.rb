@@ -2,6 +2,9 @@ module Danger
   class Executor
     def initialize(system_env)
       @system_env = system_env
+
+      # Run some validations
+      validate!
     end
 
     def run(env: nil,
@@ -12,19 +15,11 @@ module Danger
             dangerfile_path: nil,
             danger_id: nil,
             fail_on_errors: nil)
-
       # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
 
-      # Run some validations
-      validate_is_ci
-      unless validate_is_pr?
-        cork.puts "Not a Pull Request - skipping `danger` run".yellow
-        return
-      end
-
       # OK, we now know that Danger can run in this enviroment
-      env ||= EnvironmentManager.new(@system_env, cork)
+      env ||= EnvironmentManager.new(system_env, cork)
       dm ||= Dangerfile.new(env, cork)
 
       # Setup internal state
@@ -68,16 +63,27 @@ module Danger
       dangerfile.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
     end
 
+    def validate!
+      validate_ci!
+      validate_pr!
+    end
+
+    private
+
+    attr_reader :system_env
+
     # Could we find a CI source at all?
-    def validate_is_ci
-      unless EnvironmentManager.local_ci_source(@system_env)
+    def validate_ci!
+      unless EnvironmentManager.local_ci_source(system_env)
         abort("Could not find the type of CI for Danger to run on.".red)
       end
     end
 
     # Could we determine that the CI source is inside a PR?
-    def validate_is_pr?
-      EnvironmentManager.pr?(@system_env)
+    def validate_pr!
+      unless EnvironmentManager.pr?(system_env)
+        abort("Not a Pull Request - skipping `danger` run".yellow)
+      end
     end
   end
 end

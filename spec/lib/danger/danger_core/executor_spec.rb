@@ -1,7 +1,120 @@
 require "danger/danger_core/executor"
 
 # If you cannot find a method, please check spec/support/executor_helper.rb.
-describe Danger::Executor do
+describe Danger::Executor, use: :executor_helper do
+  describe "#validate!" do
+    context "with CI + is a PR" do
+      it "not raises error on Bitrise" do
+        with_bitrise_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Buildkite" do
+        with_buildkite_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Circle" do
+        with_circle_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Circle API" do
+        with_circleapi_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Drone" do
+        with_drone_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on GitLab CI" do
+        with_gitlabci_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Jenkins (GitHub)" do
+        with_jenkins_setup_github_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Jenkins (GitLab)" do
+        with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Local Git Repo" do
+        with_localgitrepo_setup do |system_env|
+          expect { described_class.new(system_env) }.to \
+            raise_error(SystemExit, /Not a Pull Request - skipping `danger` run/)
+        end
+      end
+
+      it "not raises error on Semaphore" do
+        with_semaphore_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Surf" do
+        with_surf_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on TeamCity (GitLab)" do
+        with_teamcity_setup_github_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on TeamCity (GitLab)" do
+        with_teamcity_setup_gitlab_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Travis" do
+        with_travis_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+
+      it "not raises error on Xcode Server" do
+        with_xcodeserver_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
+        end
+      end
+    end
+
+    context "without CI" do
+      it "raises error with clear message" do
+        we_dont_have_ci_setup do |system_env|
+          expect { described_class.new(system_env) }.to \
+            raise_error(SystemExit, /Could not find the type of CI for Danger to run on./)
+        end
+      end
+    end
+
+    context "NOT a PR" do
+      it "raises error with clear message" do
+        not_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.to \
+            raise_error(SystemExit, /Not a Pull Request - skipping `danger` run/)
+        end
+      end
+    end
+  end
+
   context "a test for SwiftWeekly #89" do
     class FakeProse
       attr_accessor :ignored_words
