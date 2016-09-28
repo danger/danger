@@ -22,34 +22,19 @@ module Danger
       env ||= EnvironmentManager.new(system_env, cork)
       dm ||= Dangerfile.new(env, cork)
 
-      # Setup internal state
-      dm.init_plugins
-      dm.env.fill_environment_vars
-
-      begin
-        # Sets up the git environment
-        dm.setup_for_running(base_branch(base), head_branch(head))
-
-        # Parse the local Dangerfile
-        dm.parse Pathname.new(dangerfile_path)
-
-        # Push results to the API
-        # Pass along the details of the run to the request source
-        # to send back to the code review site.
-        dm.post_results(danger_id)
-
-        # Print results in the terminal
-        dm.print_results
-      ensure
-
-        # Makes sure that Danger specific git branches are cleaned
-        dm.env.clean_up
+      ran_status = begin
+        dm.run(
+          base_branch(base),
+          head_branch(head),
+          dangerfile_path,
+          danger_id
+        )
       end
 
       # By default Danger will use the status API to fail a build,
       # allowing execution to continue, this behavior isn't always
       # optimal for everyone.
-      exit(1) if fail_on_errors && dm.failed?
+      exit(1) if fail_on_errors && ran_status
     end
 
     def validate!(cork)
