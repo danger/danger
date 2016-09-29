@@ -19,14 +19,10 @@ describe Danger::Dangerfile::DSL, host: :github do
         expect(dm.example_globbing.echo).to eq("Hi there globbing")
       end
 
-      # This is going to become a lot more complicated in the future, so I'm
-      # happy to have it pending for now.
-      xit "raises an error when calling a plugin that's not a subclass of Plugin" do
-        dm.danger.import_plugin("spec/fixtures/plugins/example_broken.rb")
-
+      it "raises an error when calling a plugin that's not a subclass of Plugin" do
         expect do
-          dm.example_broken
-        end.to raise_error("'example_broken' is not a valid danger plugin".red)
+          dm.danger.import_plugin("spec/fixtures/plugins/example_broken.rb")
+        end.to raise_error(RuntimeError, %r{spec/fixtures/plugins/example_broken.rb doesn't contain any valid danger plugin})
       end
     end
 
