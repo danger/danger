@@ -4,7 +4,7 @@ module Danger
   module Support
     module CIHelper
       def github_token
-        { "DANGER_GITHUB_API_TOKEN" => "1234567890"*4 }
+        { "DANGER_GITHUB_API_TOKEN" => "1234567890" * 4 }
       end
 
       def with_bitrise_setup_and_is_a_pull_request
