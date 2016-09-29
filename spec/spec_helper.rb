@@ -1,4 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../..", __FILE__)
 
 # Needs to be required and started before danger
 require "simplecov"
@@ -11,10 +12,7 @@ require "webmock"
 require "webmock/rspec"
 require "json"
 
-require "support/gitlab_helper"
-require "support/github_helper"
-require "support/bitbucket_server_helper"
-require "support/bitbucket_cloud_helper"
+Dir["spec/support/**/*.rb"].each { |file| require(file) }
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
@@ -22,6 +20,8 @@ RSpec.configure do |config|
   config.include Danger::Support::GitHubHelper, host: :github
   config.include Danger::Support::BitbucketServerHelper, host: :bitbucket_server
   config.include Danger::Support::BitbucketCloudHelper, host: :bitbucket_cloud
+  config.include Danger::Support::ExecutorHelper, use: :executor_helper
+
   config.run_all_when_everything_filtered = true
   config.filter_run focus: true
   config.order = :random

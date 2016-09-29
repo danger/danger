@@ -233,6 +233,54 @@ module Danger
       end
     end
 
+    def failed?
+      violation_report[:errors].count > 0
+    end
+
+    def post_results(danger_id)
+      violations = violation_report
+
+      env.request_source.update_pull_request!(
+        warnings: violations[:warnings],
+        errors: violations[:errors],
+        messages: violations[:messages],
+        markdowns: status_report[:markdowns],
+        danger_id: danger_id
+      )
+    end
+
+    def setup_for_running(base_branch, head_branch)
+      env.ensure_danger_branches_are_setup
+      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
+    end
+
+    def run(base_branch, head_branch, dangerfile_path, danger_id)
+      # Setup internal state
+      init_plugins
+      env.fill_environment_vars
+
+      begin
+        # Sets up the git environment
+        setup_for_running(base_branch, head_branch)
+
+        # Parse the local Dangerfile
+        parse(Pathname.new(dangerfile_path))
+
+        # Push results to the API
+        # Pass along the details of the run to the request source
+        # to send back to the code review site.
+        post_results(danger_id)
+
+        # Print results in the terminal
+        print_results
+      ensure
+        # Makes sure that Danger specific git branches are cleaned
+        env.clean_up
+      end
+
+      failed?
+    end
+
     private
 
     def print_list(title, rows)

@@ -10,61 +10,63 @@ module Danger
             base: nil,
             head: nil,
             dangerfile_path: nil,
-            danger_id: nil)
+            danger_id: nil,
+            fail_on_errors: nil)
+      # Create a silent Cork instance if cork is nil, as it's likely a test
+      cork ||= Cork::Board.new(silent: false, verbose: false)
 
-      cork ||= Cork::Board.new(silent: false,
-                              verbose: false)
+      # Run some validations
+      validate!(cork)
 
-      # Could we find a CI source at all?
-      unless EnvironmentManager.local_ci_source(@system_env)
-        abort("Could not find the type of CI for Danger to run on.".red)
-      end
-
-      # Could we determine that the CI source is inside a PR?
-      unless EnvironmentManager.pr?(@system_env)
-        cork.puts "Not a Pull Request - skipping `danger` run".yellow
-        return
-      end
-
-      # OK, then we can have some
-      env ||= EnvironmentManager.new(@system_env, cork)
+      # OK, we now know that Danger can run in this enviroment
+      env ||= EnvironmentManager.new(system_env, cork)
       dm ||= Dangerfile.new(env, cork)
 
-      dm.init_plugins
+      ran_status = begin
+        dm.run(
+          base_branch(base),
+          head_branch(head),
+          dangerfile_path,
+          danger_id
+        )
+      end
 
-      dm.env.fill_environment_vars
+      # By default Danger will use the status API to fail a build,
+      # allowing execution to continue, this behavior isn't always
+      # optimal for everyone.
+      exit(1) if fail_on_errors && ran_status
+    end
 
-      begin
-        dm.env.ensure_danger_branches_are_setup
+    def validate!(cork)
+      validate_ci!
+      validate_pr!(cork)
+    end
 
-        # Offer the chance for a user to specify a branch through the command line
-        ci_base = base || EnvironmentManager.danger_base_branch
-        ci_head = head || EnvironmentManager.danger_head_branch
+    private
 
-        dm.env.scm.diff_for_folder(".", from: ci_base, to: ci_head)
+    attr_reader :system_env
 
-        # Parse the local Dangerfile
-        dm.parse(Pathname.new(dangerfile_path))
-
-        post_results(dm, danger_id)
-        dm.print_results
-      ensure
-        dm.env.clean_up
+    # Could we find a CI source at all?
+    def validate_ci!
+      unless EnvironmentManager.local_ci_source(system_env)
+        abort("Could not find the type of CI for Danger to run on.".red)
       end
     end
 
-    def post_results(danger_file, danger_id)
-      request_source = danger_file.env.request_source
-      violations = danger_file.violation_report
-      status = danger_file.status_report
+    # Could we determine that the CI source is inside a PR?
+    def validate_pr!(cork)
+      unless EnvironmentManager.pr?(system_env)
+        cork.puts "Not a Pull Request - skipping `danger` run".yellow
+        exit(0)
+      end
+    end
 
-      request_source.update_pull_request!(
-        warnings: violations[:warnings],
-        errors: violations[:errors],
-        messages: violations[:messages],
-        markdowns: status[:markdowns],
-        danger_id: danger_id
-      )
+    def base_branch(user_specified_base_branch)
+      user_specified_base_branch || EnvironmentManager.danger_base_branch
+    end
+
+    def head_branch(user_specified_head_branch)
+      user_specified_head_branch || EnvironmentManager.danger_head_branch
     end
   end
 end
