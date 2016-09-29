@@ -225,7 +225,7 @@ describe Danger::EnvironmentManager, use: :ci_helper do
         with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
           result = described_class.new(env, testing_ui).meta_info_for_head
 
-          expect(result).to match(/#{head_sha}.+HEAD/)
+          expect(result).to include(head_sha)
         end
       end
     end
@@ -237,7 +237,7 @@ describe Danger::EnvironmentManager, use: :ci_helper do
         with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
           result = described_class.new(env, testing_ui).meta_info_for_base
 
-          expect(result).to match(/#{base_sha}.+BASE/)
+          expect(result).to include(base_sha)
         end
       end
     end
