@@ -81,6 +81,86 @@ describe Danger::EnvironmentManager do
     end
   end
 
+  describe ".pr?", use: :ci_helper do
+    it "loads Bitrise" do
+      with_bitrise_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Buildkite" do
+      with_buildkite_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Circle" do
+      with_circle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Drone" do
+      with_drone_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads GitLab CI" do
+      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Jenkins" do
+      with_jenkins_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Local Git Repo" do
+      with_localgitrepo_setup do |system_env|
+        expect(described_class.pr?(system_env)).to eq(false)
+      end
+    end
+
+    it "loads Semaphore" do
+      with_semaphore_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Surf" do
+      with_surf_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads TeamCity" do
+      with_teamcity_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Travis" do
+      with_travis_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Xcode Server" do
+      with_xcodeserver_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "does not return a CI source with no ENV deets" do
+      env = { "KEY" => "VALUE" }
+
+      expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    end
+  end
+
   it "stores travis in the source" do
     number = 123
     env = { "DANGER_GITHUB_API_TOKEN" => "abc123",
