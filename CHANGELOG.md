@@ -5,6 +5,7 @@
 * Big improvements to the warning around no API tokens being found - orta
 * Support for failing on errors - orta/Juanito Fatas (the PR is pretty sharedgit)
 * Improves `danger local` merged Pull Request finding logic - Juanito Fatas
+* Adds some tests for Danger::Runner - Juanito Fatas
 
 ## 3.3.2
 

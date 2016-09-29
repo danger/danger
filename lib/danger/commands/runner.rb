@@ -29,7 +29,7 @@ module Danger
 
     def initialize(argv)
       dangerfile = argv.option("dangerfile", "Dangerfile")
-      @dangerfile_path = dangerfile if File.exist? dangerfile
+      @dangerfile_path = dangerfile if File.exist?(dangerfile)
       @base = argv.option("base")
       @head = argv.option("head")
       @fail_on_errors = argv.option("fail-on-errors", false)
@@ -42,7 +42,7 @@ module Danger
     def validate!
       super
       if self.class == Runner && !@dangerfile_path
-        help! "Could not find a Dangerfile."
+        help!("Could not find a Dangerfile.")
       end
     end
 
