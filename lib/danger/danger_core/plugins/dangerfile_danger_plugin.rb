@@ -29,6 +29,10 @@ module Danger
   #
   #          danger.import_dangerfile(gitlab: "ruby-grape/danger")
   #
+  # @example Run a Dangerfile from inside a repo branch and path
+  #
+  #          danger.import_dangerfile(github: "ruby-grape/danger", branch: "custom", path: "path/to/Dangerfile")
+  #
   # @see  danger/danger
   # @tags core, plugins
 
@@ -73,7 +77,7 @@ module Danger
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
         if opts.key?(:github) || opts.key?(:gitlab)
-          import_dangerfile_from_github(opts[:github] || opts[:gitlab])
+          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
@@ -141,12 +145,16 @@ module Danger
     #
     # @param    [String] slug
     #           A slug that represents the repo where the Dangerfile is.
+    # @param    [String] branch
+    #           A branch from repo where the Dangerfile is.
+    # @param    [String] path
+    #           The path at the repo where Dangerfile is.
     # @return   [void]
     #
-    def import_dangerfile_from_github(slug)
+    def import_dangerfile_from_github(slug, branch = nil, path = nil)
       raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
       org, repo = slug.split("/")
-      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: "master", path: "Dangerfile")
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch || "master", path: path || "Dangerfile")
       local_path = download(download_url)
       @dangerfile.parse(Pathname.new(local_path))
     end
