@@ -63,12 +63,12 @@ module Danger
       end
     end
 
-    def meta_info_for_base
-      scm.exec("--no-pager log #{EnvironmentManager.danger_base_branch} -n1")
-    end
-
     def meta_info_for_head
       scm.exec("--no-pager log #{EnvironmentManager.danger_head_branch} -n1")
+    end
+
+    def meta_info_for_base
+      scm.exec("--no-pager log #{EnvironmentManager.danger_base_branch} -n1")
     end
 
     def raise_error_for_no_request_source(env, ui)

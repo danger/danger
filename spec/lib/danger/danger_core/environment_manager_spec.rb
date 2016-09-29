@@ -1,7 +1,7 @@
 require "danger/danger_core/environment_manager"
 
-describe Danger::EnvironmentManager do
-  describe ".local_ci_source", use: :ci_helper do
+describe Danger::EnvironmentManager, use: :ci_helper do
+  describe ".local_ci_source" do
     it "loads Bitrise" do
       with_bitrise_setup_and_is_a_pull_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Bitrise
@@ -81,7 +81,7 @@ describe Danger::EnvironmentManager do
     end
   end
 
-  describe ".pr?", use: :ci_helper do
+  describe ".pr?" do
     it "loads Bitrise" do
       with_bitrise_setup_and_is_a_pull_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
@@ -173,11 +173,56 @@ describe Danger::EnvironmentManager do
     end
   end
 
-  describe "#pr?", use: :ci_helper do
+  describe "#pr?" do
     it "returns true if has a ci source" do
       with_travis_setup_and_is_a_pull_request do |env|
         env_manager = Danger::EnvironmentManager.new(env, testing_ui)
         expect(env_manager.pr?).to eq true
+      end
+    end
+  end
+
+  def git_repo_with_danger_branches_setup
+    Dir.mktmpdir do |dir|
+      Dir.chdir dir do
+        `git init`
+        `touch README.md`
+        `git add .`
+        `git commit -q -m "Initial Commit"`
+        `git checkout -q -b danger_head`
+        `git commit -q --allow-empty -m "HEAD"`
+        head_sha = `git rev-parse HEAD`.chomp!
+        `git checkout -q master`
+        `git checkout -q -b danger_base`
+        `git commit -q --allow-empty -m "BASE"`
+        base_sha = `git rev-parse HEAD`.chomp!
+        `git checkout -q master`
+
+        yield(head_sha, base_sha)
+      end
+    end
+  end
+
+  describe "#meta_info_for_head" do
+    it "returns last commit of danger head branch" do
+      git_repo_with_danger_branches_setup do |head_sha, _base_sha|
+        with_travis_setup_and_is_a_pull_request do |env|
+          result = described_class.new(env, testing_ui).meta_info_for_head
+
+          expect(result).to eq "#{head_sha} HEAD"
+        end
+      end
+    end
+  end
+
+  describe "#meta_info_for_base" do
+    it "returns last commit of danger base branch" do
+      git_repo_with_danger_branches_setup do |_head_sha, base_sha|
+        with_travis_setup_and_is_a_pull_request do |env|
+          result = described_class.new(env, testing_ui).meta_info_for_base
+
+          expect(result).to eq "#{base_sha} BASE"
+        end
       end
     end
   end
