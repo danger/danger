@@ -175,7 +175,7 @@ describe Danger::EnvironmentManager, use: :ci_helper do
 
   describe "#pr?" do
     it "returns true if has a ci source" do
-      with_travis_setup_and_is_a_pull_request do |env|
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
         env_manager = Danger::EnvironmentManager.new(env, testing_ui)
         expect(env_manager.pr?).to eq true
       end
@@ -186,16 +186,17 @@ describe Danger::EnvironmentManager, use: :ci_helper do
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
         `git init`
+        `git remote add origin git@github.com:devdanger/devdanger.git`
         `touch README.md`
         `git add .`
         `git commit -q -m "Initial Commit"`
         `git checkout -q -b danger_head`
         `git commit -q --allow-empty -m "HEAD"`
-        head_sha = `git rev-parse HEAD`.chomp!
+        head_sha = `git rev-parse HEAD`.chomp![0..6]
         `git checkout -q master`
         `git checkout -q -b danger_base`
         `git commit -q --allow-empty -m "BASE"`
-        base_sha = `git rev-parse HEAD`.chomp!
+        base_sha = `git rev-parse HEAD`.chomp![0..6]
         `git checkout -q master`
 
         yield(head_sha, base_sha)
@@ -206,7 +207,7 @@ describe Danger::EnvironmentManager, use: :ci_helper do
   describe "#clean_up" do
     it "delete danger branches" do
       git_repo_with_danger_branches_setup do |_, _|
-        with_travis_setup_and_is_a_pull_request do |system_env|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |system_env|
           described_class.new(system_env, testing_ui).clean_up
 
           branches = `git branch`.lines.map(&:strip!)
@@ -221,10 +222,10 @@ describe Danger::EnvironmentManager, use: :ci_helper do
   describe "#meta_info_for_head" do
     it "returns last commit of danger head branch" do
       git_repo_with_danger_branches_setup do |head_sha, _base_sha|
-        with_travis_setup_and_is_a_pull_request do |env|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
           result = described_class.new(env, testing_ui).meta_info_for_head
 
-          expect(result).to eq "#{head_sha} HEAD"
+          expect(result).to match(/#{head_sha}.+HEAD/)
         end
       end
     end
@@ -233,10 +234,10 @@ describe Danger::EnvironmentManager, use: :ci_helper do
   describe "#meta_info_for_base" do
     it "returns last commit of danger base branch" do
       git_repo_with_danger_branches_setup do |_head_sha, base_sha|
-        with_travis_setup_and_is_a_pull_request do |env|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
           result = described_class.new(env, testing_ui).meta_info_for_base
 
-          expect(result).to eq "#{base_sha} BASE"
+          expect(result).to match(/#{base_sha}.+BASE/)
         end
       end
     end
