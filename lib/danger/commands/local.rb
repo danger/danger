@@ -9,6 +9,14 @@ module Danger
     self.summary = "Run the Dangerfile locally."
     self.command = "local"
 
+    def self.options
+      [
+        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."],
+        ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
+        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
+      ]
+    end
+
     def initialize(argv)
       @pr_num = argv.option("use-merged-pr")
       @clear_http_cache = argv.flag?("clear-http-cache", false)
@@ -37,14 +45,6 @@ module Danger
       cork.warn "Pry was not found, and is required for 'danger local --pry'."
       cork.print_warnings
       abort
-    end
-
-    def self.options
-      [
-        ["--use-merged-pr=[#id]", "The ID of an already merged PR inside your history to use as a reference for the local run."],
-        ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
-        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
-      ].concat(super)
     end
 
     def validate!
