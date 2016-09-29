@@ -19,7 +19,7 @@ module Danger
     end
 
     def supports?(request_source)
-      supported_request_sources.include? request_source
+      supported_request_sources.include?(request_source)
     end
 
     def self.validates_as_ci?(_env)
