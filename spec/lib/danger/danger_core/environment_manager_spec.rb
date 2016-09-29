@@ -75,9 +75,9 @@ describe Danger::EnvironmentManager do
     end
 
     it "does not return a CI source with no ENV deets" do
-      env = { "KEY" => "VALUE" }
-
-      expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+      we_dont_have_ci_setup do |system_env|
+        expect(Danger::EnvironmentManager.local_ci_source(system_env)).to eq nil
+      end
     end
   end
 
@@ -158,6 +158,15 @@ describe Danger::EnvironmentManager do
       env = { "KEY" => "VALUE" }
 
       expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    end
+  end
+
+  describe "#pr?", use: :ci_helper do
+    it "returns true if has a ci source" do
+      with_travis_setup_and_is_a_pull_request do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui)
+        expect(env_manager.pr?).to eq true
+      end
     end
   end
 
