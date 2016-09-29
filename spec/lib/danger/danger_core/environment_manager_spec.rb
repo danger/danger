@@ -161,6 +161,18 @@ describe Danger::EnvironmentManager do
     end
   end
 
+  describe ".danger_head_branch" do
+    it "returns danger_head" do
+      expect(described_class.danger_head_branch).to eq("danger_head")
+    end
+  end
+
+  describe ".danger_base_branch" do
+    it "returns danger_base" do
+      expect(described_class.danger_base_branch).to eq("danger_base")
+    end
+  end
+
   describe "#pr?", use: :ci_helper do
     it "returns true if has a ci source" do
       with_travis_setup_and_is_a_pull_request do |env|
