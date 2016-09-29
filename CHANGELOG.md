@@ -1,9 +1,11 @@
 ## master
 
+## 3.4.0
+
 * Simplify initialization of Octokit client in request_sources/github.rb - Juanito Fatas
 * Ensure commits exist inside the local git repo before using them for diffs - orta
 * Big improvements to the warning around no API tokens being found - orta
-* Support for failing on errors - orta/Juanito Fatas (the PR is pretty sharedgit)
+* Support for failing on errors - orta/Juanito Fatas (the PR was pretty shared)
 * Improves `danger local` merged Pull Request finding logic - Juanito Fatas
 * Adds some tests for Danger::Runner - Juanito Fatas
 * Remove unused CLI options from `danger local` - Juanito Fatas
