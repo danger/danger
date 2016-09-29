@@ -1,5 +1,4 @@
 --format documentation
 --color
 --require spec_helper
---format documentation
 --format RspecJunitFormatter --out junit-results.xml
