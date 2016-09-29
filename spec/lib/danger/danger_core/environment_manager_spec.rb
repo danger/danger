@@ -1,10 +1,84 @@
 require "danger/danger_core/environment_manager"
 
 describe Danger::EnvironmentManager do
-  it "does not return a CI source with no ENV deets" do
-    env = { "KEY" => "VALUE" }
+  describe ".local_ci_source", use: :ci_helper do
+    it "loads Bitrise" do
+      with_bitrise_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Bitrise
+      end
+    end
 
-    expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    it "loads Buildkite" do
+      with_buildkite_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Buildkite
+      end
+    end
+
+    it "loads Circle" do
+      with_circle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::CircleCI
+      end
+    end
+
+    it "loads Drone" do
+      with_drone_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Drone
+      end
+    end
+
+    it "loads GitLab CI" do
+      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::GitLabCI
+      end
+    end
+
+    it "loads Jenkins" do
+      with_jenkins_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
+      end
+    end
+
+    it "loads Local Git Repo" do
+      with_localgitrepo_setup do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::LocalGitRepo
+      end
+    end
+
+    it "loads Semaphore" do
+      with_semaphore_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Semaphore
+      end
+    end
+
+    it "loads Surf" do
+      with_surf_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Surf
+      end
+    end
+
+    it "loads TeamCity" do
+      with_teamcity_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::TeamCity
+      end
+    end
+
+    it "loads Travis" do
+      with_travis_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Travis
+      end
+    end
+
+    it "loads Xcode Server" do
+      with_xcodeserver_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::XcodeServer
+      end
+    end
+
+    it "does not return a CI source with no ENV deets" do
+      env = { "KEY" => "VALUE" }
+
+      expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    end
   end
 
   it "stores travis in the source" do

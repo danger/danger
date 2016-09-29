@@ -2,7 +2,7 @@
 
 module Danger
   module Support
-    module ExecutorHelper
+    module CIHelper
       def with_bitrise_setup_and_is_a_pull_request
         system_env = {
           "BITRISE_IO" => "true",
@@ -23,18 +23,6 @@ module Danger
       end
 
       def with_circle_setup_and_is_a_pull_request
-        system_env = {
-          "CIRCLE_BUILD_NUM" => "1589",
-          "CI_PULL_REQUEST" => "https://circleci.com/gh/danger/danger/1589",
-          "CIRCLE_CI_API_TOKEN" => "circle api token",
-          "CIRCLE_PROJECT_USERNAME" => "danger",
-          "CIRCLE_PROJECT_REPONAME" => "danger"
-        }
-
-        yield(system_env)
-      end
-
-      def with_circleapi_setup_and_is_a_pull_request
         system_env = {
           "CIRCLE_BUILD_NUM" => "1589",
           "CI_PULL_REQUEST" => "https://circleci.com/gh/danger/danger/1589",

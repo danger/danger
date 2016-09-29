@@ -20,7 +20,7 @@ RSpec.configure do |config|
   config.include Danger::Support::GitHubHelper, host: :github
   config.include Danger::Support::BitbucketServerHelper, host: :bitbucket_server
   config.include Danger::Support::BitbucketCloudHelper, host: :bitbucket_cloud
-  config.include Danger::Support::ExecutorHelper, use: :executor_helper
+  config.include Danger::Support::CIHelper, use: :ci_helper
 
   config.run_all_when_everything_filtered = true
   config.filter_run focus: true
