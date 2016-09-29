@@ -203,6 +203,21 @@ describe Danger::EnvironmentManager, use: :ci_helper do
     end
   end
 
+  describe "#clean_up" do
+    it "delete danger branches" do
+      git_repo_with_danger_branches_setup do |_, _|
+        with_travis_setup_and_is_a_pull_request do |system_env|
+          described_class.new(system_env, testing_ui).clean_up
+
+          branches = `git branch`.lines.map(&:strip!)
+
+          expect(branches).not_to include("danger_head")
+          expect(branches).not_to include("danger_base")
+        end
+      end
+    end
+  end
+
   describe "#meta_info_for_head" do
     it "returns last commit of danger head branch" do
       git_repo_with_danger_branches_setup do |head_sha, _base_sha|
