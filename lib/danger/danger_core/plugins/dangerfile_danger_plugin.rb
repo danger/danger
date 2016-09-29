@@ -197,9 +197,19 @@ module Danger
     # @return [void]
     def import_local(path)
       Dir[path].each do |file|
+        validate_file_contains_plugin!(file)
+
         # Without the expand_path it would fail if the path doesn't start with ./
         require File.expand_path(file)
         refresh_plugins
+      end
+    end
+
+    def validate_file_contains_plugin!(file)
+      content = IO.read(file)
+
+      if content.scan(/class\s+(?<plugin_class>[\w]+)\s+<\s+Plugin/i).empty?
+        raise("#{file} doesn't contain any valid danger plugin.")
       end
     end
   end

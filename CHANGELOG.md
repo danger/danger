@@ -5,6 +5,7 @@
 * Big improvements to the warning around no API tokens being found - orta
 * Support for failing on errors - orta/Juanito Fatas (the PR is pretty sharedgit)
 * Improves `danger local` merged Pull Request finding logic - Juanito Fatas
+* Raises error if plugin file doesn't contain any class inherits from Plugin - Juanito Fatas
 
 ## 3.3.2
 
