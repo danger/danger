@@ -1,10 +1,246 @@
 require "danger/danger_core/environment_manager"
 
-describe Danger::EnvironmentManager do
-  it "does not return a CI source with no ENV deets" do
-    env = { "KEY" => "VALUE" }
+describe Danger::EnvironmentManager, use: :ci_helper do
+  describe ".local_ci_source" do
+    it "loads Bitrise" do
+      with_bitrise_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Bitrise
+      end
+    end
 
-    expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    it "loads Buildkite" do
+      with_buildkite_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Buildkite
+      end
+    end
+
+    it "loads Circle" do
+      with_circle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::CircleCI
+      end
+    end
+
+    it "loads Drone" do
+      with_drone_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Drone
+      end
+    end
+
+    it "loads GitLab CI" do
+      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::GitLabCI
+      end
+    end
+
+    it "loads Jenkins" do
+      with_jenkins_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
+      end
+    end
+
+    it "loads Local Git Repo" do
+      with_localgitrepo_setup do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::LocalGitRepo
+      end
+    end
+
+    it "loads Semaphore" do
+      with_semaphore_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Semaphore
+      end
+    end
+
+    it "loads Surf" do
+      with_surf_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Surf
+      end
+    end
+
+    it "loads TeamCity" do
+      with_teamcity_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::TeamCity
+      end
+    end
+
+    it "loads Travis" do
+      with_travis_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Travis
+      end
+    end
+
+    it "loads Xcode Server" do
+      with_xcodeserver_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::XcodeServer
+      end
+    end
+
+    it "does not return a CI source with no ENV deets" do
+      we_dont_have_ci_setup do |system_env|
+        expect(Danger::EnvironmentManager.local_ci_source(system_env)).to eq nil
+      end
+    end
+  end
+
+  describe ".pr?" do
+    it "loads Bitrise" do
+      with_bitrise_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Buildkite" do
+      with_buildkite_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Circle" do
+      with_circle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Drone" do
+      with_drone_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads GitLab CI" do
+      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Jenkins" do
+      with_jenkins_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Local Git Repo" do
+      with_localgitrepo_setup do |system_env|
+        expect(described_class.pr?(system_env)).to eq(false)
+      end
+    end
+
+    it "loads Semaphore" do
+      with_semaphore_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Surf" do
+      with_surf_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads TeamCity" do
+      with_teamcity_setup_github_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Travis" do
+      with_travis_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Xcode Server" do
+      with_xcodeserver_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "does not return a CI source with no ENV deets" do
+      env = { "KEY" => "VALUE" }
+
+      expect(Danger::EnvironmentManager.local_ci_source(env)).to eq nil
+    end
+  end
+
+  describe ".danger_head_branch" do
+    it "returns danger_head" do
+      expect(described_class.danger_head_branch).to eq("danger_head")
+    end
+  end
+
+  describe ".danger_base_branch" do
+    it "returns danger_base" do
+      expect(described_class.danger_base_branch).to eq("danger_base")
+    end
+  end
+
+  describe "#pr?" do
+    it "returns true if has a ci source" do
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui)
+        expect(env_manager.pr?).to eq true
+      end
+    end
+  end
+
+  def git_repo_with_danger_branches_setup
+    Dir.mktmpdir do |dir|
+      Dir.chdir dir do
+        `git init`
+        `git remote add origin git@github.com:devdanger/devdanger.git`
+        `touch README.md`
+        `git add .`
+        `git commit -q -m "Initial Commit"`
+        `git checkout -q -b danger_head`
+        `git commit -q --allow-empty -m "HEAD"`
+        head_sha = `git rev-parse HEAD`.chomp![0..6]
+        `git checkout -q master`
+        `git checkout -q -b danger_base`
+        `git commit -q --allow-empty -m "BASE"`
+        base_sha = `git rev-parse HEAD`.chomp![0..6]
+        `git checkout -q master`
+
+        yield(head_sha, base_sha)
+      end
+    end
+  end
+
+  describe "#clean_up" do
+    it "delete danger branches" do
+      git_repo_with_danger_branches_setup do |_, _|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |system_env|
+          described_class.new(system_env, testing_ui).clean_up
+
+          branches = `git branch`.lines.map(&:strip!)
+
+          expect(branches).not_to include("danger_head")
+          expect(branches).not_to include("danger_base")
+        end
+      end
+    end
+  end
+
+  describe "#meta_info_for_head" do
+    it "returns last commit of danger head branch" do
+      git_repo_with_danger_branches_setup do |head_sha, _base_sha|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+          result = described_class.new(env, testing_ui).meta_info_for_head
+
+          expect(result).to include(head_sha)
+        end
+      end
+    end
+  end
+
+  describe "#meta_info_for_base" do
+    it "returns last commit of danger base branch" do
+      git_repo_with_danger_branches_setup do |_head_sha, base_sha|
+        with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+          result = described_class.new(env, testing_ui).meta_info_for_base
+
+          expect(result).to include(base_sha)
+        end
+      end
+    end
   end
 
   it "stores travis in the source" do

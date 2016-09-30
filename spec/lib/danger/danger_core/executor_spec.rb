@@ -1,7 +1,7 @@
 require "danger/danger_core/executor"
 
 # If you cannot find a method, please check spec/support/executor_helper.rb.
-describe Danger::Executor, use: :executor_helper do
+describe Danger::Executor, use: :ci_helper do
   describe "#validate!" do
     context "with CI + is a PR" do
       it "not raises error on Bitrise" do
@@ -18,12 +18,6 @@ describe Danger::Executor, use: :executor_helper do
 
       it "not raises error on Circle" do
         with_circle_setup_and_is_a_pull_request do |system_env|
-          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
-        end
-      end
-
-      it "not raises error on Circle API" do
-        with_circleapi_setup_and_is_a_pull_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end

@@ -2,7 +2,11 @@
 
 module Danger
   module Support
-    module ExecutorHelper
+    module CIHelper
+      def github_token
+        { "DANGER_GITHUB_API_TOKEN" => "1234567890" * 4 }
+      end
+
       def with_bitrise_setup_and_is_a_pull_request
         system_env = {
           "BITRISE_IO" => "true",
@@ -23,18 +27,6 @@ module Danger
       end
 
       def with_circle_setup_and_is_a_pull_request
-        system_env = {
-          "CIRCLE_BUILD_NUM" => "1589",
-          "CI_PULL_REQUEST" => "https://circleci.com/gh/danger/danger/1589",
-          "CIRCLE_CI_API_TOKEN" => "circle api token",
-          "CIRCLE_PROJECT_USERNAME" => "danger",
-          "CIRCLE_PROJECT_REPONAME" => "danger"
-        }
-
-        yield(system_env)
-      end
-
-      def with_circleapi_setup_and_is_a_pull_request
         system_env = {
           "CIRCLE_BUILD_NUM" => "1589",
           "CI_PULL_REQUEST" => "https://circleci.com/gh/danger/danger/1589",
@@ -131,12 +123,16 @@ module Danger
         yield(system_env)
       end
 
-      def with_travis_setup_and_is_a_pull_request
+      def with_travis_setup_and_is_a_pull_request(request_source: nil)
         system_env = {
           "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
           "TRAVIS_PULL_REQUEST" => "42",
           "TRAVIS_REPO_SLUG" => "orta/orta"
         }
+
+        if request_source == :github
+          system_env.merge!(github_token)
+        end
 
         yield(system_env)
       end

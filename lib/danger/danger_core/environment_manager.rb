@@ -15,6 +15,16 @@ module Danger
       local_ci_source(env).validates_as_pr?(env)
     end
 
+    # @return [String] danger's default head branch
+    def self.danger_head_branch
+      "danger_head".freeze
+    end
+
+    # @return [String] danger's default base branch
+    def self.danger_base_branch
+      "danger_base".freeze
+    end
+
     def initialize(env, ui)
       ci_klass = self.class.local_ci_source(env)
       self.ci_source = ci_klass.new(env)
@@ -53,20 +63,12 @@ module Danger
       end
     end
 
-    def meta_info_for_base
-      scm.exec("--no-pager log #{EnvironmentManager.danger_base_branch} -n1")
-    end
-
     def meta_info_for_head
       scm.exec("--no-pager log #{EnvironmentManager.danger_head_branch} -n1")
     end
 
-    def self.danger_head_branch
-      "danger_head"
-    end
-
-    def self.danger_base_branch
-      "danger_base"
+    def meta_info_for_base
+      scm.exec("--no-pager log #{EnvironmentManager.danger_base_branch} -n1")
     end
 
     def raise_error_for_no_request_source(env, ui)
