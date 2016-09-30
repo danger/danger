@@ -216,7 +216,7 @@ module Danger
     def validate_file_contains_plugin!(file)
       content = IO.read(file)
 
-      if content.scan(/class\s+(?<plugin_class>[\w]+)\s+<\s+Plugin/i).empty?
+      if content.scan(/class\s+(?<plugin_class>[\w]+)\s+<\s+((Danger::)?Plugin)/i).empty?
         raise("#{file} doesn't contain any valid danger plugin.")
       end
     end
