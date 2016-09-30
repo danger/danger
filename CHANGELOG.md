@@ -2,6 +2,7 @@
 
 * Added option to run a Dangerfile from a `branch` and/or `path` when using a remote repo - felipesabino
 * Add specs for `Danger::EnvironmentManager` - Juanito Fatas
+* Fixes plugin that inherits from `Danger::Plugin` should not raise error - Juanito Fatas
 
 ## 3.4.0
 

@@ -19,6 +19,12 @@ describe Danger::Dangerfile::DSL, host: :github do
         expect(dm.example_globbing.echo).to eq("Hi there globbing")
       end
 
+      it "not raises an error when calling a plugin that's a subclass of Plugin" do
+        expect do
+          dm.danger.import_plugin("spec/fixtures/plugins/example_not_broken.rb")
+        end.not_to raise_error
+      end
+
       it "raises an error when calling a plugin that's not a subclass of Plugin" do
         expect do
           dm.danger.import_plugin("spec/fixtures/plugins/example_broken.rb")
