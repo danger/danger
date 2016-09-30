@@ -2,7 +2,7 @@
 # including in a CHANGELOG for example
 has_app_changes = !git.modified_files.grep(/lib/).empty?
 has_test_changes = !git.modified_files.grep(/spec/).empty?
-is_version_bump = git.modified_files.sort == ["danger.gemspec", "lib/danger/version.rb"].sort
+is_version_bump = git.modified_files.sort == ["CHANGELOG.md", "lib/danger/version.rb"].sort
 
 if has_app_changes && !has_test_changes && !is_version_bump
   warn("Tests were not updated", sticky: false)
