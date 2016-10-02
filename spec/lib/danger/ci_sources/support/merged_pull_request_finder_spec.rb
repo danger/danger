@@ -1,6 +1,6 @@
 require "danger/ci_source/support/merged_pull_request_finder"
 
-describe Danger::MergedPullRequestFinder do
+RSpec.describe Danger::MergedPullRequestFinder do
   def finder(pull_request_id: "", logs: nil)
     described_class.new(
       pull_request_id,

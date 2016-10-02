@@ -16,16 +16,25 @@ Dir["spec/support/**/*.rb"].each { |file| require(file) }
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.filter_run_when_matching :focus
+  config.example_status_persistence_file_path = "spec/examples.txt"
+  if config.files_to_run.one?
+    config.default_formatter = "doc"
+  end
+  config.disable_monkey_patching!
+  config.order = :random
+  Kernel.srand config.seed
+
+  # Custom
   config.include Danger::Support::GitLabHelper, host: :gitlab
   config.include Danger::Support::GitHubHelper, host: :github
   config.include Danger::Support::BitbucketServerHelper, host: :bitbucket_server
   config.include Danger::Support::BitbucketCloudHelper, host: :bitbucket_cloud
   config.include Danger::Support::CIHelper, use: :ci_helper
-
-  config.run_all_when_everything_filtered = true
-  config.filter_run focus: true
-  config.order = :random
-  Kernel.srand config.seed
 end
 
 # Now that we could be using Danger's plugins in Danger

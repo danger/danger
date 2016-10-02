@@ -1,6 +1,6 @@
 require "danger/ci_source/circle"
 
-describe Danger::Jenkins do
+RSpec.describe Danger::Jenkins do
   let(:valid_env) do
     {
       "JENKINS_URL" => "Hello",

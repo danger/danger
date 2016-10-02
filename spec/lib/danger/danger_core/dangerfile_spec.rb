@@ -6,7 +6,7 @@ require "danger/danger_core/plugins/dangerfile_danger_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
 
-describe Danger::Dangerfile, host: :github do
+RSpec.describe Danger::Dangerfile, host: :github do
   it "keeps track of the original Dangerfile" do
     file = make_temp_file ""
     dm = testing_dangerfile

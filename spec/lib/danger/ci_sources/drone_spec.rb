@@ -1,6 +1,6 @@
 require "danger/ci_source/drone"
 
-describe Danger::Drone do
+RSpec.describe Danger::Drone do
   it "validates when DRONE variable is set" do
     env = { "DRONE" => "true",
             "DRONE_REPO" => "danger/danger",

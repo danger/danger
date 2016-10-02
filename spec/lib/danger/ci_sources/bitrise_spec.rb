@@ -1,6 +1,6 @@
 require "danger/ci_source/xcode_server"
 
-describe Danger::Bitrise do
+RSpec.describe Danger::Bitrise do
   let(:valid_env) do
     {
       "BITRISE_PULL_REQUEST" => "4",

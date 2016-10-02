@@ -1,6 +1,6 @@
 require "danger/request_sources/github"
 
-describe Danger::RequestSources::RequestSource, host: :github do
+RSpec.describe Danger::RequestSources::RequestSource, host: :github do
   describe "the base request source" do
     it "validates when passed a corresponding repository" do
       git_mock = Danger::GitRepo.new

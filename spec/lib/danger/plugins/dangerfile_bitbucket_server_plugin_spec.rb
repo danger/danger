@@ -1,6 +1,6 @@
 # coding: utf-8
 
-describe Danger::DangerfileBitbucketServerPlugin, host: :bitbucket_server do
+RSpec.describe Danger::DangerfileBitbucketServerPlugin, host: :bitbucket_server do
   let(:dangerfile) { testing_dangerfile }
   let(:plugin) { described_class.new(dangerfile) }
 

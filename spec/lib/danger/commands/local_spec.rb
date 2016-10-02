@@ -1,6 +1,6 @@
 require "danger/commands/local"
 
-describe Danger::Local do
+RSpec.describe Danger::Local do
   describe ".options" do
     it "contains extra options for local command" do
       result = described_class.options

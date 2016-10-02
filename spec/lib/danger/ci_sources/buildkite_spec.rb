@@ -1,6 +1,6 @@
 require "danger/ci_source/buildkite"
 
-describe Danger::Buildkite do
+RSpec.describe Danger::Buildkite do
   let(:valid_env) do
     {
       "BUILDKITE" => "true",

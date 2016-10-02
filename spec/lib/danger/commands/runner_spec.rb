@@ -1,7 +1,7 @@
 require "danger/commands/runner"
 require "danger/danger_core/executor"
 
-describe Danger::Runner do
+RSpec.describe Danger::Runner do
   context "without Dangerfile" do
     it "raises error" do
       argv = CLAide::ARGV.new([])

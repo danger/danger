@@ -3,7 +3,7 @@ require "erb"
 
 require "danger/request_sources/gitlab"
 
-describe Danger::RequestSources::GitLab, host: :gitlab do
+RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
   let(:env) { stub_env }
   let(:g) { Danger::RequestSources::GitLab.new(stub_ci, env) }
 

@@ -1,4 +1,4 @@
-describe Danger::DangerfileGitLabPlugin, host: :gitlab do
+RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   let(:dangerfile) { testing_dangerfile }
   let(:plugin) { described_class.new(dangerfile) }
   before do

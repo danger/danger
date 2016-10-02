@@ -1,4 +1,4 @@
-describe Danger::Plugin do
+RSpec.describe Danger::Plugin do
   it "creates an instance name based on the class name" do
     class DangerTestClassNamePlugin < Danger::Plugin; end
     expect(DangerTestClassNamePlugin.instance_name).to eq("test_class_name_plugin")

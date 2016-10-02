@@ -1,6 +1,6 @@
 require "danger/ci_source/travis"
 
-describe Danger::Travis do
+RSpec.describe Danger::Travis do
   let(:valid_env) do
     {
       "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",

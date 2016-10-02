@@ -1,6 +1,6 @@
 require "danger/ci_source/travis"
 
-describe Danger::Semaphore do
+RSpec.describe Danger::Semaphore do
   let(:valid_env) do
     {
       "SEMAPHORE" => "true",
