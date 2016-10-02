@@ -1,6 +1,6 @@
 require "danger/ci_source/xcode_server"
 
-describe Danger::XcodeServer do
+RSpec.describe Danger::XcodeServer do
   let(:valid_env) do
     {
       "XCS_BOT_NAME" => "BuildaBot [danger/danger] PR #17"

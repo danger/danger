@@ -1,6 +1,6 @@
 require "danger/ci_source/circle"
 
-describe Danger::CircleCI do
+RSpec.describe Danger::CircleCI do
   let(:legit_pr) { "https://github.com/artsy/eigen/pulls/800" }
   let(:not_legit_pr) { "https://github.com/orta" }
 

@@ -1,6 +1,6 @@
 require "danger/clients/rubygems_client"
 
-describe Danger do
+RSpec.describe Danger do
   context "when installed danger is outdated and an error is raised" do
     before do
       stub_const("Danger::VERSION", "1.0.0")

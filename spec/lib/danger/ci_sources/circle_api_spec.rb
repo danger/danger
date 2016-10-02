@@ -1,6 +1,6 @@
 require "danger/ci_source/circle_api"
 
-describe Danger::CircleAPI do
+RSpec.describe Danger::CircleAPI do
   it "gets out a repo slug, pull request number and commit refs when PR url is not found" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",

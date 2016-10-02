@@ -1,7 +1,7 @@
 # coding: utf-8
 require "danger/request_sources/bitbucket_server"
 
-describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server do
+RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server do
   let(:env) { stub_env }
   let(:bs) { Danger::RequestSources::BitbucketServer.new(stub_ci, env) }
 

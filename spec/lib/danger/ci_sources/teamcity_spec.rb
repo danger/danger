@@ -1,6 +1,6 @@
 require "danger/ci_source/teamcity"
 
-describe Danger::TeamCity do
+RSpec.describe Danger::TeamCity do
   let(:valid_env) do
     {
       "TEAMCITY_VERSION" => "42"

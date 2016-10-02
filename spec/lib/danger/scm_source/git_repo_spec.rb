@@ -1,6 +1,6 @@
 require "danger/scm_source/git_repo"
 
-describe Danger::GitRepo, host: :github do
+RSpec.describe Danger::GitRepo, host: :github do
   describe "#exec" do
     it "run command with our env set" do
       git_repo = described_class.new

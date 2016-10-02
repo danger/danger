@@ -1,4 +1,4 @@
-describe String do
+RSpec.describe String do
   describe "#danger_pluralize" do
     examples = [
       { count: 0, string: "0 errors" },

@@ -58,7 +58,7 @@ EOS
 class Dummy
 end
 
-describe Danger::Helpers::CommentsHelper do
+RSpec.describe Danger::Helpers::CommentsHelper do
   let(:dummy) do
     d = Dummy.new
     d.extend(described_class)

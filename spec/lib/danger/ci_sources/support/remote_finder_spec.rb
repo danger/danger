@@ -1,6 +1,6 @@
 require "danger/ci_source/support/remote_finder"
 
-describe Danger::RemoteFinder do
+RSpec.describe Danger::RemoteFinder do
   describe "#call" do
     it "returns repo slug from logs" do
       remote_logs = IO.read("spec/fixtures/ci_source/support/remote.log")

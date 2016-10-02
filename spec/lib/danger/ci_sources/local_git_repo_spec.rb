@@ -27,7 +27,7 @@ def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
   end
 end
 
-describe Danger::LocalGitRepo do
+RSpec.describe Danger::LocalGitRepo do
   let(:valid_env) do
     {
       "DANGER_USE_LOCAL_GIT" => "true"

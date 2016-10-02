@@ -1,6 +1,6 @@
 require "danger/ci_source/surf"
 
-describe Danger::Surf do
+RSpec.describe Danger::Surf do
   let(:valid_env) do
     {
       "SURF_REPO" => "https://github.com/surf-build/surf",

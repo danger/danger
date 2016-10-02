@@ -46,3 +46,6 @@ build/
 .keys
 .idea
 junit-results.xml
+
+# RSpec
+/spec/examples.txt

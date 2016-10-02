@@ -1,6 +1,6 @@
 require "danger/clients/rubygems_client"
 
-describe Danger::RubyGemsClient do
+RSpec.describe Danger::RubyGemsClient do
   describe ".latest_danger_version" do
     context "rubygems.org is operational" do
       it "returns latest danger version" do

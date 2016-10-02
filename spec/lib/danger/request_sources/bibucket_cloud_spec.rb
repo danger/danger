@@ -1,7 +1,7 @@
 # coding: utf-8
 require "danger/request_sources/bitbucket_cloud"
 
-describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
+RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
   let(:env) { stub_env }
   let(:bs) { Danger::RequestSources::BitbucketCloud.new(stub_ci, env) }
 

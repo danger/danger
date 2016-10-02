@@ -1,7 +1,7 @@
 require "danger/danger_core/environment_manager"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
 
-describe Danger::Dangerfile::DSL, host: :github do
+RSpec.describe Danger::Dangerfile::DSL, host: :github do
   let(:dm) { testing_dangerfile }
 
   describe "#import" do

@@ -1,6 +1,6 @@
 require "danger/helpers/comment"
 
-describe Danger::Comment do
+RSpec.describe Danger::Comment do
   describe ".from_github" do
     it "initializes with GitHub comment data structure" do
       github_comment = { "id" => 42, "body" => "github comment" }

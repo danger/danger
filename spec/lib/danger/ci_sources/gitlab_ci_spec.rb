@@ -1,6 +1,6 @@
 require "danger/ci_source/gitlab_ci"
 
-describe Danger::GitLabCI, host: :gitlab do
+RSpec.describe Danger::GitLabCI, host: :gitlab do
   context "valid envrionment" do
     let(:gitlab_env) do
       {
