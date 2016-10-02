@@ -25,10 +25,10 @@ module Danger
       "danger_base".freeze
     end
 
-    def initialize(env, ui)
+    def initialize(env, ui = nil)
       ci_klass = self.class.local_ci_source(env)
       self.ci_source = ci_klass.new(env)
-      self.ui = ui
+      self.ui = ui || Cork::Board.new(silent: false, verbose: false)
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)

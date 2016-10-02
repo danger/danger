@@ -68,10 +68,11 @@ module Danger
       super
     end
 
-    def initialize(env_manager, cork_board)
+    # cork_board not being set comes from plugins #585
+    def initialize(env_manager, cork_board = nil)
       @plugins = {}
       @core_plugins = []
-      @ui = cork_board
+      @ui = cork_board || Cork::Board.new(silent: false, verbose: false)
 
       # Triggers the core plugins
       @env = env_manager
