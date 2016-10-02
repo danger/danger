@@ -1,5 +1,7 @@
 ## master
 
+* Adds backwards compatibility for plugin testing API - sorry - @orta
+
 ## 3.4.1
 
 * Added option to run a Dangerfile from a `branch` and/or `path` when using a remote repo - felipesabino
