@@ -1,6 +1,7 @@
 ## master
 
 * Adds backwards compatibility for plugin testing API - sorry - @orta
+* Multiple remotes support for Jenkins - Juanito Fatas
 
 ## 3.4.1
 
