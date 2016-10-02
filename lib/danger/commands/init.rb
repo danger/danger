@@ -1,4 +1,5 @@
 require "danger/commands/init_helpers/interviewer"
+require "danger/danger_core/dangerfile_generator"
 require "danger/ci_source/local_git_repo"
 require "yaml"
 
@@ -53,8 +54,7 @@ module Danger
     end
 
     def setup_dangerfile
-      dir = Danger.gem_path
-      content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
+      content = DangerfileGenerator.create_dangerfile(".", cork)
       File.write("Dangerfile", content)
 
       ui.header "Step 1: Creating a starter Dangerfile"

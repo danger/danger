@@ -19,6 +19,9 @@ module Danger
     require "danger/commands/plugins/plugin_json"
     require "danger/commands/plugins/plugin_readme"
 
+    require "danger/commands/dangerfile/init"
+    require "danger/commands/dangerfile/gem"
+
     attr_accessor :cork
 
     self.summary = "Run the Dangerfile."
