@@ -53,7 +53,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_url = env["GIT_URL"]
+      self.repo_url = env.fetch("GIT_URL_1") { env["GIT_URL"] }
       self.pull_request_id = self.class.pull_request_id(env)
 
       repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})

@@ -114,6 +114,17 @@ RSpec.describe Danger::Jenkins do
     end
   end
 
+  context "Multiple remotes support" do
+    it "gets out the repo slug from GIT_URL_1" do
+      source = described_class.new(
+        "JENKINS_URL" => "Hello",
+        "GIT_URL_1" => "https://githug.com/danger/danger.git"
+      )
+
+      expect(source.repo_slug).to eql("danger/danger")
+    end
+  end
+
   describe "#new" do
     describe "repo slug" do
       it "gets out a repo slug from a git+ssh repo" do
