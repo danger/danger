@@ -2,6 +2,7 @@
 
 * Adds backwards compatibility for plugin testing API - sorry - @orta
 * Multiple remotes support for Jenkins - Juanito Fatas
+* Fixed a problem when checking if the latest PR commit have been fetched - @fwal
 
 ## 3.4.1
 
