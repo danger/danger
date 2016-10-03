@@ -305,14 +305,14 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       it "setups the danger branches" do
         @g.fetch_details
         expect(@g.scm).to receive(:exec)
-          .with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe")
+          .with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"")
           .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
 
         expect(@g.scm).to receive(:exec)
-          .with("rev-parse --quiet --verify 561827e46167077b5e53515b4b7349b8ae04610b")
+          .with("rev-parse --quiet --verify \"561827e46167077b5e53515b4b7349b8ae04610b^{commit}\"")
           .and_return("561827e46167077b5e53515b4b7349b8ae04610b")
 
         expect(@g.scm).to receive(:exec)
@@ -324,14 +324,14 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       it "fetches when the branches are not in the local store" do
         @g.fetch_details
         # Check for commit turns up empty
-        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe").and_return("")
+        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"").and_return("")
         # so fetch it
         expect(@g.scm).to receive(:exec).with("fetch")
         # Then make a known branch for it
         expect(@g.scm).to receive(:exec).with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
 
         # Same as above but for head, not base
-        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify 561827e46167077b5e53515b4b7349b8ae04610b").and_return("")
+        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify \"561827e46167077b5e53515b4b7349b8ae04610b^{commit}\"").and_return("")
         expect(@g.scm).to receive(:exec).with("fetch")
         expect(@g.scm).to receive(:exec).with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
 
