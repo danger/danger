@@ -8,6 +8,9 @@ module Danger
     self.command = "dangerfile"
 
     self.abstract_command = true
+    def self.options
+      []
+    end
   end
 end
 
