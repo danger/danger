@@ -37,7 +37,7 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      exec("fetch") if exec("rev-parse --quiet --verify #{commitish}").empty?
+      exec("fetch") if exec("rev-parse --quiet --verify \"#{commitish}^{commit}\"").empty?
     end
 
     private
