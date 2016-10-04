@@ -1,5 +1,13 @@
 ## master
 
+* Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
+
+  Adding two new commands:
+
+  `danger dangerfile init` which creates the same Dangerfile generated in `danger init` but without all the talking.
+
+  `danger dangerfile gem [gemname]` which uses the [dangerfile-gem-template](https://github.com/danger/dangerfile-gem-template) repo to create a Gem based on our current best practices.
+
 ## 3.4.2
 
 * Adds backwards compatibility for plugin testing API - sorry - @orta
