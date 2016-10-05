@@ -7,7 +7,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
 
   describe "#new" do
     it "should not raise uninitialized constant error" do
-      expect { described_class.new(stub_ci, env) }.not_to raise_error(NameError)
+      expect { described_class.new(stub_ci, env) }.not_to raise_error
     end
   end
 
