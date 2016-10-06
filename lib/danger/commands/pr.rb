@@ -43,7 +43,7 @@ module Danger
     def validate_pry_available
       require "pry"
     rescue LoadError
-      cork.warn "Pry was not found, and is required for 'danger local --pry'."
+      cork.warn "Pry was not found, and is required for 'danger pr --pry'."
       cork.print_warnings
       abort
     end
@@ -75,7 +75,7 @@ module Danger
 
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
-        cork.puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
+        cork.puts "danger pr failed because it only works with GitHub projects at the moment. Sorry.".red
         exit 0
       end
 
