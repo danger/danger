@@ -4,6 +4,7 @@ require "git"
 require "uri"
 require "danger/ci_source/support/remote_finder"
 require "danger/ci_source/support/pull_request_finder"
+require "danger/ci_source/support/commits"
 require "danger/request_sources/github"
 
 module Danger
@@ -32,20 +33,39 @@ module Danger
     end
 
     def print_repo_slug_warning
-      puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
-    end
-
-    def parents(sha)
-      @parents ||= run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
+      puts "danger local / pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
     end
 
     def initialize(env = {})
-      repo_slug = RemoteFinder.new(
-        env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-        run_git("remote show origin -n".freeze)
-      ).call
+      @env = env
 
-      found_pull_request = begin
+      self.repo_slug = found_repo_slug ? found_repo_slug : print_repo_slug_warning
+      self.pull_request_id = found_pull_request.pull_request_id
+
+      if sha
+        self.base_commit = commits.base
+        self.head_commit = commits.head
+      else
+        self.base_commit = found_pull_request.base
+        self.head_commit = found_pull_request.head
+      end
+    end
+
+    private
+
+    attr_reader :env
+
+    def found_repo_slug
+      @_found_repo_slug ||= begin
+        RemoteFinder.new(
+          env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+          run_git("remote show origin -n".freeze)
+        ).call
+      end
+    end
+
+    def found_pull_request
+      @_found_pull_request ||= begin
         PullRequestFinder.new(
           env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
           run_git("log --oneline -1000000".freeze),
@@ -53,18 +73,14 @@ module Danger
           env.fetch("CHECK_OPEN_PR") { "false".freeze }
         ).call
       end
+    end
 
-      self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning
-      self.pull_request_id = found_pull_request.pull_request_id
-      sha = found_pull_request.sha
+    def sha
+      @_sha ||= found_pull_request.sha
+    end
 
-      if sha
-        self.base_commit = parents(sha)[0]
-        self.head_commit = parents(sha)[1]
-      else
-        self.base_commit = found_pull_request.base
-        self.head_commit = found_pull_request.head
-      end
+    def commits
+      @_commits ||= Commits.new(run_git("rev-list --parents -n 1 #{sha}"))
     end
   end
 end
