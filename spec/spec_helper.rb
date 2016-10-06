@@ -114,7 +114,7 @@ def with_git_repo(origin: "git@github.com:artsy/eigen")
       `git commit -m "another"`
       `git remote add origin #{origin}`
 
-      yield
+      yield dir
     end
   end
 end
