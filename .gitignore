@@ -49,3 +49,6 @@ junit-results.xml
 
 # RSpec
 /spec/examples.txt
+
+# Byebug
+/.byebug_history
