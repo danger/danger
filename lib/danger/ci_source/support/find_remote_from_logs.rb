@@ -1,5 +1,5 @@
 module Danger
-  class RemoteFinder
+  class FindRemoteFromLogs
     def initialize(github_host, remote_logs)
       @github_host = github_host
       @remote_logs = remote_logs
