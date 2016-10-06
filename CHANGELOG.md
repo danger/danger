@@ -1,14 +1,26 @@
 ## master
 
+## 3.5.1
+
 * Adds `danger pr` command to run against Pull Requests - Juanito Fatas
 
-  Usage:
+  Work with Open PR:
 
+  ```
   danger pr --use-pr=https://github.com/danger/danger/pull/615
+  ```
+
+  Work with Merged PR:
+
+  ```
+  danger pr --use-pr=https://github.com/danger/danger/pull/613
+  ```
 
   Works with forks, too:
 
+  ```
   danger pr --use-pr=https://github.com/JuanitoFatas/danger/pull/3
+  ```
 
 ## 3.5.0
 
