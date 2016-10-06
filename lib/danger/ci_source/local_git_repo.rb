@@ -40,6 +40,8 @@ module Danger
       @env = env
 
       self.repo_slug = remote_info.slug
+      raise_error_for_missing_remote if remote_info.kind_of?(NoRemoteInfo)
+
       self.pull_request_id = found_pull_request.pull_request_id
 
       if sha
@@ -49,16 +51,19 @@ module Danger
         self.base_commit = found_pull_request.base
         self.head_commit = found_pull_request.head
       end
-
-      print_repo_slug_warning if remote_info.kind_of?(NoRemoteInfo)
     end
 
     private
 
     attr_reader :env, :pr_id
 
-    def print_repo_slug_warning
-      puts "danger local / pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
+    def raise_error_for_missing_remote
+      raise missing_remote_error_message
+    end
+
+    def missing_remote_error_message
+      "danger cannot find your git remote, please set a remote. " \
+      "And the repository must host on GitHub.com or GitHub Enterprise."
     end
 
     def remote_info

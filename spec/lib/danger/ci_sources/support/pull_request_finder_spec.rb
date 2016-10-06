@@ -31,16 +31,6 @@ RSpec.describe Danger::PullRequestFinder do
   end
 
   describe "#new" do
-    context "when needs to check Open PR" do
-      it "raises if repo slug is not given" do
-        expect { finder(repo_slug: nil, remote: "true") }.to \
-          raise_error(
-            RuntimeError,
-            /danger pr requires a repository hosted on GitHub.com or GitHub Enterprise./
-          )
-      end
-    end
-
     it "translates $remote into boolean" do
       expect(finder(remote: "true")).to have_instance_variables(
         "@remote" => true

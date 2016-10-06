@@ -7,6 +7,7 @@ RSpec.describe Danger::LocalGitRepo do
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
         `git init`
+        `git remote add origin https://github.com/danger/danger.git`
         File.open(dir + "/file1", "w") {}
         `git add .`
         `git commit -m "adding file1"`
@@ -67,8 +68,6 @@ RSpec.describe Danger::LocalGitRepo do
     describe "repo_slug" do
       it "gets the repo slug when it uses https" do
         run_in_repo do
-          `git remote add origin https://github.com/danger/danger.git`
-
           result = source(valid_env)
 
           expect(result.repo_slug).to eq("danger/danger")
@@ -77,7 +76,7 @@ RSpec.describe Danger::LocalGitRepo do
 
       it "gets the repo slug when it uses git@" do
         run_in_repo do
-          `git remote add origin git@github.com:orta/danger.git`
+          `git remote set-url origin git@github.com:orta/danger.git`
 
           result = source(valid_env)
 
@@ -87,7 +86,7 @@ RSpec.describe Danger::LocalGitRepo do
 
       it "gets the repo slug when it contains .git" do
         run_in_repo do
-          `git remote add origin git@github.com:artsy/artsy.github.com.git`
+          `git remote set-url origin git@github.com:artsy/artsy.github.com.git`
 
           result = source(valid_env)
 
@@ -97,7 +96,7 @@ RSpec.describe Danger::LocalGitRepo do
 
       it "gets the repo slug when it starts with git://" do
         run_in_repo do
-          `git remote add origin git://github.com:orta/danger.git`
+          `git remote set-url origin git://github.com:orta/danger.git`
 
           result = source(valid_env)
 
@@ -107,18 +106,20 @@ RSpec.describe Danger::LocalGitRepo do
 
       it "does not set a repo_slug if the repo has a non-gh remote" do
         run_in_repo do
-          `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
+          `git remote set-url origin git@git.evilcorp.com:tyrell/danger.git`
 
-          result = source(valid_env)
-
-          expect(result.repo_slug).to be_nil
+          expect { source(valid_env) }.to \
+            raise_error(
+              RuntimeError,
+              /danger cannot find your git remote, please set a remote. And the repository must host on GitHub.com or GitHub Enterprise./
+            )
         end
       end
 
       context "enterprise github repos" do
         it "does set a repo slug if provided with a github enterprise host" do
           run_in_repo do
-            `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
+            `git remote set-url origin git@git.evilcorp.com:tyrell/danger.git`
 
             result = source(valid_env.merge!("DANGER_GITHUB_HOST" => "git.evilcorp.com"))
 
@@ -128,11 +129,13 @@ RSpec.describe Danger::LocalGitRepo do
 
         it "does not set a repo_slug if provided with a github_host that is different from the remote" do
           run_in_repo do
-            `git remote add origin git@git.evilcorp.com:tyrell/danger.git`
+            `git remote set-url origin git@git.evilcorp.com:tyrell/danger.git`
 
-            result = source(valid_env.merge!("DANGER_GITHUB_HOST" => "git.robot.com"))
-
-            expect(result.repo_slug).to be_nil
+            expect { source(valid_env.merge!("DANGER_GITHUB_HOST" => "git.robot.com")) }.to \
+              raise_error(
+                RuntimeError,
+                /danger cannot find your git remote, please set a remote. And the repository must host on GitHub.com or GitHub Enterprise./
+              )
           end
         end
       end

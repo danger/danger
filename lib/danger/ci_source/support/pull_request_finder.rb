@@ -7,14 +7,8 @@ module Danger
     def initialize(specific_pull_request_id, repo_slug = nil, remote: false, git_logs: "")
       @specific_pull_request_id = specific_pull_request_id
       @git_logs = git_logs
+      @repo_slug = repo_slug
       @remote = to_boolean(remote)
-
-      if @remote
-        @repo_slug = repo_slug
-        unless repo_slug
-          raise "danger pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
-        end
-      end
     end
 
     def call

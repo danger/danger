@@ -8,7 +8,7 @@ module Danger
     end
 
     def call
-      matched = remote.match(%r{#{Regexp.escape(github_host)}(:|/|(:/))(?<repo_slug>[^/]+/.+?)(?:\.git)?$})
+      matched = remote.match(regexp)
 
       if matched
         RemoteInfo.new(matched["repo_slug"], nil)
@@ -19,9 +19,17 @@ module Danger
 
     attr_reader :remote_logs, :github_host
 
-    # @return [String] The remote URL
     def remote
       remote_logs.lines.grep(/Fetch URL/)[0].split(": ".freeze, 2)[1]
+    end
+
+    def regexp
+      %r{
+        #{Regexp.escape(github_host)}
+        (:|/|(:/))
+        (?<repo_slug>[^/]+/.+?)
+        (?:\.git)?$
+      }x
     end
   end
 end
