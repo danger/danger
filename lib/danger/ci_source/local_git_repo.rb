@@ -2,9 +2,14 @@
 
 require "git"
 require "uri"
-require "danger/ci_source/support/remote_finder"
-require "danger/ci_source/support/merged_pull_request_finder"
+
 require "danger/request_sources/github"
+
+require "danger/ci_source/support/find_repo_info_from_url"
+require "danger/ci_source/support/find_repo_info_from_logs"
+require "danger/ci_source/support/no_repo_info"
+require "danger/ci_source/support/pull_request_finder"
+require "danger/ci_source/support/commits"
 
 module Danger
   # ignore
@@ -31,29 +36,82 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
-    def print_repo_slug_warning
-      puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
-    end
-
-    def parents(sha)
-      @parents ||= run_git("rev-list --parents -n 1 #{sha}").strip.split(" ".freeze)
-    end
-
     def initialize(env = {})
-      repo_slug = RemoteFinder.new(
-        env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-        run_git("remote show origin -n".freeze)
-      ).call
+      @env = env
 
-      pull_request_id, sha = MergedPullRequestFinder.new(
-        env.fetch("LOCAL_GIT_PR_ID") { "" },
-        run_git("log --oneline -1000000".freeze)
-      ).call
+      self.repo_slug = remote_info.slug
+      raise_error_for_missing_remote if remote_info.kind_of?(NoRepoInfo)
 
-      self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning
-      self.pull_request_id = pull_request_id
-      self.base_commit = parents(sha)[0]
-      self.head_commit = parents(sha)[1]
+      self.pull_request_id = found_pull_request.pull_request_id
+
+      if sha
+        self.base_commit = commits.base
+        self.head_commit = commits.head
+      else
+        self.base_commit = found_pull_request.base
+        self.head_commit = found_pull_request.head
+      end
+    end
+
+    private
+
+    attr_reader :env
+
+    def raise_error_for_missing_remote
+      raise missing_remote_error_message
+    end
+
+    def missing_remote_error_message
+      "danger cannot find your git remote, please set a remote. " \
+      "And the repository must host on GitHub.com or GitHub Enterprise."
+    end
+
+    def remote_info
+      @_remote_info ||= begin
+        remote_info = begin
+          if given_pull_request_url?
+            FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
+          else
+            FindRepoInfoFromLogs.new(
+              env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+              run_git("remote show origin -n".freeze)
+            ).call
+          end
+        end
+
+        remote_info || NoRepoInfo.new
+      end
+    end
+
+    def found_pull_request
+      @_found_pull_request ||= begin
+        if given_pull_request_url?
+          PullRequestFinder.new(
+            remote_info.id,
+            remote_info.slug,
+            remote: true
+          ).call
+        else
+          PullRequestFinder.new(
+            env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
+            remote_info.slug,
+            remote: false,
+            git_logs: run_git("log --oneline -1000000".freeze)
+          ).call
+        end
+      end
+    end
+
+    def given_pull_request_url?
+      env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?
+    end
+
+    def sha
+      @_sha ||= found_pull_request.sha
+    end
+
+    def commits
+      @_commits ||= Commits.new(run_git("rev-list --parents -n 1 #{sha}"))
     end
   end
 end

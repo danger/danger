@@ -98,8 +98,10 @@ module Danger
       end
 
       def issue_comments
-        @comments ||= client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-                            .map { |comment| Comment.from_github(comment) }
+        @comments ||= begin
+          client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+            .map { |comment| Comment.from_github(comment) }
+        end
       end
 
       # Sending data to GitHub

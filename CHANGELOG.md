@@ -1,5 +1,15 @@
 ## master
 
+* Adds `danger pr` command to run against Pull Requests - Juanito Fatas
+
+  Usage:
+
+  danger pr --use-pr=https://github.com/danger/danger/pull/615
+
+  Works with forks, too:
+
+  danger pr --use-pr=https://github.com/JuanitoFatas/danger/pull/3
+
 ## 3.5.0
 
 * Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
