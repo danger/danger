@@ -1,5 +1,7 @@
 ## master
 
+* Adds `danger pr` command to run against open & merged PR - Juanito Fatas
+
 ## 3.5.0
 
 * Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
