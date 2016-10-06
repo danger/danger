@@ -5,9 +5,9 @@ require "uri"
 
 require "danger/request_sources/github"
 
-require "danger/ci_source/support/find_remote_from_url"
-require "danger/ci_source/support/find_remote_from_logs"
-require "danger/ci_source/support/no_remote_info"
+require "danger/ci_source/support/find_repo_info_from_url"
+require "danger/ci_source/support/find_repo_info_from_logs"
+require "danger/ci_source/support/no_repo_info"
 require "danger/ci_source/support/pull_request_finder"
 require "danger/ci_source/support/commits"
 
@@ -40,7 +40,7 @@ module Danger
       @env = env
 
       self.repo_slug = remote_info.slug
-      raise_error_for_missing_remote if remote_info.kind_of?(NoRemoteInfo)
+      raise_error_for_missing_remote if remote_info.kind_of?(NoRepoInfo)
 
       self.pull_request_id = found_pull_request.pull_request_id
 
@@ -55,7 +55,7 @@ module Danger
 
     private
 
-    attr_reader :env, :pr_id
+    attr_reader :env
 
     def raise_error_for_missing_remote
       raise missing_remote_error_message
@@ -70,16 +70,16 @@ module Danger
       @_remote_info ||= begin
         remote_info = begin
           if given_pull_request_url?
-            FindRemoteFromURL.new(env["LOCAL_GIT_PR_URL"]).call
+            FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
           else
-            FindRemoteFromLogs.new(
+            FindRepoInfoFromLogs.new(
               env["DANGER_GITHUB_HOST"] || "github.com".freeze,
               run_git("remote show origin -n".freeze)
             ).call
           end
         end
 
-        remote_info || NoRemoteInfo.new
+        remote_info || NoRepoInfo.new
       end
     end
 

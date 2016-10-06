@@ -1,7 +1,7 @@
-require "danger/ci_source/support/remote_info"
+require "danger/ci_source/support/repo_info"
 
 module Danger
-  class FindRemoteFromLogs
+  class FindRepoInfoFromLogs
     def initialize(github_host, remote_logs)
       @github_host = github_host
       @remote_logs = remote_logs
@@ -11,7 +11,7 @@ module Danger
       matched = remote.match(regexp)
 
       if matched
-        RemoteInfo.new(matched["repo_slug"], nil)
+        RepoInfo.new(matched["repo_slug"], nil)
       end
     end
 

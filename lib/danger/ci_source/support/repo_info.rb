@@ -1,5 +1,5 @@
 module Danger
-  class RemoteInfo
+  class RepoInfo
     attr_reader :slug, :id
 
     def initialize(slug, id)

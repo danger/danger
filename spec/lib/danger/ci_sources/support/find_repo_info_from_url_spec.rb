@@ -1,6 +1,6 @@
-require "danger/ci_source/support/find_remote_from_url"
+require "danger/ci_source/support/find_repo_info_from_url"
 
-RSpec.describe Danger::FindRemoteFromURL do
+RSpec.describe Danger::FindRepoInfoFromURL do
   describe "#call" do
     context "no match" do
       it "returns nil" do

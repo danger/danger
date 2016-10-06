@@ -1,7 +1,7 @@
-require "danger/ci_source/support/remote_info"
+require "danger/ci_source/support/repo_info"
 
 module Danger
-  class FindRemoteFromURL
+  class FindRepoInfoFromURL
     REGEXP = %r{
       (?<slug>[^/]+/[^/]+)
       (/(pull|merge_requests|pull-requests)/)
@@ -16,7 +16,7 @@ module Danger
       matched = url.match(REGEXP)
 
       if matched
-        RemoteInfo.new(matched[:slug], matched[:id])
+        RepoInfo.new(matched[:slug], matched[:id])
       end
     end
 

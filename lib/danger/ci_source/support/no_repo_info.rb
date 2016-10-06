@@ -1,5 +1,5 @@
 module Danger
-  class NoRemoteInfo
+  class NoRepoInfo
     attr_reader :slug, :id
   end
 end
