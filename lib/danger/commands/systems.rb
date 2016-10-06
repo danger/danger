@@ -16,10 +16,12 @@ module Danger
       require "yard"
       # Pull out all the Danger::CI subclasses docs
       registry = YARD::Registry.load(ci_source_paths, true)
-      ci_sources = registry.all(:class)
-                           .select { |klass| klass.inheritance_tree.map(&:name).include? :CI }
-                           .reject { |source| source.name == :CI }
-                           .reject { |source| source.name == :LocalGitRepo }
+      ci_sources = begin
+        registry.all(:class)
+          .select { |klass| klass.inheritance_tree.map(&:name).include? :CI }
+          .reject { |source| source.name == :CI }
+          .reject { |source| source.name == :LocalGitRepo }
+      end
 
       # Fail if anything is added and not documented
       cis_without_docs = ci_sources.select { |source| source.base_docstring.empty? }

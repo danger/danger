@@ -113,3 +113,6 @@ Style/IfInsideElse:
 
 Style/BlockComments:
   Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented

@@ -55,13 +55,17 @@ module Danger
       end
 
       def mr_comments
-        @comments ||= client.merge_request_comments(escaped_ci_slug, ci_source.pull_request_id)
-                            .map { |comment| Comment.from_gitlab(comment) }
+        @comments ||= begin
+          client.merge_request_comments(escaped_ci_slug, ci_source.pull_request_id)
+            .map { |comment| Comment.from_gitlab(comment) }
+        end
       end
 
       def mr_diff
-        @mr_diff ||= client.merge_request_changes(escaped_ci_slug, ci_source.pull_request_id)
-                           .changes.map { |change| change["diff"] }.join("\n")
+        @mr_diff ||= begin
+          client.merge_request_changes(escaped_ci_slug, ci_source.pull_request_id)
+            .changes.map { |change| change["diff"] }.join("\n")
+        end
       end
 
       def escaped_ci_slug
