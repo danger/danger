@@ -21,5 +21,16 @@ RSpec.describe Danger::RemoteFinder do
         expect(result).to eq "enterdanger/enterdanger"
       end
     end
+
+    context "specify remote in https" do
+      it "returns repo slug from logs" do
+        remote_logs = IO.read("spec/fixtures/ci_source/support/https-remote.log")
+        finder = described_class.new("github.com", remote_logs)
+
+        result = finder.call
+
+        expect(result).to eq "danger/danger"
+      end
+    end
   end
 end

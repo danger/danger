@@ -20,7 +20,7 @@ module Danger
 
     # @return [nil / MatchData] MatchData object or nil if not matched
     def remote_url_matches
-      remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
+      remote.match(%r{#{Regexp.escape(github_host)}(\:|/)(?<repo_slug>[^/]+/.+?)(?:\.git)?$})
     end
   end
 end
