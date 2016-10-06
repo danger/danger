@@ -1,33 +1,33 @@
 require "spec_helper"
 require "danger/ci_source/local_git_repo"
 
-def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
-  Dir.mktmpdir do |dir|
-    Dir.chdir dir do
-      `git init`
-      File.open(dir + "/file1", "w") {}
-      `git add .`
-      `git commit -m "adding file1"`
-      `git checkout -b new-branch --quiet`
-      File.open(dir + "/file2", "w") {}
-      `git add .`
-      `git commit -m "adding file2"`
-      `git checkout master --quiet`
+RSpec.describe Danger::LocalGitRepo do
+  def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
+    Dir.mktmpdir do |dir|
+      Dir.chdir dir do
+        `git init`
+        File.open(dir + "/file1", "w") {}
+        `git add .`
+        `git commit -m "adding file1"`
+        `git checkout -b new-branch --quiet`
+        File.open(dir + "/file2", "w") {}
+        `git add .`
+        `git commit -m "adding file2"`
+        `git checkout master --quiet`
 
-      if merge_pr
-        `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
+        if merge_pr
+          `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
+        end
+
+        if squash_and_merge_pr
+          `git merge new-branch --no-ff -m "New branch (#1234)"`
+        end
+
+        yield
       end
-
-      if squash_and_merge_pr
-        `git merge new-branch --no-ff -m "New branch (#1234)"`
-      end
-
-      yield
     end
   end
-end
 
-RSpec.describe Danger::LocalGitRepo do
   let(:valid_env) do
     {
       "DANGER_USE_LOCAL_GIT" => "true"
