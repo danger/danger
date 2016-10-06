@@ -10,7 +10,7 @@ module Danger
 
       if need_to_check_open_pr
         @repo_slug = repo_slug
-        if !repo_slug
+        unless repo_slug
           raise "danger pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
         end
       end
@@ -81,8 +81,8 @@ module Danger
     def open_pull_requests
       @open_pull_requests ||= begin
         client.pull_requests(repo_slug).
-          select { |pr| pr.state == "open" }
-          .map do |open_pr|
+          select { |pr| pr.state == "open" }.
+          map do |open_pr|
             OpenPullRequest.new(
               open_pr.number.to_s,
               open_pr.title,
@@ -125,7 +125,7 @@ module Danger
     end
 
     def check_if_any_pull_request!
-      if !pull_request.valid?
+      unless pull_request.valid?
         if !specific_pull_request_id.empty?
           raise "Could not find the Pull Request (#{specific_pull_request_id}) inside the git history for this repo."
         else
