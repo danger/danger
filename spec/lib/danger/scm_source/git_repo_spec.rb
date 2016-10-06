@@ -15,74 +15,50 @@ RSpec.describe Danger::GitRepo, host: :github do
 
   describe "#diff_for_folder" do
     it "fetches remote commits if it cannot find the merge commit" do
-      @tmp_dir = Dir.mktmpdir
-      Dir.chdir(@tmp_dir) do
-        `git init`
-        File.open(@tmp_dir + "/file", "w") {}
-        `git add .`
-        `git commit -m "ok"`
-        `git checkout -b new --quiet`
-        File.open(@tmp_dir + "/file2", "w") {}
-        `git add .`
-        `git commit -m "another"`
+      with_git_repo do |dir|
+        @dm = testing_dangerfile
+
+        allow(@dm.env.scm).to receive(:exec).and_return("")
+        # This is the thing we care about
+        allow(@dm.env.scm).to receive(:exec).with("fetch")
+
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
       end
-
-      @dm = testing_dangerfile
-
-      allow(@dm.env.scm).to receive(:exec).and_return("")
-      # This is the thing we care about
-      allow(@dm.env.scm).to receive(:exec).with("fetch")
-
-      @dm.env.scm.diff_for_folder(@tmp_dir, from: "master", to: "new")
     end
   end
 
   describe "Return Types" do
-    before do
-      @tmp_dir = Dir.mktmpdir
-      Dir.chdir(@tmp_dir) do
-        `git init`
-        File.open(@tmp_dir + "/file", "w") {}
-        `git add .`
-        `git commit -m "ok"`
-        `git checkout -b new --quiet`
-        File.open(@tmp_dir + "/file2", "w") {}
-        `git add .`
-        `git commit -m "another"`
-      end
-
-      @dm = testing_dangerfile
-      @dm.env.scm.diff_for_folder(@tmp_dir, from: "master", to: "new")
-    end
-
     it "#modified_files returns a FileList object" do
-      expect(@dm.git.modified_files.class).to eql(Danger::FileList)
+      with_git_repo do |dir|
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+        expect(@dm.git.modified_files.class).to eql(Danger::FileList)
+      end
     end
 
     it "#added_files returns a FileList object" do
-      expect(@dm.git.added_files.class).to eql(Danger::FileList)
+      with_git_repo do |dir|
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+        expect(@dm.git.added_files.class).to eql(Danger::FileList)
+      end
     end
 
     it "#deleted_files returns a FileList object" do
-      expect(@dm.git.deleted_files.class).to eql(Danger::FileList)
+      with_git_repo do |dir|
+        @dm = testing_dangerfile
+        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+        expect(@dm.git.deleted_files.class).to eql(Danger::FileList)
+      end
     end
   end
 
   describe "with files" do
     it "handles adding a new file to a git repo" do
-      Dir.mktmpdir do |dir|
-        Dir.chdir dir do
-          `git init`
-          File.open(dir + "/file1", "w") {}
-          `git add .`
-          `git commit -m "ok"`
-
-          `git checkout -b new --quiet`
-          File.open(dir + "/file2", "w") {}
-          `git add .`
-          `git commit -m "another"`
-        end
-
+      with_git_repo do |dir|
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
@@ -178,19 +154,7 @@ RSpec.describe Danger::GitRepo, host: :github do
 
     describe "#commits" do
       it "returns the commits" do
-        Dir.mktmpdir do |dir|
-          Dir.chdir dir do
-            `git init`
-            File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
-            `git add .`
-            `git commit -m "ok"`
-
-            `git checkout -b new --quiet`
-            File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
-            `git add .`
-            `git commit -m "another"`
-          end
-
+        with_git_repo do |dir|
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
