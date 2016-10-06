@@ -1,5 +1,6 @@
 require "spec_helper"
 require "danger/ci_source/local_git_repo"
+require "ostruct"
 
 RSpec.describe Danger::LocalGitRepo do
   def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
@@ -191,6 +192,32 @@ RSpec.describe Danger::LocalGitRepo do
           result = source(valid_env)
 
           expect(result.pull_request_id).to eq "1234"
+        end
+      end
+    end
+
+    context "forked PR" do
+      it "works" do
+        spec_root = Dir.pwd
+        client = double("Octokit::Client")
+        allow(Octokit::Client).to receive(:new) { client }
+        allow(client).to receive(:pull_request).with("orta/danger", "42") do
+          JSON.parse(
+            IO.read("#{spec_root}/spec/fixtures/ci_source/support/fork-pr.json"),
+            object_class: OpenStruct
+          )
+        end
+
+        run_in_repo do
+          fork_pr_env = { "LOCAL_GIT_PR_URL" => "https://github.com/orta/danger/pull/42" }
+          result = source(valid_env.merge!(fork_pr_env))
+
+          expect(result).to have_attributes(
+            repo_slug: "orta/danger",
+            pull_request_id: "42",
+            base_commit: "base commit sha1",
+            head_commit: "head commit sha1"
+          )
         end
       end
     end

@@ -1,3 +1,5 @@
+require "danger/ci_source/support/remote_info"
+
 module Danger
   class FindRemoteFromLogs
     def initialize(github_host, remote_logs)
@@ -6,7 +8,11 @@ module Danger
     end
 
     def call
-      remote_url_matches && remote_url_matches["repo_slug"]
+      matched = remote.match(%r{#{Regexp.escape(github_host)}(:|/|(:/))(?<repo_slug>[^/]+/.+?)(?:\.git)?$})
+
+      if matched
+        RemoteInfo.new(matched["repo_slug"], nil)
+      end
     end
 
     private
@@ -15,12 +21,7 @@ module Danger
 
     # @return [String] The remote URL
     def remote
-      @remote ||= remote_logs.lines.grep(/Fetch URL/)[0].split(": ".freeze, 2)[1]
-    end
-
-    # @return [nil / MatchData] MatchData object or nil if not matched
-    def remote_url_matches
-      remote.match(%r{#{Regexp.escape(github_host)}(:|\/|(:\/))(?<repo_slug>[^/]+/.+?)(?:\.git)?$})
+      remote_logs.lines.grep(/Fetch URL/)[0].split(": ".freeze, 2)[1]
     end
   end
 end

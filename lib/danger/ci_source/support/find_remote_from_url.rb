@@ -1,3 +1,5 @@
+require "danger/ci_source/support/remote_info"
+
 module Danger
   class FindRemoteFromURL
     REGEXP = %r{
@@ -11,22 +13,15 @@ module Danger
     end
 
     def call
-      if matched = url.match(REGEXP)
-        PullRequestInfo.new(matched[:slug], matched[:id])
+      matched = url.match(REGEXP)
+
+      if matched
+        RemoteInfo.new(matched[:slug], matched[:id])
       end
     end
 
     private
 
     attr_reader :url
-  end
-
-  class PullRequestInfo
-    attr_reader :slug, :id
-
-    def initialize(slug, id)
-      @slug = slug
-      @id = id
-    end
   end
 end

@@ -17,7 +17,7 @@ RSpec.describe Danger::FindRemoteFromURL do
 
       expect(result).to have_attributes(
         slug: "torvalds/linux",
-        id: "42",
+        id: "42"
       )
     end
 
@@ -26,7 +26,7 @@ RSpec.describe Danger::FindRemoteFromURL do
 
       expect(result).to have_attributes(
         slug: "torvalds/linux",
-        id: "42",
+        id: "42"
       )
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe Danger::FindRemoteFromURL do
 
       expect(result).to have_attributes(
         slug: "gitlab-org/gitlab-ce",
-        id: "42",
+        id: "42"
       )
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe Danger::FindRemoteFromURL do
 
         expect(result).to have_attributes(
           slug: "ged/ruby-pg",
-          id: "42",
+          id: "42"
         )
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe Danger::FindRemoteFromURL do
 
         expect(result).to have_attributes(
           slug: "ged/ruby-pg",
-          id: "42",
+          id: "42"
         )
       end
     end

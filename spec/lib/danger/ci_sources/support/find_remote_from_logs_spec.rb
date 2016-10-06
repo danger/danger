@@ -8,7 +8,7 @@ RSpec.describe Danger::FindRemoteFromLogs do
 
       result = finder.call
 
-      expect(result).to eq "danger/danger"
+      expect(result.slug).to eq "danger/danger"
     end
 
     context "specify GitHub Enterprise URL" do
@@ -18,7 +18,7 @@ RSpec.describe Danger::FindRemoteFromLogs do
 
         result = finder.call
 
-        expect(result).to eq "enterdanger/enterdanger"
+        expect(result.slug).to eq "enterdanger/enterdanger"
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe Danger::FindRemoteFromLogs do
 
         result = finder.call
 
-        expect(result).to eq "danger/danger"
+        expect(result.slug).to eq "danger/danger"
       end
     end
   end

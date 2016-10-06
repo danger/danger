@@ -2,10 +2,14 @@
 
 require "git"
 require "uri"
-require "danger/ci_source/support/remote_finder"
+
+require "danger/request_sources/github"
+
+require "danger/ci_source/support/find_remote_from_url"
+require "danger/ci_source/support/find_remote_from_logs"
+require "danger/ci_source/support/no_remote_info"
 require "danger/ci_source/support/pull_request_finder"
 require "danger/ci_source/support/commits"
-require "danger/request_sources/github"
 
 module Danger
   # ignore
@@ -32,14 +36,10 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
-    def print_repo_slug_warning
-      puts "danger local / pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
-    end
-
     def initialize(env = {})
       @env = env
 
-      self.repo_slug = found_repo_slug ? found_repo_slug : print_repo_slug_warning
+      self.repo_slug = remote_info.slug
       self.pull_request_id = found_pull_request.pull_request_id
 
       if sha
@@ -49,30 +49,56 @@ module Danger
         self.base_commit = found_pull_request.base
         self.head_commit = found_pull_request.head
       end
+
+      print_repo_slug_warning if remote_info.kind_of?(NoRemoteInfo)
     end
 
     private
 
-    attr_reader :env
+    attr_reader :env, :pr_id
 
-    def found_repo_slug
-      @_found_repo_slug ||= begin
-        RemoteFinder.new(
-          env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-          run_git("remote show origin -n".freeze)
-        ).call
+    def print_repo_slug_warning
+      puts "danger local / pr requires a repository hosted on GitHub.com or GitHub Enterprise.".freeze
+    end
+
+    def remote_info
+      @_remote_info ||= begin
+        remote_info = begin
+          if given_pull_request_url?
+            FindRemoteFromURL.new(env["LOCAL_GIT_PR_URL"]).call
+          else
+            FindRemoteFromLogs.new(
+              env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+              run_git("remote show origin -n".freeze)
+            ).call
+          end
+        end
+
+        remote_info || NoRemoteInfo.new
       end
     end
 
     def found_pull_request
       @_found_pull_request ||= begin
-        PullRequestFinder.new(
-          env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
-          run_git("log --oneline -1000000".freeze),
-          repo_slug,
-          env.fetch("CHECK_OPEN_PR") { "false".freeze }
-        ).call
+        if given_pull_request_url?
+          PullRequestFinder.new(
+            remote_info.id,
+            remote_info.slug,
+            remote: true
+          ).call
+        else
+          PullRequestFinder.new(
+            env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
+            remote_info.slug,
+            remote: false,
+            git_logs: run_git("log --oneline -1000000".freeze)
+          ).call
+        end
       end
+    end
+
+    def given_pull_request_url?
+      env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?
     end
 
     def sha

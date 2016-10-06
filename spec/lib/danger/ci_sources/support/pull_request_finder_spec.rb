@@ -1,12 +1,12 @@
 require "danger/ci_source/support/pull_request_finder"
 
 RSpec.describe Danger::PullRequestFinder do
-  def finder(pull_request_id: "", logs: nil, repo_slug: "danger/danger", check_open_pr: "false")
+  def finder(pull_request_id: "", logs: nil, repo_slug: "danger/danger", remote: "false")
     described_class.new(
       pull_request_id,
-      logs,
-      repo_slug, # repo_slug
-      check_open_pr # check_open_pr
+      repo_slug,
+      remote: remote,
+      git_logs: logs
     )
   end
 
@@ -25,7 +25,7 @@ RSpec.describe Danger::PullRequestFinder do
   def open_pull_requests_info
     require "ostruct"
     JSON.parse(
-      IO.read("spec/fixtures/ci_source/support/open-pull-requests.json"),
+      IO.read("spec/fixtures/ci_source/support/danger_danger_pr_518.json"),
       object_class: OpenStruct
     )
   end
@@ -33,7 +33,7 @@ RSpec.describe Danger::PullRequestFinder do
   describe "#new" do
     context "when needs to check Open PR" do
       it "raises if repo slug is not given" do
-        expect { finder(repo_slug: nil, check_open_pr: "true") }.to \
+        expect { finder(repo_slug: nil, remote: "true") }.to \
           raise_error(
             RuntimeError,
             /danger pr requires a repository hosted on GitHub.com or GitHub Enterprise./
@@ -41,9 +41,9 @@ RSpec.describe Danger::PullRequestFinder do
       end
     end
 
-    it "translates $check_open_pr into boolean" do
-      expect(finder(check_open_pr: "true")).to have_instance_variables(
-        "@need_to_check_open_pr" => true
+    it "translates $remote into boolean" do
+      expect(finder(remote: "true")).to have_instance_variables(
+        "@remote" => true
       )
     end
   end
@@ -102,13 +102,15 @@ RSpec.describe Danger::PullRequestFinder do
       it "returns the opened Pull Request info" do
         client = double("Octokit::Client")
         allow(Octokit::Client).to receive(:new) { client }
-        allow(client).to receive(:pull_requests) { open_pull_requests_info }
+        allow(client).to receive(:pull_request).with("danger/danger", "518") do
+          open_pull_requests_info
+        end
 
-        result = finder(pull_request_id: "518", logs: "not important here", check_open_pr: "true").call
+        result = finder(pull_request_id: "518", logs: "not important here", remote: "true").call
 
         expect(result.pull_request_id).to eq "518"
-        expect(result.head).to eq "72cab59fa003b6c2127397b2aac4952d539825e4"
-        expect(result.base).to eq "03a2b065143295525e9cdcb1e79d22b3cea09f94"
+        expect(result.head).to eq "pr 518 head commit sha1"
+        expect(result.base).to eq "pr 518 base commit sha1"
       end
     end
   end
