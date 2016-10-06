@@ -6,21 +6,20 @@ require "tmpdir"
 
 module Danger
   class PR < Runner
-    self.summary = "Run the Dangerfile against Pull Requests."
-    self.command = "pr"
+    self.summary = "Run the Dangerfile against Pull Requests (works with forks, too).".freeze
+    self.command = "pr".freeze
 
     def self.options
       [
-        ["--use-pr=[#id]", "The ID of an PR to use as a reference for the command run."],
+        ["--use-pr=[#id]", "The URL of the Pull Request for the command to run."],
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       ]
     end
 
     def initialize(argv)
-      @pr_num = argv.option("use-pr")
+      @pr_url = argv.option("use-pr")
       @clear_http_cache = argv.flag?("clear-http-cache", false)
-      @check_open_pr = (!!@pr_num).to_s
 
       super
 
@@ -57,8 +56,7 @@ module Danger
 
     def run
       ENV["DANGER_USE_LOCAL_GIT"] = "YES"
-      ENV["LOCAL_GIT_PR_ID"] = @pr_num if @pr_num
-      ENV["CHECK_OPEN_PR"] = @check_open_pr
+      ENV["LOCAL_GIT_PR_URL"] = @pr_url if @pr_url
 
       # setup caching for Github calls to hitting the API rate limit too quickly
       cache_file = File.join(ENV["DANGER_TMPDIR"] || Dir.tmpdir, "danger_local_cache")
