@@ -1,5 +1,7 @@
 ## master
 
+## 3.5.1
+
 * Adds `danger pr` command to run against Pull Requests - Juanito Fatas
 
   Usage:
