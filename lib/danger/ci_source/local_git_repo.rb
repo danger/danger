@@ -3,7 +3,7 @@
 require "git"
 require "uri"
 require "danger/ci_source/support/remote_finder"
-require "danger/ci_source/support/merged_pull_request_finder"
+require "danger/ci_source/support/pull_request_finder"
 require "danger/request_sources/github"
 
 module Danger
@@ -45,15 +45,26 @@ module Danger
         run_git("remote show origin -n".freeze)
       ).call
 
-      pull_request_id, sha = MergedPullRequestFinder.new(
-        env.fetch("LOCAL_GIT_PR_ID") { "" },
-        run_git("log --oneline -1000000".freeze)
-      ).call
+      found_pull_request = begin
+        PullRequestFinder.new(
+          env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
+          run_git("log --oneline -1000000".freeze),
+          repo_slug,
+          env.fetch("CHECK_OPEN_PR") { "false".freeze }
+        ).call
+      end
 
       self.repo_slug = repo_slug ? repo_slug : print_repo_slug_warning
-      self.pull_request_id = pull_request_id
-      self.base_commit = parents(sha)[0]
-      self.head_commit = parents(sha)[1]
+      self.pull_request_id = found_pull_request.pull_request_id
+      sha = found_pull_request.sha
+
+      if sha
+        self.base_commit = parents(sha)[0]
+        self.head_commit = parents(sha)[1]
+      else
+        self.base_commit = found_pull_request.base
+        self.head_commit = found_pull_request.head
+      end
     end
   end
 end
