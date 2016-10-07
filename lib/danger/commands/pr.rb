@@ -11,14 +11,13 @@ module Danger
 
     def self.options
       [
-        ["--use-pr=[#id]", "The URL of the Pull Request for the command to run."],
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       ]
     end
 
     def initialize(argv)
-      @pr_url = argv.option("use-pr")
+      @pr_url = argv.shift_argument
       @clear_http_cache = argv.flag?("clear-http-cache", false)
 
       super
