@@ -4,9 +4,9 @@ cache:
     - bundle
 
 rvm:
-  - 2.0
-  - 2.1.3
   - 2.3.1
+  - 2.1.9
+  - 2.0
 
 bundler_args: "--without documentation --path bundle"
 
@@ -24,3 +24,8 @@ script:
   - bundle exec rake spec
   - bundle exec danger --verbose
   - bundle exec danger init --mousey --impatient
+
+deploy:
+  script: bin/chandler
+  on:
+    tag: true
