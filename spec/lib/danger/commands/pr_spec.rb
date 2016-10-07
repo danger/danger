@@ -9,11 +9,22 @@ RSpec.describe Danger::PR do
     end
   end
 
+  context "takes the first argument as PR URL" do
+    it "works" do
+      argv = CLAide::ARGV.new(["https://github.com/artsy/eigen/pull/1899"])
+
+      result = described_class.new(argv)
+
+      expect(result).to have_instance_variables(
+        "@pr_url" => "https://github.com/artsy/eigen/pull/1899"
+      )
+    end
+  end
+
   describe ".options" do
     it "contains extra options for PR command" do
       result = described_class.options
 
-      expect(result).to include ["--use-pr=[#id]", "The URL of the Pull Request for the command to run."]
       expect(result).to include ["--clear-http-cache", "Clear the local http cache before running Danger locally."]
       expect(result).to include ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
     end
@@ -28,16 +39,6 @@ RSpec.describe Danger::PR do
       expect(result).to have_instance_variables(
         "@pr_url" => nil,
         "@clear_http_cache" => false
-      )
-    end
-
-    it "@pr_url can be set via --use-pr option" do
-      argv = CLAide::ARGV.new(["--use-pr=https://github.com/danger/danger/pull/615"])
-
-      result = described_class.new(argv)
-
-      expect(result).to have_instance_variables(
-        "@pr_url" => "https://github.com/danger/danger/pull/615"
       )
     end
   end
