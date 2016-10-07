@@ -24,3 +24,6 @@ script:
   - bundle exec rake spec
   - bundle exec danger --verbose
   - bundle exec danger init --mousey --impatient
+
+after_success:
+  - "[ ! -z $TRAVIS_TAG ] && bundle exec chandler push $TRAVIS_TAG"
