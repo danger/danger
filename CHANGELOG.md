@@ -1,5 +1,9 @@
 ## master
 
+* Add you're own contribution below
+
+## 3.5.2
+
 * `danger pr` takes an argument as PR URL instead of `--use-pr` option - Juanito Fatas
 
   Work with Open PR:
