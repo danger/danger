@@ -55,17 +55,17 @@ RSpec.describe Danger::Buildkite do
   describe "#new" do
     describe "repo slug" do
       it "gets out a repo slug from a git+ssh repo" do
-        expect(source.repo_slug).to eql("Danger/danger")
+        expect(source.repo_slug).to eq("Danger/danger")
       end
 
       it "gets out a repo slug from a https repo" do
         valid_env["BUILDKITE_REPO"] = "https://github.com/Danger/danger.git"
-        expect(source.repo_slug).to eql("Danger/danger")
+        expect(source.repo_slug).to eq("Danger/danger")
       end
     end
 
     it "sets the pull request id" do
-      expect(source.pull_request_id).to eql("12")
+      expect(source.pull_request_id).to eq("12")
     end
   end
 

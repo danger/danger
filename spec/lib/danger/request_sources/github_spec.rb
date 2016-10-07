@@ -8,14 +8,17 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
   describe "the github host" do
     it "sets a default GitHub host" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
-      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.host).to eql("github.com")
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).host
+
+      expect(result).to eq("github.com")
     end
 
     it "allows the GitHub host to be overridden" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
-      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.host).to eql("git.club-mateusa.com")
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).host
+
+      expect(result).to eq("git.club-mateusa.com")
     end
 
     describe "#api_url" do
@@ -71,8 +74,13 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
     it "sets the ignored violations" do
       @g.fetch_details
-      expect(@g.ignored_violations).to eql(["Developer Specific file shouldn't be changed",
-                                            "Some warning"])
+
+      expect(@g.ignored_violations).to eq(
+        [
+          "Developer Specific file shouldn't be changed",
+          "Some warning"
+        ]
+      )
     end
 
     describe "#organisation" do

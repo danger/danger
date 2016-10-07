@@ -33,7 +33,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.modified_files.class).to eql(Danger::FileList)
+        expect(@dm.git.modified_files.class).to eq(Danger::FileList)
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.added_files.class).to eql(Danger::FileList)
+        expect(@dm.git.added_files.class).to eq(Danger::FileList)
       end
     end
 
@@ -51,7 +51,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.deleted_files.class).to eql(Danger::FileList)
+        expect(@dm.git.deleted_files.class).to eq(Danger::FileList)
       end
     end
   end
@@ -62,7 +62,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.added_files).to eql(["file2"])
+        expect(@dm.git.added_files).to eq(["file2"])
       end
     end
 
@@ -83,7 +83,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.deleted_files).to eql(["file"])
+        expect(@dm.git.deleted_files).to eq(["file"])
       end
     end
 
@@ -104,7 +104,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.modified_files).to eql(["file"])
+        expect(@dm.git.modified_files).to eq(["file"])
       end
     end
   end
@@ -127,7 +127,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.insertions).to eql(3)
+        expect(@dm.git.insertions).to eq(3)
       end
     end
 
@@ -148,7 +148,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.deletions).to eql(1)
+        expect(@dm.git.deletions).to eq(1)
       end
     end
 

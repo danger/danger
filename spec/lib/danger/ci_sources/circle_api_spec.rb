@@ -12,10 +12,12 @@ RSpec.describe Danger::CircleAPI do
     build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
 
-    t = Danger::CircleCI.new(env)
+    result = Danger::CircleCI.new(env)
 
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("1130")
+    expect(result).to have_attributes(
+      repo_slug: "artsy/eigen",
+      pull_request_id: "1130"
+    )
   end
 
   it "uses the new token DANGER_CIRCLE_CI_API_TOKEN if available" do
@@ -28,8 +30,9 @@ RSpec.describe Danger::CircleAPI do
     build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token2").and_return(build_response)
 
-    t = Danger::CircleAPI.new
-    expect(t.pull_request_url(env)).to eql("https://github.com/artsy/eigen/pull/1130")
+    result = Danger::CircleAPI.new.pull_request_url(env)
+
+    expect(result).to eq("https://github.com/artsy/eigen/pull/1130")
   end
 
   it "uses Circle CI API to grab the url if available" do
@@ -42,8 +45,9 @@ RSpec.describe Danger::CircleAPI do
     build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
-    t = Danger::CircleAPI.new
-    expect(t.pull_request_url(env)).to eql("https://github.com/artsy/eigen/pull/1130")
+    result = Danger::CircleAPI.new.pull_request_url(env)
+
+    expect(result).to eq("https://github.com/artsy/eigen/pull/1130")
   end
 
   it "uses Circle CI API to and can tell you it's not a PR'" do
@@ -56,7 +60,8 @@ RSpec.describe Danger::CircleAPI do
     build_response = JSON.parse(fixture("circle_build_no_pr_response"), symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
-    t = Danger::CircleAPI.new
-    expect(t.pull_request?(env)).to be_falsy
+    result = Danger::CircleAPI.new.pull_request?(env)
+
+    expect(result).to be_falsy
   end
 end

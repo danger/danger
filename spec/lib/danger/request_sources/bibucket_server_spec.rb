@@ -13,7 +13,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
 
   describe "#host" do
     it "sets the host specified by `DANGER_BITBUCKETSERVER_HOST`" do
-      expect(bs.host).to eql("stash.example.com")
+      expect(bs.host).to eq("stash.example.com")
     end
   end
 
@@ -35,13 +35,13 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
 
     describe "#pr_json[:id]" do
       it "has fetched the same pull request id as ci_sources's `pull_request_id`" do
-        expect(bs.pr_json[:id]).to eql(2080)
+        expect(bs.pr_json[:id]).to eq(2080)
       end
     end
 
     describe "#pr_json[:title]" do
       it "has fetched the pull requests title" do
-        expect(bs.pr_json[:title]).to eql("This is a danger test")
+        expect(bs.pr_json[:title]).to eq("This is a danger test")
       end
     end
   end

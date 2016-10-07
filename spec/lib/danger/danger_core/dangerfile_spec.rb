@@ -43,9 +43,10 @@ RSpec.describe Danger::Dangerfile, host: :github do
     dm.parse Pathname.new(""), code
 
     results = dm.status_report
-    expect(results[:messages]).to eql(["A message"])
-    expect(results[:errors]).to eql(["An error"])
-    expect(results[:warnings]).to eql(["A warning"])
+
+    expect(results[:messages]).to eq(["A message"])
+    expect(results[:errors]).to eq(["An error"])
+    expect(results[:warnings]).to eq(["A warning"])
   end
 
   describe "#print_results" do

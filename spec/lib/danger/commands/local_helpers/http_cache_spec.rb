@@ -20,15 +20,19 @@ RSpec.describe Danger::HTTPCache do
   it "will open a previous file by default" do
     store = PStore.new(TEST_CACHE_FILE)
     store.transaction { store["testing"] = { value: "pants", updated_at: Time.now } }
-    cache = described_class.new(TEST_CACHE_FILE)
-    expect(cache.read("testing")).to eql("pants")
+
+    result = described_class.new(TEST_CACHE_FILE).read("testing")
+
+    expect(result).to eq("pants")
   end
 
   it "will delete a previous file if told to" do
     store = PStore.new(TEST_CACHE_FILE)
     store.transaction { store["testing"] = "pants" }
-    cache = described_class.new(TEST_CACHE_FILE, clear_cache: true)
-    expect(cache.read("testing")).to be_nil
+
+    result = described_class.new(TEST_CACHE_FILE, clear_cache: true).read("testing")
+
+    expect(result).to be_nil
   end
 
   it "will honor the TTL when a read attempt is made" do
@@ -40,7 +44,8 @@ RSpec.describe Danger::HTTPCache do
     end
 
     cache = described_class.new(TEST_CACHE_FILE)
-    expect(cache.read("testing_valid_ttl")).to eql("pants")
+
+    expect(cache.read("testing_valid_ttl")).to eq("pants")
     expect(cache.read("testing_invalid_ttl")).to be_nil
   end
 
@@ -59,7 +64,7 @@ RSpec.describe Danger::HTTPCache do
     store = PStore.new(TEST_CACHE_FILE)
     store.transaction do
       expect(store["testing_write"]).to_not be_nil
-      expect(store["testing_write"][:value]).to eql("pants")
+      expect(store["testing_write"][:value]).to eq("pants")
       expect(store["testing_write"][:updated_at]).to be_within(1).of(Time.now.to_i)
     end
   end
