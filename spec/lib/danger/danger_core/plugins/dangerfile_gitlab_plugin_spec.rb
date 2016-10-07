@@ -84,7 +84,8 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     it "should render a html link to the given file" do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         dangerfile.env.request_source.fetch_details
-        expect(plugin.html_link("CHANGELOG.md")).to eql("<a href='https://gitlab.com/k0nserv/danger-test/blob/345e74fabb2fecea93091e8925b1a7a208b48ba6/CHANGELOG.md'>CHANGELOG.md</a>")
+
+        expect(plugin.html_link("CHANGELOG.md")).to eq("<a href='https://gitlab.com/k0nserv/danger-test/blob/345e74fabb2fecea93091e8925b1a7a208b48ba6/CHANGELOG.md'>CHANGELOG.md</a>")
       end
     end
   end
