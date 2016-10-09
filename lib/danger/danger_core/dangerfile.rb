@@ -122,12 +122,15 @@ module Danger
           when :api
             value = "Octokit::Client"
 
-          when :pr_json
-            value = "[Skipped]"
+          when :pr_json, :mr_json
+            value = "[Skipped JSON]"
+
+          when :pr_diff, :mr_diff
+            value = "[Skipped Diff]"
 
           else
             value = plugin.send(method)
-            value = wrap_text(value) if value.kind_of?(String)
+            value = wrap_text(value.encode("utf-8")) if value.kind_of?(String)
             # So that we either have one value per row
             # or we have [] for an empty array
             value = value.join("\n") if value.kind_of?(Array) && value.count > 0

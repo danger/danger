@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Removes the mr/pr diff from the tabled output during `danger pr`, `danger local` and `danger --verbose`. This is because it can be a very large output that's not too useful, and can occasionally cause errors. - orta
+
 ## 3.5.2
 
 * `danger pr` takes an argument as PR URL instead of `--use-pr` option - Juanito Fatas

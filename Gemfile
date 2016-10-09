@@ -9,4 +9,5 @@ end
 # This should get removed when > 3.7.0 comes out
 gem "gitlab", git: "https://github.com/NARKOZ/gitlab.git", branch: "master"
 
+gem "rspec_junit_formatter", git: "https://github.com/orta/rspec_junit_formatter.git", branch: "errors"
 gem "danger-junit", "~> 0.5"
