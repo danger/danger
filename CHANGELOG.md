@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* fail fast if still cannot find the commit after fetch - Juanito Fatas
+
 ## 3.5.3
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.5.2...v3.5.3)

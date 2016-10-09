@@ -14,7 +14,7 @@ RSpec.describe Danger::GitRepo, host: :github do
   end
 
   describe "#diff_for_folder" do
-    it "fetches remote commits if it cannot find the merge commit" do
+    it "fetches if cannot find commits, raises if still can't find after fetched" do
       with_git_repo do |dir|
         @dm = testing_dangerfile
 
@@ -22,7 +22,9 @@ RSpec.describe Danger::GitRepo, host: :github do
         # This is the thing we care about
         allow(@dm.env.scm).to receive(:exec).with("fetch")
 
-        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+        expect do
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+        end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
       end
     end
   end
