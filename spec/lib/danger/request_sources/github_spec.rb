@@ -314,14 +314,14 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.fetch_details
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"")
-          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
+          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
 
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify \"561827e46167077b5e53515b4b7349b8ae04610b^{commit}\"")
-          .and_return("561827e46167077b5e53515b4b7349b8ae04610b")
+          .and_return("561827e46167077b5e53515b4b7349b8ae04610b").twice
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
@@ -330,20 +330,21 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "fetches when the branches are not in the local store" do
-        @g.fetch_details
-        # Check for commit turns up empty
-        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"").and_return("")
-        # so fetch it
+        # not in history
+        expect(@g.scm).to receive(:exec).
+          with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"").
+          and_return("")
+        # fetch it
         expect(@g.scm).to receive(:exec).with("fetch")
-        # Then make a known branch for it
-        expect(@g.scm).to receive(:exec).with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
+        # still not in history
+        expect(@g.scm).to receive(:exec).
+          with("rev-parse --quiet --verify \"704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}\"").
+          and_return("")
 
-        # Same as above but for head, not base
-        expect(@g.scm).to receive(:exec).with("rev-parse --quiet --verify \"561827e46167077b5e53515b4b7349b8ae04610b^{commit}\"").and_return("")
-        expect(@g.scm).to receive(:exec).with("fetch")
-        expect(@g.scm).to receive(:exec).with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
-
-        @g.setup_danger_branches
+        expect do
+          @g.fetch_details
+          @g.setup_danger_branches
+        end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
       end
     end
   end
