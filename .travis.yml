@@ -28,4 +28,5 @@ script:
 deploy:
   script: bin/chandler
   on:
+    branch: "master"
     tag: true
