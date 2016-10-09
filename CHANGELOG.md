@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+## 3.5.3
+
 * Removes the mr/pr diff from the tabled output during `danger pr`, `danger local` and `danger --verbose`. This is because it can be a very large output that's not too useful, and can occasionally cause errors. - orta
 
 ## 3.5.2
