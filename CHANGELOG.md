@@ -564,27 +564,27 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.7.3
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.7.2...v0.7.3)
+[Full Changelog](https://github.com/danger/danger/compare/0b0e428...v0.7.3)
 
 * Minor `danger init` typo fixes - orta + danger
 * Added support for CLAide-based plugins - segiddins
 
 ## 0.7.2
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.7.1...v0.7.2)
+[Full Changelog](https://github.com/danger/danger/compare/917113d...0b0e428)
 
 * Auto follow of remote plugin URL redirects - KrauseFx
 * Adding XcodeServer provider - antondomashnev
 
 ## 0.7.1
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.7.0...v0.7.1)
+[Full Changelog](https://github.com/danger/danger/compare/3a6a212...917113d)
 
 * Hotfix: import of plugins didn't work depending on alphabetical order - KrauseFx
 
 ## 0.7.0
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.6.5...v0.7.0)
+[Full Changelog](https://github.com/danger/danger/compare/bf4cfea...3a6a212)
 
 * Added support for local plugins - KrauseFx
 * Added support for remote plugins - KrauseFx
@@ -598,7 +598,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.6.5
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.6.0...v0.6.5)
+[Full Changelog](https://github.com/danger/danger/compare/be16fdb...bf4cfea)
 
 * Enterprise GitHub support - dbgrandi
 * Use branches for comparison, not commits - orta
@@ -606,7 +606,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.6.0
 
-[Full Changelog](https://github.com/danger/danger/compare/v0.5.2...v0.6.0)
+[Full Changelog](https://github.com/danger/danger/compare/v0.5.2...be16fdb)
 
 * Added internal plugin system - KrauseFx
 * Refactored unit tests - KrauseFx
