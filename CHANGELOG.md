@@ -4,9 +4,13 @@
 
 ## 3.5.3
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.2...v3.5.3)
+
 * Removes the mr/pr diff from the tabled output during `danger pr`, `danger local` and `danger --verbose`. This is because it can be a very large output that's not too useful, and can occasionally cause errors. - orta
 
 ## 3.5.2
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.1...v3.5.2)
 
 * `danger pr` takes an argument as PR URL instead of `--use-pr` option - Juanito Fatas
 
@@ -30,6 +34,8 @@
 
 ## 3.5.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.0...v3.5.1)
+
 * Adds `danger pr` command to run against Pull Requests - Juanito Fatas
 
   Work with Open PR:
@@ -52,6 +58,8 @@
 
 ## 3.5.0
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.4.2...v3.5.0)
+
 * Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
 
   Adding two new commands:
@@ -62,17 +70,23 @@
 
 ## 3.4.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.4.1...v3.4.2)
+
 * Adds backwards compatibility for plugin testing API - sorry - @orta
 * Multiple remotes support for Jenkins - Juanito Fatas
 * Fixed a problem when checking if the latest PR commit have been fetched - @fwal
 
 ## 3.4.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.4.0...v3.4.1)
+
 * Added option to run a Dangerfile from a `branch` and/or `path` when using a remote repo - felipesabino
 * Add specs for `Danger::EnvironmentManager` - Juanito Fatas
 * Fixes plugin that inherits from `Danger::Plugin` should not raise error - Juanito Fatas
 
 ## 3.4.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.3.2...v3.4.0)
 
 * Simplify initialization of Octokit client in request_sources/github.rb - Juanito Fatas
 * Ensure commits exist inside the local git repo before using them for diffs - orta
@@ -85,12 +99,16 @@
 
 ## 3.3.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.3.1...v3.3.2)
+
 * Use danger_id as context for GitHub status - Thiago Felix
 * Increase the number of commits `danger local` to search for merged PR - Juanito Fatas
 * Fix rubocop offenses in plugin_linter.rb - Juanito Fatas
 * Add missing require statements in bitbucket cloud and server - Juanito Fatas
 
 ## 3.3.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.3.0...v3.3.1)
 
 * "danger local" can find squash-and-merge-type Pull Request - Juanito Fatas
 * Fix request_sources files and specs location - Juanito Fatas
@@ -99,6 +117,8 @@
 * Fix Danger breaks when files are moved - Juanito Fatas
 
 ## 3.3.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.2.2...v3.3.0)
 
 * Add support for Bitbucket Cloud - Wolfgang Damm
 
@@ -112,8 +132,9 @@
 * Add docs to `String#danger_pluralize` & `String#danger_underscore` - Juanito Fatas
 * Refactor Comment class out of CommentsHelper - Juanito Fatas
 
-
 ## 3.2.2
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.2.1...v3.2.2)
 
 * Link to https://danger.systems/ in Bitbucket Server comments - HeEAaD
 * Add `markdown_link` for the Bitbucket Server plugin - HeEAaD
@@ -121,6 +142,8 @@
 * Fix `html_link` for gitlab - hanneskaeufler
 
 ## 3.2.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.2.0...v3.2.1)
 
 * Fix for markdown accidentally crashing Danger when sending a message #520 - orta
 * Improved the width handling for the output of the `danger local` table - orta
@@ -133,6 +156,8 @@
 * Added `branch_for_base` and `branch_for_head` for GitLab. - K0nserv
 
 ## 3.2.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.1.1...v3.2.0)
 
 * Added `file` and `line` optional parameters to methods on the messaging plugin - champo
 
@@ -173,7 +198,6 @@
   bitbucket_server.html_link (paths: String or Array, full_path=true: Bool) # Returns a list of HTML anchors for a file, or files in the head repository.
   ```
 
-
 * Deprecated `import_dangerfile(String)` in favor of `import_dangerfile(Hash)` - dblock
 
   The new `import_dangerfile` method supports loading Dangerfile from Github.
@@ -201,9 +225,13 @@
 
 ## 3.1.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.1.0...v3.1.1)
+
 * Fixes for `danger.import_dangerfile "org/repo"` - orta re:#487
 
 ## 3.1.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.0.3...v3.1.0)
 
 * Show appropriate error message when GitHub repo was moved - KrauseFx
 * `danger plugins json [gem]` will now give gem metadata too - orta
@@ -214,20 +242,27 @@
 
 ## 3.0.3
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.0.2...v3.0.3)
+
 * Add `mr_diff`/`pr_diff` for `Danger::DangerfileGitLabPlugin` - K0nserv
 * Fixes a bug where `danger` wouldn't work on Jenkins when setup with the GitHub Pull Request Builder plugin - vittoriom
 
 ## 3.0.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v3.0.1...v3.0.2)
+
 * Spelling and grammar fixes. - connorshea
 * More crash fixes for `danger local`, maybe we need more tests here - orta
 
-
 ## 3.0.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.0.0...v3.0.1)
 
 * Crash fix for `danger local` - hanneskaeufler
 
 ## 3.0.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.6...v3.0.0)
 
 * GitLab support - k0nserv / deanpcmad / hjanuschka
 
@@ -296,17 +331,25 @@
 
 ## 2.1.6
 
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.5...v2.1.6)
+
 * Crash fix for `danger init` - marcelofabri
 
 ## 2.1.5
+
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.4...v2.1.5)
 
 * Lols, more Circle CI stuff, and importantly - more documentation - orta
 
 ## 2.1.4
 
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.3...v2.1.4)
+
 * Improve detection of PR content on CircleCI. - jamtur01
 
 ## 2.1.3
+
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.2...v2.1.3)
 
 * Improve detection of Buildkite's PR context - cysp
 * An attempt at fixing a misalignment with what Danger says is inside the diff range, and what people have seen #160 #316 - orta/yimingtang/jamtur01/segiddins
@@ -314,16 +357,22 @@
 
 ## 2.1.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.1...v2.1.2)
+
 * Improvements to `danger init` - orta
 * Circle CI validation improvements - orta
 
 ## 2.1.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v2.1.0...v2.1.1)
 
 * Adds `danger-junit` to the `danger/danger` repo, requiring changes to the plugin testing systems - orta
 * Improves the "is a shared Dangerfile from the Danger Repo" check #366 - orta
 * Replaces `redcarpet` through `kramdown` to avoid jruby foo - LeFnord
 
 ## 2.1.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v2.0.1...v2.1.0)
 
 * Refactors the CI Source init, and verification section - orta
 * Adds a `danger systems ci_docs` command that outputs the CI sources and their docs - orta
@@ -336,9 +385,13 @@
 
 ## 2.0.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v2.0.0...v2.0.1)
+
 * Updates the `danger init` template to 2.0 syntax - orta
 
 ## 2.0.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.10.1...v2.0.0)
 
 * **BREAKING** Removes a lot of top-level attributes in the DSL, moving them into scoped plugins - orta
 
@@ -375,6 +428,7 @@ The main reason for this is that we can support many code review APIs without ha
 It also ensures that Danger's plugins are treated like external plugins. This means any work going into improving core plugins (via documentation or automation for example) will improve the upcoming plugin community.
 
 I don't like breaking backwards compatibility. Sorry, for as far as I can see at this point, this is the only one Danger needs.
+
 * add `pr_diff` exposing the unified diff for the PR to the GitHub plugin - champo
 * Improvements to the linter and the JSON output for plugin docs - orta
 * Add `html_link` to the GitHub plugin - marcelofabri
@@ -384,9 +438,13 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.10.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.10.0...v0.10.1)
+
 * Add `danger local --pry`, which drops into a Pry shell after eval-ing the Dangerfile - dbgrandi
 
 ## 0.10.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.9.1...v0.10.0)
 
 * Improves wording when failing a OSS build - orta
 * Add support for org-wide Dangerfile -- KrauseFx
@@ -396,7 +454,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
   The org `Dangerfile` will have access to all of the same plugins, and metadata.
   For an example, see: https://github.com/Themoji/danger
-
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 * Minor core documentation updates - orta
 * `danger plugin lint` now says it's failed when it's failed, not when it succeeds - orta
@@ -405,11 +462,15 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.9.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.9.0...v0.9.1)
+
 * Danger no longer relies on the GNU utilities and can run on Windows - henriwatson
 * `danger plugins lint` is a linter - orta
 * `danger plugins json` will show you the JSON output of your docs - orta
 
 ## 0.9.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.5...v0.9.0)
 
 * `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
   - `danger plugin lint` is now `danger plugins lint`
@@ -420,7 +481,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
   - `list` shows all plugins
   - `search` let's you search with a regexp
   - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
-
 * Warn users not to store GitHub tokens in the repository -- dantoml
 * Crash on load fix for `danger plugins readme` -- orta
 * Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
@@ -428,6 +488,8 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Make link instructions in onboarding OS aware -- K0nserv
 
 ## 0.8.5
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.4...v0.8.5)
 
 * Converts the message link to be http://danger.systems - orta
 * Fix `danger lib lint` with no params not finding the plugin paths - orta
@@ -438,6 +500,8 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Update environment variables used by Buildkite - bentrengrove
 
 ## 0.8.4
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.3...v0.8.4)
 
 * Initial work on `danger plugin lint` command - orta
 * `danger plugin lint` can run with either:
@@ -452,8 +516,9 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Fixes a problem running `danger local` due to a missing dependency on yard - ashfurrow
 * Improvements for CircleCI CI detection - orta
 
-
 ## 0.8.3
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.2...v0.8.3)
 
 * Fix updating of the commit status after danger check. - justMaku
 * Relies on the current git HEAD, instead of pulling a merge branch from GitHub - justMaku
@@ -462,6 +527,8 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.8.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.1...v0.8.2)
+
 * Support multiple Danger instances with `--dangerId` - marcelofabri
 * Add base request source so services other than GitHub could be used with Danger. - justMaku
 * Don't validate CI sources that don't expose all required environment variables.  - justMaku
@@ -469,9 +536,13 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.8.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.8.0...v0.8.1)
+
 * Fix Ruby 2.0 support - segiddins
 
 ## 0.8.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.7.4...v0.8.0)
 
 * Considerable under-the-hood changes around the DSL, shouldn't affect end-user Dangerfiles though - orta
 * Fix for `danger local` crash due to ^ - dbgrandi
@@ -485,25 +556,35 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.7.4
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.7.3...v0.7.4)
+
 * Adds the ability to specify a PR number in `danger local` - orta
 * Ensures local branches are set up with  `danger local` - orta
 * Add `commits` for the Git SCM source - segiddins
 
 ## 0.7.3
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.7.2...v0.7.3)
+
 * Minor `danger init` typo fixes - orta + danger
 * Added support for CLAide-based plugins - segiddins
 
 ## 0.7.2
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.7.1...v0.7.2)
 
 * Auto follow of remote plugin URL redirects - KrauseFx
 * Adding XcodeServer provider - antondomashnev
 
 ## 0.7.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.7.0...v0.7.1)
+
 * Hotfix: import of plugins didn't work depending on alphabetical order - KrauseFx
 
 ## 0.7.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.6.5...v0.7.0)
 
 * Added support for local plugins - KrauseFx
 * Added support for remote plugins - KrauseFx
@@ -517,11 +598,15 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.6.5
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.6.0...v0.6.5)
+
 * Enterprise GitHub support - dbgrandi
 * Use branches for comparison, not commits - orta
 * Breaking: DSL change `files_*` to `*_files` for readability - jeroenvisser101
 
 ## 0.6.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.5.2...v0.6.0)
 
 * Added internal plugin system - KrauseFx
 * Refactored unit tests - KrauseFx
@@ -531,17 +616,22 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.5.2
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.5.1...v0.5.2)
+
 * Typo fixes for `danger init` - lumaxis
 
 ## 0.5.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.5.0...v0.5.1)
 
 * Fixes for `danger init` - krausefx
 
 ## 0.5.0
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.3.0...v0.5.0)
+
 * New: Converted `danger init` into a wizard for setting up Danger, walking you though tokens/ci - orta
 * Breaking: `files_removed` to `files_deleted` ( to be more consistent with git's terminology. ) - orta
-
 * Revised underlying git tooling for generating file/diff metadata - orta
 * re-revise underlying git tooling to not use something based on libgit2 - orta
 * Set CHANGELOG merge strategy to union - marcelofabri
@@ -550,6 +640,8 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Use 100% width tables for messages - marcelofabri
 
 ## 0.3.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.2.1...v0.3.0)
 
 * Adding Jenkins provider - marcelofabri
 * Add a `danger local` command to test your current Dangerfile against the last PR merged on the repo - orta
@@ -567,9 +659,13 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 ## 0.2.1
 
+[Full Changelog](https://github.com/danger/danger/compare/v0.2.0...v0.2.1)
+
 * Edits an existing ticket rather than making a new one - orta
 
 ## 0.2
+
+[Full Changelog](https://github.com/danger/danger/compare/v0.1.1...v0.2.0)
 
 * Support making comments on a GitHub PR - Felix
 * Use GitHub status API to provide extra info on a PR - Felix
@@ -577,6 +673,8 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Don't show a message if there are not warnings/errors - orta
 
 ## 0.1
+
+[Full Changelog](https://github.com/danger/danger/compare/4aaf47f...v0.1.1)
 
 * Parses a `Dangerfile` - orta
 * Gets GitHub details from Travis & CircleCI - orta
