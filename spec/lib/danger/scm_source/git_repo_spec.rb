@@ -24,7 +24,7 @@ RSpec.describe Danger::GitRepo, host: :github do
 
         expect do
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-        end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
+        end.to raise_error(RuntimeError, /doesn't exist/)
       end
     end
   end
@@ -72,20 +72,19 @@ RSpec.describe Danger::GitRepo, host: :github do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
+          `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
-
           `git checkout -b new --quiet`
           File.delete(dir + "/file")
           `git add . --all`
           `git commit -m "another"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+          expect(@dm.git.deleted_files).to eq(["file"])
         end
-
-        @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-
-        expect(@dm.git.deleted_files).to eq(["file"])
       end
     end
 
@@ -93,20 +92,20 @@ RSpec.describe Danger::GitRepo, host: :github do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
+          `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
-
           `git checkout -b new --quiet`
           File.open(dir + "/file", "a") { |file| file.write("ok\nmorestuff") }
           `git add .`
           `git commit -m "another"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+          expect(@dm.git.modified_files).to eq(["file"])
         end
-
-        @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-
-        expect(@dm.git.modified_files).to eq(["file"])
       end
     end
   end
@@ -116,6 +115,7 @@ RSpec.describe Danger::GitRepo, host: :github do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
+          `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
@@ -124,12 +124,12 @@ RSpec.describe Danger::GitRepo, host: :github do
           File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
           `git add .`
           `git commit -m "another"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+          expect(@dm.git.insertions).to eq(3)
         end
-
-        @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-
-        expect(@dm.git.insertions).to eq(3)
       end
     end
 
@@ -137,6 +137,7 @@ RSpec.describe Danger::GitRepo, host: :github do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
+          `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
           `git add .`
           `git commit -m "ok"`
@@ -145,12 +146,12 @@ RSpec.describe Danger::GitRepo, host: :github do
           File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n5\n") }
           `git add .`
           `git commit -m "another"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+          expect(@dm.git.deletions).to eq(1)
         end
-
-        @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-
-        expect(@dm.git.deletions).to eq(1)
       end
     end
 

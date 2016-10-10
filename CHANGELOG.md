@@ -18,6 +18,9 @@
   ```
   danger pr https://github.com/danger/danger/pull/518 --dangerfile ~/Dangerfile
   ```
+* Adds the '--new-comment' argument, which makes Danger post a brand new comment by ignoring other Danger instances - Bruno Rocha
+* Fixed an issue where EnvironmentManager's output UI could be nil, and would blackhole error messages - @notjosh
+* Finding more git merge bases - Juanito Fatas
 
 ## 3.5.3
 

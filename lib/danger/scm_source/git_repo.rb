@@ -10,13 +10,27 @@ module Danger
       self.folder = folder
       repo = Git.open self.folder
 
-      ensure_commitish_exists!(from)
-      ensure_commitish_exists!(to)
-      merge_base = repo.merge_base(from, to)
+      base_sha = exec("rev-parse --verify --quiet #{from}")
+      head_sha = exec("rev-parse --verify --quiet #{to}")
+
+      ensure_commitish_exists!(base_sha)
+      ensure_commitish_exists!(head_sha)
+
+      merge_base = best_merge_base(repo, base_sha, head_sha)
 
       ensure_commitish_exists!(merge_base)
-      self.diff = repo.diff(merge_base.to_s, to)
+
+      self.diff = repo.diff(merge_base, to)
       self.log = repo.log.between(from, to)
+    rescue Exception => exception
+      puts "="*100
+        puts "*"*100
+        p repo
+        p from
+        p to
+        puts "*"*100
+      raise exception
+      puts "="*100
     end
 
     def exec(string)
@@ -37,9 +51,9 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      exec("fetch") if exec("rev-parse --quiet --verify \"#{commitish}^{commit}\"").empty?
+      exec("fetch --all") if commit_not_exists?(commitish)
 
-      if exec("rev-parse --quiet --verify \"#{commitish}^{commit}\"").empty?
+      if commit_not_exists?(commitish)
         raise_if_we_cannot_find_the_commit(commitish)
       end
     end
@@ -50,33 +64,34 @@ module Danger
       { "LANG" => "en_US.UTF-8" }
     end
 
-    def raise_if_we_cannot_find_the_commit(commit)
-      raise "Commit #{commit[0..7]} doesn't exist. Are you running `danger local/pr` against the correct repository? Also this usually happens when you rebase/reset and force-pushed."
+    def raise_if_we_cannot_find_the_commit(commitish)
+      raise "Commit #{commitish[0..7]} doesn't exist. Are you running `danger local/pr` against the correct repository? Also this usually happens when you rebase/reset and force-pushed."
+    end
+
+    def commit_exists?(sha1)
+      !commit_not_exists?(sha1)
+    end
+
+    def commit_not_exists?(sha1)
+      exec("rev-parse --quiet --verify #{sha1}^{commit}").empty?
+    end
+
+    def best_merge_base(repo, from, to)
+      possible_merge_base = [repo.merge_base(from, to)].find { |base| commit_exists?(base) }
+
+      raise "Cannot find a merge base between #{from} and #{to}." unless possible_merge_base
+
+      possible_merge_base
     end
   end
 end
 
-# For full context see:
-# https://github.com/danger/danger/issues/160
-# and https://github.com/danger/danger/issues/316
-#
-# for which the fix comes from an unmerged PR from 2012
-# https://github.com/schacon/ruby-git/pull/43
-
 module Git
   class Base
+    # Use git-merge-base https://git-scm.com/docs/git-merge-base to
+    # find as good common ancestors as possible for a merge
     def merge_base(commit1, commit2, *other_commits)
-      Git::Object.new self, self.lib.merge_base(commit1, commit2, *other_commits)
-    end
-  end
-
-  class Lib
-    def merge_base(commit1, commit2, *other_commits)
-      arr_opts = []
-      arr_opts << commit1
-      arr_opts << commit2
-      arr_opts += other_commits
-      command("merge-base", arr_opts)
+      Open3.popen2("git", "merge-base", "--all", commit1, commit2, *other_commits) { |_stdin, stdout, _wait_thr| stdout.read.rstrip }
     end
   end
 end
