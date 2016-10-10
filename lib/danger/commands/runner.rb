@@ -38,7 +38,7 @@ module Danger
       @head = argv.option("head")
       @fail_on_errors = argv.option("fail-on-errors", false)
       new_comment = argv.flag?("new-comment")
-      @danger_id = new_comment ? Time.now.strftime("%H:%M:%S") : argv.option("danger_id", "danger")
+      @danger_id = new_comment ? Time.now.strftime("%v %H:%M:%S") : argv.option("danger_id", "danger")
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
       super
