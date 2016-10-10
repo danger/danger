@@ -26,6 +26,8 @@ script:
   - bundle exec danger init --mousey --impatient
 
 deploy:
+  provider: script
   script: bin/chandler
   on:
+    branch: "master"
     tag: true

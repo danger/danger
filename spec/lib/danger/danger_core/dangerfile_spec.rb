@@ -206,6 +206,15 @@ RSpec.describe Danger::Dangerfile, host: :github do
           :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :scm_provider
         ]
       end
+
+      it "skips raw PR/MR JSON, and diffs" do
+        data = @dm.method_values_for_plugin_hashes(@dm.external_dsl_attributes)
+        data_hash = Hash[*data.collect { |v| [v.first, v.last] }.flatten]
+
+        expect(data_hash["pr_json"]).to eq("[Skipped JSON]")
+        expect(data_hash["mr_json"]).to eq("[Skipped JSON]")
+        expect(data_hash["pr_diff"]).to eq("[Skipped Diff]")
+      end
     end
   end
 
