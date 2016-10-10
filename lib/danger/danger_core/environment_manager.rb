@@ -39,7 +39,7 @@ module Danger
         self.request_source = request_source
       end
 
-      raise_error_for_no_request_source(env, ui) unless self.request_source
+      raise_error_for_no_request_source(env, self.ui) unless self.request_source
       self.scm = self.request_source.scm
     end
 
