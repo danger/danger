@@ -378,5 +378,19 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
 
       expect(ui.string).to include("Travis note: If you have an open source project, you should ensure 'Display value in build log' enabled for these flags, so that PRs from forks work.")
     end
+
+    context "cannot find request source" do
+      it "raises error" do
+        env = { "DANGER_USE_LOCAL_GIT" => "true" }
+        fake_ui = double("Cork::Board")
+        allow(Cork::Board).to receive(:new) { fake_ui }
+        allow(Danger::RequestSources::RequestSource).to receive(:available_request_sources) { [] }
+
+        expect(fake_ui).to receive(:title)
+        expect(fake_ui).to receive(:puts).exactly(5).times
+
+        expect { Danger::EnvironmentManager.new(env, nil) }.to raise_error(SystemExit)
+      end
+    end
   end
 end
