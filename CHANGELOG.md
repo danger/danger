@@ -4,6 +4,7 @@
 
 * fail fast if still cannot find the commit after fetch - Juanito Fatas
 * Adds the '--new-comment' argument, which makes Danger post a brand new comment by ignoring other Danger instances - Bruno Rocha
+* Fixed an issue where EnvironmentManager's output UI could be nil, and would blackhole error messages - @notjosh
 
 ## 3.5.3
 
