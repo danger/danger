@@ -152,6 +152,34 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.pr_json = { "head" => { "sha" => "pr_commit_ref" } }
         @g.submit_pull_request_status!(danger_id: "special_context")
       end
+
+      it "aborts when access to setting the status was denied but there were errors" do
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
+          .to_return(status: 404)
+
+        @g.pr_json = {
+          "head" => { "sha" => "pr_commit_ref" },
+          "base" => { "repo" => { "private" => true } }
+        }
+
+        expect do
+          @g.submit_pull_request_status!(errors: violations(["error"]))
+        end.to raise_error.and output(/Danger has failed this build/).to_stderr
+      end
+
+      it "warns when access to setting the status was denied but no errors were reported" do
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
+          .to_return(status: 404)
+
+        @g.pr_json = {
+          "head" => { "sha" => "pr_commit_ref" },
+          "base" => { "repo" => { "private" => true } }
+        }
+
+        expect do
+          @g.submit_pull_request_status!(warnings: violations(["error"]))
+        end.to output(/warning.*not have write access/im).to_stdout
+      end
     end
 
     describe "issue creation" do

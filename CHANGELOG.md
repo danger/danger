@@ -1,6 +1,7 @@
 ## master
 
 * Add your own contribution below
+* Show warning when Danger is missing permissions to update PR status, even on successful build - hanneskaeufler
 
 ## 3.5.4
 
