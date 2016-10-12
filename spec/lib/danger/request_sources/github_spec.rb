@@ -178,7 +178,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
         expect do
           @g.submit_pull_request_status!(warnings: violations(["error"]))
-        end.to output(/warning/i).to_stdout
+        end.to output(/warning.*not have write access/im).to_stdout
       end
     end
 

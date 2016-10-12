@@ -199,6 +199,7 @@ module Danger
             end
           else
             puts message
+            puts "\nDanger does not have write access to the PR to set a PR status.".yellow
           end
         end
       end
