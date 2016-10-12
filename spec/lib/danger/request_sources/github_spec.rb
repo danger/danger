@@ -155,11 +155,11 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
       it "aborts when access to setting the status was denied but there were errors" do
         stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
-          .to_return(:status => 404)
+          .to_return(status: 404)
 
         @g.pr_json = {
           "head" => { "sha" => "pr_commit_ref" },
-          "base" => { "repo" => { "private" => true }}
+          "base" => { "repo" => { "private" => true } }
         }
 
         expect do
@@ -169,11 +169,11 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
       it "warns when access to setting the status was denied but no errors were reported" do
         stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
-          .to_return(:status => 404)
+          .to_return(status: 404)
 
         @g.pr_json = {
           "head" => { "sha" => "pr_commit_ref" },
-          "base" => { "repo" => { "private" => true }}
+          "base" => { "repo" => { "private" => true } }
         }
 
         expect do
