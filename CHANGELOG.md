@@ -7,8 +7,11 @@
 [Full Changelog](https://github.com/danger/danger/compare/v3.5.3...v3.5.4)
 
 * fail fast if still cannot find the commit after fetch - Juanito Fatas
-* Adds the '--new-comment' argument, which makes Danger post a brand new comment by ignoring other Danger instances - Bruno Rocha
-* Fixed an issue where EnvironmentManager's output UI could be nil, and would blackhole error messages - @notjosh
+* Adds the `--new-comment` argument to `danger` command - Bruno Rocha
+
+  Makes Danger post a brand new comment by ignoring other Danger instances.
+
+* Fixed an issue where EnvironmentManager's output UI could be `nil`, and would blackhole error messages - @notjosh
 * `danger pr` now accepts `--dangerfile` argument - Juanito Fatas
 
   ```
