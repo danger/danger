@@ -77,11 +77,19 @@ module Danger
     end
 
     def best_merge_base(repo, from, to)
-      possible_merge_base = [repo.merge_base(from, to)].find { |base| commit_exists?(base) }
+      possible_merge_base = possible_merge_base(repo, from, to)
+      if !possible_merge_base
+        exec("fetch --unshallow")
+        possible_merge_base = possible_merge_base(repo, from, to)
+      end
 
       raise "Cannot find a merge base between #{from} and #{to}." unless possible_merge_base
 
       possible_merge_base
+    end
+
+    def possible_merge_base(repo, from, to)
+      [repo.merge_base(from, to)].find { |base| commit_exists?(base) }
     end
   end
 end
