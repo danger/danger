@@ -27,7 +27,8 @@ RSpec.describe Danger::Runner do
         "@base" => nil,
         "@head" => nil,
         "@fail_on_errors" => false,
-        "@danger_id" => "danger"
+        "@danger_id" => "danger",
+        "@new_comment" => nil
       )
       expect(ui).to be_a Cork::Board
       expect(ui).to have_instance_variables(
@@ -49,6 +50,7 @@ RSpec.describe Danger::Runner do
         head: nil,
         dangerfile_path: "Dangerfile",
         danger_id: "danger",
+        new_comment: nil,
         fail_on_errors: false
       )
 
@@ -65,6 +67,7 @@ RSpec.describe Danger::Runner do
             "--head=my-head",
             "--dangerfile=MyDangerfile",
             "--danger_id=my-danger-id",
+            "--new-comment",
             "--fail-on-errors=true"
           ]
         )
@@ -77,6 +80,7 @@ RSpec.describe Danger::Runner do
           head: "my-head",
           dangerfile_path: "MyDangerfile",
           danger_id: "my-danger-id",
+          new_comment: true,
           fail_on_errors: "true"
         )
 

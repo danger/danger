@@ -230,7 +230,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
       expect(request_source).to receive(:update_pull_request!)
 
-      dm.post_results("danger-identifier")
+      dm.post_results("danger-identifier", nil)
     end
   end
 
