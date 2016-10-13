@@ -51,7 +51,7 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      exec("fetch --all") if commit_not_exists?(commitish)
+      exec("fetch --unshallow") if commit_not_exists?(commitish)
 
       if commit_not_exists?(commitish)
         raise_if_we_cannot_find_the_commit(commitish)
