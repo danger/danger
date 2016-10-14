@@ -105,15 +105,16 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
         comment_result = {}
         editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
+        last_comment = editable_comments.last
+        should_create_new_comment = new_comment || last_comment.nil?
 
-        if editable_comments.empty?
+        if should_create_new_comment
           previous_violations = {}
         else
-          comment = editable_comments.first.body
-          previous_violations = parse_comment(comment)
+          previous_violations = parse_comment(last_comment.body)
         end
 
         main_violations = (warnings + errors + messages + markdowns).reject(&:inline?)
@@ -154,11 +155,10 @@ module Danger
                                   danger_id: danger_id,
                                   template: "github")
 
-          if editable_comments.empty?
+          if should_create_new_comment
             comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
           else
-            original_id = editable_comments.first.id
-            comment_result = client.update_comment(ci_source.repo_slug, original_id, body)
+            comment_result = client.update_comment(ci_source.repo_slug, last_comment.id, body)
           end
         end
 

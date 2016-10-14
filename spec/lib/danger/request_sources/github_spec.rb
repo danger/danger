@@ -208,6 +208,16 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
       end
 
+      it "creates a new comment instead of updating the issue if --new-comment is provided" do
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+
+        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
+
+        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], new_comment: true)
+      end
+
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
         comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
