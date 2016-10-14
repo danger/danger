@@ -104,7 +104,8 @@ RSpec.describe Danger::GitRepo, host: :github do
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-          expect(@dm.git.modified_files).to eq(["file"])
+          # Need to compact here because c50713a changes make AppVeyor fail
+          expect(@dm.git.modified_files.compact).to eq(["file"])
         end
       end
     end
