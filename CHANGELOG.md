@@ -4,7 +4,6 @@
 * Show warning when Danger is missing permissions to update PR status, even on successful build - hanneskaeufler
 * Fixed '--new-comment' creating multiple GitHub status checks, and removing the argument on a subsequent build will now make Danger correctly edit it's last comment - Bruno Rocha
 * Fix crash in git_repo.rb (#636) - Kyle McAlpine & Viktor Benei & orta & Juanito Fatas
-* Fixed '--new-comment' creating multiple GitHub status checks, and removing the argument on a subsequent build will now make Danger correctly edit it's last comment - Bruno Rocha
 
 ## 3.5.4
 
