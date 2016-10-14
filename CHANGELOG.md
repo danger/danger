@@ -3,6 +3,7 @@
 * Add your own contribution below
 * Show warning when Danger is missing permissions to update PR status, even on successful build - hanneskaeufler
 * Fixed '--new-comment' creating multiple GitHub status checks, and removing the argument on a subsequent build will now make Danger correctly edit it's last comment - Bruno Rocha
+* Fix crash in git_repo.rb (#636) - Kyle McAlpine & Viktor Benei & orta & Juanito Fatas
 
 ## 3.5.4
 
@@ -224,7 +225,7 @@
   danger.import_dangerfile github: 'ruby-grape/danger'
   ```
 
-  You can package a Dangerfile in a gem, add it to Gemfile and import it.
+  You can package a Dangerfile in a gem, add it to Gemfile and import it.
 
   ```ruby
   danger.import_dangerfile gem: 'ruby-grape-danger'

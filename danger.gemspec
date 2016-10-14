@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry", "~> 0.10"
   spec.add_development_dependency "pry-byebug"
 
-  spec.add_development_dependency "rubocop", "~> 0.38"
+  spec.add_development_dependency "rubocop", "~> 0.44"
   spec.add_development_dependency "yard", "~> 0.8"
 
   spec.add_development_dependency "listen", "3.0.7"
