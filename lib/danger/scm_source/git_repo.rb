@@ -10,27 +10,13 @@ module Danger
       self.folder = folder
       repo = Git.open self.folder
 
-      base_sha = exec("rev-parse --verify --quiet #{from}")
-      head_sha = exec("rev-parse --verify --quiet #{to}")
+      ensure_commitish_exists!(from)
+      ensure_commitish_exists!(to)
 
-      ensure_commitish_exists!(base_sha)
-      ensure_commitish_exists!(head_sha)
-
-      merge_base = best_merge_base(repo, base_sha, head_sha)
-
-      ensure_commitish_exists!(merge_base)
+      merge_base = find_merge_base(repo, from, to)
 
       self.diff = repo.diff(merge_base, to)
       self.log = repo.log.between(from, to)
-    rescue Exception => exception
-      puts "="*100
-        puts "*"*100
-        p repo
-        p from
-        p to
-        puts "*"*100
-      raise exception
-      puts "="*100
     end
 
     def exec(string)
@@ -43,7 +29,7 @@ module Danger
     end
 
     def head_commit
-      exec "rev-parse HEAD"
+      exec("rev-parse HEAD")
     end
 
     def origins
@@ -51,7 +37,7 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      exec("fetch --unshallow") if commit_not_exists?(commitish)
+      git_shallow_fetch if commit_not_exists?(commitish)
 
       if commit_not_exists?(commitish)
         raise_if_we_cannot_find_the_commit(commitish)
@@ -59,6 +45,10 @@ module Danger
     end
 
     private
+
+    def git_shallow_fetch
+      exec("fetch --unshallow")
+    end
 
     def default_env
       { "LANG" => "en_US.UTF-8" }
@@ -76,10 +66,11 @@ module Danger
       exec("rev-parse --quiet --verify #{sha1}^{commit}").empty?
     end
 
-    def best_merge_base(repo, from, to)
+    def find_merge_base(repo, from, to)
       possible_merge_base = possible_merge_base(repo, from, to)
-      if !possible_merge_base
-        exec("fetch --unshallow")
+
+      unless possible_merge_base
+        git_shallow_fetch
         possible_merge_base = possible_merge_base(repo, from, to)
       end
 
