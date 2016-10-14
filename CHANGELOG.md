@@ -1,6 +1,11 @@
 ## master
 
 * Add your own contribution below
+
+## 3.5.5
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.4...v3.5.5)
+
 * Show warning when Danger is missing permissions to update PR status, even on successful build - hanneskaeufler
 * Fixed '--new-comment' creating multiple GitHub status checks, and removing the argument on a subsequent build will now make Danger correctly edit it's last comment - Bruno Rocha
 * Fix crash in git_repo.rb (#636) - Kyle McAlpine & Viktor Benei & orta & Juanito Fatas
