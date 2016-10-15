@@ -114,6 +114,76 @@ RSpec.describe Danger::Jenkins do
     end
   end
 
+  context "with multibranch pipeline" do
+    before do
+      valid_env["GIT_URL"] = nil
+      valid_env["CHANGE_ID"] = "647"
+      valid_env["CHANGE_URL"] = "https://github.com/danger/danger/pull/647"
+    end
+
+    describe ".validates_as_ci?" do
+      it "validates when requierd env variables are set" do
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "validates even when `CHANGE_ID` is missing" do
+        valid_env["CHANGE_ID"] = nil
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "validates even when `CHANGE_ID` is empty" do
+        valid_env["CHANGE_ID"] = ""
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "doesn't validate when require env variables are not set" do
+        expect(described_class.validates_as_ci?(invalid_env)).to be false
+      end
+    end
+
+    describe ".validates_as_pr?" do
+      it "validates when the required variables are set" do
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+
+      it "doesn't validate if `CHANGE_ID` is missing" do
+        valid_env["CHANGE_ID"] = nil
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+
+      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+        valid_env["CHANGE_ID"] = ""
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+    end
+
+    describe ".repo_url()" do
+      it "gets the GitHub url" do
+        valid_env["CHANGE_URL"] = "https://github.com/danger/danger/pull/647"
+        expect(described_class.repo_url(valid_env)).to eq("https://github.com/danger/danger")
+      end
+
+      it "gets the GitLab url" do
+        valid_env["CHANGE_URL"] = "https://gitlab.com/danger/danger/merge_requests/1234"
+        expect(described_class.repo_url(valid_env)).to eq("https://gitlab.com/danger/danger")
+      end
+
+      it "gets the BitBucket url" do
+        valid_env["CHANGE_URL"] = "https://bitbucket.org/danger/danger/pull-requests/1"
+        expect(described_class.repo_url(valid_env)).to eq("https://bitbucket.org/danger/danger")
+      end
+    end
+
+    describe "#new" do
+      it "sets the pull_request_id" do
+        expect(source.pull_request_id).to eq("647")
+      end
+      it "sets the repo_url" do
+        expect(source.repo_url).to eq("https://github.com/danger/danger")
+      end
+    end
+  end
+
   context "Multiple remotes support" do
     it "gets out the repo slug from GIT_URL_1" do
       source = described_class.new(

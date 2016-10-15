@@ -1,6 +1,7 @@
 ## master
 
 * Add your own contribution below
+* Support for Jenkins pipelines - fwal
 
 ## 3.5.5
 
