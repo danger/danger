@@ -157,6 +157,23 @@ RSpec.describe Danger::Jenkins do
       end
     end
 
+    describe ".repo_url()" do
+      it "gets the GitHub url" do
+        valid_env["CHANGE_URL"] = "https://github.com/danger/danger/pull/647"
+        expect(described_class.repo_url(valid_env)).to eq("https://github.com/danger/danger")
+      end
+
+      it "gets the GitLab url" do
+        valid_env["CHANGE_URL"] = "https://gitlab.com/danger/danger/merge_requests/1234"
+        expect(described_class.repo_url(valid_env)).to eq("https://gitlab.com/danger/danger")
+      end
+
+      it "gets the BitBucket url" do
+        valid_env["CHANGE_URL"] = "https://bitbucket.org/danger/danger/pull-requests/1"
+        expect(described_class.repo_url(valid_env)).to eq("https://bitbucket.org/danger/danger")
+      end
+    end
+
     describe "#new" do
       it "sets the pull_request_id" do
         expect(source.pull_request_id).to eq("647")

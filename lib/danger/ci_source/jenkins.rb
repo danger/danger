@@ -80,8 +80,20 @@ module Danger
       if env["GIT_URL_1"]
         env["GIT_URL_1"]
       elsif env["CHANGE_URL"]
-        url_matches = env["CHANGE_URL"].match(%r{(.+)\/pull\/[0-9]+})
-        url_matches[1] unless url_matches.nil?
+        change_url = env["CHANGE_URL"]
+        case change_url
+        when %r{\/pull\/} # GitHub
+          matches = change_url.match(%r{(.+)\/pull\/[0-9]+})
+          matches[1] unless matches.nil?
+        when %r{\/merge_requests\/} # GitLab
+          matches = change_url.match(%r{(.+)\/merge_requests\/[0-9]+})
+          matches[1] unless matches.nil?
+        when %r{\/pull-requests\/} # Bitbucket
+          matches = change_url.match(%r{(.+)\/pull-requests\/[0-9]+})
+          matches[1] unless matches.nil?
+        else
+          change_url
+        end
       else
         env["GIT_URL"]
       end
