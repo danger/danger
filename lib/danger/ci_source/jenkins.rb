@@ -17,6 +17,12 @@ module Danger
   #
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
+  # ##### Pipeline
+  # If your're using [pipelines](https://jenkins.io/solutions/pipeline/) you should be using the [GitHub branch source plugin](https://wiki.jenkins-ci.org/display/JENKINS/GitHub+Branch+Source+Plugin)
+  # for easy setup and handling of PRs.
+  #
+  # After you've set up the plugin, add a `sh 'bundle exec danger'` line in your pipeline script and make sure that build PRs is enabled.
+  #
   # #### GitLab
   # You will want to be using the [GitLab Plugin](https://github.com/jenkinsci/gitlab-plugin)
   # in order to ensure that you have the build environment set up for MR integration.
