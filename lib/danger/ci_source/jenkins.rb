@@ -53,7 +53,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_url = env.fetch("GIT_URL_1") { env["GIT_URL"] }
+      self.repo_url = self.class.repo_url(env)
       self.pull_request_id = self.class.pull_request_id(env)
 
       repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
@@ -63,8 +63,21 @@ module Danger
     def self.pull_request_id(env)
       if env["ghprbPullId"]
         env["ghprbPullId"]
+      elsif env["CHANGE_ID"]
+        env["CHANGE_ID"]
       else
         env["gitlabMergeRequestId"]
+      end
+    end
+
+    def self.repo_url(env)
+      if env["GIT_URL_1"]
+        env["GIT_URL_1"]
+      elsif env["CHANGE_URL"]
+        url_matches = env["CHANGE_URL"].match(%r{(.+)\/pull\/[0-9]+})
+        url_matches[1] unless url_matches.nil?
+      else
+        env["GIT_URL"]
       end
     end
   end
