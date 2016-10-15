@@ -65,7 +65,56 @@ RSpec.describe Danger::Jenkins do
     end
   end
 
-  context "with GitHub (pipeline)" do
+  context "with GitLab" do
+    before do
+      valid_env["gitlabMergeRequestId"] = "1234"
+      valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.git"
+    end
+
+    describe ".validates_as_ci?" do
+      it "validates when required env variables are set" do
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "validates even when `gitlabMergeRequestId` is missing" do
+        valid_env["gitlabMergeRequestId"] = nil
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "validates even when `gitlabMergeRequestId` is empty" do
+        valid_env["gitlabMergeRequestId"] = ""
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "doesn't validate when require env variables are not set" do
+        expect(described_class.validates_as_ci?(invalid_env)).to be false
+      end
+    end
+
+    describe ".validates_as_pr?" do
+      it "validates when the required variables are set" do
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+
+      it "doesn't validate if `gitlabMergeRequestId` is missing" do
+        valid_env["gitlabMergeRequestId"] = nil
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+
+      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+        valid_env["gitlabMergeRequestId"] = ""
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+
+      describe "#new" do
+        it "sets the pull_request_id" do
+          expect(source.pull_request_id).to eq("1234")
+        end
+      end
+    end
+  end
+
+  context "with multibranch pipeline" do
     before do
       valid_env["GIT_URL"] = nil
       valid_env["CHANGE_ID"] = "647"
@@ -114,55 +163,6 @@ RSpec.describe Danger::Jenkins do
       end
       it "sets the repo_url" do
         expect(source.repo_url).to eq("https://github.com/danger/danger")
-      end
-    end
-  end
-
-  context "with GitLab" do
-    before do
-      valid_env["gitlabMergeRequestId"] = "1234"
-      valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.git"
-    end
-
-    describe ".validates_as_ci?" do
-      it "validates when required env variables are set" do
-        expect(described_class.validates_as_ci?(valid_env)).to be true
-      end
-
-      it "validates even when `gitlabMergeRequestId` is missing" do
-        valid_env["gitlabMergeRequestId"] = nil
-        expect(described_class.validates_as_ci?(valid_env)).to be true
-      end
-
-      it "validates even when `gitlabMergeRequestId` is empty" do
-        valid_env["gitlabMergeRequestId"] = ""
-        expect(described_class.validates_as_ci?(valid_env)).to be true
-      end
-
-      it "doesn't validate when require env variables are not set" do
-        expect(described_class.validates_as_ci?(invalid_env)).to be false
-      end
-    end
-
-    describe ".validates_as_pr?" do
-      it "validates when the required variables are set" do
-        expect(described_class.validates_as_pr?(valid_env)).to be true
-      end
-
-      it "doesn't validate if `gitlabMergeRequestId` is missing" do
-        valid_env["gitlabMergeRequestId"] = nil
-        expect(described_class.validates_as_pr?(valid_env)).to be false
-      end
-
-      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
-        valid_env["gitlabMergeRequestId"] = ""
-        expect(described_class.validates_as_pr?(valid_env)).to be false
-      end
-
-      describe "#new" do
-        it "sets the pull_request_id" do
-          expect(source.pull_request_id).to eq("1234")
-        end
       end
     end
   end
