@@ -45,6 +45,8 @@ We keep all of the end-user documentation at [http://danger.systems](http://dang
 
 Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html).
 
+Sidenote: There is a [pure JS version](https://github.com/danger/danger-js) in the works, it's at the point where it can fail your build but that's about it for now, would love help there if it interests you.
+
 ## I'm here to help out!
 
 Brilliant. So, let's get you set up.
