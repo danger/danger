@@ -206,6 +206,25 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             messages: []
           )
         end
+
+        it "creates a new comment instead of updating the existing one if --new-comment is provided" do
+          body = subject.generate_comment(
+            warnings: violations(["Test warning"]),
+            errors: violations(["Test error"]),
+            messages: violations(["Test message"]),
+            template: "gitlab"
+          )
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+            body: "body=#{ERB::Util.url_encode(body)}",
+            headers: expected_headers
+          ).to_return(status: 200, body: "", headers: {})
+          subject.update_pull_request!(
+            warnings: violations(["Test warning"]),
+            errors: violations(["Test error"]),
+            messages: violations(["Test message"]),
+            new_comment: true
+          )
+        end
       end
 
       context "existing comment with no sticky messages" do

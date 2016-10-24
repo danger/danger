@@ -97,10 +97,12 @@ module Danger
         pr_body.chomp.scan(/>\s*danger\s*:\s*ignore\s*"(.*)"/i).flatten
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger")
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
         editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
-        if editable_comments.empty?
+        should_create_new_comment = new_comment || editable_comments.empty?
+
+        if should_create_new_comment
           previous_violations = {}
         else
           comment = editable_comments.first.body
