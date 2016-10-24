@@ -2,6 +2,7 @@
 
 * Add your own contribution below
 * Support for Jenkins pipelines - fwal
+* Implemented '--new-comment' support for GitLab  
 
 ## 3.5.5
 
