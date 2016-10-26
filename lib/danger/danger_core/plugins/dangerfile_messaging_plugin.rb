@@ -8,12 +8,13 @@ module Danger
   #
   # The message within which Danger communicates back is amended on each run in a session.
   #
-  # Each of `message`, `warn` and `fail` have a `sticky` flag, `true` by default, which
-  # means that the message will be crossed out instead of being removed. If it's not use on
-  # subsequent runs.
+  # Each of `message`, `warn` and `fail` have a `sticky` flag, `false` by default, which
+  # when `true` means that the message will be crossed out instead of being removed.
+  # If it's not called again on subsequent runs.
   #
   # By default, using `fail` would fail the corresponding build. Either via an API call, or
-  # via the return value for the danger command.
+  # via the return value for the danger command. If you have linters with errors for this call
+  # you can use `messaging.fail` instead.
   #
   # It is possible to have Danger ignore specific warnings or errors by writing `Danger: Ignore "[warning/error text]"`.
   #
@@ -23,9 +24,9 @@ module Danger
   #
   #          fail "This build didn't pass tests"
   #
-  # @example Failing a build, but not keeping its value around on subsequent runs
+  # @example Failing a build, and note that on subsequent runs
   #
-  #          fail("This build didn't pass tests", sticky: false)
+  #          fail("This build didn't pass tests", sticky: true)
   #
   # @example Passing a warning
   #
@@ -87,14 +88,14 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def message(message, sticky: true, file: nil, line: nil)
+    def message(message, sticky: false, file: nil, line: nil)
       @messages << Violation.new(message, sticky, file, line)
     end
 
@@ -105,14 +106,14 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def warn(message, sticky: true, file: nil, line: nil)
+    def warn(message, sticky: false, file: nil, line: nil)
       return if should_ignore_violation(message)
       @warnings << Violation.new(message, sticky, file, line)
     end
@@ -124,14 +125,14 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
-    def fail(message, sticky: true, file: nil, line: nil)
+    def fail(message, sticky: false, file: nil, line: nil)
       return if should_ignore_violation(message)
       @errors << Violation.new(message, sticky, file, line)
     end
