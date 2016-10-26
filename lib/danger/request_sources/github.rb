@@ -3,6 +3,8 @@ require "octokit"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 
+require "danger/request_sources/support/get_ignored_violation"
+
 module Danger
   module RequestSources
     class GitHub < RequestSource
@@ -83,13 +85,11 @@ module Danger
         end
 
         fetch_issue_details(self.pr_json)
-        self.ignored_violations = ignored_violations_from_pr(self.pr_json)
+        self.ignored_violations = ignored_violations_from_pr
       end
 
-      def ignored_violations_from_pr(pr_json)
-        pr_body = pr_json["body"]
-        return [] if pr_body.nil?
-        pr_body.chomp.scan(/>\s*danger\s*:\s*ignore\s*"(.*)"/i).flatten
+      def ignored_violations_from_pr
+        GetIgnoredViolation.new(self.pr_json["body"]).call
       end
 
       def fetch_issue_details(pr_json)

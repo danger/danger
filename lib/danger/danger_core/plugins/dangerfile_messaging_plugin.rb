@@ -15,7 +15,7 @@ module Danger
   # By default, using `fail` would fail the corresponding build. Either via an API call, or
   # via the return value for the danger command.
   #
-  # It is possible to have Danger ignore specific warnings or errors by writing `Danger: Ignore "[warning/error text]`.
+  # It is possible to have Danger ignore specific warnings or errors by writing `Danger: Ignore "[warning/error text]"`.
   #
   # Sidenote: Messaging is the only plugin which adds functions to the root of the Dangerfile.
   #
