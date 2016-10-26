@@ -1,5 +1,4 @@
 # coding: utf-8
-require "gitlab"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 
@@ -29,6 +28,10 @@ module Danger
       def client
         token = @environment["DANGER_GITLAB_API_TOKEN"]
         raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`" unless token
+
+        # The require happens inline so that it won't cause exceptions when just using the `danger` gem.
+        require "gitlab"
+
         params = { private_token: token }
         params[:endpoint] = endpoint
 

@@ -6,8 +6,8 @@ require "danger/version"
 Gem::Specification.new do |spec|
   spec.name          = "danger"
   spec.version       = Danger::VERSION
-  spec.authors       = ["Orta Therox", "Felix Krause"]
-  spec.email         = ["orta.therox@gmail.com", "danger@krausefx.com"]
+  spec.authors       = ["Orta Therox", "Juanito Fatas"]
+  spec.email         = ["orta.therox@gmail.com", "me@juanitofatas.com"]
   spec.license       = "MIT"
 
   spec.summary       = Danger::DESCRIPTION
@@ -30,7 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "kramdown", "~> 1.5"
   spec.add_runtime_dependency "terminal-table", "~> 1"
   spec.add_runtime_dependency "cork", "~> 0.1"
-  spec.add_runtime_dependency "gitlab", "~> 3.7.0"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
