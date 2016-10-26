@@ -28,15 +28,15 @@ module Danger
   #
   #          fail "Please re-submit this MR to develop, we may have already fixed your issue." if gitlab.branch_for_merge != "develop"
   #
-  # @example Note when MRs don't reference a milestone, which goes away when it does.
+  # @example Note when MRs don't reference a milestone, make the warning stick around on subsequent runs
   #
   #          has_milestone = gitlab.mr_json["milestone"] != nil
-  #          warn("This MR does not refer to an existing milestone", sticky: false) unless has_milestone
+  #          warn("This MR does not refer to an existing milestone", sticky: true) unless has_milestone
   #
-  # @example Note when a MR cannot be manually merged, which goes away when you can.
+  # @example Note when a MR cannot be manually merged
   #
   #          can_merge = gitlab.mr_json["mergeable"]
-  #          warn("This MR cannot be merged yet.", sticky: false) unless can_merge
+  #          warn("This MR cannot be merged yet.") unless can_merge
   #
   # @example Highlight when a celebrity makes a merge request.
   #

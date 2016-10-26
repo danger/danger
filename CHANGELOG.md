@@ -2,6 +2,43 @@
 
 * Add your own contribution below
 
+## 4.0.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.6.0...v4.0.0)
+
+Welcome to 4.0. This one comes with _only_ breaking changes. There are two of them.
+They both change pretty fundamental behavior in Danger:
+
+* Switch messaging's sticky to default to `false` - Bogren
+* Move the `gitlab` gem into `danger-gitlab` - Orta
+
+#### Sticky
+
+The sticky one affects every Dangerfile. When we first introduced the feature, we wanted
+to experiment with how people used it. Looks like in general, people are writing `sticky: false`
+a lot in their Dangerfiles. Enough that it is worth going through the pain of migrating the change.
+
+If you prefer the old behavior, you need to add `sticky: true` to the end of every call to
+`warn`, `fail` and `message`. E.g. `message("Let's show something", sticky: false)`.
+
+Otherwise, you can just remove `sticky: true` from the Dangerfile.
+
+#### GitLab
+
+We want to keep the dependency tree for Danger as small as possible for the majority of our users.
+What this means is that we are moving the gitlab dependencies out into a separate gem. `danger-gitlab`.
+
+This reduces the number of dependencies we have for the majority of Danger's users. We _love_ GitLab, I've
+been super happy with their work, and we use GitLab for Danger.Systems. This is not a slight on the project.
+
+However, as of 4.0. Anyone using Danger with GitLab will need to use `danger-gitlab` instead of `danger`. It will stay
+in lock-step with the same major SemVer releases with Danger. That should be your only change.
+
+./orta
+
+---
+
+
 ## 3.6.0
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.5.5...v3.6.0)
@@ -271,7 +308,6 @@
 * Fix Buildkite repo slug URL generation - phillfarrugia
 * Added support for [Bitrise](http://bitrise.io) - kylejm
 * Set LANG variable to en_US.UTF-8 before running git commands - bogren
-* Switch messaging's sticky to default to `false` - Bogren
 
 ## 3.0.3
 

@@ -24,9 +24,9 @@ module Danger
   #
   #          fail "This build didn't pass tests"
   #
-  # @example Failing a build, but not keeping its value around on subsequent runs
+  # @example Failing a build, and note that on subsequent runs
   #
-  #          fail("This build didn't pass tests", sticky: false)
+  #          fail("This build didn't pass tests", sticky: true)
   #
   # @example Passing a warning
   #
@@ -88,7 +88,7 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
@@ -106,7 +106,7 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
@@ -125,7 +125,7 @@ module Danger
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
-    #           defaults to `true`.
+    #           defaults to `false`.
     # @param    [String] file
     #           Optional. Path to the file that the message is for.
     # @param    [String] line
