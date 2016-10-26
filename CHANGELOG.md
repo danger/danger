@@ -7,7 +7,7 @@
 [Full Changelog](https://github.com/danger/danger/compare/v3.5.5...v3.6.0)
 
 * Support for Jenkins pipelines - fwal
-* Implemented '--new-comment' support for GitLab
+* Implemented '--new-comment' support for GitLab - Nikolay Kasyanov
 * Improves Danger: Ignore "[warning/error text]" parsing - Juanito Fatas
 
 ## 3.5.5
