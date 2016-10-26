@@ -1,5 +1,5 @@
 class GetIgnoredViolation
-  IGNORE_REGEXP = %r(>*\s*danger\s*:\s*ignore\s*"(?<error>[^"]*)")i
+  IGNORE_REGEXP = />*\s*danger\s*:\s*ignore\s*"(?<error>[^"]*)"/i
 
   def initialize(body)
     @body = body
@@ -13,5 +13,5 @@ class GetIgnoredViolation
 
   private
 
-    attr_reader :body
+  attr_reader :body
 end
