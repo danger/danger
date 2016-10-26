@@ -16,5 +16,14 @@ RSpec.describe GetIgnoredViolation do
         expect(result).to eq ["This build didn't pass tests"]
       end
     end
+
+    context "With specific ignore sentence contains escapted quote" do
+      it "returns content in the quotes" do
+        sentence = %("ignoring this:\r\n>Danger: Ignore \"`TophatModels.v20` changed.\"")
+        result = described_class.new(sentence).call
+
+        expect(result).to eq [%(`TophatModels.v20` changed.)]
+      end
+    end
   end
 end
