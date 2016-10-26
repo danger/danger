@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "danger"
   spec.version       = Danger::VERSION
   spec.authors       = ["Orta Therox", "Juanito Fatas"]
-  spec.email         = ["orta.therox@gmail.com", "me@juanitofatas.com"]
+  spec.email         = ["orta.therox@gmail.com", "katehuang0320@gmail.com"]
   spec.license       = "MIT"
 
   spec.summary       = Danger::DESCRIPTION
