@@ -36,6 +36,11 @@ module Danger
         params[:endpoint] = endpoint
 
         @client ||= Gitlab.client(params)
+
+      rescue LoadError
+        puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
+        puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"
+        abort
       end
 
       def validates_as_api_source?
