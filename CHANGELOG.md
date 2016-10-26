@@ -2,7 +2,8 @@
 
 * Add your own contribution below
 * Support for Jenkins pipelines - fwal
-* Implemented '--new-comment' support for GitLab  
+* Implemented '--new-comment' support for GitLab
+* Improves Danger: Ignore "[warning/error text]" parsing - Juanito Fatas
 
 ## 3.5.5
 
