@@ -3,6 +3,8 @@ require "gitlab"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 
+require "danger/request_sources/support/get_ignored_violation"
+
 module Danger
   module RequestSources
     class GitLab < RequestSource
@@ -88,13 +90,11 @@ module Danger
       def fetch_details
         self.mr_json = client.merge_request(escaped_ci_slug, self.ci_source.pull_request_id)
         self.commits_json = client.merge_request_commits(escaped_ci_slug, self.ci_source.pull_request_id)
-        self.ignored_violations = ignored_violations_from_pr(self.mr_json)
+        self.ignored_violations = ignored_violations_from_pr
       end
 
-      def ignored_violations_from_pr(mr_json)
-        pr_body = mr_json.description
-        return [] if pr_body.nil?
-        pr_body.chomp.scan(/>\s*danger\s*:\s*ignore\s*"(.*)"/i).flatten
+      def ignored_violations_from_pr
+        GetIgnoredViolation.new(self.mr_json.description).call
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
