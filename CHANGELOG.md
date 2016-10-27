@@ -19,9 +19,9 @@ to experiment with how people used it. Looks like in general, people are writing
 a lot in their Dangerfiles. Enough that it is worth going through the pain of migrating the change.
 
 If you prefer the old behavior, you need to add `sticky: true` to the end of every call to
-`warn`, `fail` and `message`. E.g. `message("Let's show something", sticky: false)`.
+`warn`, `fail` and `message`. E.g. `message("Let's show something", sticky: true)`.
 
-Otherwise, you can just remove `sticky: true` from the Dangerfile.
+Otherwise, you can just remove `sticky: false` from the Dangerfile.
 
 #### GitLab
 
