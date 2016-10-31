@@ -52,21 +52,6 @@ module Danger
       system command
     end
 
-    def ask(question)
-      answer = ""
-      loop do
-        ui.puts "\n#{question}?"
-
-        show_prompt
-        answer = STDIN.gets.chomp
-
-        break unless answer.empty?
-
-        ui.print "\nYou need to provide an answer."
-      end
-      answer
-    end
-
     def ask_with_answers(question, possible_answers)
       ui.print "\n#{question}? ["
 
