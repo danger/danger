@@ -37,8 +37,8 @@ module Danger
       @base = argv.option("base")
       @head = argv.option("head")
       @fail_on_errors = argv.option("fail-on-errors", false)
-      new_comment = argv.flag?("new-comment")
-      @danger_id = new_comment ? Time.now.strftime("%v %H:%M:%S") : argv.option("danger_id", "danger")
+      @new_comment = argv.flag?("new-comment")
+      @danger_id = argv.option("danger_id", "danger")
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
       super
@@ -58,7 +58,7 @@ module Danger
         ["--fail-on-errors=<true|false>", "Should always fail the build process, defaults to false"],
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
         ["--danger_id=<id>", "The identifier of this Danger instance"],
-        ["--new-comment", "Makes the build process ignore other Danger instances, resulting in a new comment. Overrides '--danger_id'."]
+        ["--new-comment", "Makes Danger post a new comment instead of editing it's previous one"]
       ].concat(super)
     end
 
@@ -68,6 +68,7 @@ module Danger
         head: @head,
         dangerfile_path: @dangerfile_path,
         danger_id: @danger_id,
+        new_comment: @new_comment,
         fail_on_errors: @fail_on_errors
       )
     end

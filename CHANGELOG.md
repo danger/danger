@@ -2,9 +2,74 @@
 
 * Add your own contribution below
 
+## 4.0.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.6.0...v4.0.0)
+
+Welcome to 4.0. This one comes with _only_ breaking changes. There are two of them.
+They both change pretty fundamental behavior in Danger:
+
+* Switch messaging's sticky to default to `false` - Bogren
+* Move the `gitlab` gem into `danger-gitlab` - Orta
+
+#### Sticky
+
+The sticky one affects every Dangerfile. When we first introduced the feature, we wanted
+to experiment with how people used it. Looks like in general, people are writing `sticky: false`
+a lot in their Dangerfiles. Enough that it is worth going through the pain of migrating the change.
+
+If you prefer the old behavior, you need to add `sticky: true` to the end of every call to
+`warn`, `fail` and `message`. E.g. `message("Let's show something", sticky: true)`.
+
+Otherwise, you can just remove `sticky: false` from the Dangerfile.
+
+#### GitLab
+
+We want to keep the dependency tree for Danger as small as possible for the majority of our users.
+What this means is that we are moving the gitlab dependencies out into a separate gem. `danger-gitlab`.
+
+This reduces the number of dependencies we have for the majority of Danger's users. We _love_ GitLab, I've
+been super happy with their work, and we use GitLab for Danger.Systems. This is not a slight on the project.
+
+However, as of 4.0. Anyone using Danger with GitLab will need to use `danger-gitlab` instead of `danger`. It will stay
+in lock-step with the same major SemVer releases with Danger. That should be your only change.
+
+./orta
+
+---
+
+
+## 3.6.0
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.5...v3.6.0)
+
+* Support for Jenkins pipelines - fwal
+* Implemented '--new-comment' support for GitLab - Nikolay Kasyanov
+* Improves Danger: Ignore "[warning/error text]" parsing - Juanito Fatas
+
+## 3.5.5
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.4...v3.5.5)
+
+* Show warning when Danger is missing permissions to update PR status, even on successful build - hanneskaeufler
+* Fixed '--new-comment' creating multiple GitHub status checks, and removing the argument on a subsequent build will now make Danger correctly edit it's last comment - Bruno Rocha
+* Fix crash in git_repo.rb (#636) - Kyle McAlpine & Viktor Benei & orta & Juanito Fatas
+
+## 3.5.4
+
+[Full Changelog](https://github.com/danger/danger/compare/v3.5.3...v3.5.4)
+
 * fail fast if still cannot find the commit after fetch - Juanito Fatas
-* Adds the '--new-comment' argument, which makes Danger post a brand new comment by ignoring other Danger instances - Bruno Rocha
-* Fixed an issue where EnvironmentManager's output UI could be nil, and would blackhole error messages - @notjosh
+* Adds the `--new-comment` argument to `danger` command - Bruno Rocha
+
+  Makes Danger post a brand new comment by ignoring other Danger instances.
+
+* Fixed an issue where EnvironmentManager's output UI could be `nil`, and would blackhole error messages - @notjosh
+* `danger pr` now accepts `--dangerfile` argument - Juanito Fatas
+
+  ```
+  danger pr https://github.com/danger/danger/pull/518 --dangerfile ~/Dangerfile
+  ```
 
 ## 3.5.3
 
@@ -210,7 +275,7 @@
   danger.import_dangerfile github: 'ruby-grape/danger'
   ```
 
-  You can package a Dangerfile in a gem, add it to Gemfile and import it.
+  You can package a Dangerfile in a gem, add it to Gemfile and import it.
 
   ```ruby
   danger.import_dangerfile gem: 'ruby-grape-danger'

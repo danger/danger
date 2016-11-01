@@ -1,5 +1,7 @@
 source "https://rubygems.org"
+
 gemspec
+gem "danger-gitlab"
 
 if RUBY_VERSION == "2.3.1"
   # Lets be well lazy on GH releases OK? Can switch to real release after > 0.4.0

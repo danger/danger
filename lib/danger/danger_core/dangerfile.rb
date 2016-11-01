@@ -241,7 +241,7 @@ module Danger
       violation_report[:errors].count > 0
     end
 
-    def post_results(danger_id)
+    def post_results(danger_id, new_comment)
       violations = violation_report
 
       env.request_source.update_pull_request!(
@@ -249,7 +249,8 @@ module Danger
         errors: violations[:errors],
         messages: violations[:messages],
         markdowns: status_report[:markdowns],
-        danger_id: danger_id
+        danger_id: danger_id,
+        new_comment: new_comment
       )
     end
 
@@ -258,7 +259,7 @@ module Danger
       env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
     end
 
-    def run(base_branch, head_branch, dangerfile_path, danger_id)
+    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment)
       # Setup internal state
       init_plugins
       env.fill_environment_vars
@@ -273,7 +274,7 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
-        post_results(danger_id)
+        post_results(danger_id, new_comment)
 
         # Print results in the terminal
         print_results

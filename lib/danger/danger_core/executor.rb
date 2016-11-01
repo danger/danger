@@ -11,6 +11,7 @@ module Danger
             head: nil,
             dangerfile_path: nil,
             danger_id: nil,
+            new_comment: nil,
             fail_on_errors: nil)
       # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
@@ -27,7 +28,8 @@ module Danger
           base_branch(base),
           head_branch(head),
           dangerfile_path,
-          danger_id
+          danger_id,
+          new_comment
         )
       end
 

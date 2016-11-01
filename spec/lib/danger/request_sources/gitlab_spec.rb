@@ -116,12 +116,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject).to receive(:base_commit).
         and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
       expect(subject.scm).to receive(:exec)
-        .with("rev-parse --quiet --verify \"345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}\"")
+        .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}")
         .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
       expect(subject.scm).to receive(:exec)
         .with("branch danger_head 345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject.scm).to receive(:exec)
-        .with("rev-parse --quiet --verify \"0e4db308b6579f7cc733e5a354e026b272e1c076^{commit}\"")
+        .with("rev-parse --quiet --verify 0e4db308b6579f7cc733e5a354e026b272e1c076^{commit}")
         .and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
       expect(subject.scm).to receive(:exec)
         .with("branch danger_base 0e4db308b6579f7cc733e5a354e026b272e1c076")
@@ -204,6 +204,25 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             warnings: violations(["New Warning"]),
             errors: [],
             messages: []
+          )
+        end
+
+        it "creates a new comment instead of updating the existing one if --new-comment is provided" do
+          body = subject.generate_comment(
+            warnings: violations(["Test warning"]),
+            errors: violations(["Test error"]),
+            messages: violations(["Test message"]),
+            template: "gitlab"
+          )
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+            body: "body=#{ERB::Util.url_encode(body)}",
+            headers: expected_headers
+          ).to_return(status: 200, body: "", headers: {})
+          subject.update_pull_request!(
+            warnings: violations(["Test warning"]),
+            errors: violations(["Test error"]),
+            messages: violations(["Test message"]),
+            new_comment: true
           )
         end
       end

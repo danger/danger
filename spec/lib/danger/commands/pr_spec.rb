@@ -27,6 +27,18 @@ RSpec.describe Danger::PR do
 
       expect(result).to include ["--clear-http-cache", "Clear the local http cache before running Danger locally."]
       expect(result).to include ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
+      expect(result).to include ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"]
+    end
+
+    it "dangerfile can be set" do
+      argv = CLAide::ARGV.new(["--dangerfile=/Users/Orta/Dangerfile"])
+      allow(File).to receive(:exist?) { true }
+
+      result = described_class.new(argv)
+
+      expect(result).to have_instance_variables(
+        "@dangerfile_path" => "/Users/Orta/Dangerfile"
+      )
     end
   end
 

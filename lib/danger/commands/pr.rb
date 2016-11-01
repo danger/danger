@@ -12,15 +12,19 @@ module Danger
     def self.options
       [
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
-        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
+        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."],
+        ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"]
       ]
     end
 
     def initialize(argv)
       @pr_url = argv.shift_argument
       @clear_http_cache = argv.flag?("clear-http-cache", false)
+      dangerfile = argv.option("dangerfile", "Dangerfile")
 
       super
+
+      @dangerfile_path = dangerfile if File.exist?(dangerfile)
 
       setup_pry if should_pry?(argv)
     end
