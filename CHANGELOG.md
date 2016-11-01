@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Fixed --new-comment not working with Bitbucket - Bruno Rocha
+
 ## 4.0.0
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.6.0...v4.0.0)
