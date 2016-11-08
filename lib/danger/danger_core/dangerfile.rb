@@ -289,17 +289,19 @@ module Danger
     private
 
     def print_list(title, rows)
-      ui.title(title) do
-        rows.each do |row|
-          if row.file && row.line
-            path = "#{row.file}\#L#{row.line}: "
-          else
-            path = ""
-          end
+      unless rows.empty?
+        ui.title(title) do
+          rows.each do |row|
+            if row.file && row.line
+              path = "#{row.file}\#L#{row.line}: "
+            else
+              path = ""
+            end
 
-          ui.puts("- [ ] #{path}#{row.message}")
+            ui.puts("- [ ] #{path}#{row.message}")
+          end
         end
-      end unless rows.empty?
+      end
     end
 
     def wrap_text(text, width = 80)
