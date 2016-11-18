@@ -172,7 +172,7 @@ module Danger
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [], danger_id: "danger")
         status = (errors.count.zero? ? "success" : "failure")
-        message = generate_description(warnings: warnings, errors: errors)
+        message = generate_description(warnings: warnings, errors: errors, template: "github")
         latest_pr_commit_ref = self.pr_json["head"]["sha"]
 
         if latest_pr_commit_ref.empty? || latest_pr_commit_ref.nil?

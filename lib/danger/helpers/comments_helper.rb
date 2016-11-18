@@ -134,11 +134,11 @@ module Danger
         )
       end
 
-      def generate_description(warnings: nil, errors: nil)
+      def generate_description(warnings: nil, errors: nil, template: "github")
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
-          message = "⚠ "
+          message = character_from_emoji(":warning", template: template) + " "
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
           message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
           message += "Don't worry, everything is fixable."
@@ -151,17 +151,25 @@ module Danger
          "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."].sample
       end
 
-      def character_from_emoji(emoji)
+      def character_from_emoji(emoji, template: "github")
         emoji.delete! ":"
-        if emoji == "no_entry_sign"
-          "🚫"
-        elsif emoji == "warning"
-          "⚠️"
-        elsif emoji == "book"
-          "📖"
-        elsif emoji == "white_check_mark"
-          "✅"
-        end
+        
+        container = {
+          "github" => {
+            "no_entry_sign"    => "🚫",
+            "warning"          => "⚠️",
+            "book"             => "📖",
+            "white_check_mark" => "✅"
+          },
+          "bitbucket_server" => {
+            "no_entry_sign"    => "\u274C", # ❌
+            "warning"          => "\u2757", # ❗
+            "book"             => "\u2728", # ✨
+            "white_check_mark" => "\u2705"  # ✅
+          }
+        }
+
+        return container[template][emoji]
       end
 
       private

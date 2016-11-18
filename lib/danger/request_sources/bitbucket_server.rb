@@ -64,9 +64,11 @@ module Danger
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+        template = "bitbucket_server"
+
         delete_old_comments(danger_id: danger_id) unless new_comment
 
-        comment = generate_description(warnings: warnings, errors: errors)
+        comment = generate_description(warnings: warnings, errors: errors, template: template)
         comment += "\n\n"
         comment += generate_comment(warnings: warnings,
                                      errors: errors,
@@ -74,7 +76,7 @@ module Danger
                                   markdowns: markdowns,
                         previous_violations: {},
                                   danger_id: danger_id,
-                                   template: "bitbucket_server")
+                                   template: template)
 
         @api.post_comment(comment)
       end
