@@ -37,7 +37,7 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      git_shallow_fetch if commit_not_exists?(commitish)
+      git_in_depth_fetch if commit_not_exists?(commitish)
 
       if commit_not_exists?(commitish)
         raise_if_we_cannot_find_the_commit(commitish)
@@ -46,8 +46,8 @@ module Danger
 
     private
 
-    def git_shallow_fetch
-      exec("fetch --unshallow")
+    def git_in_depth_fetch
+      exec("fetch --depth 1000000")
     end
 
     def default_env
@@ -70,7 +70,7 @@ module Danger
       possible_merge_base = possible_merge_base(repo, from, to)
 
       unless possible_merge_base
-        git_shallow_fetch
+        git_in_depth_fetch
         possible_merge_base = possible_merge_base(repo, from, to)
       end
 
