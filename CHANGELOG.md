@@ -91,6 +91,7 @@
 
 * Fixed --new-comment not working with Bitbucket - Bruno Rocha
 * Adjust GitHub comment output for new Markdown parser - Yuki Izumi
+* Change from git fetch --unshallow to git fetch --depth=1000000 - Juanito Fatas
 
 ## 4.0.0
 

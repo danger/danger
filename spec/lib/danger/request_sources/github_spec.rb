@@ -453,7 +453,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
           and_return("")
         # fetch it
-        expect(@g.scm).to receive(:exec).with("fetch --unshallow")
+        expect(@g.scm).to receive(:exec).with("fetch --depth 1000000")
         # still not in history
         expect(@g.scm).to receive(:exec).
           with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
