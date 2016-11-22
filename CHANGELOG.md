@@ -3,6 +3,7 @@
 * Add your own contribution below
 
 * Fixed --new-comment not working with Bitbucket - Bruno Rocha
+* Adjust GitHub comment output for new Markdown parser - Yuki Izumi
 
 ## 4.0.0
 
