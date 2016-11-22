@@ -228,7 +228,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
         )
 
         # There should be no indented HTML tag after 2 or more newlines.
-        expect(comment).not_to match(%r{(\r?\n){2}[ \t]+<})
+        expect(comment).not_to match(/(\r?\n){2}[ \t]+</)
       end
     end
 
