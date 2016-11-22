@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.0.1
+
+[Full Changelog](https://github.com/danger/danger/compare/v4.0.0...v4.0.1)
+
 * Fixed --new-comment not working with Bitbucket - Bruno Rocha
 * Adjust GitHub comment output for new Markdown parser - Yuki Izumi
 
