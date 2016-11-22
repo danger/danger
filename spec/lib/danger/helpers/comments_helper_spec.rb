@@ -216,6 +216,22 @@ RSpec.describe Danger::Helpers::CommentsHelper do
       expect(comment).to include("*Raw markdown*")
     end
 
+    it "produces HTML that a CommonMark parser will accept inline" do
+      ["github", "github_inline"].each do |template|
+        comment = dummy.generate_comment(
+          warnings: [violation("This is a warning")],
+          errors: [violation("This is an error", sticky: true)],
+          messages: [violation("This is a message")],
+          markdowns: [markdown("*Raw markdown*")],
+          danger_id: "my_danger_id",
+          template: template
+        )
+
+        # There should be no indented HTML tag after 2 or more newlines.
+        expect(comment).not_to match(%r{(\r?\n){2}[ \t]+<})
+      end
+    end
+
     it "produces the expected comment when there are newlines" do
       comment = dummy.generate_comment(
         warnings: [violation("This is a warning\nin two lines")],
