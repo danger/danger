@@ -53,8 +53,8 @@ RSpec.describe Danger::GemsResolver do
         result = described_class.new(gem_names).call
 
         expect(result).to be_a Array
-        expect(result.first).to eq expected_path(tmpdir)
-        expect(result.last).to eq expected_gems
+        expect(result.first).to match_array expected_path(tmpdir)
+        expect(result.last).to match_array expected_gems
       end
     end
   end
