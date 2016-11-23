@@ -2,7 +2,7 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "danger/version"
-
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name          = "danger"
   spec.version       = Danger::VERSION
@@ -51,3 +51,4 @@ Gem::Specification.new do |spec|
   # Remove in late November/December 2016
   spec.post_install_message = "Thanks for installing Danger!\nIf you are updating from 3.0, we recommend reading the CHANGELOG: https://github.com/danger/danger/blob/master/CHANGELOG.md"
 end
+# rubocop:enable Metrics/BlockLength
