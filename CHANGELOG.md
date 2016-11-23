@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Refactor plugin_support/plugin_file_resolver.rb - Juanito Fatas
+
 ## 4.0.1
 
 [Full Changelog](https://github.com/danger/danger/compare/v4.0.0...v4.0.1)
