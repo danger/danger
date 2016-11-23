@@ -11,13 +11,13 @@ RSpec.describe Danger::GemsResolver do
   def expected_gems
     [
       {
-        :name => "danger-rubocop",
-        :gem => "danger-rubocop",
-        :author => ["Ash Furrow"],
-        :url => "https://github.com/ashfurrow/danger-rubocop",
-        :description => "A Danger plugin for running Ruby files through Rubocop.",
-        :license => "MIT",
-        :version => "0.3.0"
+        name: "danger-rubocop",
+        gem: "danger-rubocop",
+        author: ["Ash Furrow"],
+        url: "https://github.com/ashfurrow/danger-rubocop",
+        description: "A Danger plugin for running Ruby files through Rubocop.",
+        license: "MIT",
+        version: "0.3.0"
       }
     ]
   end
