@@ -2,27 +2,24 @@ module Danger
   class GemsResolver
     def initialize(gem_names)
       @gem_names = gem_names
+      @dir = Dir.mktmpdir # We want it to persist until OS cleans it on reboot
     end
 
-    # returns Hash of paths and gems
+    # Returns an Array of paths (plugin lib file paths) and gems (of metadata)
     def call
       Bundler.with_clean_env do
-        # We don't use the block syntax as we want it to persist until the OS cleans it on reboot
-        # or whatever, it needs to persist outside this scope.
-        dir = Dir.mktmpdir
-
         Dir.chdir(dir) do
           create_gemfile_from_gem_names
           `bundle install --path vendor/gems`
-
-          return compute_under(dir), plugin_metadata_from_real_gems
         end
       end
+
+      return paths, gems
     end
 
     private
 
-    attr_reader :gem_names
+    attr_reader :gem_names, :dir
 
     def create_gemfile_from_gem_names
       gemfile = File.new("Gemfile", "w")
@@ -36,7 +33,7 @@ module Danger
     end
 
     # The paths are relative to dir.
-    def compute_under(dir)
+    def paths
       relative_paths = gem_names.flat_map do |plugin|
         Dir.glob("vendor/gems/ruby/*/gems/#{plugin}*/lib/**/**/**/**.rb")
       end
@@ -44,7 +41,7 @@ module Danger
       relative_paths.map { |path| File.join(dir, path) }
     end
 
-    def plugin_metadata_from_real_gems
+    def gems
       real_gems.map { |gem| gem_metadata(gem) }
     end
 
