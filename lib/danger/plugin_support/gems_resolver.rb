@@ -1,3 +1,5 @@
+require "bundler"
+
 module Danger
   class GemsResolver
     def initialize(gem_names)

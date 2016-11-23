@@ -1,6 +1,4 @@
-require "bundler"
-require "pathname"
-require "fileutils"
+require "danger/plugin_support/gems_resolver"
 
 module Danger
   class PluginFileResolver
