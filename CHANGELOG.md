@@ -3,6 +3,7 @@
 * Add your own contribution below
 
 * Refactor plugin_support/plugin_file_resolver.rb - Juanito Fatas
+* Extend BitBucket Server request source support - Alexandr Chaplyuk
 
 ## 4.0.1
 
