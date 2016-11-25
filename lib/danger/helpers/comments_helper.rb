@@ -70,8 +70,9 @@ module Danger
         violations.reject { |_, v| v.empty? }
       end
 
-      def table(name, emoji, violations, all_previous_violations)
-        content = violations.map { |v| process_markdown(v) }
+      def table(name, emoji, violations, all_previous_violations, template: "github")
+        content = violations
+        content = content.map { |v| process_markdown(v) } unless template == "bitbucket_server"
 
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
@@ -108,9 +109,9 @@ module Danger
       def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
         apply_template(
           tables: [
-            table("Error", "no_entry_sign", errors, previous_violations),
-            table("Warning", "warning", warnings, previous_violations),
-            table("Message", "book", messages, previous_violations)
+            table("Error", "no_entry_sign", errors, previous_violations, template: template),
+            table("Warning", "warning", warnings, previous_violations, template: template),
+            table("Message", "book", messages, previous_violations, template: template)
           ],
           markdowns: markdowns,
           danger_id: danger_id,

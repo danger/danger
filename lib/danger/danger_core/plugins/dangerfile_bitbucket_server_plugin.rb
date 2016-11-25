@@ -150,7 +150,9 @@ module Danger
     # @return [String]
     #
     def html_link(paths, full_path: true)
-      create_link(paths, full_path) { |href, text| create_html_link(href, text) }
+      # TODO: Enable html formatting when BitBucketServer could handle it
+      #create_link(paths, full_path) { |href, text| create_html_link(href, text) }
+      markdown_link(paths, full_path: full_path)
     end
 
     # @!group Bitbucket Server Misc
