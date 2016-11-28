@@ -139,7 +139,7 @@ module Danger
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
-          message = character_from_emoji(":warning", template: template) + " "
+          message = "⚠️ "
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
           message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
           message += "Don't worry, everything is fixable."
@@ -164,7 +164,7 @@ module Danger
           },
           "bitbucket_server" => {
             "no_entry_sign"    => "\u274C", # ❌
-            "warning"          => "\u2757", # ❗
+            "warning"          => "⚠️",
             "book"             => "\u2728", # ✨
             "white_check_mark" => "\u2705"  # ✅
           }
