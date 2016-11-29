@@ -1,5 +1,6 @@
 require "kramdown"
 require "danger/helpers/comments_parsing_helper"
+require "danger/helpers/emoji_mapper"
 
 # rubocop:disable Metrics/ModuleLength
 
@@ -102,6 +103,7 @@ module Danger
         @tables = tables
         @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
+        @emoji_mapper = EmojiMapper.new(template)
 
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
@@ -150,27 +152,6 @@ module Danger
       def random_compliment
         ["Well done.", "Congrats.", "Woo!",
          "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."].sample
-      end
-
-      def character_from_emoji(emoji, template: "github")
-        emoji.delete! ":"
-        
-        container = {
-          "github" => {
-            "no_entry_sign"    => "🚫",
-            "warning"          => "⚠️",
-            "book"             => "📖",
-            "white_check_mark" => "✅"
-          },
-          "bitbucket_server" => {
-            "no_entry_sign"    => "\u274C", # ❌
-            "warning"          => "⚠️",
-            "book"             => "\u2728", # ✨
-            "white_check_mark" => "\u2705"  # ✅
-          }
-        }
-
-        return container[template][emoji]
       end
 
       private
