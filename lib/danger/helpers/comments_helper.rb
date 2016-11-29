@@ -137,7 +137,7 @@ module Danger
         )
       end
 
-      def generate_description(warnings: nil, errors: nil, template: "github")
+      def generate_description(warnings: nil, errors: nil)
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
