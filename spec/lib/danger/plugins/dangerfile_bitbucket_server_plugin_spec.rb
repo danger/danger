@@ -63,12 +63,16 @@ RSpec.describe Danger::DangerfileBitbucketServerPlugin, host: :bitbucket_server 
 
     describe "#html_link" do
       it "creates a usable html link" do
+        skip "Atlassian disabled inline HTML support for Bitbucket Server"
+
         expect(plugin.html_link("Classes/Main Categories/Feed/FeedViewController.m")).to include(
           "<a href='https://stash.example.com/projects/IOS/repos/fancyapp/browse/Classes/Main%20Categories/Feed/FeedViewController.m?at=c50b3f61e90dac6a00b7d0c92e415a4348bb280a'>Classes/Main Categories/Feed/FeedViewController.m</a>"
         )
       end
 
       it "handles #XX line numbers in the same format a the other plugins" do
+        skip "Atlassian disabled inline HTML support for Bitbucket Server"
+
         expect(plugin.html_link("Classes/Main Categories/Feed/FeedViewController.m#100")).to include(
           "<a href='https://stash.example.com/projects/IOS/repos/fancyapp/browse/Classes/Main%20Categories/Feed/FeedViewController.m?at=c50b3f61e90dac6a00b7d0c92e415a4348bb280a#100'>Classes/Main Categories/Feed/FeedViewController.m</a>"
         )

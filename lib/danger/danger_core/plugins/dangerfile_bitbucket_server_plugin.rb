@@ -140,8 +140,10 @@ module Danger
     end
 
     # @!group Bitbucket Server Misc
-    # Returns a list of HTML anchors for a file, or files in the head repository.
+    # Returns a list of Markdown links for a file, or files in the head repository.
     # It returns a string of multiple anchors if passed an array.
+    # @note     Atlassian [disabled inline HTML support](https://jira.atlassian.com/browse/BSERV-7147).
+    #           This method method left for backward compatibility.
     # @param    [String or Array<String>] paths
     #           A list of strings to convert to github anchors
     # @param    [Bool] full_path
@@ -150,8 +152,6 @@ module Danger
     # @return [String]
     #
     def html_link(paths, full_path: true)
-      # TODO: Enable html formatting when BitBucketServer could handle it
-      #create_link(paths, full_path) { |href, text| create_html_link(href, text) }
       markdown_link(paths, full_path: full_path)
     end
 
@@ -187,10 +187,6 @@ module Danger
 
       return paths.first if paths.count < 2
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
-    end
-
-    def create_html_link(href, text)
-      "<a href='#{href}'>#{text}</a>"
     end
 
     def create_markdown_link(href, text)
