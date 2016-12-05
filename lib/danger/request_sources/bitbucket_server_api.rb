@@ -63,8 +63,16 @@ module Danger
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
         req.body = body
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
+        end
+
+        # show error to the user when BitBucket Server returned an error
+        case res
+        when Net::HTTPClientError, Net::HTTPServerError
+          # HTTP 4xx - 5xx
+          abort "\nError posting comment to BitBucket Server: #{res.code} (#{res.message})\n\n"
         end
       end
 
