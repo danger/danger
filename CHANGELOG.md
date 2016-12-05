@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.0.2
+
+[Full Changelog](https://github.com/danger/danger/compare/v4.0.1...v4.0.2)
+
 * Refactor plugin_support/plugin_file_resolver.rb - Juanito Fatas
 * Extend BitBucket Server request source support - Alexandr Chaplyuk
 
