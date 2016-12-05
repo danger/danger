@@ -258,7 +258,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     it "handles a single error and a single warning" do
       message = dummy.generate_description(warnings: [1], errors: [1])
 
-      expect(message).to include("⚠ ")
+      expect(message).to include("⚠️ ")
       expect(message).to include("Error")
       expect(message).to include("Warning")
       expect(message).to include("Don't worry, everything is fixable.")
@@ -267,7 +267,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     it "handles multiple errors and warning with pluralisation" do
       message = dummy.generate_description(warnings: [1, 2], errors: [1, 2])
 
-      expect(message).to include("⚠ ")
+      expect(message).to include("⚠️ ")
       expect(message).to include("Errors")
       expect(message).to include("Warnings")
       expect(message).to include("Don't worry, everything is fixable.")

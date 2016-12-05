@@ -1,5 +1,6 @@
 require "kramdown"
 require "danger/helpers/comments_parsing_helper"
+require "danger/helpers/emoji_mapper"
 
 # rubocop:disable Metrics/ModuleLength
 
@@ -70,8 +71,9 @@ module Danger
         violations.reject { |_, v| v.empty? }
       end
 
-      def table(name, emoji, violations, all_previous_violations)
-        content = violations.map { |v| process_markdown(v) }
+      def table(name, emoji, violations, all_previous_violations, template: "github")
+        content = violations
+        content = content.map { |v| process_markdown(v) } unless template == "bitbucket_server"
 
         kind = table_kind_from_title(name)
         previous_violations = all_previous_violations[kind] || []
@@ -101,6 +103,7 @@ module Danger
         @tables = tables
         @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
+        @emoji_mapper = EmojiMapper.new(template)
 
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
@@ -108,9 +111,9 @@ module Danger
       def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
         apply_template(
           tables: [
-            table("Error", "no_entry_sign", errors, previous_violations),
-            table("Warning", "warning", warnings, previous_violations),
-            table("Message", "book", messages, previous_violations)
+            table("Error", "no_entry_sign", errors, previous_violations, template: template),
+            table("Warning", "warning", warnings, previous_violations, template: template),
+            table("Message", "book", messages, previous_violations, template: template)
           ],
           markdowns: markdowns,
           danger_id: danger_id,
@@ -138,7 +141,7 @@ module Danger
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
-          message = "⚠ "
+          message = "⚠️ "
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
           message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
           message += "Don't worry, everything is fixable."
@@ -149,19 +152,6 @@ module Danger
       def random_compliment
         ["Well done.", "Congrats.", "Woo!",
          "Yay.", "Jolly good show.", "Good on 'ya.", "Nice work."].sample
-      end
-
-      def character_from_emoji(emoji)
-        emoji.delete! ":"
-        if emoji == "no_entry_sign"
-          "🚫"
-        elsif emoji == "warning"
-          "⚠️"
-        elsif emoji == "book"
-          "📖"
-        elsif emoji == "white_check_mark"
-          "✅"
-        end
       end
 
       private
