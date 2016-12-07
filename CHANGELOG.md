@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.0.3
+
+[Full Changelog](https://github.com/danger/danger/compare/v4.0.2...v4.0.3)
+
 * Print out an error when posting a comment to BitBucket Server fails - Buju77
 
 ## 4.0.2
