@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Don't rely on regular expressions to determine whether or not a file will register a plugin. - Ray Zane
+
 ## 4.0.3
 
 [Full Changelog](https://github.com/danger/danger/compare/v4.0.2...v4.0.3)
