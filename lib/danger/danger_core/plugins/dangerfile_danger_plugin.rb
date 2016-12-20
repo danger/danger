@@ -205,19 +205,22 @@ module Danger
     # @return [void]
     def import_local(path)
       Dir[path].each do |file|
-        validate_file_contains_plugin!(file)
+        validate_file_contains_plugin!(file) do
+          # Without the expand_path it would fail if the path doesn't start with ./
+          require File.expand_path(file)
+        end
 
-        # Without the expand_path it would fail if the path doesn't start with ./
-        require File.expand_path(file)
         refresh_plugins
       end
     end
 
+    # Raises an error when the given block does not register a plugin.
     def validate_file_contains_plugin!(file)
-      content = IO.read(file)
+      plugin_count_was = Danger::Plugin.all_plugins.length
+      yield
 
-      if content.scan(/class\s+(?<plugin_class>[\w]+)\s+<\s+((Danger::)?Plugin)/i).empty?
-        raise("#{file} doesn't contain any valid danger plugin.")
+      if Danger::Plugin.all_plugins.length == plugin_count_was
+        raise("#{file} doesn't contain any valid danger plugins.")
       end
     end
   end
