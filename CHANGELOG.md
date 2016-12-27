@@ -2,6 +2,7 @@
 
 * Add your own contribution below
 
+* Test on Ruby 2.4.0 - Connor Shea
 * Don't rely on regular expressions to determine whether or not a file will register a plugin. - Ray Zane
 
 ## 4.0.3
