@@ -1,6 +1,6 @@
 # https://wiki.jenkins-ci.org/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-JenkinsSetEnvironmentVariables
 # https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 require "danger/request_sources/gitlab"
 require "danger/request_sources/bitbucket_server"
 require "danger/request_sources/bitbucket_cloud"

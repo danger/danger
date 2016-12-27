@@ -1,5 +1,5 @@
 # http://github.com/surf-build/surf
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 
 module Danger
   # ### CI Setup

@@ -2,6 +2,7 @@
 require "octokit"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
+require "danger/request_sources/github/github_review"
 
 require "danger/request_sources/support/get_ignored_violation"
 
@@ -61,6 +62,17 @@ module Danger
 
       def pr_diff
         @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: "application/vnd.github.v3.diff")
+      end
+
+      def review
+        return @review if @review != nil
+        pr_danger_review = client.get(reviews_url)
+          .take_while { |review_json| GitHubReview.new(client, self.pr_json, review_json).generated_by_danger? }
+          .first
+        unless pr_danger_review
+          @review = GitHubReview.new(client, self.pr_json)
+        end
+        @review = pr_danger_review
       end
 
       def setup_danger_branches
