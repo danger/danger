@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.0.4
+
+[Full Changelog](https://github.com/danger/danger/compare/v4.0.3...v4.0.4)
+
 * Test on Ruby 2.4.0 - Connor Shea
 * Don't rely on regular expressions to determine whether or not a file will register a plugin. - Ray Zane
 * Fixes parsing Gems for pulling in their plugin JSON metadata - orta/barbosa
