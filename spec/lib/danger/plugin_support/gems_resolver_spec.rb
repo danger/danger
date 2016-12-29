@@ -50,7 +50,9 @@ RSpec.describe Danger::GemsResolver do
           fake_bundle_install_path_vendor_gems_in(spec_root)
         end
 
-        result = described_class.new(gem_names).call
+        resolver = described_class.new(gem_names)
+        resolver.call
+        result = resolver.send(:all_gems_metadata)
 
         expect(result).to be_a Array
         expect(result.first).to match_array expected_path(tmpdir)
