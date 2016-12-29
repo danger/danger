@@ -9,19 +9,26 @@ module Danger
 
     # Returns an Array of paths (plugin lib file paths) and gems (of metadata)
     def call
+      path_gems = []
+
       Bundler.with_clean_env do
         Dir.chdir(dir) do
           create_gemfile_from_gem_names
           `bundle install --path vendor/gems`
+          path_gems = all_gems_metadata
         end
       end
 
-      return paths, gems
+      return path_gems
     end
 
     private
 
     attr_reader :gem_names, :dir
+
+    def all_gems_metadata
+      return paths, gems
+    end
 
     def create_gemfile_from_gem_names
       gemfile = File.new("Gemfile", "w")
