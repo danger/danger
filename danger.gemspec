@@ -47,8 +47,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "guard-rubocop", "~> 1.2"
   spec.add_development_dependency "simplecov", "~> 0.12.0"
-
-  # Remove in late November/December 2016
-  spec.post_install_message = "Thanks for installing Danger!\nIf you are updating from 3.0, we recommend reading the CHANGELOG: https://github.com/danger/danger/blob/master/CHANGELOG.md"
 end
 # rubocop:enable Metrics/BlockLength
