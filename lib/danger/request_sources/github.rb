@@ -353,8 +353,8 @@ module Danger
           end
 
           # We are past the line position, just abort
-          break if message.line < range_start
-          next unless message.line >= range_start && message.line <= range_end
+          break if message.line.to_i < range_start
+          next unless message.line.to_i >= range_start && message.line.to_i <= range_end
 
           file_line = range_start
         end

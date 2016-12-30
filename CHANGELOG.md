@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Transform `line` into an int before comparing it with ranges when posting inline comments to GitHub - barbosa
+
 ## 4.0.4
 
 [Full Changelog](https://github.com/danger/danger/compare/v4.0.3...v4.0.4)
