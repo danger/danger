@@ -13,5 +13,5 @@ test:
     - git config --global user.email "danger@example.com"
     - git config --global user.name "Danger McShane"
     - bundle exec rake specs
-    - bundle exec danger --verbose
+    - '[ ! -z $DANGER_GITHUB_API_TOKEN ] && bundle exec danger || echo "Skipping Danger for External Contributor"'
     - bundle exec danger init --mousey --impatient
