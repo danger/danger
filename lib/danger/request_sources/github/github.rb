@@ -65,13 +65,12 @@ module Danger
       end
 
       def review
-        return @review if @review != nil
-        pr_danger_review = client.get(reviews_url)
-          .take_while { |review_json| GitHubReview.new(client, self.pr_json, review_json).generated_by_danger? }
-          .first
-        unless pr_danger_review
-          @review = GitHubReview.new(client, self.pr_json)
-        end
+        return @review unless @review.nil?
+        pr_danger_review = client.get(self.pr_json["_links"]["self"]["href"] + "/reviews")
+          .map { |review_json| GitHubReview.new(client, self.pr_json, review_json) }
+          .filter(&:generated_by_danger?)
+          .last
+        pr_danger_review ||= GitHubReview.new(client, self.pr_json)
         @review = pr_danger_review
       end
 

@@ -1,67 +1,100 @@
 # coding: utf-8
 require "octokit"
+require "danger/danger_core/messages/violation"
+require "danger/danger_core/messages/markdown"
+require "danger/helpers/comments_helper"
+require "danger/helpers/comment"
 
 module Danger
   module RequestSources
     class GitHubReview
-      REVIEW_EVENT_APPROVE = "APPROVE"
-      REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
-      REVIEW_EVENT_COMMENT = "COMMENT"
+      GITHUB_REVIEW_EVENT_APPROVE = "APPROVE"
+      GITHUB_REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
 
-      DANGER_REVIEW_STATE_INITIAL = "INITIAL"
-      DANGER_REVIEW_STATE_STARTED = "STARTED"
-      DANGER_REVIEW_STATE_SUBMITTED = "SUBMITTED"
+      attr_accessor :review_json
 
-      attr_accessor :review_json :comments :danger_state :inline_comments :comments
-
-      def initialize(ci_source, client, pr_json, review_json = nil)
+      def initialize(client, pr_json, review_json = nil)
         @pr_json = pr_json
         @client = client
-        @ci_source =
-        self.danger_state = DANGER_REVIEW_STATE_INITIAL
+        @warnings = []
+        @errors = []
+        @messages = []
+        @markdowns = []
         self.review_json = review_json
       end
 
       def start
-        raise "Review has been already started, please submit the ongoing review before starting again" if started?
-        self.review_json ||= @client.post(reviews_url)
-        self.danger_state = DANGER_REVIEW_STATE_STARTED
       end
 
       def submit
-        raise "Review has not started yet, please call github.review.start first" unless started?
-        raise "Review has been started submutted, please call start it again" if submitted?
-        @client.post(reviews_url)
-        self.danger_state = DANGER_REVIEW_STATE_SUBMITTED
+        request_body = { body: generate_body, event: generate_github_review_event }
+        if self.review_json != nil
+          @client.post(review_url, request_body)
+        else
+          self.review_json = @client.post(reviews_url, request_body)
+        end
       end
 
       def generated_by_danger?(danger_id = "danger")
         self.review_json["body"].include?("generated_by_#{danger_id}")
       end
 
-      def inline_comment(path, position, body)
-
+      def message(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+        @messages << Violation.new(message, sticky, file, line)
       end
 
-      def comment(body)
-
+      def warn(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+        @warnings << Violation.new(message, sticky, file, line)
       end
 
-      def inline_comments
-        @inline_comments ||= begin
-          @client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-            .map { |comment| Comment.from_github(comment).generated_by_danger?("danger") }
-        end
+      def fail(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+        @errors << Violation.new(message, sticky, file, line)
+      end
+
+      def markdown(message, file: nil, line: nil)
+        @markdowns << Markdown.new(message, file, line)
+      end
+
+      def review_body
+        self.review_json["body"]
       end
 
       private
 
-      def started?
-        return self.danger_state == DANGER_REVIEW_STATE_STARTED
+      def generate_github_review_event
+        general_violations? ? GITHUB_REVIEW_EVENT_REQUEST_CHANGES : GITHUB_REVIEW_EVENT_APPROVE
       end
 
-      def submitted?
-        return self.danger_state == DANGER_REVIEW_STATE_SUBMITTED
+      def generate_body(danger_id: "danger")
+        previous_violations = parse_comment(body)
+        general_violations = generate_general_comments
+        return "" unless general_violations?(general_violations)
+
+        new_body = generate_comment(warnings: general_comments["warnings"],
+                                    errors: general_comments["errors"],
+                                    messages: general_comments["messages"],
+                                    markdowns: general_comments["markdowns"],
+                                    previous_violations: previous_violations,
+                                    danger_id: danger_id,
+                                    template: "github")
+        return new_body
+      end
+
+      def generate_general_violations
+        general_warnings = warnings.reject(&:inline?)
+        general_markdowns = markdowns.reject(&:inline?)
+        general_errors = errors.reject(&:inline?)
+        general_messages = messages.reject(&:inline?)
+        return {
+                 warnings: general_warning,
+                 markdowns: general_markdowns,
+                 errors: general_errors,
+                 messages: general_messages
+               }
+      end
+
+      def general_violations?(general_violations = generate_general_comments)
+        return !(general_comments["warnings"] + general_comments["markdowns"] + general_comments["errors"] + general_comments["messages"]).empty?
       end
 
       def pr_url
@@ -70,6 +103,18 @@ module Danger
 
       def reviews_url
         pr_url + "/reviews"
+      end
+
+      def review_id
+        self.review_json["id"]
+      end
+
+      def review_url
+        reviews_url + "/" + review_id
+      end
+
+      def review_comments_url
+        reviews_url + "/" + review_id + "/comments"
       end
     end
   end
