@@ -103,5 +103,29 @@ RSpec.describe Danger::PullRequestFinder do
         expect(result.base).to eq "pr 518 base commit sha1"
       end
     end
+
+    context "specify api endpoint of octokit client" do
+      it "By DANGER_GITHUB_API_HOST" do
+        ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
+
+        allow(Octokit::Client).to receive(:new).with(
+          access_token: ENV["DANGER_GITHUB_API_TOKEN"],
+          api_endpoint: "https://enterprise.artsy.net"
+        ) { spy("Octokit::Client") }
+
+        finder(pull_request_id: "42", remote: true, logs: "not important").call
+      end
+
+      it "fallbacks to DANGER_GITHUB_API_BASE_URL" do
+        ENV["DANGER_GITHUB_API_BASE_URL"] = "https://enterprise.artsy.net"
+
+        allow(Octokit::Client).to receive(:new).with(
+          access_token: ENV["DANGER_GITHUB_API_TOKEN"],
+          api_endpoint: "https://enterprise.artsy.net"
+        ) { spy("Octokit::Client") }
+
+        finder(pull_request_id: "42", remote: true, logs: "not important").call
+      end
+    end
   end
 end

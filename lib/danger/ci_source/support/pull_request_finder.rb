@@ -116,7 +116,15 @@ module Danger
 
     def client
       require "octokit"
-      Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"])
+      Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"], api_endpoint: api_url)
+    end
+
+    def api_url
+      ENV.fetch("DANGER_GITHUB_API_HOST") do
+        ENV.fetch("DANGER_GITHUB_API_BASE_URL") do
+          "https://api.github.com/".freeze
+        end
+      end
     end
   end
 end
