@@ -92,6 +92,14 @@ module Danger
       "github"
     end
 
+    # @!group PR Review
+    # Current PR Review object.
+    # @return [GitHubReview]
+    #
+    def review
+      @github.review
+    end
+
     # @!group PR Metadata
     # The title of the Pull Request.
     # @return [String]

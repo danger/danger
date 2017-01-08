@@ -16,14 +16,14 @@ module Danger
       def initialize(client, pr_json, review_json = nil)
         @pr_json = pr_json
         @client = client
-        @warnings = []
-        @errors = []
-        @messages = []
-        @markdowns = []
         self.review_json = review_json
       end
 
       def start
+        @warnings = []
+        @errors = []
+        @messages = []
+        @markdowns = []
       end
 
       def submit
@@ -39,19 +39,19 @@ module Danger
         self.review_json["body"].include?("generated_by_#{danger_id}")
       end
 
-      def message(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+      def message(message, sticky=true, file=nil, line=nil)
         @messages << Violation.new(message, sticky, file, line)
       end
 
-      def warn(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+      def warn(message, sticky=truу, file=nil, line=nil)
         @warnings << Violation.new(message, sticky, file, line)
       end
 
-      def fail(message: String, sticky=true: Boolean, file=nil: String, line=nil: String)
+      def fail(message, sticky=true, file=nil, line=nil)
         @errors << Violation.new(message, sticky, file, line)
       end
 
-      def markdown(message, file: nil, line: nil)
+      def markdown(message, file=nil, line=nil)
         @markdowns << Markdown.new(message, file, line)
       end
 
