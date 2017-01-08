@@ -1,5 +1,7 @@
 # coding: utf-8
 require "octokit"
+require "danger/ci_source/ci_source"
+require "danger/request_sources/github/octokit_pr_review"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"
 require "danger/helpers/comments_helper"
@@ -13,8 +15,8 @@ module Danger
 
       attr_accessor :review_json
 
-      def initialize(client, pr_json, review_json = nil)
-        @pr_json = pr_json
+      def initialize(client, ci_source, review_json = nil)
+        @ci_source = ci_source
         @client = client
         self.review_json = review_json
       end
@@ -28,10 +30,10 @@ module Danger
 
       def submit
         request_body = { body: generate_body, event: generate_github_review_event }
-        if self.review_json != nil
-          @client.post(review_url, request_body)
+        if exist_on_remote
+          self.review_json = @client.submit_pull_request_review(ci_source.repo_slug, ci_source.pull_request_id, id, generate_github_review_event, generate_body)
         else
-          self.review_json = @client.post(reviews_url, request_body)
+          self.review_json = @client.create_pull_request_review(ci_source.repo_slug, ci_source.pull_request_id, generate_github_review_event, generate_body)
         end
       end
 
@@ -55,8 +57,12 @@ module Danger
         @markdowns << Markdown.new(message, file, line)
       end
 
-      def review_body
-        self.review_json["body"]
+      def exist_on_remote?
+        self.review_json != nil
+      end
+
+      def id
+        self.review_json["id"]
       end
 
       private
@@ -97,25 +103,7 @@ module Danger
         return !(general_comments["warnings"] + general_comments["markdowns"] + general_comments["errors"] + general_comments["messages"]).empty?
       end
 
-      def pr_url
-        @pr_json["url"]
-      end
 
-      def reviews_url
-        pr_url + "/reviews"
-      end
-
-      def review_id
-        self.review_json["id"]
-      end
-
-      def review_url
-        reviews_url + "/" + review_id
-      end
-
-      def review_comments_url
-        reviews_url + "/" + review_id + "/comments"
-      end
     end
   end
 end
