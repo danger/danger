@@ -67,11 +67,11 @@ module Danger
       def review
         return @review unless @review.nil?
         pr_danger_review = client.pull_request_reviews(ci_source.repo_slug, ci_source.pull_request_id)
-          .map { |review_json| GitHubReview.new(client, self.pr_json, review_json) }
-          .filter(&:generated_by_danger?)
+          .map { |review_json| GitHubReview.new(client, ci_source, review_json) }
           .last
-        pr_danger_review ||= GitHubReview.new(client, self.pr_json)
+        pr_danger_review ||= GitHubReview.new(client, ci_source)
         @review = pr_danger_review
+        @review
       end
 
       def setup_danger_branches

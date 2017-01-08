@@ -10,6 +10,8 @@ require "danger/helpers/comment"
 module Danger
   module RequestSources
     class GitHubReview
+      include Danger::Helpers::CommentsHelper
+
       GITHUB_REVIEW_EVENT_APPROVE = "APPROVE"
       GITHUB_REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
 
@@ -29,11 +31,14 @@ module Danger
       end
 
       def submit
-        request_body = { body: generate_body, event: generate_github_review_event }
-        if exist_on_remote
-          self.review_json = @client.submit_pull_request_review(ci_source.repo_slug, ci_source.pull_request_id, id, generate_github_review_event, generate_body)
+        puts "Warnings :#{@warnings}"
+        puts "Errors :#{@errors}"
+        puts "Messages :#{@messages}"
+        puts "Markdowns :#{@markdowns}"
+        if exist_on_remote?
+          self.review_json = @client.submit_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, id, generate_github_review_event, generate_body)
         else
-          self.review_json = @client.create_pull_request_review(ci_source.repo_slug, ci_source.pull_request_id, generate_github_review_event, generate_body)
+          self.review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, generate_github_review_event, generate_body)
         end
       end
 
@@ -45,7 +50,7 @@ module Danger
         @messages << Violation.new(message, sticky, file, line)
       end
 
-      def warn(message, sticky=truу, file=nil, line=nil)
+      def warn(message, sticky=true, file=nil, line=nil)
         @warnings << Violation.new(message, sticky, file, line)
       end
 
@@ -65,21 +70,26 @@ module Danger
         self.review_json["id"]
       end
 
+      def body
+        return "" if self.review_json.nil?
+        self.review_json["body"]
+      end
+
       private
 
       def generate_github_review_event
-        general_violations? ? GITHUB_REVIEW_EVENT_REQUEST_CHANGES : GITHUB_REVIEW_EVENT_APPROVE
+        has_general_violations? ? GITHUB_REVIEW_EVENT_REQUEST_CHANGES : GITHUB_REVIEW_EVENT_APPROVE
       end
 
       def generate_body(danger_id: "danger")
         previous_violations = parse_comment(body)
-        general_violations = generate_general_comments
-        return "" unless general_violations?(general_violations)
+        general_violations = generate_general_violations
+        return "" unless has_general_violations?(general_violations)
 
-        new_body = generate_comment(warnings: general_comments["warnings"],
-                                    errors: general_comments["errors"],
-                                    messages: general_comments["messages"],
-                                    markdowns: general_comments["markdowns"],
+        new_body = generate_comment(warnings: general_violations[:warnings],
+                                    errors: general_violations[:errors],
+                                    messages: general_violations[:messages],
+                                    markdowns: general_violations[:markdowns],
                                     previous_violations: previous_violations,
                                     danger_id: danger_id,
                                     template: "github")
@@ -87,23 +97,21 @@ module Danger
       end
 
       def generate_general_violations
-        general_warnings = warnings.reject(&:inline?)
-        general_markdowns = markdowns.reject(&:inline?)
-        general_errors = errors.reject(&:inline?)
-        general_messages = messages.reject(&:inline?)
-        return {
-                 warnings: general_warning,
-                 markdowns: general_markdowns,
-                 errors: general_errors,
-                 messages: general_messages
-               }
+        general_warnings = @warnings.reject(&:inline?)
+        general_markdowns = @markdowns.reject(&:inline?)
+        general_errors = @errors.reject(&:inline?)
+        general_messages = @messages.reject(&:inline?)
+        {
+          warnings: general_warnings,
+          markdowns: general_markdowns,
+          errors: general_errors,
+          messages: general_messages
+        }
       end
 
-      def general_violations?(general_violations = generate_general_comments)
-        return !(general_comments["warnings"] + general_comments["markdowns"] + general_comments["errors"] + general_comments["messages"]).empty?
+      def has_general_violations?(general_violations = generate_general_violations)
+        return !(general_violations[:warnings] + general_violations[:markdowns] + general_violations[:errors] + general_violations[:messages]).empty?
       end
-
-
     end
   end
 end
