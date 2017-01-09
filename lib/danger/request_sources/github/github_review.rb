@@ -2,18 +2,23 @@
 require "octokit"
 require "danger/ci_source/ci_source"
 require "danger/request_sources/github/octokit_pr_review"
+require "danger/request_sources/github/github_review_resolver"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 
 module Danger
-  module RequestSources
-    class GitHubReview
+  module GitHub
+    class Review
       include Danger::Helpers::CommentsHelper
 
-      GITHUB_REVIEW_EVENT_APPROVE = "APPROVE"
-      GITHUB_REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
+      EVENT_APPROVE = "APPROVE"
+      EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
+
+      STATUS_APPROVED = "APPROVED"
+      STATUS_REQUESTED_CHANGES = "REQUESTED_CHANGES"
+      STATUS_PENDING = "PENDING"
 
       attr_accessor :review_json
 
@@ -31,14 +36,14 @@ module Danger
       end
 
       def submit
-        puts "Warnings :#{@warnings}"
-        puts "Errors :#{@errors}"
-        puts "Messages :#{@messages}"
-        puts "Markdowns :#{@markdowns}"
-        if exist_on_remote?
-          self.review_json = @client.submit_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, id, generate_github_review_event, generate_body)
-        else
-          self.review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, generate_github_review_event, generate_body)
+        resolver = ReviewResolver.new(self)
+        event = generate_github_review_event
+        if resolver.should_submit?(event)
+          puts "Submitting a review"
+          self.review_json = @client.submit_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, id, event, generate_body)
+        elsif resolver.should_create?(event)
+          puts "Creating a review"
+          self.review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, event, generate_body)
         end
       end
 
@@ -62,8 +67,8 @@ module Danger
         @markdowns << Markdown.new(message, file, line)
       end
 
-      def exist_on_remote?
-        self.review_json != nil
+      def should_create_new_review?
+        self.review_json.nil?
       end
 
       def id
@@ -75,10 +80,15 @@ module Danger
         self.review_json["body"]
       end
 
+      def status
+        return STATUS_PENDING unless self.review_json
+        return self.review_json["status"]
+      end
+
       private
 
       def generate_github_review_event
-        has_general_violations? ? GITHUB_REVIEW_EVENT_REQUEST_CHANGES : GITHUB_REVIEW_EVENT_APPROVE
+        has_general_violations? ? EVENT_REQUEST_CHANGES : EVENT_APPROVE
       end
 
       def generate_body(danger_id: "danger")

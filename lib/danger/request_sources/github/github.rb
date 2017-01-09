@@ -67,9 +67,9 @@ module Danger
       def review
         return @review unless @review.nil?
         pr_danger_review = client.pull_request_reviews(ci_source.repo_slug, ci_source.pull_request_id)
-          .map { |review_json| GitHubReview.new(client, ci_source, review_json) }
+          .map { |review_json| Danger::GitHub::Review.new(client, ci_source, review_json) }
           .last
-        pr_danger_review ||= GitHubReview.new(client, ci_source)
+        pr_danger_review ||= Danger::GitHub::Review.new(client, ci_source)
         @review = pr_danger_review
         @review
       end
