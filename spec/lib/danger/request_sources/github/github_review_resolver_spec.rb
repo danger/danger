@@ -13,13 +13,13 @@ RSpec.describe Danger::GitHub::ReviewResolver do
 
       context "when wants to approve" do
         it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_false
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_APPROVE)).to be false
         end
       end
 
       context "when wants to request changes" do
-        it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_false
+        it "returns false" do
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be false
         end
       end
     end
@@ -30,14 +30,14 @@ RSpec.describe Danger::GitHub::ReviewResolver do
       end
 
       context "when wants to approve" do
-        it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_true
+        it "returns true" do
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_APPROVE)).to be true
         end
       end
 
       context "when wants to request changes" do
         it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_true
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be true
         end
       end
     end
@@ -49,13 +49,13 @@ RSpec.describe Danger::GitHub::ReviewResolver do
 
       context "when wants to approve" do
         it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_false
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_APPROVE)).to be false
         end
       end
 
       context "when wants to request changes" do
-        it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_false
+        it "returns false" do
+          expect(subject.should_submit?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be false
         end
       end
     end
@@ -68,14 +68,14 @@ RSpec.describe Danger::GitHub::ReviewResolver do
       end
 
       context "when wants to approve" do
-        it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_true
+        it "returns true" do
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be true
         end
       end
 
       context "when wants to request changes" do
         it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_true
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be true
         end
       end
     end
@@ -87,13 +87,13 @@ RSpec.describe Danger::GitHub::ReviewResolver do
 
       context "when wants to approve" do
         it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_false
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be false
         end
       end
 
       context "when wants to request changes" do
         it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_false
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be false
         end
       end
     end
@@ -105,13 +105,13 @@ RSpec.describe Danger::GitHub::ReviewResolver do
 
       context "when wants to approve" do
         it "returns false" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be_false
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_APPROVE)).to be false
         end
       end
 
       context "when wants to request changes" do
         it "returns true" do
-          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be_true
+          expect(subject.should_create?(Danger::GitHub::Review::EVENT_REQUEST_CHANGES)).to be true
         end
       end
     end
