@@ -1,6 +1,7 @@
 require "kramdown"
 require "danger/helpers/comments_parsing_helper"
 require "danger/helpers/emoji_mapper"
+require "danger/helpers/find_max_num_violations"
 
 # rubocop:disable Metrics/ModuleLength
 
