@@ -60,13 +60,11 @@ end
 
 RSpec.describe Danger::Helpers::CommentsHelper do
   let(:dummy) do
-    d = Dummy.new
-    d.extend(described_class)
-    d
+    Dummy.new.tap { |dummy| dummy.extend(described_class) }
   end
 
   describe "#markdown_parser" do
-    it "is a Redcarpet::Markdown instance" do
+    it "is a Kramdown::Document instance" do
       parser = dummy.markdown_parser("")
       expect(parser).to be_an_instance_of(Kramdown::Document)
     end
@@ -392,7 +390,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     end
 
     it "truncates comments which would exceed githubs maximum comment length" do
-      warnings = (1..900).map { |i| "warning #{i}" }
+      warnings = (1..900).map { |i| "single long warning" * (rand(10) + 1) + i.to_s }
       result = dummy.generate_comment(warnings: violations(warnings), errors: violations([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
       expect(result).to include("has been truncated")
