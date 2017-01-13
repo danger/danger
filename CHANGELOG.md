@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+## 4.0.5
+
 * Transform `line` into an int before comparing it with ranges when posting inline comments to GitHub - barbosa
 * Fix danger pr command cannot specify API host - Juanito Fatas
 * Better handling of long comments - Juanito Fatas
