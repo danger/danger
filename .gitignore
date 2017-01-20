@@ -46,3 +46,12 @@ build/
 .keys
 .idea
 junit-results.xml
+
+# RSpec
+/spec/examples.txt
+
+# Byebug
+/.byebug_history
+
+# our forked RSpec JUnit Formatter
+/.xml_dump_failures

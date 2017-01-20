@@ -1,4 +1,7 @@
+# Defaults can be found here: https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+
 AllCops:
+  TargetRubyVersion: 2.0
   Exclude:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'
@@ -112,3 +115,10 @@ Style/IfInsideElse:
 
 Style/BlockComments:
   Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# FIXME: 25
+Metrics/BlockLength:
+  Max: 31

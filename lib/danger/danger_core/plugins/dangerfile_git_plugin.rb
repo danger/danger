@@ -28,7 +28,7 @@ module Danger
   #
   # @example Warn when somebody tries to add nokogiri to the project
   #
-  #          diff = git.diff_for_file["Gemfile.lock"]
+  #          diff = git.diff_for_file("Gemfile.lock")
   #          if diff && diff.patch =~ "nokogiri"
   #            warn 'Please do not add nokogiri to the project. Thank you.'
   #          end
@@ -113,6 +113,22 @@ module Danger
     #
     def diff_for_file(file)
       modified_files.include?(file) ? @git.diff[file] : nil
+    end
+
+    # @!group Git Metadata
+    # Statistics for a specific file in this diff
+    # @return [Hash] with keys `:insertions`, `:deletions` giving line counts, and `:before`, `:after` giving file contents, or nil if the file has no changes or does not exist
+    #
+    def info_for_file(file)
+      return nil unless modified_files.include?(file)
+      stats = @git.diff.stats[:files][file]
+      diff = @git.diff[file]
+      {
+        insertions: stats[:insertions],
+        deletions: stats[:deletions],
+        before: diff.blob(:src).contents,
+        after: diff.blob(:dst).contents
+      }
     end
   end
 end

@@ -14,7 +14,7 @@ module Danger
   #
   # @example Ensure that labels have been used on the PR
   #
-  #          fail "Please add labels to this PR" if github.labels.empty?
+  #          fail "Please add labels to this PR" if github.pr_labels.empty?
   #
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
@@ -97,7 +97,7 @@ module Danger
     # @return [String]
     #
     def pr_title
-      @github.pr_json[:title].to_s
+      @github.pr_json["title"].to_s
     end
 
     # @!group PR Metadata
@@ -105,7 +105,7 @@ module Danger
     # @return [String]
     #
     def pr_body
-      pr_json[:body].to_s
+      pr_json["body"].to_s
     end
 
     # @!group PR Metadata
@@ -113,7 +113,7 @@ module Danger
     # @return [String]
     #
     def pr_author
-      pr_json[:user][:login].to_s
+      pr_json["user"]["login"].to_s
     end
 
     # @!group PR Metadata
@@ -121,7 +121,7 @@ module Danger
     # @return [String]
     #
     def pr_labels
-      @github.issue_json[:labels].map { |l| l[:name] }
+      @github.issue_json["labels"].map { |l| l[:name] }
     end
 
     # @!group PR Commit Metadata
@@ -129,7 +129,7 @@ module Danger
     # @return [String]
     #
     def branch_for_base
-      pr_json[:base][:ref]
+      pr_json["base"]["ref"]
     end
 
     # @!group PR Commit Metadata
@@ -137,7 +137,7 @@ module Danger
     # @return [String]
     #
     def branch_for_head
-      pr_json[:head][:ref]
+      pr_json["head"]["ref"]
     end
 
     # @!group PR Commit Metadata
@@ -145,7 +145,7 @@ module Danger
     # @return [String]
     #
     def base_commit
-      pr_json[:base][:sha]
+      pr_json["base"]["sha"]
     end
 
     # @!group PR Commit Metadata
@@ -153,7 +153,7 @@ module Danger
     # @return [String]
     #
     def head_commit
-      pr_json[:head][:sha]
+      pr_json["head"]["sha"]
     end
 
     # @!group GitHub Misc
@@ -193,7 +193,7 @@ module Danger
     def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
-      repo = pr_json[:head][:repo][:html_url]
+      repo = pr_json["head"]["repo"]["html_url"]
 
       paths = paths.map do |path|
         url_path = path.start_with?("/") ? path : "/#{path}"
@@ -203,6 +203,10 @@ module Danger
 
       return paths.first if paths.count < 2
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
+    end
+
+    [:title, :body, :author, :labels, :json].each do |suffix|
+      alias_method "mr_#{suffix}".to_sym, "pr_#{suffix}".to_sym
     end
 
     private

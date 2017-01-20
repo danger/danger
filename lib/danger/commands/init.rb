@@ -1,4 +1,5 @@
 require "danger/commands/init_helpers/interviewer"
+require "danger/danger_core/dangerfile_generator"
 require "danger/ci_source/local_git_repo"
 require "yaml"
 
@@ -53,8 +54,7 @@ module Danger
     end
 
     def setup_dangerfile
-      dir = Danger.gem_path
-      content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
+      content = DangerfileGenerator.create_dangerfile(".", cork)
       File.write("Dangerfile", content)
 
       ui.header "Step 1: Creating a starter Dangerfile"
@@ -90,10 +90,10 @@ module Danger
       ui.say "Here are great resources for creative commons images of robots:"
       ui.link "https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9"
       ui.link "https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359"
-      ui.pause ""
+      ui.pause 1
 
       if considered_an_oss_repo?
-        ui.say "#{@bot_name} does not need privilidged access to your repo or org. This is because Danger will only"
+        ui.say "#{@bot_name} does not need privileged access to your repo or org. This is because Danger will only"
         ui.say "be writing comments, and you do not need special access for that."
       else
         ui.say "#{@bot_name} will need access to your repo. Simply because the code is not available for the public"
@@ -145,7 +145,7 @@ module Danger
     def current_repo_slug
       @git = GitRepo.new
       repo_matches = @git.origins.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-      repo_matches[2] || "[Your/Repo]"
+      (repo_matches[2] || "[Your/Repo]").strip
     end
 
     def setup_danger_ci
@@ -234,7 +234,7 @@ module Danger
         ui.say "I'll give you a minute to read it..."
         ui.wait_for_return
 
-        ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
+        ui.say "On danger/danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
         ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
@@ -248,7 +248,7 @@ module Danger
 
     def unsure_token
       ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
-      ui.say "Depending on the CI system, this may need to be done on the machine ( in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
+      ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
       ui.say "We have a guide for all supported CI systems on danger.systems:"
       ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
     end

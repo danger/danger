@@ -1,0 +1,8 @@
+bde9ea7 Merge pull request #557 from danger/hk-spec-improvements
+4a86be0 fix ruby keyword argument syntax
+028fecb silence git output in specs
+e2ccd73 extract `with_git_repo` to spec_helper, be more explicit about git origin
+3f8645a use different url to allow spec to fail
+49f08b9 remove useless local variable
+9c84248 Update CHANGELOG.md
+0cd9198 Prepare for 3.3.0 (#556)

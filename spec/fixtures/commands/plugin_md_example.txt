@@ -1,0 +1,37 @@
+
+
+### proselint
+
+Lint markdown files inside your projects.
+This is done using the [proselint](http://proselint.com) python egg.
+Results are passed out as a table in markdown.
+
+<blockquote>Specifying custom CocoaPods installation options
+  <pre>
+# Runs a linter with comma style disabled
+proselint.disable_linters = ["misc.scare_quotes", "misc.tense_present"]
+proselint.lint_files "_posts/*.md"
+
+# Runs a linter with all styles, on modified and added markpown files in this PR
+proselint.lint_files</pre>
+</blockquote>
+
+
+
+#### Attributes
+
+`disable_linters` - Allows you to disable a collection of linters from being ran.
+You can get a list of [them here](https://github.com/amperser/proselint#checks)
+
+
+
+
+#### Methods
+
+`lint_files` - Lints the globbed files, which can fail your build if
+
+`proselint_installed?` - Determine if proselint is currently installed in the system paths.
+
+
+
+

@@ -4,9 +4,12 @@ require "danger/danger_core/dangerfile_dsl"
 require "danger/danger_core/standard_error"
 
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
-require "danger/danger_core/plugins/dangerfile_import_plugin"
+require "danger/danger_core/plugins/dangerfile_danger_plugin"
 require "danger/danger_core/plugins/dangerfile_git_plugin"
 require "danger/danger_core/plugins/dangerfile_github_plugin"
+require "danger/danger_core/plugins/dangerfile_gitlab_plugin"
+require "danger/danger_core/plugins/dangerfile_bitbucket_server_plugin"
+require "danger/danger_core/plugins/dangerfile_bitbucket_cloud_plugin"
 
 module Danger
   class Dangerfile
@@ -34,7 +37,7 @@ module Danger
 
     # The ones that everything would break without
     def self.essential_plugin_classes
-      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileImportPlugin, DangerfileGitHubPlugin]
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin, DangerfileBitbucketServerPlugin, DangerfileBitbucketCloudPlugin]
     end
 
     # Both of these methods exist on all objects
@@ -65,10 +68,11 @@ module Danger
       super
     end
 
-    def initialize(env_manager, cork_board)
+    # cork_board not being set comes from plugins #585
+    def initialize(env_manager, cork_board = nil)
       @plugins = {}
       @core_plugins = []
-      @ui = cork_board
+      @ui = cork_board || Cork::Board.new(silent: false, verbose: false)
 
       # Triggers the core plugins
       @env = env_manager
@@ -118,15 +122,15 @@ module Danger
           when :api
             value = "Octokit::Client"
 
-          when :pr_json
-            value = "[Skipped]"
+          when :pr_json, :mr_json
+            value = "[Skipped JSON]"
 
-          when :pr_body
-            value = plugin.send(method)
-            value = value.scan(/.{,80}/).to_a.each(&:strip!).join("\n")
+          when :pr_diff, :mr_diff
+            value = "[Skipped Diff]"
 
           else
             value = plugin.send(method)
+            value = wrap_text(value.encode("utf-8")) if value.kind_of?(String)
             # So that we either have one value per row
             # or we have [] for an empty array
             value = value.join("\n") if value.kind_of?(Array) && value.count > 0
@@ -156,7 +160,9 @@ module Danger
 
       ui.section("Info:") do
         ui.puts
-        ui.puts Terminal::Table.new(params)
+        table = Terminal::Table.new(params)
+        table.align_column(0, :right)
+        ui.puts table
         ui.puts
       end
     end
@@ -202,7 +208,8 @@ module Danger
 
     def print_results
       status = status_report
-      return if (status[:errors] + status[:warnings] + status[:messages] + status[:markdowns]).count.zero?
+      violations = violation_report
+      return if (violations[:errors] + violations[:warnings] + violations[:messages] + status[:markdowns]).count.zero?
 
       ui.section("Results:") do
         [:errors, :warnings, :messages].each do |key|
@@ -215,28 +222,93 @@ module Danger
                   else
                     formatted
                   end
-          rows = status[key]
+          rows = violations[key]
           print_list(title, rows)
         end
 
         if status[:markdowns].count > 0
-          ui.section("Markdown:") do
+          ui.title("Markdown:") do
             status[:markdowns].each do |current_markdown|
-              ui.puts current_markdown
+              ui.puts "#{current_markdown.file}\#L#{current_markdown.line}" if current_markdown.file && current_markdown.line
+              ui.puts current_markdown.message
             end
           end
         end
       end
     end
 
+    def failed?
+      violation_report[:errors].count > 0
+    end
+
+    def post_results(danger_id, new_comment)
+      violations = violation_report
+
+      env.request_source.update_pull_request!(
+        warnings: violations[:warnings],
+        errors: violations[:errors],
+        messages: violations[:messages],
+        markdowns: status_report[:markdowns],
+        danger_id: danger_id,
+        new_comment: new_comment
+      )
+    end
+
+    def setup_for_running(base_branch, head_branch)
+      env.ensure_danger_branches_are_setup
+      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
+    end
+
+    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment)
+      # Setup internal state
+      init_plugins
+      env.fill_environment_vars
+
+      begin
+        # Sets up the git environment
+        setup_for_running(base_branch, head_branch)
+
+        # Parse the local Dangerfile
+        parse(Pathname.new(dangerfile_path))
+
+        # Push results to the API
+        # Pass along the details of the run to the request source
+        # to send back to the code review site.
+        post_results(danger_id, new_comment)
+
+        # Print results in the terminal
+        print_results
+      ensure
+        # Makes sure that Danger specific git branches are cleaned
+        env.clean_up
+      end
+
+      failed?
+    end
+
     private
 
     def print_list(title, rows)
-      ui.title(title) do
-        rows.each do |row|
-          ui.puts("- [ ] #{row}")
+      unless rows.empty?
+        ui.title(title) do
+          rows.each do |row|
+            if row.file && row.line
+              path = "#{row.file}\#L#{row.line}: "
+            else
+              path = ""
+            end
+
+            ui.puts("- [ ] #{path}#{row.message}")
+          end
         end
-      end unless rows.empty?
+      end
+    end
+
+    def wrap_text(text, width = 80)
+      text.gsub(/.{,#{width}}/) do |line|
+        line.strip!
+        "#{line}\n"
+      end
     end
   end
 end

@@ -1,24 +1,69 @@
 require "danger/ci_source/xcode_server"
 
-describe Danger::XcodeServer do
-  it "validates when Xcode Server has XCS_BOT_NAME env var" do
-    env = {
+RSpec.describe Danger::XcodeServer do
+  let(:valid_env) do
+    {
       "XCS_BOT_NAME" => "BuildaBot [danger/danger] PR #17"
     }
-    expect(Danger::XcodeServer.validates_as_ci?(env)).to be true
   end
 
-  it "doesnt validate when Xcode Server does not have XCS_BOT_NAME env var" do
-    env = { "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true" }
-    expect(Danger::XcodeServer.validates_as_ci?(env)).to be false
-  end
-
-  it "gets out a repo slug and a pull request number from a bot name" do
-    env = {
-      "XCS_BOT_NAME" => "BuildaBot [danger/danger] PR #17"
+  let(:invalid_env) do
+    {
+      "CIRCLE" => "true"
     }
-    t = Danger::XcodeServer.new(env)
-    expect(t.repo_slug).to eql("danger/danger")
-    expect(t.pull_request_id).to eql("17")
+  end
+
+  let(:source) { described_class.new(valid_env) }
+
+  describe ".validates_as_pr?" do
+    it "validates when the required env variables are set" do
+      expect(described_class.validates_as_pr?(valid_env)).to be true
+    end
+
+    it "does not validate when XCS_BOT_NAME does not contain BuildaBot" do
+      valid_env["XCS_BOT_NAME"] = "[danger/danger] PR #17"
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "does not validate when the required env variables are not set" do
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
+    end
+  end
+
+  describe ".validates_as_ci?" do
+    it "validates when the required env variables are set" do
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "validates when `XCS_BOT_NAME` does not contain `BuildaBot`" do
+      valid_env["XCS_BOT_NAME"] = "[danger/danger] PR #17"
+      expect(described_class.validates_as_ci?(valid_env)).to be true
+    end
+
+    it "does not validate when the required env variables are not set" do
+      expect(described_class.validates_as_ci?(invalid_env)).to be false
+    end
+  end
+
+  describe "#new" do
+    it "sets the repo_slug" do
+      expect(source.repo_slug).to eq("danger/danger")
+    end
+
+    it "sets the pull_request_id" do
+      expect(source.pull_request_id).to eq("17")
+    end
+
+    it "sets the repo_url", host: :github do
+      with_git_repo(origin: "git@github.com:artsy/eigen") do
+        expect(source.repo_url).to eq("git@github.com:artsy/eigen")
+      end
+    end
+  end
+
+  describe "supported_request_sources" do
+    it "supports GitHub" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
+    end
   end
 end

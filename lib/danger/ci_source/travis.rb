@@ -1,5 +1,6 @@
 # http://docs.travis-ci.com/user/osx-ci-environment/
 # http://docs.travis-ci.com/user/environment-variables/
+require "danger/request_sources/github"
 
 module Danger
   # ### CI Setup
@@ -31,7 +32,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      exists = ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] }
+      exists = ["TRAVIS_PULL_REQUEST", "TRAVIS_REPO_SLUG"].all? { |x| env[x] && !env[x].empty? }
       exists && env["TRAVIS_PULL_REQUEST"].to_i > 0
     end
 

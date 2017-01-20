@@ -1,5 +1,6 @@
 # Following the advice from @czechboy0 https://github.com/danger/danger/issues/171
 # https://github.com/czechboy0/Buildasaur
+require "danger/request_sources/github"
 
 module Danger
   # ### CI Setup
@@ -21,11 +22,15 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      env["XCS_BOT_NAME"].include? "BuildaBot"
+      value = env["XCS_BOT_NAME"]
+      !value.nil? && value.include?("BuildaBot")
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [
+        Danger::RequestSources::GitHub,
+        Danger::RequestSources::BitbucketServer
+      ]
     end
 
     def initialize(env)

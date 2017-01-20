@@ -2,6 +2,7 @@
 
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/orta/danger/blob/master/LICENSE)
 [![Gem](https://img.shields.io/gem/v/danger.svg?style=flat)](http://rubygems.org/gems/danger)
+[![Travis CI](https://img.shields.io/travis/danger/danger.svg?style=flat)](https://travis-ci.org/danger/danger)
 
 Formalize your Pull Request etiquette.
 
@@ -32,7 +33,7 @@ You can:
 * Enforce using descriptive labels
 * Look out for common anti-patterns
 * Highlight interesting build artifacts
-* Give specific files extra focus 
+* Give specific files extra focus
 
 Danger provides the glue to let _you_ build out the rules specific to your team's culture, offering useful metadata and a comprehensive plugin system to share common issues.
 
@@ -42,7 +43,9 @@ Alright. So, actually, you may be in the wrong place. From here on in, this READ
 
 We keep all of the end-user documentation at [http://danger.systems](http://danger.systems).
 
-Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html). 
+Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html).
+
+Sidenote: There is a [pure JS version](https://github.com/danger/danger-js) in the works, it's at the point where it can fail your build but that's about it for now, would love help there if it interests you.
 
 ## I'm here to help out!
 
@@ -55,7 +58,7 @@ bundle install
 bundle exec rake spec
 ```
 
-This sets everything up and runs all of the tests. 
+This sets everything up and runs all of the tests.
 
 #### Theory
 
@@ -63,7 +66,7 @@ Danger has a [VISION.md](https://github.com/danger/danger/blob/master/VISION.md)
 
 #### Documentation
 
-The code you write may end up in the public part of the website — the easiest way to tell is that it is vastly overdocumented. If you are working in a space that looks over-documented, please be extra considerate to add documentation. We expect the consumers of that documentation to be non-rubyists, thus you should avoid specific jargon and try to provide duplicate overlapping examples.  
+The code you write may end up in the public part of the website — the easiest way to tell is that it is vastly overdocumented. If you are working in a space that looks over-documented, please be extra considerate to add documentation. We expect the consumers of that documentation to be non-rubyists, thus you should avoid specific jargon and try to provide duplicate overlapping examples.
 
 #### Testing
 
@@ -76,7 +79,7 @@ I'd strongly recommend using `bundle exec guard` to run your tests as you work. 
 Ruby is super dynamic. One of the best ways to debug Ruby code is by using [pry](http://pryrepl.org/). We include pry for developers: when you have a problem, copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](http://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
 
 ```ruby
-require 'pry'      
+require 'pry'
 binding.pry
 ```
 
@@ -87,7 +90,7 @@ binding.pry
 
 ## License, Contributor's Guidelines and Code of Conduct
 
-We try to keep as much discussion as possible in GitHub issues, but also have a pretty inactive Slack --- if you'd like an invite, ping [@Orta](https://twitter.com/orta/) a DM on Twitter with your email. It's mostly interesting if you want to stay on top of Danger without all the emails from GitHub. 
+We try to keep as much discussion as possible in GitHub issues, but also have a pretty inactive Slack --- if you'd like an invite, ping [@Orta](https://twitter.com/orta/) a DM on Twitter with your email. It's mostly interesting if you want to stay on top of Danger without all the emails from GitHub.
 
 > This project is open source under the MIT license, which means you have full access to the source code and can modify it to fit your own needs.
 

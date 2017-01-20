@@ -1,6 +1,6 @@
 require "danger/ci_source/drone"
 
-describe Danger::Drone do
+RSpec.describe Danger::Drone do
   it "validates when DRONE variable is set" do
     env = { "DRONE" => "true",
             "DRONE_REPO" => "danger/danger",
@@ -29,14 +29,18 @@ describe Danger::Drone do
 
   it "gets the pull request ID" do
     env = { "DRONE_PULL_REQUEST" => "2" }
-    t = Danger::Drone.new(env)
-    expect(t.pull_request_id).to eql("2")
+
+    result = Danger::Drone.new(env)
+
+    expect(result.pull_request_id).to eq("2")
   end
 
   it "gets the repo address" do
     env = { "DRONE_REPO" => "orta/danger" }
-    t = Danger::Drone.new(env)
-    expect(t.repo_slug).to eql("orta/danger")
+
+    result = Danger::Drone.new(env)
+
+    expect(result.repo_slug).to eq("orta/danger")
   end
 
   it "gets out a repo slug and pull request number" do
@@ -45,8 +49,11 @@ describe Danger::Drone do
       "DRONE_PULL_REQUEST" => "800",
       "DRONE_REPO" => "artsy/eigen"
     }
-    t = Danger::Drone.new(env)
-    expect(t.repo_slug).to eql("artsy/eigen")
-    expect(t.pull_request_id).to eql("800")
+    result = Danger::Drone.new(env)
+
+    expect(result).to have_attributes(
+      repo_slug: "artsy/eigen",
+      pull_request_id: "800"
+    )
   end
 end

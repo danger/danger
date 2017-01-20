@@ -3,6 +3,14 @@
 require "git"
 require "uri"
 
+require "danger/request_sources/github"
+
+require "danger/ci_source/support/find_repo_info_from_url"
+require "danger/ci_source/support/find_repo_info_from_logs"
+require "danger/ci_source/support/no_repo_info"
+require "danger/ci_source/support/pull_request_finder"
+require "danger/ci_source/support/commits"
+
 module Danger
   # ignore
   class LocalGitRepo < CI
@@ -10,6 +18,10 @@ module Danger
 
     def self.validates_as_ci?(env)
       env.key? "DANGER_USE_LOCAL_GIT"
+    end
+
+    def self.validates_as_pr?(_env)
+      false
     end
 
     def git
@@ -25,39 +37,81 @@ module Danger
     end
 
     def initialize(env = {})
-      github_host = env["DANGER_GITHUB_HOST"] || "github.com"
+      @env = env
 
-      # get the remote URL
-      remote = run_git("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
-      if remote
-        remote_url_matches = remote.match(%r{#{Regexp.escape github_host}(:|/)(?<repo_slug>.+/.+?)(?:\.git)?$})
-        if !remote_url_matches.nil? and remote_url_matches["repo_slug"]
-          self.repo_slug = remote_url_matches["repo_slug"]
+      self.repo_slug = remote_info.slug
+      raise_error_for_missing_remote if remote_info.kind_of?(NoRepoInfo)
+
+      self.pull_request_id = found_pull_request.pull_request_id
+
+      if sha
+        self.base_commit = commits.base
+        self.head_commit = commits.head
+      else
+        self.base_commit = found_pull_request.base
+        self.head_commit = found_pull_request.head
+      end
+    end
+
+    private
+
+    attr_reader :env
+
+    def raise_error_for_missing_remote
+      raise missing_remote_error_message
+    end
+
+    def missing_remote_error_message
+      "danger cannot find your git remote, please set a remote. " \
+      "And the repository must host on GitHub.com or GitHub Enterprise."
+    end
+
+    def remote_info
+      @_remote_info ||= begin
+        remote_info = begin
+          if given_pull_request_url?
+            FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
+          else
+            FindRepoInfoFromLogs.new(
+              env["DANGER_GITHUB_HOST"] || "github.com".freeze,
+              run_git("remote show origin -n".freeze)
+            ).call
+          end
+        end
+
+        remote_info || NoRepoInfo.new
+      end
+    end
+
+    def found_pull_request
+      @_found_pull_request ||= begin
+        if given_pull_request_url?
+          PullRequestFinder.new(
+            remote_info.id,
+            remote_info.slug,
+            remote: true
+          ).call
         else
-          puts "Danger local requires a repository hosted on GitHub.com or GitHub Enterprise."
+          PullRequestFinder.new(
+            env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
+            remote_info.slug,
+            remote: false,
+            git_logs: run_git("log --oneline -1000000".freeze)
+          ).call
         end
       end
+    end
 
-      specific_pr = env["LOCAL_GIT_PR_ID"]
-      pr_ref = specific_pr ? "##{specific_pr}" : ""
-      pr_command = "log --merges --oneline"
+    def given_pull_request_url?
+      env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?
+    end
 
-      # get the most recent PR merge
-      pr_merge = run_git(pr_command.strip).lines.grep(Regexp.new("Merge pull request " + pr_ref))[0]
+    def sha
+      @_sha ||= found_pull_request.sha
+    end
 
-      if pr_merge.to_s.empty?
-        if specific_pr
-          raise "Could not find the pull request (#{specific_pr}) inside the git history for this repo."
-        else
-          raise "No recent pull requests found for this repo, danger requires at least one PR for the local mode."
-        end
-      end
-
-      self.pull_request_id = pr_merge.match("#([0-9]+)")[1]
-      sha = pr_merge.split(" ")[0]
-      parents = run_git("rev-list --parents -n 1 #{sha}").strip.split(" ")
-      self.base_commit = parents[0]
-      self.head_commit = parents[1]
+    def commits
+      @_commits ||= Commits.new(run_git("rev-list --parents -n 1 #{sha}"))
     end
   end
 end
