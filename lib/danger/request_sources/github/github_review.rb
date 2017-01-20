@@ -42,7 +42,7 @@ module Danger
         end
 
         def status
-          return STATUS_PENDING unless self.review_json
+          return STATUS_PENDING if self.review_json.nil?
           return self.review_json["state"]
         end
 
@@ -55,10 +55,15 @@ module Danger
 
         def submit
           # We wanna add final markdown with the pull request review status such as Danger uses for pull request status
-          
-          submission_event = generate_event(generate_general_violations)
+          general_violations = generate_general_violations
+          @markdowns << Markdown.new(message, generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors]))
+
+          submission_event = generate_event(general_violations)
           submission_body = generate_body
-          return unless ReviewResolver.new(self).should_submit?(submission_event, submission_body)
+
+          # If the review resolver says that there is nothing to submit we skip submission
+          return unless ReviewResolver.should_submit?(self, submission_event, submission_body)
+
           self.review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, submission_event, submission_body)
         end
 
@@ -88,14 +93,14 @@ module Danger
 
         private
 
+        # The only reason to request changes for the PR is to have errors from Danger
+        # otherwise let's just notify user and we're done
         def generate_event(violations)
           violations[:errors].empty? ? EVENT_APPROVE : EVENT_REQUEST_CHANGES
         end
 
         def generate_body(danger_id: "danger")
           previous_violations = parse_comment(body)
-          puts "Previous violations #{previous_violations} for body #{body}"
-
           general_violations = generate_general_violations
           new_body = generate_comment(warnings: general_violations[:warnings],
                                       errors: general_violations[:errors],
