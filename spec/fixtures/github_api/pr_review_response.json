@@ -1,0 +1,36 @@
+{
+  "id": 15629060,
+  "user": {
+    "login": "conichi-ci",
+    "id": 17313329,
+    "avatar_url": "https://avatars3.githubusercontent.com/u/17313329?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/conichi-ci",
+    "html_url": "https://github.com/conichi-ci",
+    "followers_url": "https://api.github.com/users/conichi-ci/followers",
+    "following_url": "https://api.github.com/users/conichi-ci/following{/other_user}",
+    "gists_url": "https://api.github.com/users/conichi-ci/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/conichi-ci/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/conichi-ci/subscriptions",
+    "organizations_url": "https://api.github.com/users/conichi-ci/orgs",
+    "repos_url": "https://api.github.com/users/conichi-ci/repos",
+    "events_url": "https://api.github.com/users/conichi-ci/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/conichi-ci/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "body": "Looks good",
+  "commit_id": "d076f61a9eee9806bd8c272903c4182c033e0e7e",
+  "state": "APPROVED",
+  "html_url": "https://github.com/Antondomashnev/MyAmazingDangerPlayground/pull/2#pullrequestreview-15629060",
+  "pull_request_url": "https://api.github.com/repos/Antondomashnev/MyAmazingDangerPlayground/pulls/2",
+  "_links": {
+    "html": {
+      "href": "https://github.com/Antondomashnev/MyAmazingDangerPlayground/pull/2#pullrequestreview-15629060"
+    },
+    "pull_request": {
+      "href": "https://api.github.com/repos/Antondomashnev/MyAmazingDangerPlayground/pulls/2"
+    }
+  },
+  "submitted_at": "2017-01-08T17:37:23Z"
+}

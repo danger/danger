@@ -87,10 +87,6 @@ module Danger
           @markdowns << Markdown.new(message, file, line)
         end
 
-        def should_create_new_review?
-          self.review_json.nil?
-        end
-
         private
 
         # The only reason to request changes for the PR is to have errors from Danger

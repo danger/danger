@@ -2,7 +2,7 @@ require "danger/request_sources/github/github_review_resolver"
 require "danger/request_sources/github/github_review"
 
 RSpec.describe Danger::RequestSources::GitHubSource::ReviewResolver do
-  let(:review) { double("Danger::GitHub::Review") }
+  let(:review) { double(Danger::RequestSources::GitHubSource::Review) }
 
   describe "should_submit?" do
     context "when submission body the same as review has" do
@@ -11,7 +11,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::ReviewResolver do
       end
 
       it "returns false" do
-        expect(described_class.should_submit?(review, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, "super body").to be false
+        expect(described_class.should_submit?(review, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, "super body")).to be false
       end
     end
 
