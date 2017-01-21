@@ -33,6 +33,7 @@ module Danger
         end
 
         def id
+          return nil unless self.review_json
           self.review_json["id"]
         end
 
@@ -56,7 +57,8 @@ module Danger
         def submit
           # We wanna add final markdown with the pull request review status such as Danger uses for pull request status
           general_violations = generate_general_violations
-          @markdowns << Markdown.new(message, generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors]))
+          submission_message = generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors])
+          @markdowns << Markdown.new(submission_message)
 
           submission_event = generate_event(general_violations)
           submission_body = generate_body

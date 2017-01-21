@@ -1,6 +1,6 @@
 require "danger/request_sources/github/github_review"
 
-RSpec.describe Danger::RequestSources::GitHubSource::Review do
+RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
   let(:client) { double(Octokit::Client) }
 
   describe "submit" do
@@ -15,7 +15,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review do
       end
 
       it "approves the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, anger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
         subject.submit
       end
     end
@@ -44,7 +44,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review do
 
     describe "body" do
       it "returns an empty string" do
-        expect(subject.status).to eq ""
+        expect(subject.body).to eq ""
       end
     end
   end
@@ -70,7 +70,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review do
 
     describe "body" do
       it "returns a body from request review json" do
-        expect(subject.status).to eq "Looks good"
+        expect(subject.body).to eq "Looks good"
       end
     end
   end
