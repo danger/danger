@@ -132,7 +132,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
       expect(methods).to eq [
         :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files,
-        :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :info_for_file, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :scm_provider
+        :deletions, :diff_for_file, :head_commit, :html_link, :import_dangerfile, :import_plugin, :info_for_file, :insertions, :lines_of_code, :modified_files, :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title, :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :review, :scm_provider
       ]
     end
 
@@ -162,6 +162,8 @@ RSpec.describe Danger::Dangerfile, host: :github do
         @dm.env.request_source.support_tokenless_auth = true
 
         # Stub out the GitHub stuff
+        pr_reviews_response = JSON.parse(fixture("github_api/pr_reviews_response"))
+        allow(@dm.env.request_source.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return(pr_reviews_response)
         pr_response = JSON.parse(fixture("github_api/pr_response"))
         allow(@dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
         issue_response = JSON.parse(fixture("github_api/issue_response"))
@@ -203,7 +205,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
           :added_files, :api, :base_commit, :branch_for_base, :branch_for_head, :commits, :deleted_files, :deletions, :head_commit,
           :insertions, :lines_of_code, :modified_files,
           :mr_author, :mr_body, :mr_json, :mr_labels, :mr_title,
-          :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :scm_provider
+          :pr_author, :pr_body, :pr_diff, :pr_json, :pr_labels, :pr_title, :review, :scm_provider
         ]
       end
 

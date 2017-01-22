@@ -5,17 +5,8 @@ module Danger
   module RequestSources
     module GitHubSource
       class ReviewResolver
-        def self.should_submit?(review, event, body)
-          return false if same_body?(body, review.body)
-          return event_changes_status?(event, review.status)
-        end
-
-        # @orta @JuanitoFatas to be discussed whether we should submit review with
-        # the same status as already submitted by danger before
-        def self.event_changes_status?(event, status)
-          all_events = [Review::EVENT_APPROVE, Review::EVENT_COMMENT, Review::EVENT_REQUEST_CHANGES]
-          all_statuses = [Review::STATUS_APPROVED, Review::STATUS_COMMENTED, Review::STATUS_REQUESTED_CHANGES, Review::STATUS_PENDING]
-          return all_events.index(event) != all_statuses.index(status)
+        def self.should_submit?(review, body)
+          return !same_body?(body, review.body)
         end
 
         def self.same_body?(body1, body2)

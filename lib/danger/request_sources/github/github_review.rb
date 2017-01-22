@@ -14,7 +14,7 @@ module Danger
       class Review
         include Danger::Helpers::CommentsHelper
 
-        # @see https://developer.github.com/v3/pulls/reviews/ for all possbile events
+        # @see https://developer.github.com/v3/pulls/reviews/ for all possible events
         EVENT_APPROVE = "APPROVE".freeze
         EVENT_REQUEST_CHANGES = "REQUEST_CHANGES".freeze
         EVENT_COMMENT = "COMMENT".freeze
@@ -64,13 +64,12 @@ module Danger
           submission_message = generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors])
           markdown submission_message
 
-          submission_event = generate_event(general_violations)
           submission_body = generate_body
 
           # If the review resolver says that there is nothing to submit we skip submission
-          return unless ReviewResolver.should_submit?(self, submission_event, submission_body)
+          return unless ReviewResolver.should_submit?(self, submission_body)
 
-          @review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, submission_event, submission_body)
+          @review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, generate_event(general_violations), submission_body)
         end
 
         def generated_by_danger?(danger_id = "danger")
