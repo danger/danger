@@ -145,7 +145,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           it "returns the last review from danger" do
             @review = @g.review
             expect(@review.review_json).to_not be_nil
-            expect(@review.id).to eq(16237194)
+            expect(@review.id).to eq(16_237_194)
           end
         end
       end

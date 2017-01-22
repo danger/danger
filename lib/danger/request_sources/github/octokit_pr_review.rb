@@ -8,16 +8,16 @@ module Octokit
     # please see the blog post for full details.
     # To access the API during the preview period, you must provide
     # a custom media type in the Accept header:
-    CUSTOM_ACCEPT_HEADER = "application/vnd.github.black-cat-preview+json"
+    CUSTOM_ACCEPT_HEADER = "application/vnd.github.black-cat-preview+json".freeze
 
     # Approve pull request event
-    PULL_REQUEST_REVIEW_EVENT_APPROVE = "APPROVE"
+    PULL_REQUEST_REVIEW_EVENT_APPROVE = "APPROVE".freeze
 
     # Request changes on the pull request event
-    PULL_REQUEST_REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
+    PULL_REQUEST_REVIEW_EVENT_REQUEST_CHANGES = "REQUEST_CHANGES".freeze
 
     # Left a gemeneral comment on the pull request event
-    PULL_REQUEST_REVIEW_EVENT_COMMENT = "COMMENT"
+    PULL_REQUEST_REVIEW_EVENT_COMMENT = "COMMENT".freeze
 
     # List pull request reviews for a pull request
     #
@@ -29,7 +29,7 @@ module Octokit
     #   Octokit.pull_request_reviews('rails/rails', :state => 'closed')
     def pull_request_reviews(repo, pull_request_number, options = {})
       accept = {
-        :accept => CUSTOM_ACCEPT_HEADER
+        accept: CUSTOM_ACCEPT_HEADER
       }
       paginate "#{Repository.path repo}/pulls/#{pull_request_number}/reviews", options.merge(accept)
     end
@@ -49,8 +49,8 @@ module Octokit
     #   @client.create_pull_request_review("octokit/octokit.rb", "APPROVE", "Thanks for your contribution")
     def create_pull_request_review(repo, pull_request_number, event, body = nil, options = {})
       review = {
-        :event  => event,
-        :accept => CUSTOM_ACCEPT_HEADER
+        event: event,
+        accept: CUSTOM_ACCEPT_HEADER
       }
       review[:body] = body unless body.nil?
       post "#{Repository.path repo}/pulls/#{pull_request_number}/reviews", options.merge(review)
@@ -73,8 +73,8 @@ module Octokit
     #                                      "Nice changes, but please make couple of imrovements")
     def submit_pull_request_review(repo, pull_request_number, review_id, event, body = nil, options = {})
       review = {
-        :event  => event,
-        :accept => CUSTOM_ACCEPT_HEADER
+        event: event,
+        accept: CUSTOM_ACCEPT_HEADER
       }
       review[:body] = body unless body.nil?
       post "#{Repository.path repo}/pulls/#{pull_request_number}/reviews/#{review_id}/events", options.merge(review)

@@ -15,15 +15,15 @@ module Danger
         include Danger::Helpers::CommentsHelper
 
         # @see https://developer.github.com/v3/pulls/reviews/ for all possbile events
-        EVENT_APPROVE = "APPROVE"
-        EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
-        EVENT_COMMENT = "COMMENT"
+        EVENT_APPROVE = "APPROVE".freeze
+        EVENT_REQUEST_CHANGES = "REQUEST_CHANGES".freeze
+        EVENT_COMMENT = "COMMENT".freeze
 
         # Current review status, if the review has not been submitted yet -> STATUS_PENDING
-        STATUS_APPROVED = "APPROVED"
-        STATUS_REQUESTED_CHANGES = "CHANGES_REQUESTED"
-        STATUS_COMMENTED = "COMMENTED"
-        STATUS_PENDING = "PENDING"
+        STATUS_APPROVED = "APPROVED".freeze
+        STATUS_REQUESTED_CHANGES = "CHANGES_REQUESTED".freeze
+        STATUS_COMMENTED = "COMMENTED".freeze
+        STATUS_PENDING = "PENDING".freeze
 
         attr_reader :id, :body, :status, :review_json
 
@@ -70,26 +70,26 @@ module Danger
           # If the review resolver says that there is nothing to submit we skip submission
           return unless ReviewResolver.should_submit?(self, submission_event, submission_body)
 
-          self.review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, submission_event, submission_body)
+          @review_json = @client.create_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, submission_event, submission_body)
         end
 
         def generated_by_danger?(danger_id = "danger")
           self.review_json["body"].include?("generated_by_#{danger_id}")
         end
 
-        def message(message, sticky=true, file=nil, line=nil)
+        def message(message, sticky = true, file = nil, line = nil)
           @messages << Violation.new(message, sticky, file, line)
         end
 
-        def warn(message, sticky=true, file=nil, line=nil)
+        def warn(message, sticky = true, file = nil, line = nil)
           @warnings << Violation.new(message, sticky, file, line)
         end
 
-        def fail(message, sticky=true, file=nil, line=nil)
+        def fail(message, sticky = true, file = nil, line = nil)
           @errors << Violation.new(message, sticky, file, line)
         end
 
-        def markdown(message, file=nil, line=nil)
+        def markdown(message, file = nil, line = nil)
           @markdowns << Markdown.new(message, file, line)
         end
 

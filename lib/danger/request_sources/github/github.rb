@@ -3,7 +3,7 @@ require "octokit"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 require "danger/request_sources/github/github_review"
-require 'danger/request_sources/github/octokit_pr_review.rb'
+require "danger/request_sources/github/octokit_pr_review.rb"
 require "danger/request_sources/support/get_ignored_violation"
 
 module Danger
@@ -68,7 +68,7 @@ module Danger
         return @review unless @review.nil?
         @review = client.pull_request_reviews(ci_source.repo_slug, ci_source.pull_request_id)
           .map { |review_json| Danger::RequestSources::GitHubSource::Review.new(client, ci_source, review_json) }
-          .select { |review| review.generated_by_danger? }
+          .select(&:generated_by_danger?)
           .last
         @review ||= Danger::RequestSources::GitHubSource::Review.new(client, ci_source)
         @review

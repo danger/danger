@@ -143,7 +143,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
 
     describe "id" do
       it "returns an id of request review" do
-        expect(subject.id).to eq 15629060
+        expect(subject.id).to eq 15_629_060
       end
     end
 

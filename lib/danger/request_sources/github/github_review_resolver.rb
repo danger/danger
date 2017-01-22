@@ -10,8 +10,6 @@ module Danger
           return event_changes_status?(event, review.status)
         end
 
-        private
-
         # @orta @JuanitoFatas to be discussed whether we should submit review with
         # the same status as already submitted by danger before
         def self.event_changes_status?(event, status)
