@@ -14,22 +14,23 @@ module Danger
       class Review
         include Danger::Helpers::CommentsHelper
 
+        # @see https://developer.github.com/v3/pulls/reviews/ for all possbile events
         EVENT_APPROVE = "APPROVE"
         EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
         EVENT_COMMENT = "COMMENT"
 
+        # Current review status, if the review has not been submitted yet -> STATUS_PENDING
         STATUS_APPROVED = "APPROVED"
         STATUS_REQUESTED_CHANGES = "CHANGES_REQUESTED"
         STATUS_COMMENTED = "COMMENTED"
         STATUS_PENDING = "PENDING"
 
-        attr_accessor :review_json
-        attr_reader :id, :body, :status
+        attr_reader :id, :body, :status, :review_json
 
         def initialize(client, ci_source, review_json = nil)
           @ci_source = ci_source
           @client = client
-          self.review_json = review_json
+          @review_json = review_json
         end
 
         def id
@@ -47,6 +48,7 @@ module Danger
           return self.review_json["state"]
         end
 
+        # Starts the new review process
         def start
           @warnings = []
           @errors = []
@@ -54,11 +56,13 @@ module Danger
           @markdowns = []
         end
 
+        # Submits the built review
+        # As on overview of pull request review it adds final markdown
+        # with the pull request review status such as Danger uses for pull request status
         def submit
-          # We wanna add final markdown with the pull request review status such as Danger uses for pull request status
           general_violations = generate_general_violations
           submission_message = generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors])
-          @markdowns << Markdown.new(submission_message)
+          markdown submission_message
 
           submission_event = generate_event(general_violations)
           submission_body = generate_body

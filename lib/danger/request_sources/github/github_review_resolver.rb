@@ -12,6 +12,8 @@ module Danger
 
         private
 
+        # @orta @JuanitoFatas to be discussed whether we should submit review with
+        # the same status as already submitted by danger before
         def self.event_changes_status?(event, status)
           all_events = [Review::EVENT_APPROVE, Review::EVENT_COMMENT, Review::EVENT_REQUEST_CHANGES]
           all_statuses = [Review::STATUS_APPROVED, Review::STATUS_COMMENTED, Review::STATUS_REQUESTED_CHANGES, Review::STATUS_PENDING]
@@ -19,7 +21,6 @@ module Danger
         end
 
         def self.same_body?(body1, body2)
-          puts "body1 #{body1} body2 #{body2}"
           return !body1.nil? && !body2.nil? && body1 == body2
         end
       end
