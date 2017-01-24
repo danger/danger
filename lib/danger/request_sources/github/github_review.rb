@@ -56,14 +56,9 @@ module Danger
           @markdowns = []
         end
 
-        # Submits the built review
-        # As on overview of pull request review it adds final markdown
-        # with the pull request review status such as Danger uses for pull request status
+        # Submits the prepared review
         def submit
           general_violations = generate_general_violations
-          submission_message = generate_description(warnings: general_violations[:warnings], errors: general_violations[:errors])
-          markdown submission_message
-
           submission_body = generate_body
 
           # If the review resolver says that there is nothing to submit we skip submission

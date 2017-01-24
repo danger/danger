@@ -25,7 +25,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       messages = [Danger::Violation.new("Hi", true)]
       warnings = [Danger::Violation.new("I warn you", true)]
       errors = [Danger::Violation.new("This is bad, really bad", true)]
-      markdowns = [Danger::Markdown.new("Yo", true), Danger::Markdown.new(generate_description(warnings: warnings, errors: errors), true)]
+      markdowns = [Danger::Markdown.new("Yo", true)]
       expected_body = generate_comment(warnings: warnings,
                                        errors: errors,
                                        messages: messages,
