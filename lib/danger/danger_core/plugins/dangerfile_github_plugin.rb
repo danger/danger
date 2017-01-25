@@ -102,9 +102,9 @@ module Danger
     # ```
     #   github.review.start
     #   github.review.fail("Please add a CHANGELOG entry") if has_no_changelog
-    #   github.review.warn("Highway to the Danger Zone") if pr_includes_word_danger
+    #   github.review.warn("PR has no body entry") if github.pr_body.length == 0
     #   github.review.message("You might want to read #{url}") if may_require_docs
-    #   github.review.markdown("Please update your changelog entry according an #{example}") if changelog_format_not_valid
+    #   github.review.markdown("##Failed Test results #{failed_results}") if failed_results
     #   github.review.submit
     # ```
     #
