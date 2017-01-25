@@ -92,6 +92,27 @@ module Danger
       "github"
     end
 
+    # @!group PR Review
+    #
+    # In Beta. Provides access to creating a GitHub Review instead of a typical GitHub comment.
+    #
+    # To use you announce the start of your review, and the end via the `start` and `submit` functions,
+    # for example:
+    #
+    # ```
+    #   github.review.start
+    #   github.review.fail("Please add a CHANGELOG entry") if has_no_changelog
+    #   github.review.warn("Highway to the Danger Zone") if pr_includes_word_danger
+    #   github.review.message("You might want to read #{url}") if may_require_docs
+    #   github.review.markdown("Please update your changelog entry according an #{example}") if changelog_format_not_valid
+    #   github.review.submit
+    # ```
+    #
+    # @return [ReviewDSL]
+    def review
+      @github.review
+    end
+
     # @!group PR Metadata
     # The title of the Pull Request.
     # @return [String]

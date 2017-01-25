@@ -1,5 +1,5 @@
 # https://semaphoreci.com/docs/available-environment-variables.html
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 
 module Danger
   # ### CI Setup

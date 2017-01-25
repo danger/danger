@@ -1,6 +1,6 @@
 # https://buildkite.com/docs/agent/osx
 # https://buildkite.com/docs/guides/environment-variables
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 require "danger/request_sources/gitlab"
 
 module Danger

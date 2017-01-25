@@ -1,7 +1,7 @@
 # https://circleci.com/docs/environment-variables
 require "uri"
 require "danger/ci_source/circle_api"
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 
 module Danger
   # ### CI Setup

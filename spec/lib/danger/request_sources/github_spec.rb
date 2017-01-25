@@ -1,5 +1,6 @@
 # coding: utf-8
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
+require "danger/request_sources/github/octokit_pr_review"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/messages/violation"
@@ -108,6 +109,45 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
                               branch: "yolo_branch",
                                 path: "path/Dangerfile")
         expect(url).to eq("https://raw.githubusercontent.com/org_yo/danger/yolo_branch/path/Dangerfile")
+      end
+    end
+
+    describe "review" do
+      context "when already asked for review" do
+        before do
+          allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return([])
+          @created_review = @g.review
+        end
+
+        it "returns the same review" do
+          expect(@g.review).to eq(@created_review)
+        end
+      end
+
+      context "when ask for review first time" do
+        context "when there are no danger review for PR" do
+          before do
+            allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return([])
+          end
+
+          it "returns a newly created review" do
+            @review = @g.review
+            expect(@review.review_json).to be_nil
+          end
+        end
+
+        context "when there are danger review for PR" do
+          before do
+            pr_reviews_response = JSON.parse(fixture("github_api/pr_reviews_response"))
+            allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return(pr_reviews_response)
+          end
+
+          it "returns the last review from danger" do
+            @review = @g.review
+            expect(@review.review_json).to_not be_nil
+            expect(@review.id).to eq(16_237_194)
+          end
+        end
       end
     end
 

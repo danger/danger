@@ -3,7 +3,7 @@
 require "git"
 require "uri"
 
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 
 require "danger/ci_source/support/find_repo_info_from_url"
 require "danger/ci_source/support/find_repo_info_from_logs"

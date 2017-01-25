@@ -1,6 +1,6 @@
 # http://docs.travis-ci.com/user/osx-ci-environment/
 # http://docs.travis-ci.com/user/environment-variables/
-require "danger/request_sources/github"
+require "danger/request_sources/github/github"
 
 module Danger
   # ### CI Setup

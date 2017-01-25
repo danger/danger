@@ -1,6 +1,6 @@
 ## master
 
-* Add your own contribution below
+* PR Review in Beta. Provides access to creating a GitHub Review instead of a typical GitHub comment - antondomashnev
 
 ## 4.0.5
 
