@@ -1,6 +1,23 @@
 ## master
 
+
+* Add your own contribution below
+
+## 4.1.0
+
 * PR Review in Beta. Provides access to creating a GitHub Review instead of a typical GitHub comment - antondomashnev
+
+ To use you announce the start of your review, and the end via the `start` and submit` functions,
+ for example:
+
+  ```ruby
+  github.review.start
+  github.review.fail("Please add a CHANGELOG entry") if has_no_changelog
+  github.review.warn("Highway to the Danger Zone") if pr_includes_word_danger
+  github.review.message("You might want to read #{url}") if may_require_docs
+  github.review.markdown("Please update your changelog entry according an #{\example}") if changelog_format_not_valid
+  github.review.submit
+  ```
 
 ## 4.0.5
 
