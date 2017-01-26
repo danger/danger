@@ -1,7 +1,8 @@
 ## master
 
-
 * Add your own contribution below
+
+* Minor docs formatting change - orta
 
 ## 4.1.0
 
