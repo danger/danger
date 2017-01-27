@@ -99,14 +99,12 @@ module Danger
     # To use you announce the start of your review, and the end via the `start` and `submit` functions,
     # for example:
     #
-    # ```
-    #   github.review.start
-    #   github.review.fail("Please add a CHANGELOG entry") if has_no_changelog
-    #   github.review.warn("PR has no body entry") if github.pr_body.length == 0
-    #   github.review.message("You might want to read #{url}") if may_require_docs
-    #   github.review.markdown("##Failed Test results #{failed_results}") if failed_results
-    #   github.review.submit
-    # ```
+    # github.review.start
+    # github.review.fail(message)
+    # github.review.warn(message)
+    # github.review.message(message)
+    # github.review.markdown(message)
+    # github.review.submit
     #
     # @return [ReviewDSL]
     def review
