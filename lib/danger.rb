@@ -7,7 +7,7 @@ require "danger/core_ext/string"
 require "danger/danger_core/executor"
 
 require "claide"
-require "colored"
+require "colored2"
 require "pathname"
 require "terminal-table"
 require "cork"

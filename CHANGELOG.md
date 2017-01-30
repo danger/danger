@@ -2,6 +2,8 @@
 
 * Add your own contribution below
 
+* Use the colored2 gem instead of colored - orta
+
 ## 4.1.1
 
 * Minor docs formatting change - orta
