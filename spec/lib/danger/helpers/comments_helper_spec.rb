@@ -379,7 +379,8 @@ COMMENT
         warnings: [],
         errors: violations(["an error"]),
         messages: [],
-        previous_violations: previous_violations)
+        previous_violations: previous_violations
+      )
 
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
