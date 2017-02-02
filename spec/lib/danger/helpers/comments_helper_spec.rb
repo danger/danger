@@ -248,7 +248,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
     it "produces a comment containing a summary" do
       comment = dummy.generate_comment(
-        warnings: [violation("This is a warning")],
+        warnings: [violation("Violations that are very very very very long should be truncated")],
         errors: [violation("This is an error", sticky: true)],
         messages: [violation("This is a message")],
         markdowns: [markdown("*Raw markdown*")],
@@ -258,9 +258,9 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
       summary = <<COMMENT
 <!--
-  1 Error
-  1 Warning
-  1 Message
+  1 Error: This is an error
+  1 Warning: Violations that are very very very very long should be truncated
+  1 Message: This is a message
   1 Markdown
 --!>
 COMMENT
