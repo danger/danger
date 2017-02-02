@@ -3,6 +3,7 @@
 * Add your own contribution below
 
 * Use the colored2 gem instead of colored - orta
+* Add summary to dangers comment to show in e.g. slack - hanneskaeufler
 
 ## 4.1.1
 
