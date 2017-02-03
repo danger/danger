@@ -171,6 +171,15 @@ module Danger
 
         return NEW_REGEX.match(table)
       end
+
+      def pluralize(string, count)
+        string.danger_pluralize(count)
+      end
+
+      def truncate(string)
+        max_message_length = 30
+        string.danger_truncate(max_message_length)
+      end
     end
   end
 end

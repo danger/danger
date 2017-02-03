@@ -12,4 +12,9 @@ class String
       tr("-".freeze, "_".freeze).
       downcase
   end
+
+  # @return [String] truncates string with ellipsis when exceeding the limit
+  def danger_truncate(limit)
+    length > limit ? "#{self[0...limit]}..." : self
+  end
 end

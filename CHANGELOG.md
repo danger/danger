@@ -2,6 +2,11 @@
 
 * Add your own contribution below
 
+## 4.2.0
+
+* Use the colored2 gem instead of colored - orta
+* Add summary to dangers comment to show in e.g. slack - hanneskaeufler
+
 ## 4.1.1
 
 * Minor docs formatting change - orta

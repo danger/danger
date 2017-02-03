@@ -18,4 +18,18 @@ RSpec.describe String do
       expect("ExampleClass".danger_underscore).to eq("example_class")
     end
   end
+
+  describe "#danger_truncate" do
+    it "truncates strings exceeding the limit" do
+      expect("super long string".danger_truncate(5)).to eq("super...")
+    end
+
+    it "does not truncate strings that are on the limit" do
+      expect("12345".danger_truncate(5)).to eq("12345")
+    end
+
+    it "does not truncate strings that are within the limit" do
+      expect("123".danger_truncate(5)).to eq("123")
+    end
+  end
 end
