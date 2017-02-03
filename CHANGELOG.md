@@ -1,6 +1,6 @@
 ## master
 
-* Add your own contribution below
+* Fixed an issue that broke markdown rendering in Github comments - turekj
 
 ## 4.2.0
 
