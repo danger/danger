@@ -298,21 +298,21 @@ COMMENT
     it "no warnings, no errors, no messages" do
       result = dummy.generate_comment(warnings: [], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
     it "supports markdown code below the summary table" do
       result = dummy.generate_comment(warnings: violations(["ups"]), markdowns: violations(["### h3"]))
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
     it "supports markdown only without a table" do
       result = dummy.generate_comment(markdowns: violations(["### h3"]))
       expect(result.gsub(/\s+/, "")).to end_with(
-        '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
@@ -320,7 +320,7 @@ COMMENT
       result = dummy.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -330,7 +330,7 @@ COMMENT
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -340,7 +340,7 @@ COMMENT
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -349,7 +349,7 @@ COMMENT
       result = dummy.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
       # rubocop:enable Metrics/LineLength
     end
@@ -383,7 +383,7 @@ COMMENT
       )
 
       expect(result.gsub(/\s+/, "")).to end_with(
-        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
+        '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
