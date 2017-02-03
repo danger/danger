@@ -262,7 +262,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
   1 Warning: Violations that are very very ...
   1 Message: This is a message
   1 Markdown
---!>
+-->
 COMMENT
 
       expect(comment).to include(summary)
