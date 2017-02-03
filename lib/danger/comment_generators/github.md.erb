@@ -3,7 +3,7 @@
   <%= pluralize(table[:name], table[:count]) %><%= ": #{truncate(table[:content].first.message)}" if table[:count] > 0 %>
   <%- end -%>
   <%= pluralize("Markdown", @markdowns.size) %>
---!>
+-->
 <%- @tables.each do |table| -%>
   <%- if table[:content].any? || table[:resolved].any? -%>
 <table>
