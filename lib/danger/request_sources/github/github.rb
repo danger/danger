@@ -230,7 +230,7 @@ module Danger
 
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        danger_comments = pr_comments.select { |comment| comment["body"].include?("generated_by_#{danger_id}") }
+        danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }
         non_danger_comments = pr_comments - danger_comments
 
         submit_inline_comments_for_kind!("warning", warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
