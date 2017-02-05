@@ -267,34 +267,7 @@ COMMENT
 
       expect(comment).to include(summary)
     end
-  end
 
-  describe "#generate_description" do
-    it "Handles no errors or warnings" do
-      message = dummy.generate_description(warnings: [], errors: [])
-      expect(message).to include("All green.")
-    end
-
-    it "handles a single error and a single warning" do
-      message = dummy.generate_description(warnings: [1], errors: [1])
-
-      expect(message).to include("⚠️ ")
-      expect(message).to include("Error")
-      expect(message).to include("Warning")
-      expect(message).to include("Don't worry, everything is fixable.")
-    end
-
-    it "handles multiple errors and warning with pluralisation" do
-      message = dummy.generate_description(warnings: [1, 2], errors: [1, 2])
-
-      expect(message).to include("⚠️ ")
-      expect(message).to include("Errors")
-      expect(message).to include("Warnings")
-      expect(message).to include("Don't worry, everything is fixable.")
-    end
-  end
-
-  describe "#generate_comment" do
     it "no warnings, no errors, no messages" do
       result = dummy.generate_comment(warnings: [], errors: [], messages: [])
       expect(result.gsub(/\s+/, "")).to end_with(
@@ -422,6 +395,31 @@ COMMENT
       result = dummy.generate_comment(warnings: violations(warnings), errors: violations([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
       expect(result).to include("has been truncated")
+    end
+  end
+
+  describe "#generate_description" do
+    it "Handles no errors or warnings" do
+      message = dummy.generate_description(warnings: [], errors: [])
+      expect(message).to include("All green.")
+    end
+
+    it "handles a single error and a single warning" do
+      message = dummy.generate_description(warnings: [1], errors: [1])
+
+      expect(message).to include("⚠️ ")
+      expect(message).to include("Error")
+      expect(message).to include("Warning")
+      expect(message).to include("Don't worry, everything is fixable.")
+    end
+
+    it "handles multiple errors and warning with pluralisation" do
+      message = dummy.generate_description(warnings: [1, 2], errors: [1, 2])
+
+      expect(message).to include("⚠️ ")
+      expect(message).to include("Errors")
+      expect(message).to include("Warnings")
+      expect(message).to include("Don't worry, everything is fixable.")
     end
   end
 
