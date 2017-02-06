@@ -22,11 +22,7 @@ module Danger
     attr_reader :specific_pull_request_id, :git_logs, :repo_slug, :remote
 
     def to_boolean(maybe_string)
-      if ["true", "1", "yes", "y", true].include?(maybe_string)
-        true
-      else
-        false
-      end
+      ["true", "1", "yes", "y", true].include?(maybe_string)
     end
 
     def check_if_any_pull_request!
