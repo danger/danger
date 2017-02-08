@@ -62,8 +62,13 @@ module Danger
       self.repo_url = self.class.repo_url(env)
       self.pull_request_id = self.class.pull_request_id(env)
 
-      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-      self.repo_slug = repo_matches[2] unless repo_matches.nil?
+      repo_matches = self.repo_url.match(%r{(?:[\/:])projects\/([^\/.]+)\/repos\/([^\/.]+)}) # Bitbucket Server
+      if repo_matches
+        self.repo_slug = "#{repo_matches[1]}/#{repo_matches[2]}"
+      else
+        repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+        self.repo_slug = repo_matches[2] unless repo_matches.nil?
+      end
     end
 
     def self.pull_request_id(env)
