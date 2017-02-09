@@ -24,28 +24,32 @@ RSpec.describe Danger::Local do
 
   describe "#run" do
     it "uses the local git ci source and GitHub by default" do
-      stub_request(:get, "https://api.github.com/repos/danger/danger/pulls/717")
+      host = ENV.fetch("DANGER_GITHUB_API_HOST") do
+        ENV.fetch("DANGER_GITHUB_API_BASE_URL") { "https://api.github.com" }
+      end
+
+      stub_request(:get, "#{host}/repos/danger/danger/pulls/717")
         .to_return(
           :status => 200,
           :body => fixture("github_api/pr_response_717"),
           :headers => { "content-type" => "application/json" }
         )
 
-      stub_request(:get, "https://api.github.com/repos/danger/danger/issues/717")
+      stub_request(:get, "#{host}/repos/danger/danger/issues/717")
         .to_return(
           :status => 200,
           :body => fixture("github_api/issue_response"),
           :headers => { "content-type" => "application/json" }
         )
 
-      stub_request(:get, "https://api.github.com/repos/danger/danger/pulls/717/reviews?per_page=100")
+      stub_request(:get, "#{host}/repos/danger/danger/pulls/717/reviews?per_page=100")
         .with(:headers => {"Accept"=>"application/vnd.github.black-cat-preview+json"})
         .to_return(
           :status => 200,
           :body => fixture("github_api/pr_reviews_response"),
           :headers => { "content-type" => "application/json" }
         )
-      stub_request(:get, /https:\/\/api\.github\.com\/orgs\/danger\/members\/\w*/).
+      stub_request(:get, /#{Regexp.quote(host)}\/orgs\/danger\/members\/\w*/).
         to_return(:status => 200, :body => "{\"message\": \"User does not exist or is not a public member of the organization\",
   \"documentation_url\": \"https://developer.github.com/v3/orgs/members/#check-public-membership\"}", :headers => {"content-type"=> "application/json"})
 
