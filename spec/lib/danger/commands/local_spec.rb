@@ -35,7 +35,7 @@ RSpec.describe Danger::Local do
           :headers => { "content-type" => "application/json" }
         )
 
-      stub_request(:get, "#{host}/repos/danger/danger/issues/717")
+      stub_request(:get, "https://api.github.com/repos/danger/danger/issues/717")
         .to_return(
           :status => 200,
           :body => fixture("github_api/issue_response"),
