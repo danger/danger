@@ -27,8 +27,9 @@ module Danger
         tables = parse_tables_from_comment(comment)
         violations = {}
         tables.each do |table|
-          next unless table =~ %r{<th width="100%"(.*?)</th>}im
-          title = Regexp.last_match(1)
+          match = danger_table?(table)
+          next unless match
+          title = match[1]
           kind = table_kind_from_title(title)
           next unless kind
 
@@ -46,6 +47,23 @@ module Danger
         elsif title =~ /message/i
           :message
         end
+      end
+
+      private
+
+      GITHUB_OLD_REGEX = %r{<th width="100%"(.*?)</th>}im
+      NEW_REGEX = %r{<th.*data-danger-table="true"(.*?)</th>}im
+
+      def danger_table?(table)
+        # The old GitHub specific method relied on
+        # the width of a `th` element to find the table
+        # title and determine if it was a danger table.
+        # The new method uses a more robust data-danger-table
+        # tag instead.
+        match = GITHUB_OLD_REGEX.match(table)
+        return match if match
+
+        return NEW_REGEX.match(table)
       end
     end
   end

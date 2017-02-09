@@ -3,8 +3,6 @@ require "danger/helpers/comments_parsing_helper"
 require "danger/helpers/emoji_mapper"
 require "danger/helpers/find_max_num_violations"
 
-# rubocop:disable Metrics/ModuleLength
-
 module Danger
   module Helpers
     module CommentsHelper
@@ -54,22 +52,6 @@ module Danger
         # Remove the outer `<p>`, the -5 represents a newline + `</p>`
         html = html[3...-5] if html.start_with? "<p>"
         Violation.new(html, violation.sticky, violation.file, violation.line)
-      end
-
-      def parse_comment(comment)
-        tables = parse_tables_from_comment(comment)
-        violations = {}
-        tables.each do |table|
-          match = danger_table?(table)
-          next unless match
-          title = match[1]
-          kind = table_kind_from_title(title)
-          next unless kind
-
-          violations[kind] = violations_from_table(table)
-        end
-
-        violations.reject { |_, v| v.empty? }
       end
 
       def table(name, emoji, violations, all_previous_violations, template: "github")
@@ -156,21 +138,6 @@ module Danger
       end
 
       private
-
-      GITHUB_OLD_REGEX = %r{<th width="100%"(.*?)</th>}im
-      NEW_REGEX = %r{<th.*data-danger-table="true"(.*?)</th>}im
-
-      def danger_table?(table)
-        # The old GitHub specific method relied on
-        # the width of a `th` element to find the table
-        # title and determine if it was a danger table.
-        # The new method uses a more robust data-danger-table
-        # tag instead.
-        match = GITHUB_OLD_REGEX.match(table)
-        return match if match
-
-        return NEW_REGEX.match(table)
-      end
 
       def pluralize(string, count)
         string.danger_pluralize(count)

@@ -138,6 +138,34 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
       expect(violations[:error].first.message).to include("Please include a CHANGELOG")
     end
+
+    it "parses a comment with error" do
+      comment = comment_fixture("comment_with_error")
+      results = dummy.parse_comment(comment)
+      expect(results[:error].map(&:message)).to eq(["Some error"])
+    end
+
+    it "parses a comment with error and warnings" do
+      comment = comment_fixture("comment_with_error_and_warnings")
+      results = dummy.parse_comment(comment)
+
+      expect(results[:error].map(&:message)).to eq(["Some error"])
+      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
+    end
+
+    it "ignores non-sticky violations when parsing a comment" do
+      comment = comment_fixture("comment_with_non_sticky")
+      results = dummy.parse_comment(comment)
+      expect(results[:warning].map(&:message)).to eq(["First warning"])
+    end
+
+    it "parses a comment with error and warnings removing strike tag" do
+      comment = comment_fixture("comment_with_resolved_violation")
+      results = dummy.parse_comment(comment)
+
+      expect(results[:error].map(&:message)).to eq(["Some error"])
+      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
+    end
   end
 
   describe "#table" do
@@ -420,51 +448,6 @@ COMMENT
       expect(message).to include("Errors")
       expect(message).to include("Warnings")
       expect(message).to include("Don't worry, everything is fixable.")
-    end
-  end
-
-  describe "comment parsing" do
-    it "detects the warning kind" do
-      expect(dummy.table_kind_from_title("1 Warning")).to eq(:warning)
-      expect(dummy.table_kind_from_title("2 Warnings")).to eq(:warning)
-    end
-
-    it "detects the error kind" do
-      expect(dummy.table_kind_from_title("1 Error")).to eq(:error)
-      expect(dummy.table_kind_from_title("2 Errors")).to eq(:error)
-    end
-
-    it "detects the warning kind" do
-      expect(dummy.table_kind_from_title("1 Message")).to eq(:message)
-      expect(dummy.table_kind_from_title("2 Messages")).to eq(:message)
-    end
-
-    it "parses a comment with error" do
-      comment = comment_fixture("comment_with_error")
-      results = dummy.parse_comment(comment)
-      expect(results[:error].map(&:message)).to eq(["Some error"])
-    end
-
-    it "parses a comment with error and warnings" do
-      comment = comment_fixture("comment_with_error_and_warnings")
-      results = dummy.parse_comment(comment)
-
-      expect(results[:error].map(&:message)).to eq(["Some error"])
-      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
-    end
-
-    it "ignores non-sticky violations when parsing a comment" do
-      comment = comment_fixture("comment_with_non_sticky")
-      results = dummy.parse_comment(comment)
-      expect(results[:warning].map(&:message)).to eq(["First warning"])
-    end
-
-    it "parses a comment with error and warnings removing strike tag" do
-      comment = comment_fixture("comment_with_resolved_violation")
-      results = dummy.parse_comment(comment)
-
-      expect(results[:error].map(&:message)).to eq(["Some error"])
-      expect(results[:warning].map(&:message)).to eq(["First warning", "Second warning"])
     end
   end
 end

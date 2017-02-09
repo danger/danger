@@ -3,8 +3,6 @@ module Danger
     attr_reader :pull_request_id, :sha
 
     def initialize(log_line)
-      @log_line = log_line
-
       @pull_request_id = log_line.match(/#(?<id>[0-9]+)/)[:id]
       @sha = log_line.split(" ".freeze).first
     end
@@ -12,9 +10,5 @@ module Danger
     def valid?
       pull_request_id && sha
     end
-
-    private
-
-    attr_reader :log_line
   end
 end
