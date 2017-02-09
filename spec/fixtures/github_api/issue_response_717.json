@@ -1,0 +1,70 @@
+{
+  "url": "https://api.github.com/repos/danger/danger/issues/717",
+  "repository_url": "https://api.github.com/repos/danger/danger",
+  "labels_url": "https://api.github.com/repos/danger/danger/issues/717/labels{/name}",
+  "comments_url": "https://api.github.com/repos/danger/danger/issues/717/comments",
+  "events_url": "https://api.github.com/repos/danger/danger/issues/717/events",
+  "html_url": "https://github.com/danger/danger/pull/717",
+  "id": 205188478,
+  "number": 717,
+  "title": "Fix for #716",
+  "user": {
+    "login": "turekj",
+    "id": 4130481,
+    "avatar_url": "https://avatars.githubusercontent.com/u/4130481?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turekj",
+    "html_url": "https://github.com/turekj",
+    "followers_url": "https://api.github.com/users/turekj/followers",
+    "following_url": "https://api.github.com/users/turekj/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turekj/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turekj/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turekj/subscriptions",
+    "organizations_url": "https://api.github.com/users/turekj/orgs",
+    "repos_url": "https://api.github.com/users/turekj/repos",
+    "events_url": "https://api.github.com/users/turekj/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turekj/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "labels": [
+
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2017-02-03T15:31:31Z",
+  "updated_at": "2017-02-03T15:49:33Z",
+  "closed_at": "2017-02-03T15:49:33Z",
+  "pull_request": {
+    "url": "https://api.github.com/repos/danger/danger/pulls/717",
+    "html_url": "https://github.com/danger/danger/pull/717",
+    "diff_url": "https://github.com/danger/danger/pull/717.diff",
+    "patch_url": "https://github.com/danger/danger/pull/717.patch"
+  },
+  "body": "This PR fixes a small issue with #716",
+  "closed_by": {
+    "login": "orta",
+    "id": 49038,
+    "avatar_url": "https://avatars.githubusercontent.com/u/49038?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/orta",
+    "html_url": "https://github.com/orta",
+    "followers_url": "https://api.github.com/users/orta/followers",
+    "following_url": "https://api.github.com/users/orta/following{/other_user}",
+    "gists_url": "https://api.github.com/users/orta/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/orta/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/orta/subscriptions",
+    "organizations_url": "https://api.github.com/users/orta/orgs",
+    "repos_url": "https://api.github.com/users/orta/repos",
+    "events_url": "https://api.github.com/users/orta/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/orta/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+}

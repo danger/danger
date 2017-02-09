@@ -21,4 +21,42 @@ RSpec.describe Danger::Local do
       expect(result.instance_variable_get(:"@clear_http_cache")).to eq false
     end
   end
+
+  describe "#run" do
+    it "uses the local git ci source and GitHub by default" do
+      stub_request(:get, "https://api.github.com/repos/danger/danger/pulls/717")
+        .to_return(
+          :status => 200,
+          :body => fixture("github_api/pr_response_717"),
+          :headers => { "content-type" => "application/json" }
+        )
+
+      stub_request(:get, "https://api.github.com/repos/danger/danger/issues/717")
+        .to_return(
+          :status => 200,
+          :body => fixture("github_api/issue_response"),
+          :headers => { "content-type" => "application/json" }
+        )
+
+      stub_request(:get, "https://api.github.com/repos/danger/danger/pulls/717/reviews?per_page=100")
+        .with(:headers => {"Accept"=>"application/vnd.github.black-cat-preview+json"})
+        .to_return(
+          :status => 200,
+          :body => fixture("github_api/pr_reviews_response"),
+          :headers => { "content-type" => "application/json" }
+        )
+      stub_request(:get, /https:\/\/api\.github\.com\/orgs\/danger\/members\/\w*/).
+        to_return(:status => 200, :body => "{\"message\": \"User does not exist or is not a public member of the organization\",
+  \"documentation_url\": \"https://developer.github.com/v3/orgs/members/#check-public-membership\"}", :headers => {"content-type"=> "application/json"})
+
+      stub_request(:get, "https://rubygems.org/api/v1/versions/danger/latest.json")
+        .to_return(:status => 200, :body => "{\"version\":\"4.2.1\"}")
+
+      expect do
+        described_class
+          .new(CLAide::ARGV.new(["--use-merged-pr=717"]))
+          .run
+      end.to output(/your mom/).to_stdout
+    end
+  end
 end
