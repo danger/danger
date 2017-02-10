@@ -99,8 +99,6 @@ module Danger
         return
       end
 
-      dm.env.request_source = gh
-
       DangerfileLocalEvaluator
         .new(dm, Pathname.new(@dangerfile_path))
         .evaluate
