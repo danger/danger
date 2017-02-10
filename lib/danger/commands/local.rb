@@ -71,6 +71,9 @@ module Danger
       end
 
       gh = dm.env.request_source
+      # We can use tokenless here, as it's running on someone's computer
+      # and is IP locked, as opposed to on the CI.
+      gh.support_tokenless_auth = true
 
       cork.puts "Running your Dangerfile against this PR - https://#{gh.host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
 
@@ -80,10 +83,6 @@ module Danger
       end
 
       cork.puts
-
-      # We can use tokenless here, as it's running on someone's computer
-      # and is IP locked, as opposed to on the CI.
-      gh.support_tokenless_auth = true
 
       begin
         gh.fetch_details
