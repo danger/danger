@@ -15,7 +15,7 @@ RSpec.describe Danger::LocalSetup do
     end
 
     it "exits when no applicable ci source was identified" do
-      dangerfile = FakeDangerfile.new(FakeEnv.new(nil), false)
+      dangerfile = FakeDangerfile.new(FakeEnv.new(nil, nil), false)
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
@@ -49,12 +49,31 @@ RSpec.describe Danger::LocalSetup do
     end
   end
 
-  class FakeDangerfile < Struct.new(:env, :verbose)
+  class FakeDangerfile
+    attr_reader :env
+    attr_accessor :verbose
+
+    def initialize(env, verbose)
+      @env = env
+      @verbose = verbose
+    end
   end
 
-  class FakeEnv < Struct.new(:ci_source, :request_source)
+  class FakeEnv
+    attr_reader :ci_source, :request_source
+
+    def initialize(ci_source, request_source)
+      @ci_source = ci_source
+      @request_source = request_source
+    end
   end
 
-  class FakeCiSource < Struct.new(:repo_slug, :pull_request_id)
+  class FakeCiSource
+    attr_reader :repo_slug, :pull_request_id
+
+    def initialize(repo_slug, pull_request_id)
+      @repo_slug = repo_slug
+      @pull_request_id = pull_request_id
+    end
   end
 end
