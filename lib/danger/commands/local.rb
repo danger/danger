@@ -77,7 +77,7 @@ module Danger
 
       cork.puts "Running your Dangerfile against this PR - https://#{gh.host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
 
-      if verbose != true
+      unless verbose
         cork.puts "Turning on --verbose"
         dm.verbose = true
       end
