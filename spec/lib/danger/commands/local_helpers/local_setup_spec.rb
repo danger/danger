@@ -48,13 +48,13 @@ RSpec.describe Danger::LocalSetup do
       expect(ui.string).not_to include("success")
     end
   end
-end
 
-class FakeDangerfile < Struct.new(:env, :verbose)
-end
+  class FakeDangerfile < Struct.new(:env, :verbose)
+  end
 
-class FakeEnv < Struct.new(:ci_source, :request_source)
-end
+  class FakeEnv < Struct.new(:ci_source, :request_source)
+  end
 
-class FakeCiSource < Struct.new(:repo_slug, :pull_request_id)
+  class FakeCiSource < Struct.new(:repo_slug, :pull_request_id)
+  end
 end
