@@ -1,4 +1,6 @@
 require "danger/commands/local_helpers/http_cache"
+require "danger/commands/local_helpers/dangerfile_evaluator"
+require "danger/commands/local_helpers/local_setup"
 require "faraday/http_cache"
 require "fileutils"
 require "octokit"
@@ -64,7 +66,7 @@ module Danger
       dm = Dangerfile.new(env, cork)
       dm.init_plugins
 
-      Something.new(dm, cork).do(verbose) do
+      LocalSetup.new(dm, cork).setup(verbose) do
         DangerfileLocalEvaluator
           .new(dm, Pathname.new(@dangerfile_path))
           .evaluate
@@ -82,66 +84,6 @@ module Danger
         builder.use Octokit::Response::RaiseError
         builder.adapter Faraday.default_adapter
       end
-    end
-  end
-
-  class DangerfileLocalEvaluator
-    def initialize(dm, dangerfile_path)
-      @dangerfile_path = dangerfile_path
-      @dm = dm
-    end
-
-    def evaluate
-      begin
-        @dm.env.fill_environment_vars
-        @dm.env.ensure_danger_branches_are_setup
-        @dm.env.scm.diff_for_folder(".", from: Danger::EnvironmentManager.danger_base_branch, to: Danger::EnvironmentManager.danger_head_branch)
-
-        @dm.parse(@dangerfile_path)
-        @dm.print_results
-      ensure
-        @dm.env.clean_up
-      end
-    end
-  end
-
-  class Something
-    attr_reader :dm, :cork
-
-    def initialize(dangerfile, cork)
-      @dm = dangerfile
-      @cork = cork
-    end
-
-    def do(verbose, &block)
-      source = dm.env.ci_source
-      if source.nil? or source.repo_slug.empty?
-        cork.puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
-        exit 0
-      end
-
-      gh = dm.env.request_source
-      # We can use tokenless here, as it's running on someone's computer
-      # and is IP locked, as opposed to on the CI.
-      gh.support_tokenless_auth = true
-
-      cork.puts "Running your Dangerfile against this PR - https://#{gh.host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
-
-      unless verbose
-        cork.puts "Turning on --verbose"
-        dm.verbose = true
-      end
-
-      cork.puts
-
-      begin
-        gh.fetch_details
-      rescue Octokit::NotFound
-        cork.puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through " + "DANGER_GITHUB_API_TOKEN".yellow + " environment variable."
-        return
-      end
-
-      yield
     end
   end
 end
