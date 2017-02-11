@@ -51,14 +51,21 @@ end
 # rubocop:disable Lint/NestedMethodDefinition
 def testing_ui
   @output = StringIO.new
+  @err = StringIO.new
+
   def @output.winsize
     [20, 9999]
   end
 
-  cork = Cork::Board.new(out: @output)
+  cork = Cork::Board.new(out: @output, err: @err)
   def cork.string
     out.string.gsub(/\e\[([;\d]+)?m/, "")
   end
+
+  def cork.err_string
+    err.string.gsub(/\e\[([;\d]+)?m/, "")
+  end
+
   cork
 end
 # rubocop:enable Lint/NestedMethodDefinition
