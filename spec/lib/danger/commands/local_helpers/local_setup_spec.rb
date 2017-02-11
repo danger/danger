@@ -9,9 +9,9 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      subject.setup(verbose: false) { ui.puts "success" }
+      subject.setup(verbose: false) { ui.puts "evaluated" }
       expect(ui.string).to include("Running your Dangerfile against this PR - https://github.com/danger/danger/pull/1337")
-      expect(ui.string).to include("success")
+      expect(ui.string).to include("evaluated")
     end
 
     it "exits when no applicable ci source was identified" do
@@ -20,10 +20,10 @@ RSpec.describe Danger::LocalSetup do
       subject = described_class.new(dangerfile, ui)
 
       expect do
-        subject.setup(verbose: false) { ui.puts "success" }
+        subject.setup(verbose: false) { ui.puts "evaluated" }
       end.to raise_error(SystemExit)
       expect(ui.string).to include("only works with GitHub")
-      expect(ui.string).not_to include("success")
+      expect(ui.string).not_to include("evaluated")
     end
 
     it "turns on verbose if arguments wasn't passed" do
@@ -45,9 +45,9 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      subject.setup(verbose: true) { ui.puts "success" }
+      subject.setup(verbose: true) { ui.puts "evaluated" }
       expect(ui.string).to include("was not found on GitHub")
-      expect(ui.string).not_to include("success")
+      expect(ui.string).not_to include("evaluated")
     end
   end
 
