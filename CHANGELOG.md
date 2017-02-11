@@ -3,6 +3,7 @@
 -* Add your own contribution below
 * Improved support for [Bitbucket Branch Source Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Bitbucket+Branch+Source+Plugin) - bartoszj
 * Refactoring of `danger local` and `danger pr` commands - hanneskaeufler
+* Fixes crash of `danger local` with github enterprise hosts - hanneskaeufler
 
 ## 4.2.1
 
