@@ -1,5 +1,4 @@
 require "danger/commands/local_helpers/http_cache"
-require "danger/commands/local_helpers/dangerfile_evaluator"
 require "danger/commands/local_helpers/local_setup"
 require "faraday/http_cache"
 require "fileutils"
@@ -64,12 +63,15 @@ module Danger
 
       env = EnvironmentManager.new(ENV, cork)
       dm = Dangerfile.new(env, cork)
-      dm.init_plugins
 
       LocalSetup.new(dm, cork).setup(verbose) do
-        DangerfileLocalEvaluator
-          .new(dm, Pathname.new(@dangerfile_path))
-          .evaluate
+        dm.run(
+          Danger::EnvironmentManager.danger_base_branch,
+          Danger::EnvironmentManager.danger_head_branch,
+          @dangerfile_path,
+          nil,
+          nil
+        )
       end
     end
 

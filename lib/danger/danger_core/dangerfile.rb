@@ -274,7 +274,7 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
-        post_results(danger_id, new_comment)
+        post_results(danger_id, new_comment) unless danger_id.nil?
 
         # Print results in the terminal
         print_results
