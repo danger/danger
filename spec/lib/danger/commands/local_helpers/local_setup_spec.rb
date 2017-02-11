@@ -9,7 +9,7 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      subject.setup(false) { ui.puts "success" }
+      subject.setup(verbose: false) { ui.puts "success" }
       expect(ui.string).to include("Running your Dangerfile against this PR - https://github.com/danger/danger/pull/1337")
       expect(ui.string).to include("success")
     end
@@ -19,7 +19,9 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      expect { subject.setup(false) { ui.puts "success" } }.to raise_error(SystemExit)
+      expect do
+        subject.setup(verbose: false) { ui.puts "success" }
+      end.to raise_error(SystemExit)
       expect(ui.string).to include("only works with GitHub")
       expect(ui.string).not_to include("success")
     end
@@ -31,7 +33,7 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      subject.setup(false) {}
+      subject.setup(verbose: false) {}
       expect(ui.string).to include("Turning on --verbose")
     end
 
@@ -43,7 +45,7 @@ RSpec.describe Danger::LocalSetup do
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
 
-      subject.setup(true) { ui.puts "success" }
+      subject.setup(verbose: true) { ui.puts "success" }
       expect(ui.string).to include("was not found on GitHub")
       expect(ui.string).not_to include("success")
     end

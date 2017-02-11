@@ -64,7 +64,7 @@ module Danger
       env = EnvironmentManager.new(ENV, cork)
       dm = Dangerfile.new(env, cork)
 
-      LocalSetup.new(dm, cork).setup(verbose) do
+      LocalSetup.new(dm, cork).setup(verbose: verbose) do
         dm.run(
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,

@@ -7,7 +7,7 @@ module Danger
       @cork = cork
     end
 
-    def setup(verbose)
+    def setup(verbose: false)
       source = dm.env.ci_source
       if source.nil? or source.repo_slug.empty?
         cork.puts "danger local failed because it only works with GitHub projects at the moment. Sorry.".red
