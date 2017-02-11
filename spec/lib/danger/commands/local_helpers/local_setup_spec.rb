@@ -1,10 +1,12 @@
 require "octokit"
 
 RSpec.describe Danger::LocalSetup do
+  let(:ci_source) { FakeCiSource.new("danger/danger", "1337") }
+
   describe "#setup" do
     it "informs the user and runs the block" do
       github = double(:host => "github.com", :support_tokenless_auth= => nil, :fetch_details => nil)
-      env = FakeEnv.new(FakeCiSource.new("danger/danger", "1337"), github)
+      env = FakeEnv.new(ci_source, github)
       dangerfile = FakeDangerfile.new(env, false)
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
@@ -28,7 +30,7 @@ RSpec.describe Danger::LocalSetup do
 
     it "turns on verbose if arguments wasn't passed" do
       github = double(:host => "", :support_tokenless_auth= => nil, :fetch_details => nil)
-      env = FakeEnv.new(FakeCiSource.new("danger/danger", "123"), github)
+      env = FakeEnv.new(ci_source, github)
       dangerfile = FakeDangerfile.new(env, false)
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
@@ -37,10 +39,10 @@ RSpec.describe Danger::LocalSetup do
       expect(ui.string).to include("Turning on --verbose")
     end
 
-    it "does not evaluate Dangerfile if local repo was not found on github" do
+    it "does not evaluate Dangerfile if local repo wasn't found on github" do
       github = double(:host => "", :support_tokenless_auth= => nil)
       allow(github).to receive(:fetch_details).and_raise(Octokit::NotFound.new)
-      env = FakeEnv.new(FakeCiSource.new("danger/danger", "123"), github)
+      env = FakeEnv.new(ci_source, github)
       dangerfile = FakeDangerfile.new(env, false)
       ui = testing_ui
       subject = described_class.new(dangerfile, ui)
