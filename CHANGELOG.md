@@ -2,6 +2,7 @@
 
 -* Add your own contribution below
 * Improved support for [Bitbucket Branch Source Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Bitbucket+Branch+Source+Plugin) - bartoszj
+* Refactoring of `danger local` command - hanneskaeufler
 
 ## 4.2.1
 
