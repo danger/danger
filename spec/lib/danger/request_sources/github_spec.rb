@@ -149,6 +149,18 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           end
         end
       end
+
+      context "when running against github enterprise which doesn't support reviews" do
+        it "returns an unsupported review instance" do
+          allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_raise(Octokit::NotFound)
+
+          review = @g.review
+          expect(review).to respond_to(
+            :id, :body, :status, :review_json, :start, :submit, :message, :warn,
+            :fail, :markdown
+          )
+        end
+      end
     end
 
     describe "status message" do
