@@ -1,6 +1,8 @@
 ## master
 
--* Add your own contribution below
+* Add your own contribution below
+
+* Minor changes to the danger Gemfile - orta
 
 * Fix inline comment url when using github enterprise - leonhartX 
 * Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
