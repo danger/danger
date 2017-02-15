@@ -9,7 +9,7 @@ if RUBY_VERSION == "2.3.1"
 end
 
 # This should get removed when > 3.7.0 comes out
-gem "gitlab", git: "https://github.com/NARKOZ/gitlab.git", branch: "master"
+gem "gitlab", git: "https://github.com/NARKOZ/gitlab.git", branch: "master", :ref => "0cc49d008c6448d652fa27b3f9b3f60202dffab3"
 
 gem "danger-junit", "~> 0.5"
 gem "rspec_junit_formatter", git: "https://github.com/JuanitoFatas/rspec_junit_formatter.git", branch: "dump-rspec_junit_formatter-failed-examples"
