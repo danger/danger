@@ -1,6 +1,7 @@
 ## master
 
 -* Add your own contribution below
+* Fix inline comment url when using github enterprise
 
 ## 4.2.2
 
