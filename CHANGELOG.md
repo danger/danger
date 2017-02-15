@@ -1,6 +1,7 @@
 ## master
 
 -* Add your own contribution below
+* pin then gitlab gem to a known good version - hanneskaeufler
 
 ## 4.2.2
 
