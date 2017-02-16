@@ -210,7 +210,21 @@ RSpec.describe Danger::Jenkins do
         valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.git"
 
         expect(source.repo_slug).to eq("danger/danger")
+
       end
+
+      it "get out a repo slug from a repo with dot in name" do
+        valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.test.git"
+
+        expect(source.repo_slug).to eq("danger/danger.test")
+      end
+
+      it "get out a repo slug from a repo with .git in name" do
+        valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.git.git"
+
+        expect(source.repo_slug).to eq("danger/danger.git")
+      end
+
 
       it "gets out a repo slug from a BitBucket Server" do
         valid_env["CHANGE_URL"] = "https://bitbucket.example.com/projects/DANGER/repos/danger/pull-requests/1/overview"
