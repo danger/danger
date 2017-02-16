@@ -332,7 +332,7 @@ module Danger
 
       def find_position_in_diff(diff_lines, message)
         range_header_regexp = /@@ -([0-9]+),([0-9]+) \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
-        file_header_regexp = %r{ a/.*}
+        file_header_regexp = %r{^diff --git a/.*}
 
         pattern = "+++ b/" + message.file + "\n"
         file_start = diff_lines.index(pattern)
@@ -343,6 +343,9 @@ module Danger
         file_line = nil
 
         diff_lines.drop(file_start).each do |line|
+          # If we found the start of another file diff, we went too far
+          break if line.match file_header_regexp
+
           match = line.match range_header_regexp
 
           # file_line is set once we find the hunk the line is in
@@ -358,9 +361,6 @@ module Danger
           position += 1
 
           next unless match
-
-          # If we found the start of another file diff, we went too far
-          break if line.match file_header_regexp
 
           range_start = match[:start].to_i
           if match[:end]
