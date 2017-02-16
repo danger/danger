@@ -1,6 +1,7 @@
 ## master
 
 -* Add your own contribution below
+* Fix find wrong diff position for inline comment
 
 ## 4.2.2
 
