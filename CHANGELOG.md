@@ -1,7 +1,9 @@
 ## master
 
 -* Add your own contribution below
+
 * Fix find wrong diff position for inline comment
+* gitlab project names dont need to be urlencoded anymore - hanneskaeufler
 
 ## 4.2.2
 
