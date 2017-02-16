@@ -3,6 +3,9 @@
 -* Add your own contribution below
 * Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
 
+* Fix find wrong diff position for inline comment
+* gitlab project names dont need to be urlencoded anymore - hanneskaeufler
+
 ## 4.2.2
 
 * Improved support for [Bitbucket Branch Source Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Bitbucket+Branch+Source+Plugin) - bartoszj
