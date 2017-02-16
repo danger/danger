@@ -1,6 +1,7 @@
 ## master
 
 -* Add your own contribution below
+* Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
 
 ## 4.2.2
 
