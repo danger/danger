@@ -67,7 +67,7 @@ module Danger
         self.repo_slug = "#{repo_matches[1]}/#{repo_matches[2]}"
       else
         repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/]+)$})
-        self.repo_slug = repo_matches[2].gsub(%r{\.git$}, "") unless repo_matches.nil?
+        self.repo_slug = repo_matches[2].gsub(/\.git$/, "") unless repo_matches.nil?
       end
     end
 
