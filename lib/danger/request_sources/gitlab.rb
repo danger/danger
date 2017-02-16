@@ -66,20 +66,16 @@ module Danger
 
       def mr_comments
         @comments ||= begin
-          client.merge_request_comments(escaped_ci_slug, ci_source.pull_request_id)
+          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
             .map { |comment| Comment.from_gitlab(comment) }
         end
       end
 
       def mr_diff
         @mr_diff ||= begin
-          client.merge_request_changes(escaped_ci_slug, ci_source.pull_request_id)
+          client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
             .changes.map { |change| change["diff"] }.join("\n")
         end
-      end
-
-      def escaped_ci_slug
-        @escaped_ci_slug ||= CGI.escape(ci_source.repo_slug)
       end
 
       def setup_danger_branches
@@ -96,8 +92,8 @@ module Danger
       end
 
       def fetch_details
-        self.mr_json = client.merge_request(escaped_ci_slug, self.ci_source.pull_request_id)
-        self.commits_json = client.merge_request_commits(escaped_ci_slug, self.ci_source.pull_request_id)
+        self.mr_json = client.merge_request(ci_source.repo_slug, self.ci_source.pull_request_id)
+        self.commits_json = client.merge_request_commits(ci_source.repo_slug, self.ci_source.pull_request_id)
         self.ignored_violations = ignored_violations_from_pr
       end
 
@@ -131,12 +127,12 @@ module Danger
 
           if editable_comments.empty?
             client.create_merge_request_comment(
-              escaped_ci_slug, ci_source.pull_request_id, body
+              ci_source.repo_slug, ci_source.pull_request_id, body
             )
           else
             original_id = editable_comments.first.id
             client.edit_merge_request_comment(
-              escaped_ci_slug, ci_source.pull_request_id, original_id, body
+              ci_source.repo_slug, ci_source.pull_request_id, original_id, body
             )
           end
         end
@@ -147,7 +143,7 @@ module Danger
           next unless comment.generated_by_danger?(danger_id)
           next if comment.id == except
           client.delete_merge_request_comment(
-            escaped_ci_slug,
+            ci_source.repo_slug,
             ci_source.pull_request_id,
             comment.id
           )

@@ -1,7 +1,12 @@
 ## master
 
 -* Add your own contribution below
-* Fix inline comment url when using github enterprise
+
+* Fix inline comment url when using github enterprise - leonhartX 
+* Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
+
+* Fix find wrong diff position for inline comment - leonhartX 
+* gitlab project names dont need to be urlencoded anymore - hanneskaeufler
 
 ## 4.2.2
 
