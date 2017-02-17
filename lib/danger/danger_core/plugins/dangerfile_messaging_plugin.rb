@@ -16,6 +16,9 @@ module Danger
   # via the return value for the danger command. If you have linters with errors for this call
   # you can use `messaging.fail` instead.
   #
+  # You can optionally add `file` and `line` to provide inline feedback on a PR in GitHub, note that
+  # only feedback inside the PR's diff will show up inline. Others will appear inside the main comment.
+  #
   # It is possible to have Danger ignore specific warnings or errors by writing `Danger: Ignore "[warning/error text]"`.
   #
   # Sidenote: Messaging is the only plugin which adds functions to the root of the Dangerfile.
