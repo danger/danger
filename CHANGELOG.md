@@ -7,6 +7,8 @@
 
 * Fix find wrong diff position for inline comment - leonhartX 
 * gitlab project names dont need to be urlencoded anymore - hanneskaeufler
+* Fix inline comment failed to fall back when there is only inline comments - leonhartX
+* Fix only inline markdown comments will fall back to main comment even in diff's range - leonhartX
 
 ## 4.2.2
 

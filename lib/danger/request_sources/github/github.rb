@@ -134,12 +134,6 @@ module Danger
           previous_violations = parse_comment(last_comment.body)
         end
 
-        main_violations = (warnings + errors + messages + markdowns).reject(&:inline?)
-        if previous_violations.empty? && main_violations.empty?
-          # Just remove the comment, if there's nothing to say.
-          delete_old_comments!(danger_id: danger_id)
-        end
-
         cmp = proc do |a, b|
           next -1 unless a.file
           next 1 unless b.file
@@ -161,6 +155,12 @@ module Danger
                                 markdowns: comment_markdowns,
                       previous_violations: previous_violations,
                                 danger_id: danger_id)
+
+        main_violations = comment_warnings + comment_errors + comment_messages + comment_markdowns
+        if previous_violations.empty? && main_violations.empty?
+          # Just remove the comment, if there's nothing to say.
+          delete_old_comments!(danger_id: danger_id)
+        end
 
         # If there are still violations to show
         unless main_violations.empty?
@@ -232,7 +232,7 @@ module Danger
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
         # Avoid doing any fetchs if there's no inline comments
-        return if (warnings + errors + messages).select(&:inline?).empty?
+        return if (warnings + errors + messages + markdowns).select(&:inline?).empty?
 
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
