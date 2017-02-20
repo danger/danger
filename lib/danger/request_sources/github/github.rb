@@ -12,7 +12,7 @@ module Danger
     class GitHub < RequestSource
       include Danger::Helpers::CommentsHelper
 
-      attr_accessor :pr_json, :issue_json, :support_tokenless_auth
+      attr_accessor :pr_json, :issue_json, :support_tokenless_auth, :dismiss_out_of_range_messages
 
       def self.env_vars
         ["DANGER_GITHUB_API_TOKEN"]
@@ -282,8 +282,8 @@ module Danger
 
           position = find_position_in_diff diff_lines, m
 
-          # Keep the change if it's line is not in the diff
-          next false if position.nil?
+          # Keep the change if it's line is not in the diff and not in dismiss mode
+          next self.dismiss_out_of_range_messages if position.nil?
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content

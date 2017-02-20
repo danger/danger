@@ -9,6 +9,7 @@
 * gitlab project names dont need to be urlencoded anymore - hanneskaeufler
 * Fix inline comment failed to fall back when there is only inline comments - leonhartX
 * Fix only inline markdown comments will fall back to main comment even in diff's range - leonhartX
+* Add `dismiss_out_of_range_messages` option to `github` plugin to support inline comment only - leonhartX
 
 ## 4.2.2
 
