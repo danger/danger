@@ -2,17 +2,20 @@
 
 * Add your own contribution below
 
-* Minor changes to the danger Gemfile - orta
+## 4.3.0
 
+* Minor changes to the danger Gemfile - orta
 * Make danger pr & local commands recognize -h to print help - Juanito Fatas
 * Fix inline comment url when using github enterprise - leonhartX
 * Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
-
+* Fix find wrong diff position for inline comment - leonhartX
+* Add `dismiss_out_of_range_messages` option to `github` plugin to support inline comments only, instead of moving them into the main comment - leonhartX
+* Fix inline comment url when using github enterprise - leonhartX
+* Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
 * Fix find wrong diff position for inline comment - leonhartX
 * gitlab project names dont need to be urlencoded anymore - hanneskaeufler
 * Fix inline comment failed to fall back when there is only inline comments - leonhartX
 * Fix only inline markdown comments will fall back to main comment even in diff's range - leonhartX
-* Add `dismiss_out_of_range_messages` option to `github` plugin to support inline comment only - leonhartX
 
 ## 4.2.2
 
