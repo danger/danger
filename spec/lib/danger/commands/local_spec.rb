@@ -1,6 +1,19 @@
 require "danger/commands/local"
+require "open3"
 
 RSpec.describe Danger::Local do
+  context "prints help" do
+    it "danger local --help flag prints help" do
+      stdout, = Open3.capture3("danger local -h")
+      expect(stdout).to include "Usage"
+    end
+
+    it "danger local -h prints help" do
+      stdout, = Open3.capture3("danger local -h")
+      expect(stdout).to include "Usage"
+    end
+  end
+
   describe ".options" do
     it "contains extra options for local command" do
       result = described_class.options

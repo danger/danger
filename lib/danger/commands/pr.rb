@@ -19,9 +19,15 @@ module Danger
     end
 
     def initialize(argv)
+      show_help = true if argv.arguments == ["-h"]
+
       @pr_url = argv.shift_argument
       @clear_http_cache = argv.flag?("clear-http-cache", false)
       dangerfile = argv.option("dangerfile", "Dangerfile")
+
+      # Currently CLAide doesn't support short option like -h https://github.com/CocoaPods/CLAide/pull/60
+      # when user pass in -h, mimic the behavior of passing in --help.
+      argv = CLAide::ARGV.new ["--help"] if show_help
 
       super
 

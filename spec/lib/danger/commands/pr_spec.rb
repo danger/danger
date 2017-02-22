@@ -1,6 +1,19 @@
 require "danger/commands/pr"
+require "open3"
 
 RSpec.describe Danger::PR do
+  context "prints help" do
+    it "danger pr --help flag prints help" do
+      stdout, = Open3.capture3("danger pr -h")
+      expect(stdout).to include "Usage"
+    end
+
+    it "danger pr -h prints help" do
+      stdout, = Open3.capture3("danger pr -h")
+      expect(stdout).to include "Usage"
+    end
+  end
+
   describe ".summary" do
     it "returns the summary for PR command" do
       result = described_class.summary
