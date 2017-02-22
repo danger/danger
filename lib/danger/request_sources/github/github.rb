@@ -26,6 +26,7 @@ module Danger
         self.ci_source = ci_source
         self.environment = environment
         self.support_tokenless_auth = false
+        self.dismiss_out_of_range_messages = false
 
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
       end

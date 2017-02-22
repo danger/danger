@@ -224,10 +224,10 @@ module Danger
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
-    # @!group Github Misc
-    # Tell github to ingore any inline message whihc is not in diff's range, not post as main comment.
+    # @!group GitHub Misc
+    # Use to ignore inline messages which lay outside a diff's range, thereby not posting them in the main comment.
     # @param    [Bool] dismiss
-    #           Ingore out of range inline messages, defaults to `true`
+    #           Ignore out of range inline messages, defaults to `true`
     #
     # @return   [void]
     def dismiss_out_of_range_messages(dismiss: true)
