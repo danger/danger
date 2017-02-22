@@ -160,7 +160,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           messages: violations(["Test message"]),
           template: "gitlab"
         )
-        stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes").with(
+        stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes").with(
           body: "body=#{ERB::Util.url_encode(body)}",
           headers: expected_headers
         ).to_return(status: 200, body: "", headers: {})
@@ -195,7 +195,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             },
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
             body: "body=#{ERB::Util.url_encode(body)}",
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
@@ -214,7 +214,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             messages: violations(["Test message"]),
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
             body: "body=#{ERB::Util.url_encode(body)}",
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
@@ -239,7 +239,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         it "removes the previous danger comment if there are no new messages" do
-          stub_request(:delete, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:delete, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
             headers: expected_headers
           )
 
