@@ -121,4 +121,4 @@ Style/MultilineMethodCallIndentation:
 
 # FIXME: 25
 Metrics/BlockLength:
-  Max: 31
+  Max: 345
