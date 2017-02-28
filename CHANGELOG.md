@@ -1,6 +1,7 @@
 ## master
 
 * Add your own contribution below
+* Fix find inline comment position at the last line of diff - leonhartX
 
 ## 4.3.0
 
