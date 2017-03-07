@@ -353,7 +353,10 @@ module Danger
           # we need to count how many lines in new file we have
           # so we do it one by one ignoring the deleted lines
           if !file_line.nil? && !line.start_with?("-")
-            break if file_line == message.line
+            if file_line == message.line
+              file_line = nil if dismiss_out_of_range_messages && !line.start_with("+")
+              break
+            end
             file_line += 1
           end
 
