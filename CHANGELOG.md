@@ -2,6 +2,7 @@
 
 * Add your own contribution below
 * Fix find inline comment position at the last line of diff - leonhartX
+* Add inline comments to changed lines only when `dismiss_out_of_range_message` is enabled - leonhartX
 
 ## 4.3.0
 
