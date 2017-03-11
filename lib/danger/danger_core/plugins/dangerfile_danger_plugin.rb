@@ -19,7 +19,7 @@ module Danger
   #
   # @example Run a Dangerfile from inside a sub-folder
   #
-  #          danger.import_dangerfile(file: "danger/Dangerfile.private")
+  #          danger.import_dangerfile(path: "path/to/Dangerfile")
   #
   # @example Run a Dangerfile from inside a gem
   #
