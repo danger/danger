@@ -1,6 +1,9 @@
 ## master
 
 * Add your own contribution below
+
+## 4.3.1
+
 * Fix find inline comment position at the last line of diff - leonhartX
 * Add inline comments to changed lines only when `dismiss_out_of_range_message` is enabled - leonhartX
 * Add documentation for [buddybuild](https://www.buddybuild.com) - sunshinejr
