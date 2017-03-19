@@ -7,6 +7,7 @@ RSpec.describe Danger::CI do
         [
           "Danger::LocalGitRepo",
           "Danger::Bitrise",
+          "Danger::Buddybuild",
           "Danger::Buildkite",
           "Danger::CircleCI",
           "Danger::Drone",
