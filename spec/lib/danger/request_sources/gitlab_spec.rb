@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "erb"
 
 require "danger/request_sources/gitlab"

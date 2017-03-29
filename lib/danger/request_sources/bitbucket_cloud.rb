@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_cloud_api"
 

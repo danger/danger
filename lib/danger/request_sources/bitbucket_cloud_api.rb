@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/helpers/comments_helper"
 
 module Danger

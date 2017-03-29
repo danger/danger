@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 
@@ -36,7 +37,6 @@ module Danger
         params[:endpoint] = endpoint
 
         @client ||= Gitlab.client(params)
-
       rescue LoadError
         puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
         puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"

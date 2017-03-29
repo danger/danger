@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "octokit"
 require "danger/ci_source/ci_source"
 require "danger/request_sources/github/octokit_pr_review"
