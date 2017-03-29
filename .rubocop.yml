@@ -131,3 +131,6 @@ Style/FileName:
 
 Style/IndentHeredoc:
   Enabled: false
+
+Style/SpecialGlobalVars:
+  Enabled: false
