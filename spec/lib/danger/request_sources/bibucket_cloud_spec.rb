@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/request_sources/bitbucket_cloud"
 
 RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do

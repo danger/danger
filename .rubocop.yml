@@ -122,3 +122,12 @@ Style/MultilineMethodCallIndentation:
 # FIXME: 25
 Metrics/BlockLength:
   Max: 345
+
+Style/MixinGrouping:
+  Enabled: false
+
+Style/FileName:
+  Enabled: false
+
+Style/IndentHeredoc:
+  Enabled: false

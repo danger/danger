@@ -207,7 +207,7 @@ module Danger
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
-    [:title, :body, :author, :labels, :json, :diff].each do |suffix|
+    %i(title body author labels json diff).each do |suffix|
       alias_method "pr_#{suffix}".to_sym, "mr_#{suffix}".to_sym
     end
 

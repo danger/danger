@@ -16,7 +16,7 @@ RSpec.describe Danger::PluginParser do
     classes = parser.classes_in_file
 
     class_syms = classes.map(&:name)
-    expect(class_syms).to eq [:Dangerfile, :ExampleBroken]
+    expect(class_syms).to eq %i(Dangerfile ExampleBroken)
   end
 
   it "skips non-subclasses of Danger::Plugin" do

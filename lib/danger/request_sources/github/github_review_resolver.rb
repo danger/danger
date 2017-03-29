@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/request_sources/github/github_review"
 
 module Danger

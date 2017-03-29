@@ -1,4 +1,5 @@
 # coding: utf-8
+
 module Danger
   module RequestSources
     module GitHubSource

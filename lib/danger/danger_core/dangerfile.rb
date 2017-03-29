@@ -212,7 +212,7 @@ module Danger
       return if (violations[:errors] + violations[:warnings] + violations[:messages] + status[:markdowns]).count.zero?
 
       ui.section("Results:") do
-        [:errors, :warnings, :messages].each do |key|
+        %i(errors warnings messages).each do |key|
           formatted = key.to_s.capitalize + ":"
           title = case key
                   when :errors

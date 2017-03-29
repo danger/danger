@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require "danger/plugin_support/plugin"
 
 module Danger
