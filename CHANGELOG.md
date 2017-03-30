@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.3.2
+
+* Change from `git fetch --unshallow` to `git fetch --depth=1000000` - Juanito Fatas
+
 ## 4.3.1
 
 * Fix find inline comment position at the last line of diff - leonhartX
@@ -91,7 +95,6 @@
 
 * Fixed --new-comment not working with Bitbucket - Bruno Rocha
 * Adjust GitHub comment output for new Markdown parser - Yuki Izumi
-* Change from git fetch --unshallow to git fetch --depth=1000000 - Juanito Fatas
 
 ## 4.0.0
 
