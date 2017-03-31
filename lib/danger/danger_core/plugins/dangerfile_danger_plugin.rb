@@ -70,6 +70,7 @@ module Danger
     # @option opts [String] :gitlab GitLab repo
     # @option opts [String] :gem Gem name
     # @option opts [String] :path Path to Dangerfile
+    # @option opts [String] :url URL to Dangerfile
     # @return   [void]
     def import_dangerfile(opts)
       if opts.kind_of?(String)
@@ -80,6 +81,8 @@ module Danger
           import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
+        elsif opts.key?(:url)
+          import_dangerfile_from_url(opts[:url])
         elsif opts.key?(:gem)
           import_dangerfile_from_gem(opts[:gem])
         else
@@ -123,6 +126,19 @@ module Danger
       raise "`import_dangerfile_from_path` requires a string" unless path.kind_of?(String)
       local_path = File.join(path, "Dangerfile")
       @dangerfile.parse(Pathname.new(local_path))
+    end
+
+    # @!group Danger
+    # Read and execute a remote Dangerfile.
+    #
+    # @param    [String] url
+    #           An URL to a Dangerfile.
+    # @return   [void]
+    #
+    def import_dangerfile_from_url(url)
+      raise "`import_dangerfile_from_url` requires a string" unless url.kind_of?(String)
+      path = download(url)
+      @dangerfile.parse(Pathname.new(path))
     end
 
     # @!group Danger
