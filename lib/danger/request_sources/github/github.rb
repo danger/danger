@@ -416,9 +416,10 @@ module Danger
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
-      def file_url(organisation: nil, repository: nil, branch: "master", path: nil)
+      def file_url(organisation: nil, repository: nil, branch: "master", path: nil, rawhost: "https://raw.githubusercontent.com")
+        #"https://githubext.deere.com/raw"
         organisation ||= self.organisation
-        "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+        "#{rawhost}/#{organisation}/#{repository}/#{branch}/#{path}"
       end
     end
   end

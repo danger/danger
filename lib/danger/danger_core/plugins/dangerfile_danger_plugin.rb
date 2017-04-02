@@ -71,7 +71,7 @@ module Danger
     # @option opts [String] :gem Gem name
     # @option opts [String] :path Path to Dangerfile
     # @option opts [String] :url URL to Dangerfile
-    # @option opts [String] :git Git URL to Dangerfile
+    # @option opts [String] :host GitHub host
     # @return   [void]
     def import_dangerfile(opts)
       if opts.kind_of?(String)
@@ -79,7 +79,7 @@ module Danger
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
         if opts.key?(:github) || opts.key?(:gitlab)
-          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path])
+          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path], opts[:host])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:url)
@@ -170,29 +170,10 @@ module Danger
     #           The path at the repo where Dangerfile is.
     # @return   [void]
     #
-    def import_dangerfile_from_github(slug, branch = nil, path = nil)
+    def import_dangerfile_from_github(slug, branch = nil, path = nil, host = nil)
       raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
       org, repo = slug.split("/")
-      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch || "master", path: path || "Dangerfile")
-      local_path = download(download_url)
-      @dangerfile.parse(Pathname.new(local_path))
-    end
-
-    # @!group Danger
-    # Download and execute a remote Dangerfile from Git.
-    #
-    # @param    [String] url
-    #           A URL that represents the repo where the Dangerfile is.
-    # @param    [String] branch
-    #           A branch from repo where the Dangerfile is.
-    # @param    [String] path
-    #           The path at the repo where Dangerfile is.
-    # @return   [void]
-    #
-    def import_dangerfile_from_git(url, branch = nil, path = nil)
-      raise "`import_dangerfile_from_git` requires a string" unless url.kind_of?(String)
-      #TODO: Implement me
-      download_url = env.request_source.file_url(url, branch: branch || "master", path: path || "Dangerfile")
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch || "master", path: path || "Dangerfile", rawhost: host)
       local_path = download(download_url)
       @dangerfile.parse(Pathname.new(local_path))
     end
