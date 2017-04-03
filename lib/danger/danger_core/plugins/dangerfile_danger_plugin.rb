@@ -71,7 +71,6 @@ module Danger
     # @option opts [String] :gem Gem name
     # @option opts [String] :path Path to Dangerfile
     # @option opts [String] :url URL to Dangerfile
-    # @option opts [String] :host GitHub host
     # @return   [void]
     def import_dangerfile(opts)
       if opts.kind_of?(String)
@@ -79,11 +78,9 @@ module Danger
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
         if opts.key?(:github) || opts.key?(:gitlab)
-          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path], opts[:host])
+          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
-        elsif opts.key?(:url)
-          import_dangerfile_from_url(opts[:url])
         elsif opts.key?(:gem)
           import_dangerfile_from_gem(opts[:gem])
         elsif opts.key?(:git)
@@ -170,10 +167,10 @@ module Danger
     #           The path at the repo where Dangerfile is.
     # @return   [void]
     #
-    def import_dangerfile_from_github(slug, branch = nil, path = nil, host = nil)
+    def import_dangerfile_from_github(slug, branch = nil, path = nil)
       raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
       org, repo = slug.split("/")
-      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch || "master", path: path || "Dangerfile", rawhost: host)
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
       @dangerfile.parse(Pathname.new(local_path))
     end

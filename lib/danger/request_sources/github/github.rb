@@ -416,11 +416,20 @@ module Danger
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
-      def file_url(organisation: nil, repository: nil, branch: "master", path: nil, rawhost: "https://raw.githubusercontent.com")
-        #"https://githubext.deere.com/raw"
+      def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         organisation ||= self.organisation
-        "#{rawhost}/#{organisation}/#{repository}/#{branch}/#{path}"
+
+        return @download_url unless @download_url.nil?
+        begin
+          contents = client.contents(repo: "#{organisation}/#{repository}", :path => path, :ref => branch)
+          @download_url = contents["download_url"]
+
+          # fallback
+          content_host = host ? "https://#{host}/raw" : "https://raw.githubusercontent.com"
+          @download_url ||= "#{content_host}/#{organisation}/#{repository}/#{branch}/#{path}"
+        end
       end
+
     end
   end
 end
