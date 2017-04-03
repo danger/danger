@@ -426,11 +426,11 @@ module Danger
           contents = client.contents("#{organisation}/#{repository}", :path => path, :ref => branch)
           @download_url = contents["download_url"]
 
-          # Fallback
-          @download_url ||= "https://raw.githubusercontent.com/#{organisation}/#{repository}/master/#{path}"
+          # Fallback to github.com
+          branch ||= "master"
+          @download_url ||= "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
         end
       end
-
     end
   end
 end
