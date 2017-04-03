@@ -419,14 +419,15 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         organisation ||= self.organisation
 
+        puts "request Dangerfile in #{organisation}/#{repository}/#{path}"
+
         return @download_url unless @download_url.nil?
         begin
-          contents = client.contents(repo: "#{organisation}/#{repository}", :path => path, :ref => branch)
+          contents = client.contents("#{organisation}/#{repository}", :path => path, :ref => branch)
           @download_url = contents["download_url"]
 
-          # fallback
-          content_host = host ? "https://#{host}/raw" : "https://raw.githubusercontent.com"
-          @download_url ||= "#{content_host}/#{organisation}/#{repository}/#{branch}/#{path}"
+          # Fallback
+          @download_url ||= "https://raw.githubusercontent.com/#{organisation}/#{repository}/master/#{path}"
         end
       end
 
