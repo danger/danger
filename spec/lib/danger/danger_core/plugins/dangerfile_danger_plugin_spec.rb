@@ -54,6 +54,10 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
   end
 
   describe "#import_dangerfile" do
+    before do
+      stub_request(:get, "https://api.github.com/example/example/contents/Dangerfile").to_return status: 200
+    end
+
     it "defaults to org/repo and warns of deprecation" do
       outer_dangerfile = "danger.import_dangerfile('example/example')"
       inner_dangerfile = "message('OK')"
