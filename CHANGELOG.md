@@ -4,7 +4,7 @@
 
 ## 4.3.3
 
-* Add actual file URL to `danger.import_dangerfile(github:)` (supports private repositories and GitHub Enterprise now)
+* `danger.import_dangerfile(github:)` now supports private repositories and GitHub Enterprise - hotbott
 
 
 ## 4.3.2
