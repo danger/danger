@@ -234,7 +234,7 @@ module Danger
       @github.dismiss_out_of_range_messages = dismiss == true
     end
 
-    %i(title body author labels json).each do |suffix|
+    %i[title body author labels json].each do |suffix|
       alias_method "mr_#{suffix}".to_sym, "pr_#{suffix}".to_sym
     end
 

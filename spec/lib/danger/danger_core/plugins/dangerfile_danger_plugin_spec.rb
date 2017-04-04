@@ -62,8 +62,8 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       download_url_custom = "https://raw.githubusercontent.com/example/example/custom-branch/path/to/Dangerfile"
       mock_dangerfile = "message('OK')"
 
-      stub_request(:get, api_url).to_return(:status => 404)
-      stub_request(:get, api_url_custom).to_return(:status => 404)
+      stub_request(:get, api_url).to_return(status: 404)
+      stub_request(:get, api_url_custom).to_return(status: 404)
       stub_request(:get, download_url).to_return(status: 200, body: mock_dangerfile)
       stub_request(:get, download_url_custom).to_return(status: 200, body: mock_dangerfile)
     end

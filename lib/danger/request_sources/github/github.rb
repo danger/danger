@@ -422,7 +422,7 @@ module Danger
         return @download_url unless @download_url.nil?
         begin
           # Retrieve the download URL (default branch on nil param)
-          contents = client.contents("#{organisation}/#{repository}", :path => path, :ref => branch)
+          contents = client.contents("#{organisation}/#{repository}", path: path, ref: branch)
           @download_url = contents["download_url"]
         rescue Octokit::ClientError
           # Fallback to github.com
