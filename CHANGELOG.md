@@ -2,6 +2,11 @@
 
 * Add your own contribution below
 
+## 4.3.3
+
+* Add actual file URL to `danger.import_dangerfile(github:)` (supports private repositories and GitHub Enterprise now)
+
+
 ## 4.3.2
 
 * Change from `git fetch --unshallow` to `git fetch --depth=1000000` - Juanito Fatas
