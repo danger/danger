@@ -420,14 +420,17 @@ module Danger
         organisation ||= self.organisation
 
         return @download_url unless @download_url.nil?
-        begin
-          contents = client.contents("#{organisation}/#{repository}", :path => path, :ref => branch)
-          @download_url = contents["download_url"]
-
-        rescue
-          branch ||= "master"
-          @download_url ||= "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
-        end
+          begin
+            # Call the contents endpoint (default branch on nil param)
+            contents = client.contents("#{organisation}/#{repository}", :path => path, :ref => branch)
+          rescue Octokit::ClientError
+            # Fallback to github.com
+            branch ||= "master"
+            @download_url = "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+          else
+            # Get the download URL
+            @download_url = contents["download_url"]
+          end
       end
     end
   end
