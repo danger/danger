@@ -154,7 +154,7 @@ module Danger
     def import_dangerfile_from_github(slug, branch = nil, path = nil)
       raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
       org, repo = slug.split("/")
-      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch || "master", path: path || "Dangerfile")
+      download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
       @dangerfile.parse(Pathname.new(local_path))
     end

@@ -2,6 +2,11 @@
 
 * Add your own contribution below
 
+## 4.3.3
+
+* `danger.import_dangerfile(github:)` now supports private repositories and GitHub Enterprise - hotbott
+
+
 ## 4.3.2
 
 * Change from `git fetch --unshallow` to `git fetch --depth=1000000` - Juanito Fatas

@@ -98,18 +98,26 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
     end
 
     describe "#file_url" do
+      before do
+        contents_response = JSON.parse(fixture("github_api/contents_response"))
+        allow(@g.client).to receive(:contents).with("artsy/danger", path: "Dangerfile", ref: nil).and_return(contents_response)
+        allow(@g.client).to receive(:contents).with("artsy/danger", path: "path/Dangerfile", ref: "master").and_return(contents_response)
+        allow(@g.client).to receive(:contents).with("teapot/danger", path: "Dangerfile", ref: nil).and_raise(Octokit::NotFound)
+      end
+
       it "returns a valid URL with the minimum parameters" do
-        url = @g.file_url(repository: "danger",
-                                path: "path/Dangerfile")
-        expect(url).to eq("https://raw.githubusercontent.com//danger/master/path/Dangerfile")
+        url = @g.file_url(organisation: "artsy", repository: "danger", path: "Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
       end
 
       it "returns a valid URL with more parameters" do
-        url = @g.file_url(repository: "danger",
-                        organisation: "org_yo",
-                              branch: "yolo_branch",
-                                path: "path/Dangerfile")
-        expect(url).to eq("https://raw.githubusercontent.com/org_yo/danger/yolo_branch/path/Dangerfile")
+        url = @g.file_url(repository: "danger", organisation: "artsy", branch: "master", path: "path/Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
+      end
+
+      it "returns a valid fallback URL" do
+        url = @g.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/teapot/danger/master/Dangerfile")
       end
     end
 
@@ -207,13 +215,9 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "aborts when access to setting the status was denied but there were errors" do
-        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
-          .to_return(status: 404)
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref").to_return(status: 404)
 
-        @g.pr_json = {
-          "head" => { "sha" => "pr_commit_ref" },
-          "base" => { "repo" => { "private" => true } }
-        }
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
 
         expect do
           @g.submit_pull_request_status!(errors: violations(["error"]))
@@ -221,13 +225,9 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "warns when access to setting the status was denied but no errors were reported" do
-        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref")
-          .to_return(status: 404)
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref").to_return(status: 404)
 
-        @g.pr_json = {
-          "head" => { "sha" => "pr_commit_ref" },
-          "base" => { "repo" => { "private" => true } }
-        }
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
 
         expect do
           @g.submit_pull_request_status!(warnings: violations(["error"]))

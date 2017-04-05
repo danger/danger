@@ -54,12 +54,22 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
   end
 
   describe "#import_dangerfile" do
+    before do
+      api_url = "https://api.github.com/repos/example/example/contents/Dangerfile?ref"
+      api_url_custom = "https://api.github.com/repos/example/example/contents/path/to/Dangerfile?ref=custom-branch"
+
+      download_url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
+      download_url_custom = "https://raw.githubusercontent.com/example/example/custom-branch/path/to/Dangerfile"
+      mock_dangerfile = "message('OK')"
+
+      stub_request(:get, api_url).to_return(status: 404)
+      stub_request(:get, api_url_custom).to_return(status: 404)
+      stub_request(:get, download_url).to_return(status: 200, body: mock_dangerfile)
+      stub_request(:get, download_url_custom).to_return(status: 200, body: mock_dangerfile)
+    end
+
     it "defaults to org/repo and warns of deprecation" do
       outer_dangerfile = "danger.import_dangerfile('example/example')"
-      inner_dangerfile = "message('OK')"
-
-      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
-      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
 
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:warnings]).to eq(["Use `import_dangerfile(github: 'example/example')` instead of `import_dangerfile 'example/example'`."])
@@ -68,21 +78,13 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
 
     it "github: 'repo/name'" do
       outer_dangerfile = "danger.import_dangerfile(github: 'example/example')"
-      inner_dangerfile = "message('OK')"
-
-      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
-      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
 
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
 
-    it "github: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangefile'" do
-      outer_dangerfile = "danger.import_dangerfile(github: 'example/example', branch: 'custom-branch', path: 'path/to/Dangefile')"
-      inner_dangerfile = "message('OK')"
-
-      url = "https://raw.githubusercontent.com/example/example/custom-branch/path/to/Dangefile"
-      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
+    it "github: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangerfile'" do
+      outer_dangerfile = "danger.import_dangerfile(github: 'example/example', branch: 'custom-branch', path: 'path/to/Dangerfile')"
 
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:messages]).to eq(["OK"])
@@ -90,21 +92,13 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
 
     it "gitlab: 'repo/name'" do
       outer_dangerfile = "danger.import_dangerfile(gitlab: 'example/example')"
-      inner_dangerfile = "message('OK')"
-
-      url = "https://raw.githubusercontent.com/example/example/master/Dangerfile"
-      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
 
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
 
-    it "gitlab: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangefile'" do
+    it "gitlab: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangerfile'" do
       outer_dangerfile = "danger.import_dangerfile(gitlab: 'example/example', branch: 'custom-branch', path: 'path/to/Dangerfile')"
-      inner_dangerfile = "message('OK')"
-
-      url = "https://raw.githubusercontent.com/example/example/custom-branch/path/to/Dangerfile"
-      stub_request(:get, url).to_return(status: 200, body: inner_dangerfile)
 
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:messages]).to eq(["OK"])
