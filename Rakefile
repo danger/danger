@@ -11,14 +11,7 @@ task default: :spec
 desc "Danger's tests"
 task :spec do
   Rake::Task["specs"].invoke
-  Rake::Task["rubocop"].invoke
   Rake::Task["spec_docs"].invoke
-end
-
-require "rubocop/rake_task"
-desc "Run RuboCop on the lib/specs directory"
-RuboCop::RakeTask.new(:rubocop) do |task|
-  task.patterns = Dir.glob(["lib/**/*.rb", "spec/**/*.rb"]) - Dir.glob(["spec/fixtures/**/*", "lib/danger/plugin_support/plugin_parser.rb"])
 end
 
 desc "Tests that the core documentation is up to snuff"
