@@ -29,7 +29,7 @@ module Danger
     self.command = "danger"
     self.version = Danger::VERSION
 
-    self.plugin_prefixes = %w[claide danger]
+    self.plugin_prefixes = %w(claide danger)
 
     def initialize(argv)
       dangerfile = argv.option("dangerfile", "Dangerfile")

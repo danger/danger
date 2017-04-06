@@ -134,3 +134,15 @@ Style/IndentHeredoc:
 
 Style/SpecialGlobalVars:
   Enabled: false
+
+PercentLiteralDelimiters:
+  PreferredDelimiters:
+    "%":  ()
+    "%i": ()
+    "%q": ()
+    "%Q": ()
+    "%r": "{}"
+    "%s": ()
+    "%w": ()
+    "%W": ()
+    "%x": ()
