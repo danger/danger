@@ -33,7 +33,7 @@ module Danger
     end
 
     def link(url)
-      say " -> " + url.underline + "\n"
+      say " -> " + url.underlined + "\n"
     end
 
     def pause(time)
@@ -57,7 +57,7 @@ module Danger
 
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
-          the_answer = i.zero? ? answer.underline : answer
+          the_answer = i.zero? ? answer.underlined : answer
           ui.print " " + the_answer
           ui.print(" /") if i != possible_answers.length - 1
         end
