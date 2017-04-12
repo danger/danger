@@ -1,6 +1,9 @@
 ## master
 
 * Add your own contribution below
+
+## 4.3.4
+
 * #775 Fixed calling undefined method `start_with`
 
 ## 4.3.4
