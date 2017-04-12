@@ -355,7 +355,7 @@ module Danger
           # so we do it one by one ignoring the deleted lines
           if !file_line.nil? && !line.start_with?("-")
             if file_line == message.line
-              file_line = nil if dismiss_out_of_range_messages && !line.start_with("+")
+              file_line = nil if dismiss_out_of_range_messages && !line.start_with?("+")
               break
             end
             file_line += 1
