@@ -2,6 +2,10 @@
 
 * Add your own contribution below
 
+## 4.3.4
+
+* Fix danger init - Kohki Miki
+
 ## 4.3.3
 
 * `danger.import_dangerfile(github:)` now supports private repositories and GitHub Enterprise - hotbott
