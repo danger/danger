@@ -127,10 +127,8 @@ RSpec.describe Danger::GitRepo, host: :github do
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
           # Need to compact here because c50713a changes make AppVeyor fail
-          expect(@dm.git.modified_files.compact).to eq(["file => subfolder with => weird name/file"])
-          expect do
-            @dm.git.diff_for_file("file => subfolder with => weird name/file")
-          end.to_not raise_error
+          expect(@dm.git.modified_files.compact).to eq(["file"])
+          expect(@dm.git.diff_for_file("file")).not_to be_nil
         end
       end
     end
