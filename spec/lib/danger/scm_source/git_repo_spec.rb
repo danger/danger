@@ -120,8 +120,8 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
           `git checkout -b new --quiet`
-          `mkdir 'subfolder with => weird name'`
-          `git mv file 'subfolder with => weird name'`
+          `mkdir "subfolder with => weird name"`
+          `git mv file "subfolder with => weird name"`
           `git commit -m "another"`
 
           @dm = testing_dangerfile
