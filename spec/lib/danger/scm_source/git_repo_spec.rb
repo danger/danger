@@ -113,6 +113,8 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "handles moved files as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
+          subfolder = "subfolder"
+
           `git init`
           `git config diff.renames true`
           `git remote add origin git@github.com:danger/danger.git`
@@ -120,8 +122,8 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git add .`
           `git commit -m "ok"`
           `git checkout -b new --quiet`
-          `mkdir "subfolder with => weird name"`
-          `git mv file "subfolder with => weird name"`
+          `mkdir "#{subfolder}"`
+          `git mv file "#{subfolder}"`
           `git commit -m "another"`
 
           @dm = testing_dangerfile
