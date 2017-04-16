@@ -1,5 +1,6 @@
 ## master
 
+* #681, #498 Fixes handling of files moved across directories by using diff to get list of modified files. Please note that the fix is not backward-compatible due to moved files names being the original file names.
 * Add your own contribution below
 
 ## 4.3.4

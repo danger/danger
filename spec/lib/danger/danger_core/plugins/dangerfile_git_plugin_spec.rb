@@ -47,8 +47,7 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
     end
 
     it "gets modified_files " do
-      stats = { files: { "my/path/file_name" => "thing" } }
-      diff = OpenStruct.new(stats: stats)
+      diff = [OpenStruct.new(type: "modified", path: "my/path/file_name")]
       allow(@repo).to receive(:diff).and_return(diff)
 
       expect(@dsl.modified_files).to eq(["my/path/file_name"])

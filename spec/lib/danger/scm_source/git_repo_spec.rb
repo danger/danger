@@ -109,6 +109,32 @@ RSpec.describe Danger::GitRepo, host: :github do
         end
       end
     end
+
+    it "handles moved files as expected" do
+      Dir.mktmpdir do |dir|
+        Dir.chdir dir do
+          subfolder = "subfolder"
+
+          `git init`
+          `git config diff.renames true`
+          `git remote add origin git@github.com:danger/danger.git`
+          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
+          `git add .`
+          `git commit -m "ok"`
+          `git checkout -b new --quiet`
+          `mkdir "#{subfolder}"`
+          `git mv file "#{subfolder}"`
+          `git commit -m "another"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
+
+          # Need to compact here because c50713a changes make AppVeyor fail
+          expect(@dm.git.modified_files.compact).to eq(["file"])
+          expect(@dm.git.diff_for_file("file")).not_to be_nil
+        end
+      end
+    end
   end
 
   describe "lines of code" do

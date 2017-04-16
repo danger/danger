@@ -72,7 +72,7 @@ module Danger
     # @return [FileList<String>] an [Array] subclass
     #
     def modified_files
-      Danger::FileList.new(@git.diff.stats[:files].keys)
+      Danger::FileList.new(@git.diff.select { |diff| diff.type == "modified" }.map(&:path))
     end
 
     # @!group Git Metadata
