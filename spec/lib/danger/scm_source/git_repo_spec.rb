@@ -114,6 +114,7 @@ RSpec.describe Danger::GitRepo, host: :github do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
           `git init`
+          `git config diff.renames true`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
