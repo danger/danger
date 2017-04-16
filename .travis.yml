@@ -22,6 +22,7 @@ script:
   # Tests use real git commands
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
+  - git config --global diff.renames true
   - bundle exec rubocop lib
   - bundle exec rake spec
   - bundle exec danger --verbose
