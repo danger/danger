@@ -2,6 +2,9 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too.
 
+##5.0.2
+
+* #787 Fixes issue with `use_ssl` for bitbucket server integration. - RishabhTayal
 * #788 Fix `diff_for_file` for added files - allewun
 
 
