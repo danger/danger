@@ -1,10 +1,16 @@
 ## master
 
-* Add your own contribution below
+* Add your own contributions to the next release  on the line below this, please include your name too.
+
+*
+
+
+## 5.0.1
+
+* #785 Added support for `http://` for bitbucket server integration. - RishabhTayal
 
 ## 5.0.0
 
-* #785 Added support for `http://` for bitbucket server integration.
 * #681, #498 - Fixes handling of files moved across directories by using diff to get list of modified files. Please note that the fix is not backward-compatible due to moved files names being the original file names - nikolaykasyanov
 
   This is very likely not break any Dangerfiles out there, but it's better to be safe. So we're bumping the version number to let everyone know there _could_ be a risk. - orta
