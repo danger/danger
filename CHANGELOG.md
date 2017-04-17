@@ -1,6 +1,6 @@
 ## master
 
-* Add your own contribution below
+* Added support for `http://` for bitbucket server integration.
 
 ## 5.0.0
 
