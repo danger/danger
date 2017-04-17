@@ -54,10 +54,14 @@ module Danger
 
       private
 
+      def use_ssl
+        return self.pr_api_endpoint.include? "https://"
+      end
+
       def fetch_json(uri)
         req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
         JSON.parse(res.body, symbolize_names: true)
@@ -68,7 +72,7 @@ module Danger
         req.basic_auth @username, @password
         req.body = body
 
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
 
@@ -83,7 +87,7 @@ module Danger
       def delete(uri)
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
         end
       end
