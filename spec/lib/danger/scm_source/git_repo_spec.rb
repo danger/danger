@@ -65,6 +65,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
         expect(@dm.git.added_files).to eq(["file2"])
+        expect(@dm.git.diff_for_file("file2")).not_to be_nil
       end
     end
 
