@@ -10,5 +10,15 @@ RSpec.describe Danger::RequestSources::BitbucketServerAPI, host: :bitbucket_serv
 
       expect(inspected).to include(%(@password="********"))
     end
+
+    it "handles http hosts" do
+      env = stub_env
+      env["DANGER_BITBUCKETSERVER_HOST"] = "http://my_url"
+      api = described_class.new("danger", "danger", 1, env)
+      expect(api.pr_api_endpoint).to eq("http://my_url/rest/api/1.0/projects/danger/repos/danger/pull-requests/1")
+      env["DANGER_BITBUCKETSERVER_HOST"] = "my_url"
+      api = described_class.new("danger", "danger", 1, env)
+      expect(api.pr_api_endpoint).to eq("https://my_url/rest/api/1.0/projects/danger/repos/danger/pull-requests/1")
+   end
   end
 end
