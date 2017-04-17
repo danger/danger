@@ -14,7 +14,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
 
   describe "#host" do
     it "sets the host specified by `DANGER_BITBUCKETSERVER_HOST`" do
-      expect(bs.host).to eq("stash.example.com")
+      expect(bs.host).to eq("https://stash.example.com")
     end
   end
 
