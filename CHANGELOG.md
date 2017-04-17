@@ -1,8 +1,8 @@
 ## master
 
-* Add your own contributions to the next release  on the line below this, please include your name too.
+* Add your own contributions to the next release on the line below this, please include your name too.
 
-*
+* #788 Fix `diff_for_file` for added files - allewun
 
 
 ## 5.0.1
