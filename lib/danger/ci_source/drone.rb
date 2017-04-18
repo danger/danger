@@ -19,7 +19,7 @@ module Danger
   # ### Token Setup
   #
   # As this is self-hosted, you will need to expose the `DANGER_GITHUB_API_TOKEN` as a secret to your
-  # builds as having the API Token in plain text is a security issue.
+  # builds:
   #
   # Drone secrets: http://readme.drone.io/usage/secret-guide/
   # NOTE: This is a new syntax in DroneCI 0.6+
