@@ -84,17 +84,17 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
     before do
       stub_merge_request(
         "merge_request_593728_response",
-        "k0nserv/danger-test",
+        "k0nserv%2Fdanger-test",
         593_728
       )
       stub_merge_request_commits(
         "merge_request_593728_commits_response",
-        "k0nserv/danger-test",
+        "k0nserv%2Fdanger-test",
         593_728
       )
       @comments_stub = stub_merge_request_comments(
         "merge_request_593728_comments_response",
-        "k0nserv/danger-test",
+        "k0nserv%2Fdanger-test",
         593_728
       )
     end
@@ -161,7 +161,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           messages: violations(["Test message"]),
           template: "gitlab"
         )
-        stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes").with(
+        stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes").with(
           body: "body=#{ERB::Util.url_encode(body)}",
           headers: expected_headers
         ).to_return(status: 200, body: "", headers: {})
@@ -178,7 +178,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           @comments_stub = stub_merge_request_comments(
             "merge_request_593728_comments_existing_danger_comment_response",
-            "k0nserv/danger-test",
+            "k0nserv%2Fdanger-test",
             593_728
           )
         end
@@ -196,7 +196,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             },
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
             body: "body=#{ERB::Util.url_encode(body)}",
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
@@ -215,7 +215,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             messages: violations(["Test message"]),
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
             body: "body=#{ERB::Util.url_encode(body)}",
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
@@ -234,13 +234,13 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           @comments_stub = stub_merge_request_comments(
             "merge_request_593728_comments_no_stickies_response",
-            "k0nserv/danger-test",
+            "k0nserv%2Fdanger-test",
             593_728
           )
         end
 
         it "removes the previous danger comment if there are no new messages" do
-          stub_request(:delete, "https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:delete, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
             headers: expected_headers
           )
 

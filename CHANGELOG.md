@@ -2,6 +2,8 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+* Automates the add GitHub release notes when we release via [chandler](https://github.com/mattbrictson/chandler) - orta
+* Updates Danger's tests to use the gitlab 4.0 gem - orta
 * #790 Fixes issue with BitbucketServer crashing when `DANGER_BITBUCKETSERVER_HOST` is not set - orta
 
 ## 5.0.2

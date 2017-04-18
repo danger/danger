@@ -25,3 +25,21 @@ desc "I do this so often now, better to just handle it here"
 task :guard do |task|
   sh "bundle exec guard"
 end
+
+desc "Runs chandler for current version"
+task :chandler do
+  lib = File.expand_path("../lib", __FILE__)
+  $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+  require "danger/version"
+  if ENV["CHANDLER_GITHUB_API_TOKEN"]
+    sh "bundle exec chandler #{Danger::VERSION}"
+  elsif ENV["DANGER_GITHUB_API_TOKEN"]
+    sh "CHANDLER_GITHUB_API_TOKEN=#{ENV['DANGER_GITHUB_API_TOKEN']} bundle exec chandler #{Danger::VERSION}"
+  else
+    puts "Skipping chandler due to no `CHANDLER_GITHUB_API_TOKEN` or `DANGER_GITHUB_API_TOKEN` in the ENV."
+  end
+end
+
+Rake::Task["release"].enhance do
+  Rake::Task["chandler"].invoke
+end
