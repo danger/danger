@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-if !ENV["TRAVIS_TAG"].empty? && ENV["TRAVIS_RUBY_VERSION"] == "2.3.1"
-  `bundle exec chandler push $TRAVIS_TAG`
-end
