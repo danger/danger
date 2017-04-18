@@ -11,7 +11,8 @@ module Danger
       def stub_env
         {
           "DRONE" => true,
-          "DRONE_REPO" => "k0nserv/danger-test",
+          "DRONE_REPO_OWNER" => "k0nserv",
+          "DRONE_REPO_NAME" => "danger-test",
           "DRONE_PULL_REQUEST" => "593728",
           "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
         }
