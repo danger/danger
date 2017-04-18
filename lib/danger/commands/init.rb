@@ -265,7 +265,7 @@ module Danger
 
     def info
       ui.header "Useful info"
-      ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger local".yellow + "."
+      ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger pr".yellow + "."
       ui.pause 0.6
       ui.say "- You can have Danger output all of its variables to the console via the " + "--verbose".yellow + " option."
       ui.pause 0.6
