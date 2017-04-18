@@ -1,5 +1,6 @@
 {
     "search.exclude": {
-        "coverage/": true
-    },
+        "coverage/": true,
+        ".xml_dump_failures" : true
+    }
 }
