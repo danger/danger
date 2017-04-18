@@ -3,7 +3,8 @@ require "danger/ci_source/drone"
 RSpec.describe Danger::Drone do
   it "validates when DRONE variable is set" do
     env = { "DRONE" => "true",
-            "DRONE_REPO" => "danger/danger",
+            "DRONE_REPO_NAME" => "danger",
+            "DRONE_REPO_OWNER" => "danger",
             "DRONE_PULL_REQUEST" => 1 }
     expect(Danger::Drone.validates_as_ci?(env)).to be true
   end
@@ -15,14 +16,16 @@ RSpec.describe Danger::Drone do
 
   it "does not validate PR when DRONE_PULL_REQUEST is set to non int value" do
     env = { "CIRCLE" => "true",
-            "DRONE_REPO" => "danger/danger",
+            "DRONE_REPO_NAME" => "danger",
+            "DRONE_REPO_OWNER" => "danger",
             "DRONE_PULL_REQUEST" => "maku" }
     expect(Danger::Drone.validates_as_pr?(env)).to be false
   end
 
   it "does not validate  PRwhen DRONE_PULL_REQUEST is set to non positive int value" do
     env = { "CIRCLE" => "true",
-            "DRONE_REPO" => "danger/danger",
+            "DRONE_REPO_NAME" => "danger",
+            "DRONE_REPO_OWNER" => "danger",
             "DRONE_PULL_REQUEST" => -1 }
     expect(Danger::Drone.validates_as_pr?(env)).to be false
   end
@@ -36,7 +39,10 @@ RSpec.describe Danger::Drone do
   end
 
   it "gets the repo address" do
-    env = { "DRONE_REPO" => "orta/danger" }
+    env = {
+      "DRONE_REPO_NAME" => "danger",
+      "DRONE_REPO_OWNER" => "orta"
+    }
 
     result = Danger::Drone.new(env)
 
@@ -47,7 +53,8 @@ RSpec.describe Danger::Drone do
     env = {
       "DRONE" => "true",
       "DRONE_PULL_REQUEST" => "800",
-      "DRONE_REPO" => "artsy/eigen"
+      "DRONE_REPO_NAME" => "eigen",
+      "DRONE_REPO_OWNER" => "artsy"
     }
     result = Danger::Drone.new(env)
 
