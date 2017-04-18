@@ -11,19 +11,31 @@ module Danger
   #  ``` shell
   #   build:
   #     image: golang
-  #       commands:
-  #         - ...
-  #         - bundle exec danger
+  #     commands:
+  #       - ...
+  #       - bundle exec danger
   #  ```
   #
   # ### Token Setup
   #
-  # As this is self-hosted, you will need to add the `DANGER_GITHUB_API_TOKEN` to your build user's ENV. The alternative
-  # is to pass in the token as a prefix to the command `DANGER_GITHUB_API_TOKEN="123" bundle exec danger`.
+  # As this is self-hosted, you will need to expose the `DANGER_GITHUB_API_TOKEN` as a secret to your
+  # builds as having the API Token in plain text is a security issue.
   #
+  # Drone secrets: http://readme.drone.io/usage/secret-guide/
+  # NOTE: This is a new syntax in DroneCI 0.6+
+  #
+  # ```
+  #   build:
+  #     image: golang
+  #     secrets:
+  #       - DANGER_GITHUB_API_TOKEN
+  #     commands:
+  #       - ...
+  #       - bundle exec danger
+  # ```
   class Drone < CI
     def self.validates_as_ci?(env)
-      env.key? "DRONE_REPO"
+      env.key? "DRONE_REPO_OWNER" and env.key? "DRONE_REPO_NAME"
     end
 
     def self.validates_as_pr?(env)
@@ -35,9 +47,9 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["DRONE_REPO"]
+      self.repo_slug = env["DRONE_REPO_OWNER"] + "/" + env["DRONE_REPO_NAME"]
       self.pull_request_id = env["DRONE_PULL_REQUEST"]
-      self.repo_url = GitRepo.new.origins # Drone doesn't provide a repo url env variable :/
+      self.repo_url = GitRepo.new.origins
     end
   end
 end
