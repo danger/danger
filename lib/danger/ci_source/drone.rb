@@ -47,7 +47,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["DRONE_REPO_OWNER"] + "/" + env["DRONE_REPO_NAME"]
+      self.repo_slug = "#{env['DRONE_REPO_OWNER']}/#{env['DRONE_REPO_NAME']}"
       self.pull_request_id = env["DRONE_PULL_REQUEST"]
       self.repo_url = env["DRONE_REPO_LINK"]
     end
