@@ -4,12 +4,12 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   before do
     stub_merge_request(
       "merge_request_593728_response",
-      "k0nserv/danger-test",
+      "k0nserv%2Fdanger-test",
       593_728
     )
     stub_merge_request_commits(
       "merge_request_593728_commits_response",
-      "k0nserv/danger-test",
+      "k0nserv%2Fdanger-test",
       593_728
     )
   end
@@ -40,7 +40,7 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     before do
       stub_merge_request_changes(
         "merge_request_593728_changes_response",
-        "k0nserv/danger-test",
+        "k0nserv\%2Fdanger-test",
         593_728
       )
     end
@@ -90,3 +90,4 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
   end
 end
+
