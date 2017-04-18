@@ -1,6 +1,6 @@
 require "danger/danger_core/executor"
 
-# If you cannot find a method, please check spec/support/executor_helper.rb.
+# If you cannot find a method, please check spec/support/ci_helper.rb.
 RSpec.describe Danger::Executor, use: :ci_helper do
   describe "#validate!" do
     context "with CI + is a PR" do
