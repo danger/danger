@@ -40,7 +40,8 @@ module Danger
 
       def with_drone_setup_and_is_a_pull_request
         system_env = {
-          "DRONE_REPO" => "true",
+          "DRONE_REPO_NAME" => "danger",
+          "DRONE_REPO_OWNER" => "danger",
           "DRONE_PULL_REQUEST" => "42"
         }
 
