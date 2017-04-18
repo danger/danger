@@ -32,9 +32,9 @@ task :chandler do
   $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
   require "danger/version"
   if ENV["CHANDLER_GITHUB_API_TOKEN"]
-    sh "bundle exec chandler #{Danger::VERSION}"
+    sh "bundle exec chandler push #{Danger::VERSION}"
   elsif ENV["DANGER_GITHUB_API_TOKEN"]
-    sh "CHANDLER_GITHUB_API_TOKEN=#{ENV['DANGER_GITHUB_API_TOKEN']} bundle exec chandler #{Danger::VERSION}"
+    sh "CHANDLER_GITHUB_API_TOKEN=#{ENV['DANGER_GITHUB_API_TOKEN']} bundle exec chandler push #{Danger::VERSION}"
   else
     puts "Skipping chandler due to no `CHANDLER_GITHUB_API_TOKEN` or `DANGER_GITHUB_API_TOKEN` in the ENV."
   end
