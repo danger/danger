@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
 gemspec
-gem "chandler"
+
+gem "chandler" if RUBY_VERSION != "2.0.0"
 gem "danger-gitlab"
 
 gem "danger-junit", "~> 0.5"
