@@ -714,6 +714,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Notify the user to add the new GitHub account as collaborator to Close Source project
 * Fixes a problem running `danger local` due to a missing dependency on yard - ashfurrow
 * Improvements for CircleCI CI detection - orta
+* Fixes URL for Circle CI given to user in `danger init` - ashfurrow
 
 ## 0.8.3
 
