@@ -35,7 +35,7 @@ module Danger
   # ```
   class Drone < CI
     def self.validates_as_ci?(env)
-      env.key? "DRONE_REPO_OWNER" and env.key? "DRONE_REPO_NAME"
+      validates_as_ci_post_06?(env) or validates_as_ci_pre_06?(env)
     end
 
     def self.validates_as_pr?(env)
@@ -47,9 +47,25 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = "#{env['DRONE_REPO_OWNER']}/#{env['DRONE_REPO_NAME']}"
+      if self.class.validates_as_ci_post_06?(env)
+        self.repo_slug = "#{env['DRONE_REPO_OWNER']}/#{env['DRONE_REPO_NAME']}"
+        self.repo_url = env["DRONE_REPO_LINK"] if self.class.validates_as_ci_post_06?(env)
+      elsif self.class.validates_as_ci_pre_06?(env)
+        self.repo_slug = env["DRONE_REPO"]
+        self.repo_url = GitRepo.new.origins
+      end
+
       self.pull_request_id = env["DRONE_PULL_REQUEST"]
-      self.repo_url = env["DRONE_REPO_LINK"]
+    end
+
+    # Check if this build is valid for CI with drone 0.6 or later
+    def self.validates_as_ci_post_06?(env)
+      env.key? "DRONE_REPO_OWNER" and env.key? "DRONE_REPO_NAME"
+    end
+
+    # Checks if this build is valid for CI with drone 0.5 or earlier
+    def self.validates_as_ci_pre_06?(env)
+      env.key? "DRONE_REPO"
     end
   end
 end
