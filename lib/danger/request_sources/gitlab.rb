@@ -94,7 +94,9 @@ module Danger
 
       def fetch_details
         self.mr_json = client.merge_request(ci_source.repo_slug, self.ci_source.pull_request_id)
-        self.commits_json = client.merge_request_commits(ci_source.repo_slug, self.ci_source.pull_request_id)
+        self.commits_json = client.merge_request_commits(
+          ci_source.repo_slug, self.ci_source.pull_request_id
+        ).auto_paginate
         self.ignored_violations = ignored_violations_from_pr
       end
 
