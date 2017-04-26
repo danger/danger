@@ -46,7 +46,7 @@ module Danger
 
       def stub_merge_request_comments(fixture, slug, merge_request_id)
         raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
-        url = "https://gitlab.com/api/v3/projects/#{slug}/merge_requests/#{merge_request_id}/notes"
+        url = "https://gitlab.com/api/v3/projects/#{slug}/merge_requests/#{merge_request_id}/notes?per_page=100"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
       end
     end

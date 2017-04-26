@@ -66,7 +66,7 @@ module Danger
 
       def mr_comments
         @comments ||= begin
-          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
+          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
             .auto_paginate
             .map { |comment| Comment.from_gitlab(comment) }
         end
