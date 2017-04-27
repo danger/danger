@@ -66,7 +66,8 @@ module Danger
 
       def mr_comments
         @comments ||= begin
-          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
+          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
+            .auto_paginate
             .map { |comment| Comment.from_gitlab(comment) }
         end
       end
@@ -93,7 +94,9 @@ module Danger
 
       def fetch_details
         self.mr_json = client.merge_request(ci_source.repo_slug, self.ci_source.pull_request_id)
-        self.commits_json = client.merge_request_commits(ci_source.repo_slug, self.ci_source.pull_request_id)
+        self.commits_json = client.merge_request_commits(
+          ci_source.repo_slug, self.ci_source.pull_request_id
+        ).auto_paginate
         self.ignored_violations = ignored_violations_from_pr
       end
 
