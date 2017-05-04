@@ -52,6 +52,24 @@ module Danger
         post(uri, body)
       end
 
+      def post_inline_comment(text, line, fromHash, path, srcPath, toHash)
+        uri = URI("#{pr_api_endpoint}/comments")
+        body = { 
+          text: text, 
+          anchor: { 
+            diffType: 'Commit',
+            line: line,
+            lineType: 'CONTEXT',
+            fileType: 'FROM',
+            fromHash: fromHash,
+            path: path,
+            srcPath: srcPath,
+            toHash: toHash
+            } 
+          }.to_json
+        post(uri, body)
+      end
+
       private
 
       def use_ssl
