@@ -52,20 +52,20 @@ module Danger
         post(uri, body)
       end
 
-      def post_inline_comment(text, line, fromHash, path, srcPath, toHash)
+      def post_inline_comment(text, line, from_hash, path, src_path, to_hash)
         uri = URI("#{pr_api_endpoint}/comments")
-        body = { 
-          text: text, 
-          anchor: { 
-            diffType: 'Commit',
+        body = {
+          text: text,
+          anchor: {
+            diffType: "Commit",
             line: line,
-            lineType: 'CONTEXT',
-            fileType: 'FROM',
-            fromHash: fromHash,
+            lineType: "CONTEXT",
+            fileType: "FROM",
+            fromHash: from_hash,
             path: path,
-            srcPath: srcPath,
-            toHash: toHash
-            } 
+            srcPath: src_path,
+            toHash: to_hash
+            }
           }.to_json
         post(uri, body)
       end
