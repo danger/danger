@@ -1,6 +1,7 @@
 ## master
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
+* Fix danger_id and new_comment flag not being set for pr checks [@4oby](https://github.com/4oby)
 * Add support for DotCi - Daniel Beard
 
 ## 5.1.1
