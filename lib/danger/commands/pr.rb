@@ -24,15 +24,18 @@ module Danger
       @pr_url = argv.shift_argument
       @clear_http_cache = argv.flag?("clear-http-cache", false)
       dangerfile = argv.option("dangerfile", "Dangerfile")
-
+      danger_id = argv.option("danger_id", "danger")
+      new_comment = argv.flag?("new-comment")
       # Currently CLAide doesn't support short option like -h https://github.com/CocoaPods/CLAide/pull/60
       # when user pass in -h, mimic the behavior of passing in --help.
       argv = CLAide::ARGV.new ["--help"] if show_help
 
       super
-
+      @danger_id = danger_id
+      @new_comment = new_comment
       @dangerfile_path = dangerfile if File.exist?(dangerfile)
-
+      #@danger_id = danger_id
+      #@new_comment = new_comment
       if argv.flag?("pry", false)
         @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path)
       end
@@ -59,8 +62,8 @@ module Danger
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
-          nil,
-          nil
+          @danger_id,
+          @new_comment
         )
       end
     end
