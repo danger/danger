@@ -278,6 +278,10 @@ module Danger
 
         # Print results in the terminal
         print_results
+      rescue DSLError => ex
+        # Push exception to the API and re-raise
+        post_exception(ex, danger_id, new_comment) unless danger_id.nil?
+        raise
       ensure
         # Makes sure that Danger specific git branches are cleaned
         env.clean_up
@@ -309,6 +313,14 @@ module Danger
         line.strip!
         "#{line}\n"
       end
+    end
+
+    def post_exception(ex, danger_id, new_comment)
+      env.request_source.update_pull_request!(
+        danger_id: danger_id,
+        new_comment: new_comment,
+        markdowns: [ex.to_markdown]
+      )
     end
   end
 end

@@ -62,41 +62,68 @@ module Danger
     #
     def message
       @message ||= begin
-        trace_line, description = parse_line_number_from_description
-        latest_version = Danger.danger_outdated?
+        description, stacktrace = parse.values_at(:description, :stacktrace)
 
-        m = "\n[!] "
-        m << description
-        if latest_version
-          m << upgrade_message(latest_version)
-        end
-        m = m.red if m.respond_to?(:red)
+        msg = description
+        msg = msg.red if msg.respond_to?(:red)
+        msg << stacktrace if stacktrace
+        msg
+      end
+    end
 
-        return m unless backtrace && dsl_path && contents
+    def to_markdown
+      @markdown ||= begin
+        description, stacktrace = parse.values_at(:description, :stacktrace)
 
-        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
-        return m unless trace_line
-        line_numer = trace_line.split(":")[1].to_i - 1
-        return m unless line_numer
+        # Highlight failed method in markdown
+        description = description.tr("'", "`")
 
-        lines      = contents.lines
-        indent     = " #  "
-        indicator  = indent.tr("#", ">")
-        first_line = line_numer.zero?
-        last_line  = (line_numer == (lines.count - 1))
+        # Escape markdown brackets
+        description = description.gsub(/<|>/) { |bracket| "\\#{bracket}" }
 
-        m << "\n"
-        m << "#{indent}from #{trace_line.gsub(/:in.*$/, '')}\n"
-        m << "#{indent}-------------------------------------------\n"
-        m << "#{indent}#{lines[line_numer - 1]}" unless first_line
-        m << "#{indicator}#{lines[line_numer]}"
-        m << "#{indent}#{lines[line_numer + 1]}" unless last_line
-        m << "\n" unless m.end_with?("\n")
-        m << "#{indent}-------------------------------------------\n"
+        md = "## Danger has errored"
+        md << "#{description}\n"
+        md << "```#{stacktrace}```" if stacktrace
+
+        Markdown.new(md, nil, nil)
       end
     end
 
     private
+
+    def parse
+      result = {}
+
+      trace_line, description = parse_line_number_from_description
+      latest_version = Danger.danger_outdated?
+
+      result[:description] = "\n[!] #{description}"
+      result[:description] << upgrade_message(latest_version) if latest_version
+
+      return result unless backtrace && dsl_path && contents
+
+      trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
+      return result unless trace_line
+      line_numer = trace_line.split(":")[1].to_i - 1
+      return result unless line_numer
+
+      lines      = contents.lines
+      indent     = " #  "
+      indicator  = indent.tr("#", ">")
+      first_line = line_numer.zero?
+      last_line  = (line_numer == (lines.count - 1))
+
+      result[:stacktrace] = "\n"
+      result[:stacktrace] << "#{indent}from #{trace_line.gsub(/:in.*$/, '')}\n"
+      result[:stacktrace] << "#{indent}-------------------------------------------\n"
+      result[:stacktrace] << "#{indent}#{lines[line_numer - 1]}" unless first_line
+      result[:stacktrace] << "#{indicator}#{lines[line_numer]}"
+      result[:stacktrace] << "#{indent}#{lines[line_numer + 1]}" unless last_line
+      result[:stacktrace] << "\n" unless result[:stacktrace].end_with?("\n")
+      result[:stacktrace] << "#{indent}-------------------------------------------\n"
+
+      result
+    end
 
     def parse_line_number_from_description
       description = self.description
