@@ -253,4 +253,37 @@ RSpec.describe Danger::Dangerfile, host: :github do
       dm.setup_for_running("custom_danger_base", "custom_danger_head")
     end
   end
+
+  describe "#run" do
+    context "when exception occured" do
+      before { allow(Danger).to receive(:danger_outdated?).and_return(false) }
+
+      it "updates PR with an error" do
+        path = Pathname.new(File.join("spec", "fixtures", "dangerfile_with_error"))
+        env_manager = double("Danger::EnvironmentManager", {
+          pr?: false,
+          clean_up: true,
+          fill_environment_vars: true,
+          ensure_danger_branches_are_setup: false
+        })
+        scm = double("Danger::GitRepo", {
+          class: Danger::GitRepo,
+          diff_for_folder: true
+        })
+        request_source = double("Danger::RequestSources::GitHub")
+        dm = Danger::Dangerfile.new(env_manager, testing_ui)
+
+        allow(env_manager).to receive(:scm) { scm }
+        allow(env_manager).to receive(:request_source) { request_source }
+
+        expect(request_source).to receive(:update_pull_request!)
+
+        expect do
+          dm.run("custom_danger_base", "custom_danger_head", path, 1, false)
+        end.to raise_error(Danger::DSLError)
+      end
+
+      after { allow(Danger).to receive(:danger_outdated?).and_call_original }
+    end
+  end
 end
