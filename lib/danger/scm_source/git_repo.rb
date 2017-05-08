@@ -19,6 +19,32 @@ module Danger
       self.log = repo.log.between(from, to)
     end
 
+    def renamed_files
+      # Get raw diff with --find-renames --diff-filter
+      # We need to pass --find-renames cause
+      # older versions of git don't use this flag as default
+      diff = exec(
+        "diff #{self.diff.from} #{self.diff.to} --find-renames --diff-filter=R"
+      ).lines.map { |line| line.tr("\n", "") }
+
+      before_name_regexp = /^rename from (.*)$/
+      after_name_regexp = /^rename to (.*)$/
+
+      # Extract old and new paths via regexp
+      diff.each_with_index.map do |line, index|
+        before_match = line.match(before_name_regexp)
+        next unless before_match
+
+        after_match = diff.fetch(index + 1, "").match(after_name_regexp)
+        next unless after_match
+
+        {
+          before: before_match.captures.first,
+          after: after_match.captures.first
+        }
+      end.compact
+    end
+
     def exec(string)
       require "open3"
       Dir.chdir(self.folder || ".") do

@@ -76,6 +76,14 @@ module Danger
     end
 
     # @!group Git Metadata
+    # List of renamed files
+    # @return [Array<Hash>] with keys `:before` and `:after`
+    #
+    def renamed_files
+      @git.renamed_files
+    end
+
+    # @!group Git Metadata
     # The overall lines of code added/removed in the diff
     # @return [Fixnum]
     #

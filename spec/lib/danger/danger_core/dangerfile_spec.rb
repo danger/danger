@@ -131,8 +131,12 @@ RSpec.describe Danger::Dangerfile, host: :github do
       dm = testing_dangerfile
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
       expect(methods).to eq %i[
-        added_files api base_commit branch_for_base branch_for_head commits deleted_files
-        deletions diff_for_file dismiss_out_of_range_messages head_commit html_link import_dangerfile import_plugin info_for_file insertions lines_of_code modified_files mr_author mr_body mr_json mr_labels mr_title pr_author pr_body pr_diff pr_json pr_labels pr_title review scm_provider
+        added_files api base_commit branch_for_base branch_for_head commits
+        deleted_files deletions diff_for_file dismiss_out_of_range_messages
+        head_commit html_link import_dangerfile import_plugin info_for_file
+        insertions lines_of_code modified_files mr_author mr_body mr_json
+        mr_labels mr_title pr_author pr_body pr_diff pr_json pr_labels
+        pr_title renamed_files review scm_provider
       ]
     end
 
@@ -202,16 +206,17 @@ RSpec.describe Danger::Dangerfile, host: :github do
         data = sort_data(data).map { |d| d.first.to_sym }
 
         expect(data).to eq %i[
-          added_files api base_commit branch_for_base branch_for_head commits deleted_files deletions head_commit
-          insertions lines_of_code modified_files
-          mr_author mr_body mr_json mr_labels mr_title
-          pr_author pr_body pr_diff pr_json pr_labels pr_title review scm_provider
+          added_files api base_commit branch_for_base branch_for_head commits
+          deleted_files deletions head_commit insertions lines_of_code
+          modified_files mr_author mr_body mr_json mr_labels mr_title
+          pr_author pr_body pr_diff pr_json pr_labels pr_title
+          renamed_files review scm_provider
         ]
       end
 
       it "skips raw PR/MR JSON, and diffs" do
         data = @dm.method_values_for_plugin_hashes(@dm.external_dsl_attributes)
-        data_hash = Hash[*data.collect { |v| [v.first, v.last] }.flatten]
+        data_hash = Hash[*data.collect { |v| [v.first, v.last] }.flatten(1)]
 
         expect(data_hash["pr_json"]).to eq("[Skipped JSON]")
         expect(data_hash["mr_json"]).to eq("[Skipped JSON]")
