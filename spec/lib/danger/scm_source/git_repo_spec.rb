@@ -195,4 +195,50 @@ RSpec.describe Danger::GitRepo, host: :github do
       end
     end
   end
+
+  describe "#renamed_files" do
+    it "returns array of hashes with names before and after" do
+      Dir.mktmpdir do |dir|
+        Dir.chdir dir do
+          `git init`
+          `git remote add origin git@github.com:danger/danger.git`
+
+          Dir.mkdir(File.join(dir, "first"))
+          Dir.mkdir(File.join(dir, "second"))
+
+          File.open(File.join(dir, "first", "a"), "w") { |f| f.write("hi") }
+          File.open(File.join(dir, "second", "b"), "w") { |f| f.write("bye") }
+          File.open(File.join(dir, "c"), "w") { |f| f.write("Hello") }
+
+          `git add .`
+          `git commit -m "Add files"`
+          `git checkout -b rename_files --quiet`
+
+          File.delete(File.join(dir, "first", "a"))
+          File.delete(File.join(dir, "second", "b"))
+          File.delete(File.join(dir, "c"))
+
+          File.open(File.join(dir, "a"), "w") { |f| f.write("hi") }
+          File.open(File.join(dir, "first", "b"), "w") { |f| f.write("bye") }
+          File.open(File.join(dir, "second", "c"), "w") { |f| f.write("Hello") }
+
+          # Use -A here cause for older versions of git
+          # add . don't add removed files to index
+          `git add -A .`
+          `git commit -m "Rename files"`
+
+          @dm = testing_dangerfile
+          @dm.env.scm.diff_for_folder(dir, from: "master", to: "rename_files")
+
+          expectation = [
+            { before: "first/a", after: "a" },
+            { before: "second/b", after: "first/b" },
+            { before: "c", after: "second/c" }
+          ]
+
+          expect(@dm.git.renamed_files).to eq(expectation)
+        end
+      end
+    end
+  end
 end

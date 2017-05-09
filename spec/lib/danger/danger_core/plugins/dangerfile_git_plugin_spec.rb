@@ -121,5 +121,17 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
         end
       end
     end
+
+    describe "#renamed_files" do
+      it "delegates to scm" do
+        renamed_files = [{
+          before: "some/path/old",
+          after: "some/path/new"
+        }]
+
+        allow(@repo).to receive(:renamed_files).and_return(renamed_files)
+        expect(@dsl.renamed_files).to eq(renamed_files)
+      end
+    end
   end
 end
