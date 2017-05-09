@@ -2,10 +2,11 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+## 5.2.1
+
 * Add ability to get list of renamed files - [@sleekybadger](https://github.com/sleekybadger)
 
 ## 5.2.0
-
 
 * Add support for DotCi - Daniel Beard
 * Send Dangerfile eval exceptions to PR - [@sleekybadger](https://github.com/sleekybadger)
