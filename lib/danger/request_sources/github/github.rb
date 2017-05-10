@@ -130,63 +130,67 @@ module Danger
         last_comment = editable_comments.last
         should_create_new_comment = new_comment || last_comment.nil?
 
-        if should_create_new_comment
-          previous_violations = {}
-        else
-          previous_violations = parse_comment(last_comment.body)
-        end
+        previous_violations =
+          if should_create_new_comment
+            {}
+          else
+            parse_comment(last_comment.body)
+          end
 
-        cmp = proc do |a, b|
-          next -1 unless a.file
-          next 1 unless b.file
+        regular_violations = regular_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
 
-          next a.line <=> b.line if a.file == b.file
-          next a.file <=> b.file
-        end
+        inline_violations = inline_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
 
-        # Sort to group inline comments by file
-        # We copy because we need to mutate this arrays for inlines
-        comment_warnings = warnings.sort(&cmp)
-        comment_errors = errors.sort(&cmp)
-        comment_messages = messages.sort(&cmp)
-        comment_markdowns = markdowns.sort(&cmp)
+        rest_inline_violations = submit_inline_comments!({
+          danger_id: danger_id,
+          previous_violations: previous_violations
+        }.merge(inline_violations))
 
-        submit_inline_comments!(warnings: comment_warnings,
-                                  errors: comment_errors,
-                                messages: comment_messages,
-                                markdowns: comment_markdowns,
-                      previous_violations: previous_violations,
-                                danger_id: danger_id)
+        main_violations = merge_violations(
+          regular_violations, rest_inline_violations
+        )
 
-        main_violations = comment_warnings + comment_errors + comment_messages + comment_markdowns
-        if previous_violations.empty? && main_violations.empty?
+        main_violations_sum = main_violations.values.inject(:+)
+
+        if previous_violations.empty? && main_violations_sum.empty?
           # Just remove the comment, if there's nothing to say.
           delete_old_comments!(danger_id: danger_id)
         end
 
         # If there are still violations to show
-        unless main_violations.empty?
-          body = generate_comment(warnings: comment_warnings,
-                                    errors: comment_errors,
-                                  messages: comment_messages,
-                                  markdowns: comment_markdowns,
-                        previous_violations: previous_violations,
-                                  danger_id: danger_id,
-                                  template: "github")
+        if main_violations_sum.any?
+          body = generate_comment({
+            template: "github",
+            danger_id: danger_id,
+            previous_violations: previous_violations
+          }.merge(main_violations))
 
-          if should_create_new_comment
-            comment_result = client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-          else
-            comment_result = client.update_comment(ci_source.repo_slug, last_comment.id, body)
-          end
+          comment_result =
+            if should_create_new_comment
+              client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
+            else
+              client.update_comment(ci_source.repo_slug, last_comment.id, body)
+            end
         end
 
         # Now, set the pull request status.
         # Note: this can terminate the entire process.
-        submit_pull_request_status!(warnings: warnings,
-                                      errors: errors,
-                                 details_url: comment_result["html_url"],
-                                   danger_id: danger_id)
+        submit_pull_request_status!(
+          warnings: warnings,
+          errors: errors,
+          details_url: comment_result["html_url"],
+          danger_id: danger_id
+        )
       end
 
       def submit_pull_request_status!(warnings: [], errors: [], details_url: [], danger_id: "danger")
@@ -234,17 +238,25 @@ module Danger
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
         # Avoid doing any fetchs if there's no inline comments
-        return if (warnings + errors + messages + markdowns).select(&:inline?).empty?
+        return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
 
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }
         non_danger_comments = pr_comments - danger_comments
 
-        submit_inline_comments_for_kind!("warning", warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
-        submit_inline_comments_for_kind!("no_entry_sign", errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
-        submit_inline_comments_for_kind!("book", messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
-        submit_inline_comments_for_kind!(nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
+        warnings = submit_inline_comments_for_kind!(
+          "warning", warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id
+        )
+        errors = submit_inline_comments_for_kind!(
+          "no_entry_sign", errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id
+        )
+        messages = submit_inline_comments_for_kind!(
+          "book", messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id
+        )
+        markdowns = submit_inline_comments_for_kind!(
+          nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id
+        )
 
         # submit removes from the array all comments that are still in force
         # so we strike out all remaining ones
@@ -266,6 +278,13 @@ module Danger
             client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
           end
         end
+
+        {
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        }
       end
 
       def messages_are_equivalent(m1, m2)
@@ -279,7 +298,7 @@ module Danger
         previous_violations ||= []
         is_markdown_content = emoji.nil?
 
-        submit_inline = proc do |m|
+        messages.reject do |m|
           next false unless m.file && m.line
 
           position = find_position_in_diff diff_lines, m
@@ -328,8 +347,6 @@ module Danger
           # Remove this element from the array
           next true
         end
-
-        messages.reject!(&submit_inline)
       end
 
       def find_position_in_diff(diff_lines, message)
@@ -428,6 +445,41 @@ module Danger
           # Fallback to github.com
           branch ||= "master"
           @download_url = "https://raw.githubusercontent.com/#{organisation}/#{repository}/#{branch}/#{path}"
+        end
+      end
+
+      private
+
+      def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        {
+          warnings: warnings.reject(&:inline?),
+          errors: errors.reject(&:inline?),
+          messages: messages.reject(&:inline?),
+          markdowns: markdowns.reject(&:inline?)
+        }
+      end
+
+      def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        cmp = proc do |a, b|
+          next -1 unless a.file
+          next 1 unless b.file
+
+          next a.line <=> b.line if a.file == b.file
+          next a.file <=> b.file
+        end
+
+        # Sort to group inline comments by file
+        {
+          warnings: warnings.select(&:inline?).sort(&cmp),
+          errors: errors.select(&:inline?).sort(&cmp),
+          messages: messages.select(&:inline?).sort(&cmp),
+          markdowns: markdowns.select(&:inline?).sort(&cmp)
+        }
+      end
+
+      def merge_violations(*violation_groups)
+        violation_groups.inject({}) do |accumulator, group|
+          accumulator.merge(group) { |_, old, fresh| old + fresh }
         end
       end
     end
