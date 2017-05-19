@@ -64,7 +64,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
-        expect(@dm.git.added_files).to eq(["file2"])
+        expect(@dm.git.added_files).to eq(Danger::FileList.new(["file2"]))
         expect(@dm.git.diff_for_file("file2")).not_to be_nil
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe Danger::GitRepo, host: :github do
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
-          expect(@dm.git.deleted_files).to eq(["file"])
+          expect(@dm.git.deleted_files).to eq(Danger::FileList.new(["file"]))
         end
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe Danger::GitRepo, host: :github do
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
           # Need to compact here because c50713a changes make AppVeyor fail
-          expect(@dm.git.modified_files.compact).to eq(["file"])
+          expect(@dm.git.modified_files.compact).to eq(Danger::FileList.new(["file"]))
         end
       end
     end
@@ -131,7 +131,7 @@ RSpec.describe Danger::GitRepo, host: :github do
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
 
           # Need to compact here because c50713a changes make AppVeyor fail
-          expect(@dm.git.modified_files.compact).to eq(["file"])
+          expect(@dm.git.modified_files.compact).to eq(Danger::FileList.new(["file"]))
           expect(@dm.git.diff_for_file("file")).not_to be_nil
         end
       end

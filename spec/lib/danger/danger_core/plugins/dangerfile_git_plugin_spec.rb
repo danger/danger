@@ -36,21 +36,21 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
       diff = [OpenStruct.new(type: "new", path: "added")]
       allow(@repo).to receive(:diff).and_return(diff)
 
-      expect(@dsl.added_files).to eq(["added"])
+      expect(@dsl.added_files).to eq(Danger::FileList.new(["added"]))
     end
 
     it "gets deleted_files " do
       diff = [OpenStruct.new(type: "deleted", path: "deleted")]
       allow(@repo).to receive(:diff).and_return(diff)
 
-      expect(@dsl.deleted_files).to eq(["deleted"])
+      expect(@dsl.deleted_files).to eq(Danger::FileList.new(["deleted"]))
     end
 
     it "gets modified_files " do
       diff = [OpenStruct.new(type: "modified", path: "my/path/file_name")]
       allow(@repo).to receive(:diff).and_return(diff)
 
-      expect(@dsl.modified_files).to eq(["my/path/file_name"])
+      expect(@dsl.modified_files).to eq(Danger::FileList.new(["my/path/file_name"]))
     end
 
     it "gets lines_of_code" do
