@@ -426,6 +426,41 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
+
+      it "keeps initial messages order" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:add_comment).and_return({})
+        allow(@g).to receive(:submit_pull_request_status!).and_return(true)
+        allow(@g.client).to receive(:create_pull_request_comment).and_return({})
+        allow(@g.client).to receive(:delete_comment).and_return(true)
+        allow(@g.client).to receive(:delete_comment).and_return(true)
+
+        messages = [
+          Danger::Violation.new("1", false, nil, nil),
+          Danger::Violation.new("2", false, nil, nil),
+          Danger::Violation.new("3", false, nil, nil),
+          Danger::Violation.new("4", false, nil, nil),
+          Danger::Violation.new("5", false, nil, nil),
+          Danger::Violation.new("6", false, nil, nil),
+          Danger::Violation.new("7", false, nil, nil),
+          Danger::Violation.new("8", false, nil, nil),
+          Danger::Violation.new("9", false, nil, nil),
+          Danger::Violation.new("10", false, nil, nil)
+        ]
+
+        expect(@g).to receive(:generate_comment).with(
+          template: "github",
+          danger_id: "danger",
+          previous_violations: {},
+          warnings: [],
+          errors: [],
+          messages: messages,
+          markdowns: []
+        )
+
+        @g.update_pull_request!(messages: messages)
+      end
     end
 
     describe "branch setup" do
