@@ -122,6 +122,8 @@ Style/MultilineMethodCallIndentation:
 # FIXME: 25
 Metrics/BlockLength:
   Max: 345
+  Exclude:
+    - "**/*_spec.rb"
 
 Style/MixinGrouping:
   Enabled: false

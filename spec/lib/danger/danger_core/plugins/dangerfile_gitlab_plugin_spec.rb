@@ -65,14 +65,14 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
         dangerfile.env.request_source.fetch_details
 
-        %i[
+        %i(
           id iid project_id title description state created_at
           updated_at target_branch source_branch upvotes downvotes
           author assignee source_project_id target_project_id labels
           work_in_progress milestone merge_when_build_succeeds merge_status
           subscribed user_notes_count approvals_before_merge
           should_remove_source_branch force_remove_source_branch
-        ].each do |key|
+        ).each do |key|
           key_present = plugin.pr_json.key?(key.to_s)
           expect(key_present).to be_truthy, "Expected key #{key} not found"
         end
@@ -90,4 +90,3 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
   end
 end
-
