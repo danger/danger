@@ -12,9 +12,8 @@ RSpec.describe Danger::Helpers::ArraySublcass do
     concated_list = first_list + second_list
     mapped_mutated_list = third_list.map! { |item| item + 10 }
     deleted_from_list = fourth_list.delete_at(0)
-    reduced_list = first_list.each_with_index.reduce({}) do |accum, (i, el)|
-      accum.store(i, el)
-      accum
+    reduced_list = first_list.each_with_object({}) do |el, accum|
+      accum.store(el, el)
     end
 
     expect(first_list.length).to eq(3)
@@ -24,7 +23,7 @@ RSpec.describe Danger::Helpers::ArraySublcass do
     expect(mapped_mutated_list).to eq(List.new([11, 12, 13]))
     expect(deleted_from_list).to eq(7)
     expect(fourth_list).to eq(List.new([7]))
-    expect(reduced_list).to eq({ 1 => 0, 2 => 1, 3 => 2 })
+    expect(reduced_list).to eq({ 1 => 1, 2 => 2, 3 => 3 })
   end
 
   describe "equality" do
