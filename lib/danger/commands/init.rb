@@ -143,9 +143,14 @@ module Danger
     end
 
     def current_repo_slug
-      @git = GitRepo.new
-      repo_matches = @git.origins.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-      (repo_matches[2] || "[Your/Repo]").strip
+      git = GitRepo.new
+
+      author_repo_regexp = %r{(?:[\/:])([^\/]+\/[^\/]+)(?:.git)?$}
+      last_git_regexp = /.git$/
+
+      matches = git.origins.match(author_repo_regexp)
+
+      matches ? matches[1].gsub(last_git_regexp, "").strip : "[Your/Repo]"
     end
 
     def setup_danger_ci
