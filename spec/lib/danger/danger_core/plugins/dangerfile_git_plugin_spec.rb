@@ -133,5 +133,12 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
         expect(@dsl.renamed_files).to eq(renamed_files)
       end
     end
+
+    describe "#diff" do
+      it "delegates to scm" do
+        allow(@repo).to receive(:diff).and_return(:diff)
+        expect(@dsl.diff).to eq(:diff)
+      end
+    end
   end
 end
