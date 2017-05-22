@@ -132,7 +132,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
       methods = dm.external_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
       expect(methods).to eq %i(
         added_files api base_commit branch_for_base branch_for_head commits
-        deleted_files deletions diff_for_file dismiss_out_of_range_messages
+        deleted_files deletions diff diff_for_file dismiss_out_of_range_messages
         head_commit html_link import_dangerfile import_plugin info_for_file
         insertions lines_of_code modified_files mr_author mr_body mr_json
         mr_labels mr_title pr_author pr_body pr_diff pr_json pr_labels
@@ -207,7 +207,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
         expect(data).to eq %i(
           added_files api base_commit branch_for_base branch_for_head commits
-          deleted_files deletions head_commit insertions lines_of_code
+          deleted_files deletions diff head_commit insertions lines_of_code
           modified_files mr_author mr_body mr_json mr_labels mr_title
           pr_author pr_body pr_diff pr_json pr_labels pr_title
           renamed_files review scm_provider

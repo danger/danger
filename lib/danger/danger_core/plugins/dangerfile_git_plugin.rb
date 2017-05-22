@@ -84,6 +84,14 @@ module Danger
     end
 
     # @!group Git Metadata
+    # Whole diff
+    # @return [Git::Diff] from the gem `git`
+    #
+    def diff
+      @git.diff
+    end
+
+    # @!group Git Metadata
     # The overall lines of code added/removed in the diff
     # @return [Fixnum]
     #
