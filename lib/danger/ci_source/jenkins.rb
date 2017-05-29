@@ -29,6 +29,11 @@ module Danger
   #
   # With that set up, you can edit your job to add `bundle exec danger` at the build action.
   #
+  # #### General
+  #
+  # People occasionally see issues with Danger not classing your CI runs as a PR, to give you visibilty
+  # the Jenkins side of Danger expects to see one of these env vars: ghprbPullId, CHANGE_ID or gitlabMergeRequestId
+  #
   # ### Token Setup
   #
   # #### GitHub
