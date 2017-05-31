@@ -226,12 +226,17 @@ module Danger
 
     # @!group GitHub Misc
     # Use to ignore inline messages which lay outside a diff's range, thereby not posting them in the main comment.
-    # @param    [Bool] dismiss
+    # You can set hash to change behavior per each kinds. (ex. `{warning: true, error: false}`)
+    # @param    [Bool] or [Hash<Symbol, Bool>] dismiss
     #           Ignore out of range inline messages, defaults to `true`
     #
     # @return   [void]
     def dismiss_out_of_range_messages(dismiss: true)
-      @github.dismiss_out_of_range_messages = dismiss == true
+      if dismiss.kind_of?(Hash)
+        @github.dismiss_out_of_range_messages = dismiss
+      elsif dismiss.kind_of?(TrueClass)
+        @github.dismiss_out_of_range_messages = true
+      end
     end
 
     %i(title body author labels json).each do |suffix|
