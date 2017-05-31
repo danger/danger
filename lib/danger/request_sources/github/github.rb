@@ -289,7 +289,7 @@ module Danger
         head_ref = pr_json["head"]["sha"]
         previous_violations ||= []
         is_markdown_content = kind == :markdown
-        emoji = {warning: "warning", error: "no_entry_sign", message: "book"}[kind]
+        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
 
         messages.reject do |m|
           next false unless m.file && m.line
