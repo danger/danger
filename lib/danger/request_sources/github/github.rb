@@ -245,18 +245,10 @@ module Danger
         danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }
         non_danger_comments = pr_comments - danger_comments
 
-        warnings = submit_inline_comments_for_kind!(
-          "warning", warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id
-        )
-        errors = submit_inline_comments_for_kind!(
-          "no_entry_sign", errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id
-        )
-        messages = submit_inline_comments_for_kind!(
-          "book", messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id
-        )
-        markdowns = submit_inline_comments_for_kind!(
-          nil, markdowns, diff_lines, danger_comments, [], danger_id: danger_id
-        )
+        warnings = submit_inline_comments_for_kind!(:warning, warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
+        errors = submit_inline_comments_for_kind!(:error, errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
+        messages = submit_inline_comments_for_kind!(:message, messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
+        markdowns = submit_inline_comments_for_kind!(:markdown, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
 
         # submit removes from the array all comments that are still in force
         # so we strike out all remaining ones
@@ -293,18 +285,19 @@ module Danger
           m1.message.sub(blob_regexp, "") == m2.message.sub(blob_regexp, "")
       end
 
-      def submit_inline_comments_for_kind!(emoji, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
+      def submit_inline_comments_for_kind!(kind, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
         head_ref = pr_json["head"]["sha"]
         previous_violations ||= []
-        is_markdown_content = emoji.nil?
+        is_markdown_content = kind == :markdown
+        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
 
         messages.reject do |m|
           next false unless m.file && m.line
 
-          position = find_position_in_diff diff_lines, m
+          position = find_position_in_diff diff_lines, m, kind
 
           # Keep the change if it's line is not in the diff and not in dismiss mode
-          next self.dismiss_out_of_range_messages if position.nil?
+          next dismiss_out_of_range_messages_for(kind) if position.nil?
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
@@ -349,7 +342,7 @@ module Danger
         end
       end
 
-      def find_position_in_diff(diff_lines, message)
+      def find_position_in_diff(diff_lines, message, kind)
         range_header_regexp = /@@ -([0-9]+),([0-9]+) \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
         file_header_regexp = %r{^diff --git a/.*}
 
@@ -372,7 +365,7 @@ module Danger
           # so we do it one by one ignoring the deleted lines
           if !file_line.nil? && !line.start_with?("-")
             if file_line == message.line
-              file_line = nil if dismiss_out_of_range_messages && !line.start_with?("+")
+              file_line = nil if dismiss_out_of_range_messages_for(kind) && !line.start_with?("+")
               break
             end
             file_line += 1
@@ -430,6 +423,16 @@ module Danger
         return matched[1] if matched && matched[1]
       rescue
         nil
+      end
+
+      def dismiss_out_of_range_messages_for(kind)
+        if self.dismiss_out_of_range_messages.kind_of?(Hash) && self.dismiss_out_of_range_messages[kind]
+          self.dismiss_out_of_range_messages[kind]
+        elsif self.dismiss_out_of_range_messages == true
+          self.dismiss_out_of_range_messages
+        else
+          false
+        end
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded

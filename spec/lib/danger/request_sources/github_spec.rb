@@ -396,6 +396,26 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
+      it "ingores out of range inline comments when in dismiss mode per kind" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        m = Danger::Markdown.new("Sure thing", "CHANGELOG.md", 4)
+        @g.dismiss_out_of_range_messages = {
+          warning: false,
+          error: false,
+          message: false,
+          markdown: true
+        }
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v], markdowns: [m])
+      end
+
       it "crosses out sticky comments" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 
