@@ -5,6 +5,7 @@
 * Improve remotes parsing for init command - [@sleekybadger](https://github.com/sleekybadger)
 * Adds ability to get the whole diff object at `git.diff` - This lets you do
   more fine grained checks on the raw changes. - [@sleekybadger](https://github.com/sleekybadger)
+* Add ability to set dismiss_out_of_range_messages per each message kinds. - [@giginet](https://github.com/giginet)
 
 ## 5.2.2
 
