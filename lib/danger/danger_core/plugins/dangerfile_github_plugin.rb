@@ -231,11 +231,11 @@ module Danger
     #           Ignore out of range inline messages, defaults to `true`
     #
     # @return   [void]
-    def dismiss_out_of_range_messages(dismiss: true)
+    def dismiss_out_of_range_messages(dismiss = true)
       if dismiss.kind_of?(Hash)
         @github.dismiss_out_of_range_messages = dismiss
-      elsif dismiss.kind_of?(TrueClass)
-        @github.dismiss_out_of_range_messages = true
+      else
+        @github.dismiss_out_of_range_messages = !!dismiss
       end
     end
 

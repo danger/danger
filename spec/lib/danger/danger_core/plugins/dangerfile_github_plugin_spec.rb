@@ -30,6 +30,20 @@ RSpec.describe Danger::DangerfileGitHubPlugin, host: :github do
                            "<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/example.json'>example.json</a> & " \
                            "<a href='https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/script.rb#L30'>script.rb#L30</a>")
       end
+
+      describe "#dismiss_out_of_range_messages" do
+        context "without argument" do
+          it { expect(@dsl.dismiss_out_of_range_messages).not_to be_nil }
+        end
+
+        context "with bool" do
+          it { expect(@dsl.dismiss_out_of_range_messages(false)).not_to be_nil }
+        end
+
+        context "with Hash" do
+          it { expect(@dsl.dismiss_out_of_range_messages({ error: true, warning: false })).not_to be_nil }
+        end
+      end
     end
   end
 end
