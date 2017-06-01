@@ -18,18 +18,34 @@ module Danger
   # Add the `DANGER_GITLAB_API_TOKEN` to your build user's ENV.
 
   class Buddybuild < CI
-    def self.validates_as_ci?(_)
-      false
+
+    #######################################################################
+    def self.validates_as_ci?(env)
+      value = env["BUDDYBUILD_BUILD_ID"]
+      return !value.nil? && !env["BUDDYBUILD_BUILD_ID"].empty?
     end
 
-    def self.validates_as_pr?(_)
-      false
+    #######################################################################
+    def self.validates_as_pr?(env)
+      value = env["BUDDYBUILD_PULL_REQUEST"]
+      return !value.nil? && !env["BUDDYBUILD_PULL_REQUEST"].empty?
     end
 
-    def initialize(_) end
-
+    #######################################################################
     def supported_request_sources
-      @supported_request_sources ||= []
+      @supported_request_sources ||= [
+          Danger::RequestSources::GitHub,
+          Danger::RequestSources::GitLab,
+          Danger::RequestSources::BitbucketServer,
+          Danger::RequestSources::BitbucketCloud
+      ]
+    end
+
+    #######################################################################
+    def initialize(env)
+      self.repo_slug = env["BUDDYBUILD_REPO_SLUG"]
+      self.pull_request_id = env["BUDDYBUILD_PULL_REQUEST"]
+      self.repo_url = GitRepo.new.origins # Buddybuild doesn't provide a repo url env variable for now
     end
   end
 end

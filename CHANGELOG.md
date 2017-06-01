@@ -23,6 +23,7 @@
 
 ## 5.3.0
 
+* Add actual support for [buddybuild](buddybuild.com) - [@palleas](https://github.com/palleas)
 * Improve remotes parsing for init command - [@sleekybadger](https://github.com/sleekybadger)
 * Adds ability to get the whole diff object at `git.diff` - This lets you do
   more fine grained checks on the raw changes. - [@sleekybadger](https://github.com/sleekybadger)
