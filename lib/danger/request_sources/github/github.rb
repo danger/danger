@@ -312,13 +312,14 @@ module Danger
           end
 
           matching_comments = danger_comments.select do |comment_data|
-            if comment_data["path"] == m.file && comment_data["commit_id"] == head_ref && comment_data["position"] == position
+            if comment_data["path"] == m.file && comment_data["position"] == position
               # Parse it to avoid problems with strikethrough
               violation = violations_from_table(comment_data["body"]).first
               if violation
                 messages_are_equivalent(violation, m)
               else
-                comment_data["body"] == body
+                blob_regexp = %r{blob/[0-9a-z]+/}
+                comment_data["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
               end
             else
               false
