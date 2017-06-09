@@ -2,6 +2,8 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+* Fixes for duplicated GitHub inline comments - [@litmon](https://github.com/litmon)
+
 ## 5.3.0
 
 * Improve remotes parsing for init command - [@sleekybadger](https://github.com/sleekybadger)
