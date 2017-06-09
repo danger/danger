@@ -2,6 +2,8 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+## 5.3.0
+
 * Improve remotes parsing for init command - [@sleekybadger](https://github.com/sleekybadger)
 * Adds ability to get the whole diff object at `git.diff` - This lets you do
   more fine grained checks on the raw changes. - [@sleekybadger](https://github.com/sleekybadger)
