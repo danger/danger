@@ -27,6 +27,18 @@ RSpec.describe Danger::GitRepo, host: :github do
         end.to raise_error(RuntimeError, /doesn't exist/)
       end
     end
+
+    it "passes commits count in branch to git log" do
+      with_git_repo do |dir|
+        @dm = testing_dangerfile
+
+        expect_any_instance_of(Git::Base).to(
+          receive(:log).with(1).and_call_original
+        )
+
+        @dm.env.scm.diff_for_folder(dir)
+      end
+    end
   end
 
   describe "Return Types" do
