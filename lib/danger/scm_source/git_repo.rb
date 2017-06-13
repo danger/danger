@@ -14,9 +14,10 @@ module Danger
       ensure_commitish_exists!(to)
 
       merge_base = find_merge_base(repo, from, to)
+      commits_in_branch_count = commits_in_branch_count(from, to)
 
       self.diff = repo.diff(merge_base, to)
-      self.log = repo.log.between(from, to)
+      self.log = repo.log(commits_in_branch_count).between(from, to)
     end
 
     def renamed_files
@@ -107,6 +108,10 @@ module Danger
 
     def possible_merge_base(repo, from, to)
       [repo.merge_base(from, to)].find { |base| commit_exists?(base) }
+    end
+
+    def commits_in_branch_count(from, to)
+      exec("rev-list #{from}..#{to} --count").to_i
     end
   end
 end

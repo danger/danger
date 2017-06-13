@@ -3,6 +3,7 @@
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
 * Fixes for duplicated GitHub inline comments - [@litmon](https://github.com/litmon)
+* Fix wrong commits count for PR's that have more than 30 commits - [@sleekybadger](https://github.com/sleekybadger)
 
 ## 5.3.0
 
