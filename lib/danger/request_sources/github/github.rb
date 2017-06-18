@@ -1,5 +1,7 @@
 # coding: utf-8
 
+# rubocop:disable Metrics/ClassLength
+
 require "octokit"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
