@@ -4,6 +4,7 @@
 
 * Fixes for duplicated GitHub inline comments - [@litmon](https://github.com/litmon)
 * Fix wrong commits count for PR's that have more than 30 commits - [@sleekybadger](https://github.com/sleekybadger)
+* Fix markdown links to files in messages - [@ffittschen](https://github.com/ffittschen)
 
 ## 5.3.0
 
