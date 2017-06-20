@@ -47,8 +47,8 @@ module Danger
       end
 
       def setup_danger_branches
-        base_commit = self.pr_json[:toRef][:latestCommit]
-        head_commit = self.pr_json[:fromRef][:latestCommit]
+        base_commit = self.pr_json[:toRef][:latestChangeset]
+        head_commit = self.pr_json[:fromRef][:latestChangeset]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
         scm.ensure_commitish_exists! base_commit
