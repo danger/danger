@@ -83,7 +83,7 @@ RSpec.describe Danger::LocalGitRepo do
         let(:invalid_encoded_string) { "testing\xC2 a non UTF-8 string" }
 
         it "encodes the string correctly" do
-          expect { invalid_encoded_string.gsub(//, '') }.to raise_error(ArgumentError)
+          expect { invalid_encoded_string.gsub(//, "") }.to raise_error(ArgumentError)
 
           run_in_repo do
             File.open("file3", "w") {}
