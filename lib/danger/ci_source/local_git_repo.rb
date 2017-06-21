@@ -29,7 +29,7 @@ module Danger
     end
 
     def run_git(command)
-      git.exec command
+      git.exec(command).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     end
 
     def supported_request_sources
