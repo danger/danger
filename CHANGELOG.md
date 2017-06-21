@@ -1,13 +1,13 @@
 ## master
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
+* Explicitly encode the results of `git` executions in UTF-8 - [@nikhilmat](https://github.com/nikhilmat)
 
 ## 5.3.1
 
 * Fixes for duplicated GitHub inline comments - [@litmon](https://github.com/litmon)
 * Fix wrong commits count for PR's that have more than 30 commits - [@sleekybadger](https://github.com/sleekybadger)
 * Fix markdown links to files in messages - [@ffittschen](https://github.com/ffittschen)
-* Explicitly encode the results of `git` executions in UTF-8 - [@nikhilmat](https://github.com/nikhilmat)
 
 ## 5.3.0
 
