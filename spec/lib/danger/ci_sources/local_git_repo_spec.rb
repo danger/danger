@@ -82,7 +82,7 @@ RSpec.describe Danger::LocalGitRepo do
       context "with a non UTF-8 character" do
         let(:invalid_encoded_string) { "testing\xC2 a non UTF-8 string" }
 
-        it "enocdes the string correctly" do
+        it "encodes the string correctly" do
           expect { invalid_encoded_string.gsub(//, '') }.to raise_error(ArgumentError)
 
           run_in_repo do
