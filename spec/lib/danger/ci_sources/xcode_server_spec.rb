@@ -65,5 +65,13 @@ RSpec.describe Danger::XcodeServer do
     it "supports GitHub" do
       expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
     end
+
+    it "supports BitbucketServer" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketServer)
+    end
+
+    it "supports BitbucketCloud" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketCloud)
+    end
   end
 end
