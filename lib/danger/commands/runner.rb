@@ -12,7 +12,7 @@ module Danger
       CLAide::Plugins::Configuration.new(
         "Danger",
         "danger",
-        "https://raw.githubusercontent.com/danger/danger.systems/master/plugins-search-generated.json",
+        "https://gitlab.com/danger-systems/danger.systems/raw/master/plugins-search-generated.json",
         "https://github.com/danger/danger-plugin-template"
       )
 
