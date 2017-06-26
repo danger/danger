@@ -10,8 +10,9 @@ Formalize your Pull Request etiquette.
 
 <p align="center">
     <a href="#what-is-danger">What is Danger?</a> &bull;
+    <a href="VISION.md">Vision</a> &bull;
     <a href="#im-here-to-help-out">Helping Out</a> &bull;
-    <a href="#tell-me-of-these-plugins">Plugin Development</a>
+    <a href="http://danger.systems/guides/creating_your_first_plugin.html">Plugin Development</a>
 </p>
 
 -------
@@ -44,8 +45,6 @@ Alright. So, actually, you may be in the wrong place. From here on in, this READ
 We keep all of the end-user documentation at [http://danger.systems](http://danger.systems).
 
 Some quick links: [Guides Index](http://danger.systems/guides.html), [DSL Reference](http://danger.systems/reference.html), [Getting Started](http://danger.systems/guides/getting_started.html) and [What does Danger Do?](http://danger.systems/guides/what_does_danger_do.html).
-
-Sidenote: There is a [pure JS version](https://github.com/danger/danger-js) in the works, it's at the point where it can fail your build but that's about it for now, would love help there if it interests you.
 
 ## I'm here to help out!
 
@@ -82,11 +81,6 @@ Ruby is super dynamic. One of the best ways to debug Ruby code is by using [pry]
 require 'pry'
 binding.pry
 ```
-
-## Tell me of these Plugins
-
-* Follow the [Creating your first plugin](http://danger.systems/guides/creating_your_first_plugin.html) guide
-* (Talk through the tech specs here.)
 
 ## License, Contributor's Guidelines and Code of Conduct
 
