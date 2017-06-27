@@ -182,7 +182,7 @@ module Danger
 
     def uses_travis
       danger = "bundle exec danger".yellow
-      config = YAML.load(File.read(".travis.yml")) # rubocop:disable Security/YAMLLoad
+      config = YAML.load(File.read(".travis.yml"))
       if config.kind_of?(Hash) && config["script"]
         ui.say "Add " + "- ".yellow + danger + " as a new step in the " + "script".yellow + " section of your .travis.yml file."
       else
@@ -195,7 +195,7 @@ module Danger
 
     def uses_circle
       danger = "- bundle exec danger".yellow
-      config = YAML.load(File.read("circle.yml")) # rubocop:disable Security/YAMLLoad
+      config = YAML.load(File.read("circle.yml"))
 
       if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]

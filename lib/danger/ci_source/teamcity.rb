@@ -23,10 +23,10 @@ module Danger
   # As for `GITHUB_PULL_REQUEST_ID`, TeamCity provides the `%teamcity.build.branch%` variable which is in the format
   # `PR_NUMBER/merge`. You can slice the Pull Request ID out by doing the following:
   #
-  #```sh
-  #branch="%teamcity.build.branch%"
-  #export GITHUB_PULL_REQUEST_ID=(${branch//\// })
-  #```
+  # ```sh
+  # branch="%teamcity.build.branch%"
+  # export GITHUB_PULL_REQUEST_ID=(${branch//\// })
+  # ```
   #
   # #### GitLab
   #
