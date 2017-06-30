@@ -248,11 +248,11 @@ module Danger
 
       ui.say "In order to expose an environment variable, go to:"
       ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#env-vars"
-      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
     end
 
     def unsure_token
-      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
       ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
       ui.say "We have a guide for all supported CI systems on danger.systems:"
       ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
