@@ -7,7 +7,6 @@ require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 require "danger/request_sources/github/github_review"
 require "danger/request_sources/github/github_review_unsupported"
-require "danger/request_sources/github/octokit_pr_review"
 require "danger/request_sources/support/get_ignored_violation"
 
 module Danger

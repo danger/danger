@@ -34,7 +34,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
                                        danger_id: "danger",
                                        template: "github")
 
-      expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, expected_body)
+      expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, body: expected_body)
       subject.submit
     end
 
@@ -44,7 +44,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "approves the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, body: anything)
         subject.submit
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "approves the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, body: anything)
         subject.submit
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "approves the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, body: anything)
         subject.submit
       end
     end
@@ -77,7 +77,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "suggests changes to the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, body: anything)
         subject.submit
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "suggests changes to the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_REQUEST_CHANGES, body: anything)
         subject.submit
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
       end
 
       it "sapproves the pr" do
-        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, anything)
+        expect(client).to receive(:create_pull_request_review).with(stub_ci.repo_slug, stub_ci.pull_request_id, event: Danger::RequestSources::GitHubSource::Review::EVENT_APPROVE, body: anything)
         subject.submit
       end
     end

@@ -1,7 +1,6 @@
 # coding: utf-8
 
 require "danger/request_sources/github/github"
-require "danger/request_sources/github/octokit_pr_review"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/messages/violation"
