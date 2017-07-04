@@ -336,7 +336,7 @@ module Danger
               # Show more detail for UnprocessableEntity error
               message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
               puts message
-              
+
               # Not reject because this comment has not completed
               next false
             end
