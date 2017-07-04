@@ -3,6 +3,7 @@
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 * Add to documentation for TeamCity CI setup - [@atelic](https://github.com/atelic)
 * Show more error detail for UnprocessableEntity - [@litmon](https://github.com/litmon)
+* Use latest [octokit](https://github.com/octokit/octokit.rb) pr reviews functionality - [@antondomashnev](https://github.com/antondomashnev)
 
 ## 5.3.2
 
