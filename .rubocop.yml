@@ -148,3 +148,6 @@ PercentLiteralDelimiters:
     "%w": ()
     "%W": ()
     "%x": ()
+
+Security/YAMLLoad:
+  Enabled: false
