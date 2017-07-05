@@ -18,7 +18,7 @@ module Danger
   # to your build user's ENV.
   #
   # #### Bitbucket server
-  # Add the `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD` 
+  # Add the `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD`
   # and `DANGER_BITBUCKETSERVER_HOST` to your build user's ENV.
   #
   class Buddybuild < CI
@@ -38,10 +38,10 @@ module Danger
     #######################################################################
     def supported_request_sources
       @supported_request_sources ||= [
-          Danger::RequestSources::GitHub,
-          Danger::RequestSources::GitLab,
-          Danger::RequestSources::BitbucketServer,
-          Danger::RequestSources::BitbucketCloud
+        Danger::RequestSources::GitHub,
+        Danger::RequestSources::GitLab,
+        Danger::RequestSources::BitbucketServer,
+        Danger::RequestSources::BitbucketCloud
       ]
     end
 
