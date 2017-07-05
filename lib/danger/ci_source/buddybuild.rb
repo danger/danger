@@ -21,6 +21,11 @@ module Danger
   # Add the `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD`
   # and `DANGER_BITBUCKETSERVER_HOST` to your build user's ENV.
   #
+  # ### Running Danger
+  #
+  # Once the environment variables are all available, create a custom build step
+  # to run Danger as part of your build process:
+  # http://docs.buddybuild.com/docs/custom-prebuild-and-postbuild-steps
   class Buddybuild < CI
     #######################################################################
     def self.validates_as_ci?(env)
