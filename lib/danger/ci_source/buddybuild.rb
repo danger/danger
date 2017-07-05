@@ -22,7 +22,6 @@ module Danger
   # and `DANGER_BITBUCKETSERVER_HOST` to your build user's ENV.
   #
   class Buddybuild < CI
-
     #######################################################################
     def self.validates_as_ci?(env)
       value = env["BUDDYBUILD_BUILD_ID"]
