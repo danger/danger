@@ -1,22 +1,26 @@
 module Danger
   # ### CI Setup
   #
-  # Buddybuild has an integration for Danger already built-in.
-  # What you need to do is to upload your `Gemfile` and `Dangerfile` to
-  # the server and you should be all set-up. However, if you want to use
-  # different bot for Danger, you can do it with token setup described below.
-  #
   # ### Token Setup
   #
   # Login to buddybuild and select your app. Go to your *App Settings* and
   # in the *Build Settings* menu on the left, choose *Environment Variables*.
+  # http://docs.buddybuild.com/docs/environment-variables
   #
   # #### GitHub
   # Add the `DANGER_GITHUB_API_TOKEN` to your build user's ENV.
   #
   # #### GitLab
   # Add the `DANGER_GITLAB_API_TOKEN` to your build user's ENV.
-
+  #
+  # #### Bitbucket Cloud
+  # Add the `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD`
+  # to your build user's ENV.
+  #
+  # #### Bitbucket server
+  # Add the `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD` 
+  # and `DANGER_BITBUCKETSERVER_HOST` to your build user's ENV.
+  #
   class Buddybuild < CI
 
     #######################################################################
