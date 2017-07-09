@@ -111,7 +111,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
       expect(violations.size).to be(1)
       expect(violations.first).to eq(
-        violation("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
+        violation_factory("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
       )
     end
   end
@@ -125,9 +125,9 @@ RSpec.describe Danger::Helpers::CommentsHelper do
       expect(violations[:message]).to be_nil
 
       expect(violations[:error][0]).to eq(
-        violation("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
+        violation_factory("<p>Please include a CHANGELOG entry. You can find it at <a href=\"https://github.com/danger/danger/blob/master/CHANGELOG.md\">CHANGELOG.md</a>.</p>", sticky: true)
       )
-      expect(violations[:warning][0]).to eq(violation("<p>External contributor has edited the Gemspec</p>", sticky: true))
+      expect(violations[:warning][0]).to eq(violation_factory("<p>External contributor has edited the Gemspec</p>", sticky: true))
     end
 
     it "handles data-danger-table to identify danger tables" do
@@ -170,9 +170,9 @@ RSpec.describe Danger::Helpers::CommentsHelper do
   end
 
   describe "#table" do
-    let(:violation_1) { violation("**Violation 1**") }
+    let(:violation_1) { violation_factory("**Violation 1**") }
     let(:violation_2) do
-      violation("A [link](https://example.com)", sticky: true)
+      violation_factory("A [link](https://example.com)", sticky: true)
     end
 
     it "produces table data" do
@@ -221,10 +221,10 @@ RSpec.describe Danger::Helpers::CommentsHelper do
   describe "#generate_comment" do
     it "produces the expected comment" do
       comment = dummy.generate_comment(
-        warnings: [violation("This is a warning")],
-        errors: [violation("This is an error", sticky: true)],
-        messages: [violation("This is a message")],
-        markdowns: [markdown("*Raw markdown*")],
+        warnings: [violation_factory("This is a warning")],
+        errors: [violation_factory("This is an error", sticky: true)],
+        messages: [violation_factory("This is a message")],
+        markdowns: [markdown_factory("*Raw markdown*")],
         danger_id: "my_danger_id",
         template: "github"
       )
@@ -246,10 +246,10 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     it "produces HTML that a CommonMark parser will accept inline" do
       ["github", "github_inline"].each do |template|
         comment = dummy.generate_comment(
-          warnings: [violation("This is a warning")],
-          errors: [violation("This is an error", sticky: true)],
-          messages: [violation("This is a message")],
-          markdowns: [markdown("*Raw markdown*")],
+          warnings: [violation_factory("This is a warning")],
+          errors: [violation_factory("This is an error", sticky: true)],
+          messages: [violation_factory("This is a message")],
+          markdowns: [markdown_factory("*Raw markdown*")],
           danger_id: "my_danger_id",
           template: template
         )
@@ -261,7 +261,7 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
     it "produces the expected comment when there are newlines" do
       comment = dummy.generate_comment(
-        warnings: [violation("This is a warning\nin two lines")],
+        warnings: [violation_factory("This is a warning\nin two lines")],
         errors: [],
         messages: [],
         markdowns: [],
@@ -277,10 +277,10 @@ RSpec.describe Danger::Helpers::CommentsHelper do
 
     it "produces a comment containing a summary" do
       comment = dummy.generate_comment(
-        warnings: [violation("Violations that are very very very very long should be truncated")],
-        errors: [violation("This is an error", sticky: true)],
-        messages: [violation("This is a message")],
-        markdowns: [markdown("*Raw markdown*")],
+        warnings: [violation_factory("Violations that are very very very very long should be truncated")],
+        errors: [violation_factory("This is an error", sticky: true)],
+        messages: [violation_factory("This is a message")],
+        markdowns: [markdown_factory("*Raw markdown*")],
         danger_id: "my_danger_id",
         template: "github"
       )
@@ -305,21 +305,21 @@ COMMENT
     end
 
     it "supports markdown code below the summary table" do
-      result = dummy.generate_comment(warnings: violations(["ups"]), markdowns: violations(["### h3"]))
+      result = dummy.generate_comment(warnings: violations_factory(["ups"]), markdowns: violations_factory(["### h3"]))
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
     it "supports markdown only without a table" do
-      result = dummy.generate_comment(markdowns: violations(["### h3"]))
+      result = dummy.generate_comment(markdowns: violations_factory(["### h3"]))
       expect(result.gsub(/\s+/, "")).to end_with(
         '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
       )
     end
 
     it "some warnings, no errors" do
-      result = dummy.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
+      result = dummy.generate_comment(warnings: violations_factory(["my warning", "second warning"]), errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
@@ -328,7 +328,7 @@ COMMENT
     end
 
     it "some warnings with markdown, no errors" do
-      warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"])
+      warnings = violations_factory(["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"])
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
@@ -338,7 +338,7 @@ COMMENT
     end
 
     it "a multiline warning with markdown, no errors" do
-      warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)\n\n```\nsomething\n```\n\nHello"])
+      warnings = violations_factory(["a markdown [link to danger](https://github.com/danger/danger)\n\n```\nsomething\n```\n\nHello"])
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
@@ -348,7 +348,7 @@ COMMENT
     end
 
     it "some warnings, some errors" do
-      result = dummy.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
+      result = dummy.generate_comment(warnings: violations_factory(["my warning"]), errors: violations_factory(["some error"]), messages: [])
       # rubocop:disable Metrics/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">Danger</a></p>'
@@ -357,29 +357,29 @@ COMMENT
     end
 
     it "deduplicates previous violations" do
-      previous_violations = { error: violations(["an error", "an error"]) }
-      result = dummy.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
+      previous_violations = { error: violations_factory(["an error", "an error"]) }
+      result = dummy.generate_comment(warnings: [], errors: violations_factory([]), messages: [], previous_violations: previous_violations)
       expect(result.scan("an error").size).to eq(1)
     end
 
     it "includes a random compliment" do
-      previous_violations = { error: violations(["an error"]) }
-      result = dummy.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
+      previous_violations = { error: violations_factory(["an error"]) }
+      result = dummy.generate_comment(warnings: [], errors: violations_factory([]), messages: [], previous_violations: previous_violations)
       expect(result).to match(/:white_check_mark: \w+?/)
     end
 
     it "crosses resolved violations and changes the title" do
-      previous_violations = { error: violations(["an error"]) }
+      previous_violations = { error: violations_factory(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">:white_check_mark:')
       expect(result.gsub(/\s+/, "")).to include('<td>:white_check_mark:</td><tddata-sticky="true"><del>anerror</del></td>')
     end
 
     it "uncrosses violations that were on the list and happened again" do
-      previous_violations = { error: violations(["an error"]) }
+      previous_violations = { error: violations_factory(["an error"]) }
       result = dummy.generate_comment(
         warnings: [],
-        errors: violations(["an error"]),
+        errors: violations_factory(["an error"]),
         messages: [],
         previous_violations: previous_violations
       )
@@ -390,19 +390,19 @@ COMMENT
     end
 
     it "counts only unresolved violations on the title" do
-      previous_violations = { error: violations(["an error"]) }
-      result = dummy.generate_comment(warnings: [], errors: violations(["another error"]),
+      previous_violations = { error: violations_factory(["an error"]) }
+      result = dummy.generate_comment(warnings: [], errors: violations_factory(["another error"]),
                                    messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th>')
     end
 
     it "needs to include generated_by_danger" do
-      result = dummy.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
+      result = dummy.generate_comment(warnings: violations_factory(["my warning"]), errors: violations_factory(["some error"]), messages: [])
       expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
     end
 
     it "handles a custom danger_id" do
-      result = dummy.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]),
+      result = dummy.generate_comment(warnings: violations_factory(["my warning"]), errors: violations_factory(["some error"]),
                                    messages: [], danger_id: "another_danger")
       expect(result.gsub(/\s+/, "")).to include("generated_by_another_danger")
     end
@@ -421,7 +421,7 @@ COMMENT
 
     it "truncates comments which would exceed githubs maximum comment length" do
       warnings = (1..900).map { |i| "single long warning" * (rand(10) + 1) + i.to_s }
-      result = dummy.generate_comment(warnings: violations(warnings), errors: violations([]), messages: [])
+      result = dummy.generate_comment(warnings: violations_factory(warnings), errors: violations_factory([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
       expect(result).to include("has been truncated")
     end

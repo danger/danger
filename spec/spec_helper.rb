@@ -91,20 +91,20 @@ def diff_fixture(file)
   File.read("spec/fixtures/#{file}.diff")
 end
 
-def violation(message, sticky: false)
+def violation_factory(message, sticky: false)
   Danger::Violation.new(message, sticky)
 end
 
-def violations(messages, sticky: false)
-  messages.map { |s| violation(s, sticky: sticky) }
+def violations_factory(messages, sticky: false)
+  messages.map { |s| violation_factory(s, sticky: sticky) }
 end
 
-def markdown(message)
+def markdown_factory(message)
   Danger::Markdown.new(message)
 end
 
-def markdowns(messages)
-  messages.map { |s| markdown(s) }
+def markdowns_factory(messages)
+  messages.map { |s| markdown_factory(s) }
 end
 
 def with_git_repo(origin: "git@github.com:artsy/eigen")

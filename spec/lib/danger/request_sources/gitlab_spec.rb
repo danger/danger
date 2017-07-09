@@ -156,9 +156,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
     describe "#update_pull_request!" do
       it "creates a new comment when there is not one already" do
         body = subject.generate_comment(
-          warnings: violations(["Test warning"]),
-          errors: violations(["Test error"]),
-          messages: violations(["Test message"]),
+          warnings: violations_factory(["Test warning"]),
+          errors: violations_factory(["Test error"]),
+          messages: violations_factory(["Test message"]),
           template: "gitlab"
         )
         stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes").with(
@@ -166,9 +166,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           headers: expected_headers
         ).to_return(status: 200, body: "", headers: {})
         subject.update_pull_request!(
-          warnings: violations(["Test warning"]),
-          errors: violations(["Test error"]),
-          messages: violations(["Test message"])
+          warnings: violations_factory(["Test warning"]),
+          errors: violations_factory(["Test error"]),
+          messages: violations_factory(["Test message"])
         )
       end
 
@@ -186,12 +186,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         it "updates the existing comment instead of creating a new one" do
           allow(subject).to receive(:random_compliment).and_return("random compliment")
           body = subject.generate_comment(
-            warnings: violations(["New Warning"]),
+            warnings: violations_factory(["New Warning"]),
             errors: [],
             messages: [],
             previous_violations: {
               warning: [],
-              error: violations(["Test error"]),
+              error: violations_factory(["Test error"]),
               message: []
             },
             template: "gitlab"
@@ -202,7 +202,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           ).to_return(status: 200, body: "", headers: {})
 
           subject.update_pull_request!(
-            warnings: violations(["New Warning"]),
+            warnings: violations_factory(["New Warning"]),
             errors: [],
             messages: []
           )
@@ -210,9 +210,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
         it "creates a new comment instead of updating the existing one if --new-comment is provided" do
           body = subject.generate_comment(
-            warnings: violations(["Test warning"]),
-            errors: violations(["Test error"]),
-            messages: violations(["Test message"]),
+            warnings: violations_factory(["Test warning"]),
+            errors: violations_factory(["Test error"]),
+            messages: violations_factory(["Test message"]),
             template: "gitlab"
           )
           stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
@@ -220,9 +220,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
           subject.update_pull_request!(
-            warnings: violations(["Test warning"]),
-            errors: violations(["Test error"]),
-            messages: violations(["Test message"]),
+            warnings: violations_factory(["Test warning"]),
+            errors: violations_factory(["Test error"]),
+            messages: violations_factory(["Test message"]),
             new_comment: true
           )
         end

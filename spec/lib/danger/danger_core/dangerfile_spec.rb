@@ -61,9 +61,9 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
       dm.parse Pathname.new(""), code
 
-      expect(dm).to receive(:print_list).with("Errors:".red, violations(["Another error", "An error"], sticky: false))
-      expect(dm).to receive(:print_list).with("Warnings:".yellow, violations(["Another warning", "A warning"], sticky: false))
-      expect(dm).to receive(:print_list).with("Messages:", violations(["A message"], sticky: false))
+      expect(dm).to receive(:print_list).with("Errors:".red, violations_factory(["Another error", "An error"], sticky: false))
+      expect(dm).to receive(:print_list).with("Warnings:".yellow, violations_factory(["Another warning", "A warning"], sticky: false))
+      expect(dm).to receive(:print_list).with("Messages:", violations_factory(["A message"], sticky: false))
 
       dm.print_results
     end
