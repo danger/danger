@@ -3,7 +3,8 @@
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
 * Add actual support for [buddybuild](buddybuild.com) - [@palleas](https://github.com/palleas)
- 
+* Add ability to add multiple messages - [@sleekybadger](https://github.com/sleekybadger)
+
 ## 5.3.3
 
 * Add to documentation for TeamCity CI setup - [@atelic](https://github.com/atelic)
