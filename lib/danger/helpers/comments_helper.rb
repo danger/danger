@@ -25,7 +25,7 @@ module Danger
       #
       # @return [String] The Markdown compatible link
       def markdown_link_to_message(message, _)
-        "#{messages.file}#L#{message.line}"
+        "#{message.file}#L#{message.line}"
       end
 
       # !@group Extension points

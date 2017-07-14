@@ -2,8 +2,27 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+* Add actual support for [buddybuild](buddybuild.com) - [@palleas](https://github.com/palleas)
+* Add ability to add multiple messages - [@sleekybadger](https://github.com/sleekybadger)
+
+## 5.3.3
+
+* Add to documentation for TeamCity CI setup - [@atelic](https://github.com/atelic)
+* Show more error detail for UnprocessableEntity - [@litmon](https://github.com/litmon)
+* Use latest [octokit](https://github.com/octokit/octokit.rb) pr reviews functionality - [@antondomashnev](https://github.com/antondomashnev)
+
+## 5.3.2
+
+* Fix plugins search list to gitlab - [@leonhartX](https://github.com/leonhartX)
+* Explicitly encode the results of `git` executions in UTF-8 - [@nikhilmat](https://github.com/nikhilmat)
+* Adds BitbucketServer to XcodeServer's supported_request_sources
+[@anreitersimon](https://github.com/anreitersimon)
+
+## 5.3.1
+
 * Fixes for duplicated GitHub inline comments - [@litmon](https://github.com/litmon)
 * Fix wrong commits count for PR's that have more than 30 commits - [@sleekybadger](https://github.com/sleekybadger)
+* Fix markdown links to files in messages - [@ffittschen](https://github.com/ffittschen)
 
 ## 5.3.0
 

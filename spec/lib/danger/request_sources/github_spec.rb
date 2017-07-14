@@ -1,7 +1,6 @@
 # coding: utf-8
 
 require "danger/request_sources/github/github"
-require "danger/request_sources/github/octokit_pr_review"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
 require "danger/danger_core/messages/violation"
@@ -179,17 +178,17 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "Shows an error messages when there are errors" do
-        message = @g.generate_description(warnings: violations([1, 2, 3]), errors: [])
+        message = @g.generate_description(warnings: violations_factory([1, 2, 3]), errors: [])
         expect(message).to eq("⚠️ 3 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
+        message = @g.generate_description(warnings: violations_factory([1, 2]), errors: violations_factory([1, 2, 3]))
         expect(message).to eq("⚠️ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_description(warnings: violations([1]), errors: violations([1]))
+        message = @g.generate_description(warnings: violations_factory([1]), errors: violations_factory([1]))
         expect(message).to eq("⚠️ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
     end
@@ -220,7 +219,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
 
         expect do
-          @g.submit_pull_request_status!(errors: violations(["error"]))
+          @g.submit_pull_request_status!(errors: violations_factory(["error"]))
         end.to raise_error.and output(/Danger has failed this build/).to_stderr
       end
 
@@ -230,7 +229,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
 
         expect do
-          @g.submit_pull_request_status!(warnings: violations(["error"]))
+          @g.submit_pull_request_status!(warnings: violations_factory(["error"]))
         end.to output(/warning.*not have write access/im).to_stdout
       end
     end
@@ -245,40 +244,40 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         comments = []
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
       end
 
       it "updates the issue if no danger comments exist" do
         comments = [{ "body" => "generated_by_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
       end
 
       it "creates a new comment instead of updating the issue if --new-comment is provided" do
         comments = [{ "body" => "generated_by_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], new_comment: true)
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [], new_comment: true)
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
         comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [], danger_id: "another_danger")
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [], danger_id: "another_danger")
       end
 
       it "deletes existing comments if danger doesnt need to say anything" do

@@ -182,7 +182,7 @@ module Danger
 
     def uses_travis
       danger = "bundle exec danger".yellow
-      config = YAML.load(File.read(".travis.yml")) # rubocop:disable Security/YAMLLoad
+      config = YAML.load(File.read(".travis.yml"))
       if config.kind_of?(Hash) && config["script"]
         ui.say "Add " + "- ".yellow + danger + " as a new step in the " + "script".yellow + " section of your .travis.yml file."
       else
@@ -195,7 +195,7 @@ module Danger
 
     def uses_circle
       danger = "- bundle exec danger".yellow
-      config = YAML.load(File.read("circle.yml")) # rubocop:disable Security/YAMLLoad
+      config = YAML.load(File.read("circle.yml"))
 
       if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]
@@ -248,11 +248,11 @@ module Danger
 
       ui.say "In order to expose an environment variable, go to:"
       ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#env-vars"
-      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
     end
 
     def unsure_token
-      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
       ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
       ui.say "We have a guide for all supported CI systems on danger.systems:"
       ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"

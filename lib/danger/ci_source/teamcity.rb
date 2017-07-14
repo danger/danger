@@ -17,7 +17,16 @@ module Danger
   # is to pass in the token as a prefix to the command `DANGER_GITHUB_API_TOKEN="123" bundle exec danger`.
   #
   # However, you will need to find a way to add the environment vars: `GITHUB_REPO_SLUG`, `GITHUB_PULL_REQUEST_ID` and
-  # `GITHUB_REPO_URL`. These are not added by default. You could do this via the GitHub API potentially.
+  # `GITHUB_REPO_URL`. These are not added by default. You can manually add `GITHUB_REPO_SLUG` and `GITHUB_REPO_URL`
+  #  as build parameters or by exporting them inside your Simple Command Runner.
+  #
+  # As for `GITHUB_PULL_REQUEST_ID`, TeamCity provides the `%teamcity.build.branch%` variable which is in the format
+  # `PR_NUMBER/merge`. You can slice the Pull Request ID out by doing the following:
+  #
+  # ```sh
+  # branch="%teamcity.build.branch%"
+  # export GITHUB_PULL_REQUEST_ID=(${branch//\// })
+  # ```
   #
   # #### GitLab
   #

@@ -7,7 +7,6 @@ require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 require "danger/request_sources/github/github_review"
 require "danger/request_sources/github/github_review_unsupported"
-require "danger/request_sources/github/octokit_pr_review"
 require "danger/request_sources/support/get_ignored_violation"
 
 module Danger
@@ -329,8 +328,17 @@ module Danger
           end
 
           if matching_comments.empty?
-            client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                               body, head_ref, m.file, position)
+            begin
+              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
+                                                 body, head_ref, m.file, position)
+            rescue Octokit::UnprocessableEntity => e
+              # Show more detail for UnprocessableEntity error
+              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
+              puts message
+
+              # Not reject because this comment has not completed
+              next false
+            end
           else
             # Remove the surviving comment so we don't strike it out
             danger_comments.reject! { |c| matching_comments.include? c }

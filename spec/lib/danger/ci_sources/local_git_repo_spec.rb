@@ -65,6 +65,45 @@ RSpec.describe Danger::LocalGitRepo do
       end
     end
 
+    describe "repo_logs" do
+      let(:git_sha_regex) { /\b[0-9a-f]{5,40}\b/ }
+
+      it "returns the git logs correctly" do
+        run_in_repo do
+          result = source(valid_env)
+          expect(result.run_git("log --oneline -1000000".freeze).split("\n")).to match_array [
+            /#{git_sha_regex} Merge pull request #1234 from new-branch/,
+            /#{git_sha_regex} adding file2/,
+            /#{git_sha_regex} adding file1/
+          ]
+        end
+      end
+
+      context "with a non UTF-8 character" do
+        let(:invalid_encoded_string) { "testing\xC2 a non UTF-8 string" }
+
+        it "encodes the string correctly" do
+          expect { invalid_encoded_string.gsub(//, "") }.to raise_error(ArgumentError)
+
+          run_in_repo do
+            File.open("file3", "w") {}
+            `git add .`
+            `git commit -m "#{invalid_encoded_string}"`
+
+            result = source(valid_env)
+            logs = nil
+            expect { logs = result.run_git("log --oneline -1000000".freeze) }.to_not raise_error
+            expect(logs.split("\n")).to match_array [
+              /#{git_sha_regex} testing a non UTF-8 string/,
+              /#{git_sha_regex} Merge pull request #1234 from new-branch/,
+              /#{git_sha_regex} adding file2/,
+              /#{git_sha_regex} adding file1/
+            ]
+          end
+        end
+      end
+    end
+
     describe "repo_slug" do
       it "gets the repo slug when it uses https" do
         run_in_repo do
