@@ -5,7 +5,7 @@ Content-Type: application/json
 Content-Length: 1507
 Cache-Control: max-age=0, private, must-revalidate
 Etag: W/"e810a3b50890dd0a5823597abbbf9fc9"
-Link: <https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes?id=k0nserv/danger-test&merge_request_id=593728&page=1&per_page=20>; rel="first", <https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes?id=k0nserv/danger-test&merge_request_id=593728&page=1&per_page=20>; rel="last"
+Link: <https://gitlab.com/api/v4/projects/k0nserv/danger-test/merge_requests/593728/notes?id=k0nserv/danger-test&merge_request_id=593728&page=1&per_page=20>; rel="first", <https://gitlab.com/api/v3/projects/k0nserv/danger-test/merge_requests/593728/notes?id=k0nserv/danger-test&merge_request_id=593728&page=1&per_page=20>; rel="last"
 Status: 200 OK
 Vary: Origin
 X-Next-Page:
