@@ -1,6 +1,9 @@
 module Danger
   # ### CI Setup
   #
+  # Read how you can setup Danger on the buddybuild blog:
+  # https://www.buddybuild.com/blog/using-danger-with-buddybuild/
+  #
   # ### Token Setup
   #
   # Login to buddybuild and select your app. Go to your *App Settings* and

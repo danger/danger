@@ -6,13 +6,15 @@ module Danger
   # ### CI Setup
   #
   # Add a script step to your workflow:
-  # ``` yml
+  #
+  # ```yml
   # - script@1.1.2:
   #     inputs:
   #    - content: |-
   #        bundle install
   #        bundle exec danger
   # ```
+  #
   # ### Token Setup
   #
   # Add the `DANGER_GITHUB_API_TOKEN` to your workflow's App Env Vars.
