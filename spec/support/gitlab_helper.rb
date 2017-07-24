@@ -26,6 +26,12 @@ module Danger
         Danger::RequestSources::GitLab.new(stub_ci, stub_env)
       end
 
+      def stub_merge_requests(fixture, slug)
+        raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
+        url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests?state=opened"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
       def stub_merge_request(fixture, slug, merge_request_id)
         raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
         url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests/#{merge_request_id}"
