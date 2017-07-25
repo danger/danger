@@ -4,6 +4,8 @@
 
 * Add actual support for [buddybuild](https://buddybuild.com) - [@palleas](https://github.com/palleas)
 * Add ability to add multiple messages - [@sleekybadger](https://github.com/sleekybadger)
+* Use gitlab api v4, instead of deprecated v3 - [@sleekybadger](https://github.com/sleekybadger)
+* Add support for GitLabCI - [@sleekybadger](https://github.com/sleekybadger)
 
 ## 5.3.3
 
