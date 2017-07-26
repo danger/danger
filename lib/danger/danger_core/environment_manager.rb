@@ -83,13 +83,13 @@ module Danger
     private
 
     def get_repo_source()
-      if (env["DANGER_GITHUB_API_TOKEN"])
+      if ENV["DANGER_GITHUB_API_TOKEN"]
         RequestSources::GitHub
-      elsif (env["DANGER_GITLAB_API_TOKEN"])
+      elsif ENV["DANGER_GITLAB_API_TOKEN"]
         RequestSources::GitLab
-      elsif (env["DANGER_BITBUCKETCLOUD_USERNAME"]) && (env["DANGER_BITBUCKETCLOUD_PASSWORD"])
+      elsif ENV["DANGER_BITBUCKETCLOUD_USERNAME"] && ENV["DANGER_BITBUCKETCLOUD_PASSWORD"]
         RequestSources::BitbucketCloud
-      elsif (env["DANGER_BITBUCKETSERVER_USERNAME"]) && (env["DANGER_BITBUCKETSERVER_PASSWORD"]) && (env["DANGER_BITBUCKETSERVER_HOST"])
+      elsif ENV["DANGER_BITBUCKETSERVER_USERNAME"] && ENV["DANGER_BITBUCKETSERVER_PASSWORD"] && ENV["DANGER_BITBUCKETSERVER_HOST"]
         RequestSources::BitbucketServer
       end
     end
