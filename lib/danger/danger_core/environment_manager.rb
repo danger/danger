@@ -83,12 +83,14 @@ module Danger
     private
 
     def get_repo_source()
-      if defined? DANGER_GITHUB_API_BASE_URL
+      if (defined? DANGER_GITHUB_API_TOKEN)
         RequestSources::GitHub
-      elsif defined? DANGER_GITLAB_API_TOKEN
+      elsif (defined? DANGER_GITLAB_API_TOKEN)
         RequestSources::GitLab
-      elsif defined? DANGER_BITBUCKETCLOUD_USERNAME
+      elsif (defined? DANGER_BITBUCKETCLOUD_USERNAME) && (defined? DANGER_BITBUCKETCLOUD_PASSWORD)
         RequestSources::BitbucketCloud
+      elsif (defined? DANGER_BITBUCKETSERVER_USERNAME) && (defined? DANGER_BITBUCKETSERVER_PASSWORD) && (defined? DANGER_BITBUCKETSERVER_HOST)
+        RequestSources::BitbucketServer
       end
     end
 
