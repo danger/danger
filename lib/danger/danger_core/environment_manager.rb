@@ -82,18 +82,18 @@ module Danger
 
     private
 
-    def get_repo_source(repo_url)
-      if repo_url =~ /github/i
+    def get_repo_source()
+      if defined? DANGER_GITHUB_API_BASE_URL
         RequestSources::GitHub
-      elsif repo_url =~ /gitlab/i
+      elsif defined? DANGER_GITLAB_API_TOKEN
         RequestSources::GitLab
-      elsif repo_url =~ /bitbucket\.(org|com)/i
+      elsif defined? DANGER_BITBUCKETCLOUD_USERNAME
         RequestSources::BitbucketCloud
       end
     end
 
     def extract_title_and_subtitle_from_source(repo_url)
-      source = get_repo_source(repo_url)
+      source = get_repo_source()
 
       if source
         title = "For your #{source.source_name} repo, you need to expose: " + source.env_vars.join(", ").yellow
