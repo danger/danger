@@ -496,6 +496,15 @@ module Danger
           accumulator.merge(group) { |_, old, fresh| old + fresh }
         end
       end
+
+      def request_reviewers(reviewers: [])
+        begin
+          @client.request_pull_request_review(ci_source.repo_slug, ci_source.pull_request_id, reviewers)
+        rescue Octokit::UnprocessableEntity
+          puts "\nRequested reviewer is not a collaborator.".yellow
+        end
+      end
+
     end
   end
 end
