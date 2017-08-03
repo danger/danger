@@ -2,6 +2,10 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+## 5.4.0
+
+* Request reviewers for a Pull Request - [@hotbott](https://github.com/hotbott)
+
 ## 5.3.4
 
 This release adds compatibility for GitLab API v4, you need to update the [danger-gitlab gem](https://github.com/danger/danger-gitlab-gem) to be version `6.x` when you migrate to the new API. 👍
