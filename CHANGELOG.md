@@ -2,6 +2,8 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 * Tightens up pronouns in `danger init`.
+* Add `--verify-ssl` option to bypass Octokit's SSL Verification
+* Add `no_proxy_fix` gem as Ruby's no proxy is not working in `2.4.0/2.4.1`
 
 ## 5.3.4
 
