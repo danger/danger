@@ -75,7 +75,7 @@ module Danger
       cache_file = File.join(cache_dir, "danger_local_cache")
       cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
       Octokit.configure do |config|
-        config.connection_options[:ssl] = { :verify => @verify_ssl }
+        config.connection_options[:ssl] = { verify: @verify_ssl }
       end
       Octokit.middleware = Faraday::RackBuilder.new do |builder|
         builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
