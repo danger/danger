@@ -78,6 +78,7 @@ module Danger
                                    template: "bitbucket_server")
 
         @api.post_comment(comment)
+        # @api.post_inline_comment(comment)
       end
 
       def delete_old_comments(danger_id: "danger")
