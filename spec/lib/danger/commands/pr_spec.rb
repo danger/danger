@@ -41,6 +41,8 @@ RSpec.describe Danger::PR do
       expect(result).to include ["--clear-http-cache", "Clear the local http cache before running Danger locally."]
       expect(result).to include ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       expect(result).to include ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"]
+      expect(result).to include ["--verify-ssl", "Verify SSL in Octokit"]
+
     end
 
     it "dangerfile can be set" do
@@ -56,14 +58,15 @@ RSpec.describe Danger::PR do
   end
 
   context "default options" do
-    it "pr url is nil and clear_http_cache defaults to false" do
+    it "pr url is nil, clear_http_cache defaults to false and verify-ssl defaults to true" do
       argv = CLAide::ARGV.new([])
 
       result = described_class.new(argv)
 
       expect(result).to have_instance_variables(
         "@pr_url" => nil,
-        "@clear_http_cache" => false
+        "@clear_http_cache" => false,
+        "@verify_ssl" => true
       )
     end
   end
