@@ -105,6 +105,8 @@ module Danger
         :bitbucket_server
       when Danger::RequestSources::BitbucketCloud
         :bitbucket_cloud
+      when Danger::RequestSources::VSTS
+        :vsts
       else
         :unknown
       end
