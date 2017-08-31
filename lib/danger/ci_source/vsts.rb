@@ -9,7 +9,7 @@ module Danger
   # ### Token Setup
   #
   # #### VSTS
-  # 
+  #
   # You need to add the `DANGER_VSTS_API_TOKEN` and `DANGER_VSTS_HOST` environment variable, to do this,
   # go to your build definition's variables tab. The `DANGER_VSTS_API_TOKEN` is your vsts personal access token.
   # Instructions for creating a personal access token can be found [here](https://www.visualstudio.com/en-us/docs/setup-admin/team-services/use-personal-access-tokens-to-authenticate).
@@ -43,4 +43,4 @@ module Danger
       self.repo_url = env["BUILD_REPOSITORY_URI"]
     end
   end
-  end
+end
