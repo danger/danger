@@ -30,11 +30,6 @@ module Danger
         @api = VSTSAPI.new(project, slug, ci_source.pull_request_id, environment)
       end
 
-      def validates_as_ci?
-        # TODO: ???
-        true
-      end
-
       def validates_as_api_source?
         @api.credentials_given?
       end
