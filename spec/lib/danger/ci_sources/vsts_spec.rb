@@ -3,10 +3,12 @@ require "danger/ci_source/vsts"
 RSpec.describe Danger::VSTS do
   let(:valid_env) do
     {
-      "BUILD_BUILDID" => "5",
-      "SYSTEM_PULLREQUEST_PULLREQUESTID" => "800",
-      "SYSTEM_TEAMPROJECT" => "artsy",
-      "BUILD_REPOSITORY_URI" => "https://test.visualstudio.com/_git/eigen"
+      "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" => "https://example.visualstudio.com",
+      "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/danger-test",
+      "BUILD_SOURCEBRANCH" => "refs/pull/800/merge",
+      "BUILD_REASON" => "PullRequest",
+      "BUILD_REPOSITORY_NAME" => "example/danger-test",
+      "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
     }
   end
 
@@ -19,17 +21,27 @@ RSpec.describe Danger::VSTS do
   let(:source) { described_class.new(valid_env) }
 
   describe ".validates_as_ci?" do
-    it "validates when required env variables are set" do
+    it "validates when the required env variables are set" do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
-    it "validates even when `BUILD_BUILDID` is missing" do
-      valid_env["BUILD_BUILDID"] = nil
+    it "validates even when `SYSTEM_TEAMFOUNDATIONCOLLECTIONURI` is missing" do
+      valid_env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = nil
       expect(described_class.validates_as_ci?(valid_env)).to be false
     end
 
-    it "validates even when `BUILD_BUILDID` is empty" do
-      valid_env["BUILD_BUILDID"] = ""
+    it "validates even when `SYSTEM_TEAMFOUNDATIONCOLLECTIONURI` is empty" do
+      valid_env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = ""
+      expect(described_class.validates_as_ci?(valid_env)).to be false
+    end
+
+    it "validates even when `BUILD_REPOSITORY_PROVIDER` is missing" do
+      valid_env["BUILD_REPOSITORY_PROVIDER"] = nil
+      expect(described_class.validates_as_ci?(valid_env)).to be false
+    end
+
+    it "validates even when `BUILD_REPOSITORY_PROVIDER` is empty" do
+      valid_env["BUILD_REPOSITORY_PROVIDER"] = ""
       expect(described_class.validates_as_ci?(valid_env)).to be false
     end
 
@@ -43,14 +55,48 @@ RSpec.describe Danger::VSTS do
       expect(described_class.validates_as_pr?(valid_env)).to be true
     end
 
-    it "doesn't validate if `SYSTEM_PULLREQUEST_PULLREQUESTID` is missing" do
-      valid_env["SYSTEM_PULLREQUEST_PULLREQUESTID"] = nil
+    it "doesn't validate if `BUILD_SOURCEBRANCH` is missing" do
+      valid_env["BUILD_SOURCEBRANCH"] = nil
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end
 
-    it "doesn't validate_as_pr if `SYSTEM_PULLREQUEST_PULLREQUESTID` is the empty string" do
-      valid_env["SYSTEM_PULLREQUEST_PULLREQUESTID"] = ""
+    it "doesn't validate_as_pr if `BUILD_SOURCEBRANCH` is the empty string" do
+      valid_env["BUILD_SOURCEBRANCH"] = ""
       expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate if `BUILD_REPOSITORY_URI` is missing" do
+      valid_env["BUILD_REPOSITORY_URI"] = nil
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate_as_pr if `BUILD_REPOSITORY_URI` is the empty string" do
+      valid_env["BUILD_REPOSITORY_URI"] = ""
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate if `BUILD_REASON` is missing" do
+      valid_env["BUILD_REASON"] = nil
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate_as_pr if `BUILD_REASON` is the empty string" do
+      valid_env["BUILD_REASON"] = ""
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate if `BUILD_REPOSITORY_NAME` is missing" do
+      valid_env["BUILD_REPOSITORY_NAME"] = nil
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate_as_pr if `BUILD_REPOSITORY_NAME` is the empty string" do
+      valid_env["BUILD_REPOSITORY_NAME"] = ""
+      expect(described_class.validates_as_pr?(valid_env)).to be false
+    end
+
+    it "doesn't validate when require env variables are not set" do
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
     end
   end
 
@@ -60,12 +106,12 @@ RSpec.describe Danger::VSTS do
     end
 
     it "sets the repo_slug" do
-      expect(source.repo_slug).to eq("artsy/eigen")
+      expect(source.repo_slug).to eq("example/danger-test")
     end
 
     it "sets the repo_url", host: :vsts do
       with_git_repo do
-        expect(source.repo_url).to eq("https://test.visualstudio.com/_git/eigen")
+        expect(source.repo_url).to eq("https://example.visualstudio.com/_git/danger-test")
       end
     end
   end
@@ -73,6 +119,10 @@ RSpec.describe Danger::VSTS do
   describe "#supported_request_sources" do
     it "supports VSTS" do
       expect(source.supported_request_sources).to include(Danger::RequestSources::VSTS)
+    end
+
+    it "supports GitHub" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
     end
   end
 end

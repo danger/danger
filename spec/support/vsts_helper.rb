@@ -5,10 +5,12 @@ module Danger
         {
           "DANGER_VSTS_HOST" => "https://example.visualstudio.com/example",
           "DANGER_VSTS_API_TOKEN" => "a_token",
-          "BUILD_BUILDID" => "3",
-          "SYSTEM_PULLREQUEST_PULLREQUESTID" => "1",
-          "SYSTEM_TEAMPROJECT" => "example",
-          "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/example"
+          "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" => "https://example.visualstudio.com",
+          "BUILD_SOURCEBRANCH" => "refs/pull/1/merge",
+          "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/example",
+          "BUILD_REASON" => "PullRequest",
+          "BUILD_REPOSITORY_NAME" => "example/example",
+          "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
         }
       end
 

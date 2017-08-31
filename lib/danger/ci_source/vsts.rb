@@ -1,3 +1,4 @@
+require "danger/request_sources/github/github"
 require "danger/request_sources/vsts"
 
 module Danger
@@ -7,6 +8,13 @@ module Danger
   # and the "Arguments" field set to "exec danger".
   #
   # ### Token Setup
+  #
+  # #### GitHub
+  #
+  # You need to add the `DANGER_GITHUB_API_TOKEN` environment variable, to do this, go to your build definition's variables tab.
+  #
+  # Make sure `DANGER_GITHUB_API_TOKEN` is not secret since it won't vsts does not expose secret variables
+  # when building.
   #
   # #### VSTS
   #
@@ -21,25 +29,27 @@ module Danger
   #
   class VSTS < CI
     def self.validates_as_ci?(env)
-      value = env["BUILD_BUILDID"]
-      return !value.nil? && !env["BUILD_BUILDID"].empty?
+      has_all_variables = ["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", "BUILD_REPOSITORY_PROVIDER"].all? { |x| env[x] && !env[x].empty? }
+
+      is_support_source_control = ["GitHub", "TfsGit"].include?(env["BUILD_REPOSITORY_PROVIDER"])
+
+      has_all_variables && is_support_source_control
     end
 
     def self.validates_as_pr?(env)
-      value = env["SYSTEM_PULLREQUEST_PULLREQUESTID"]
-      return !value.nil? && !env["SYSTEM_PULLREQUEST_PULLREQUESTID"].empty?
+      has_all_variables = ["BUILD_SOURCEBRANCH", "BUILD_REPOSITORY_URI", "BUILD_REASON", "BUILD_REPOSITORY_NAME"].all? { |x| env[x] && !env[x].empty? }
+
+      has_all_variables && env["BUILD_REASON"] == "PullRequest"
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::VSTS]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::VSTS]
     end
 
     def initialize(env)
-      team_project = env["SYSTEM_TEAMPROJECT"]
-      repo_name = env["BUILD_REPOSITORY_URI"].split("/").last
-
-      self.repo_slug = "#{team_project}/#{repo_name}"
-      self.pull_request_id = env["SYSTEM_PULLREQUEST_PULLREQUESTID"]
+      self.repo_slug = env["BUILD_REPOSITORY_NAME"]
+      repo_matches = env["BUILD_SOURCEBRANCH"].match(%r{refs\/pull\/([0-9]+)\/merge})
+      self.pull_request_id = repo_matches[1] unless repo_matches.nil?
       self.repo_url = env["BUILD_REPOSITORY_URI"]
     end
   end
