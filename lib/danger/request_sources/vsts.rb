@@ -26,8 +26,14 @@ module Danger
         self.ci_source = ci_source
         self.environment = environment
 
+        @is_vsts_git = environment["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
+        
         project, slug = ci_source.repo_slug.split("/")
         @api = VSTSAPI.new(project, slug, ci_source.pull_request_id, environment)
+      end
+
+      def validates_as_ci?
+        @is_vsts_git
       end
 
       def validates_as_api_source?
