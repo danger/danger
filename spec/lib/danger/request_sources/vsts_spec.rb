@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require "danger/request_sources/VSTS"
+require "danger/request_sources/vsts"
 
 RSpec.describe Danger::RequestSources::VSTS, host: :vsts do
   let(:env) { stub_env }
