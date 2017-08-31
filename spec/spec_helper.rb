@@ -34,6 +34,7 @@ RSpec.configure do |config|
   config.include Danger::Support::GitHubHelper, host: :github
   config.include Danger::Support::BitbucketServerHelper, host: :bitbucket_server
   config.include Danger::Support::BitbucketCloudHelper, host: :bitbucket_cloud
+  config.include Danger::Support::VSTSHelper, host: :vsts
   config.include Danger::Support::CIHelper, use: :ci_helper
 end
 
