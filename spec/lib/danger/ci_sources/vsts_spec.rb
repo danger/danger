@@ -7,7 +7,8 @@ RSpec.describe Danger::VSTS do
       "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/danger-test",
       "BUILD_SOURCEBRANCH" => "refs/pull/800/merge",
       "BUILD_REASON" => "PullRequest",
-      "BUILD_REPOSITORY_NAME" => "example/danger-test",
+      "BUILD_REPOSITORY_NAME" => "danger-test",
+      "SYSTEM_TEAMPROJECT" => "example",
       "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
     }
   end

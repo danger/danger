@@ -28,6 +28,19 @@ module Danger
   # when building.
   #
   class VSTS < CI
+    class << self
+      def github_slug(env)
+        env["BUILD_REPOSITORY_NAME"]
+      end
+
+      def vsts_slug(env)
+        project_name = env["SYSTEM_TEAMPROJECT"]
+        repo_name = env["BUILD_REPOSITORY_NAME"]
+
+        "#{project_name}/#{repo_name}"
+      end
+    end
+
     def self.validates_as_ci?(env)
       has_all_variables = ["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", "BUILD_REPOSITORY_PROVIDER"].all? { |x| env[x] && !env[x].empty? }
 
@@ -47,7 +60,13 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["BUILD_REPOSITORY_NAME"]
+      case env["BUILD_REPOSITORY_PROVIDER"]
+      when "GitHub"
+        self.repo_slug = self.class.github_slug(env)
+      when "TfsGit"
+        self.repo_slug = self.class.vsts_slug(env)
+      end
+
       repo_matches = env["BUILD_SOURCEBRANCH"].match(%r{refs\/pull\/([0-9]+)\/merge})
       self.pull_request_id = repo_matches[1] unless repo_matches.nil?
       self.repo_url = env["BUILD_REPOSITORY_URI"]

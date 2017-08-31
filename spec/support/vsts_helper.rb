@@ -9,7 +9,8 @@ module Danger
           "BUILD_SOURCEBRANCH" => "refs/pull/1/merge",
           "BUILD_REPOSITORY_URI" => "https://example.visualstudio.com/_git/example",
           "BUILD_REASON" => "PullRequest",
-          "BUILD_REPOSITORY_NAME" => "example/example",
+          "BUILD_REPOSITORY_NAME" => "example",
+          "SYSTEM_TEAMPROJECT" => "example",
           "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
         }
       end
