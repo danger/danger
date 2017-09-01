@@ -56,11 +56,6 @@ module Danger
         fetch_json(uri)[:value]
       end
 
-      def delete_comment(thread, id)
-        uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
-        delete(uri)
-      end
-
       def post_comment(text)
         uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
         body = {
@@ -80,6 +75,14 @@ module Danger
           "status" => 1
         }.to_json
         post(uri, body)
+      end
+
+      def update_comment(thread, id, new_comment)
+        uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
+        body = {
+          "content" => new_comment
+        }.to_json
+        patch(uri, body)
       end
 
       private
@@ -112,10 +115,22 @@ module Danger
         end
       end
 
-      def delete(uri)
-        req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+      def patch(uri, body)
+        puts uri
+        puts body
+
+        req = Net::HTTP::Patch.new(uri.request_uri, { "Content-Type" => "application/json", "Authorization" => "Basic #{@token}" })
+        req.body = body
+
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(req)
+        end
+
+        # show error to the user when VSTS returned an error
+        case res
+        when Net::HTTPClientError, Net::HTTPServerError
+          # HTTP 4xx - 5xx
+          abort "\nError updating comment on VSTS: #{res.code} (#{res.message})\n\n"
         end
       end
     end

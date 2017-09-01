@@ -75,8 +75,6 @@ module Danger
           return
         end
 
-        delete_old_comments(danger_id: danger_id) unless new_comment
-
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"
         comment += generate_comment(warnings: warnings,
@@ -86,18 +84,21 @@ module Danger
                         previous_violations: {},
                                   danger_id: danger_id,
                                    template: "vsts")
-
-        @api.post_comment(comment)
+        if new_comment 
+          @api.post_comment(comment)
+        else 
+          update_old_comment(comment, danger_id: danger_id)
+        end
       end
 
-      def delete_old_comments(danger_id: "danger")
+      def update_old_comment(new_comment, danger_id: "danger")
         @api.fetch_last_comments.each do |c|
           thread_id = c[:id]
           comment = c[:comments].first
           comment_id = comment[:id]
           comment_content = comment[:content].nil? ? "" : comment[:content]
 
-          @api.delete_comment(thread_id, comment_id) if comment_content.include?("generated_by_#{danger_id}")
+          @api.update_comment(thread_id, comment_id, new_comment) if comment_content.include?("generated_by_#{danger_id}")
         end
       end
     end
