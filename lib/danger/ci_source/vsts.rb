@@ -13,8 +13,7 @@ module Danger
   #
   # You need to add the `DANGER_GITHUB_API_TOKEN` environment variable, to do this, go to your build definition's variables tab.
   #
-  # Make sure `DANGER_GITHUB_API_TOKEN` is not secret since it won't vsts does not expose secret variables
-  # when building.
+  # Make sure that `DANGER_GITHUB_API_TOKEN` is not set to secret since vsts does not expose secret variables while building.
   #
   # #### VSTS
   #
@@ -24,8 +23,7 @@ module Danger
   # For the `DANGER_VSTS_HOST` variable the suggested value is `$(System.TeamFoundationCollectionUri)$(System.TeamProject)`
   # which will automatically get your vsts domain and your project name needed for the vsts api.
   #
-  # Make sure `DANGER_VSTS_API_TOKEN` is not secret since it won't vsts does not expose secret variables
-  # when building.
+  # Make sure that `DANGER_VSTS_API_TOKEN` is not set to secret since vsts does not expose secret variables while building.
   #
   class VSTS < CI
     class << self
