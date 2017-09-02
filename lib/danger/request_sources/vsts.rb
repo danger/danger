@@ -84,9 +84,9 @@ module Danger
                         previous_violations: {},
                                   danger_id: danger_id,
                                    template: "vsts")
-        if new_comment 
+        if new_comment
           @api.post_comment(comment)
-        else 
+        else
           update_old_comment(comment, danger_id: danger_id)
         end
       end
