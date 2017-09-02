@@ -42,7 +42,6 @@ RSpec.describe Danger::PR do
       expect(result).to include ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       expect(result).to include ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"]
       expect(result).to include ["--verify-ssl", "Verify SSL in Octokit"]
-
     end
 
     it "dangerfile can be set" do

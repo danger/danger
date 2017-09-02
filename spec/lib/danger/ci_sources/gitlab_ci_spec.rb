@@ -56,9 +56,7 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
 
     describe "#supported_request_sources" do
       it "it is gitlab" do
-        expect(ci_source.supported_request_sources).to eq([
-          Danger::RequestSources::GitLab
-        ])
+        expect(ci_source.supported_request_sources).to eq([Danger::RequestSources::GitLab])
       end
     end
 
