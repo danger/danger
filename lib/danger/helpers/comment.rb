@@ -16,7 +16,7 @@ module Danger
     end
 
     def generated_by_danger?(danger_id)
-      body.include?("generated_by_#{danger_id}")
+      body.include?("\"generated_by_#{danger_id}\"")
     end
   end
 end

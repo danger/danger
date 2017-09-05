@@ -24,15 +24,21 @@ RSpec.describe Danger::Comment do
 
   describe "#generated_by_danger?" do
     it "returns true when body contains generated_by_{identifier}" do
-      comment = described_class.new(42, "generated_by_orta")
+      comment = described_class.new(42, '"generated_by_orta"')
 
       expect(comment.generated_by_danger?("orta")).to be true
     end
 
     it "returns false when body NOT contains generated_by_{identifier}" do
-      comment = described_class.new(42, "generated_by_orta")
+      comment = described_class.new(42, '"generated_by_orta"')
 
       expect(comment.generated_by_danger?("artsy")).to be false
+    end
+
+    it "returns false when identifier is a substring of actual identifier" do
+      comment = described_class.new(42, '"generated_by_danger2"')
+
+      expect(comment.generated_by_danger?("danger")).to be false
     end
   end
 end
