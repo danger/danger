@@ -43,6 +43,36 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
     end
   end
 
+  describe "ssl verification" do
+    it "sets ssl verification environment variable to false" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "false" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_falsey
+    end
+
+    it "sets ssl verification environment variable to true" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "true" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+
+    it "sets ssl verification environment variable to wrong input" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "wronginput" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+
+    it "unsets ssl verification environment variable" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+  end
+
   describe "valid server response" do
     before do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
