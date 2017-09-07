@@ -3,6 +3,10 @@
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 * Adds VSTS Dangerfile plugin - [@petester42](https://github.com/petester42)
 
+## 5.4.1
+
+* Add support to pass in `DANGER_OCTOKIT_VERIFY_SSL` to toggle SSL Verification for Octokit - [@nikhilsh](https://github.com/nikhilsh)
+
 ## 5.4.0
 
 * Add support for VSTS - [@petester42](https://github.com/petester42)
