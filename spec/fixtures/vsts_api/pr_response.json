@@ -28,7 +28,7 @@ HTTP/1.1 200 OK
     "creationDate": "2017-08-29T15:59:01.2399079Z",
     "title": "This is a danger test",
     "description": "test danger",
-    "sourceRefName": "refs/heads/test",
+    "sourceRefName": "refs/heads/feature/danger",
     "targetRefName": "refs/heads/master",
     "mergeStatus": "succeeded",
     "mergeId": "e321cd6c-0e80-4026-91a0-d0458b269b97",
