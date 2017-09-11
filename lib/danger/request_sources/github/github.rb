@@ -33,6 +33,13 @@ module Danger
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
       end
 
+      def get_pr_from_branch(repo_name, branch_name, owner)
+        prs = client.pull_requests(repo_name, head: "#{owner}:#{branch_name}")
+        unless prs.empty?
+          prs.first.number
+        end
+      end
+
       def validates_as_api_source?
         (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
       end
