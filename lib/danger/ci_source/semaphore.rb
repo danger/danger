@@ -4,7 +4,7 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
-  # For Semaphor you will want to go to the settings page of the project. Inside "Build Settings"
+  # For Semaphore you will want to go to the settings page of the project. Inside "Build Settings"
   # you should add `bundle exec danger` to the Setup thread. Note that Semaphore only provides
   # the build environment variables necessary for Danger on PRs across forks.
   #
