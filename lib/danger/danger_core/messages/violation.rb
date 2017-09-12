@@ -26,9 +26,9 @@ module Danger
 
     def to_s
       extra = []
-      extra << "sticky: true" if sticky
-      extra << "file: #{file}" unless file
-      extra << "line: #{line}" unless line
+      extra << "sticky: #{sticky}"
+      extra << "file: #{file}" if file
+      extra << "line: #{line}" if line
 
       "Violation #{message} { #{extra.join ', '.freeze} }"
     end
