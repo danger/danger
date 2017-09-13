@@ -17,7 +17,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      env["CI_BRANCH"] && !env["CI_BRANCH"].empty?
+      env["CI_BRANCH"] && !env["CI_BRANCH"].empty? && env["CI_BRANCH"] == "master"
     end
 
     def supported_request_sources
