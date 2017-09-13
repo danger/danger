@@ -19,12 +19,16 @@ module Danger
     def self.validates_as_pr?(env)
       return false unless env["CI_BRANCH"] && !env["CI_BRANCH"].empty?
 
-      # this is fairly hacky, see https://github.com/danger/danger/pull/892#issuecomment-329030616 for why
-      !Danger::RequestSources::GitHub.new(nil, env).get_pr_from_branch(env["CI_REPO_NAME"], env["CI_BRANCH"], self.class.owner_for_github(env))
+      !pr_from_env(env, nil).nil?
     end
 
     def self.owner_for_github(env)
       env["CI_REPO_NAME"].split("/").first
+    end
+
+    # this is fairly hacky, see https://github.com/danger/danger/pull/892#issuecomment-329030616 for why
+    def self.pr_from_env(env, ci_source)
+      Danger::RequestSources::GitHub.new(nil, env).get_pr_from_branch(env["CI_REPO_NAME"], env["CI_BRANCH"], owner_for_github(env))
     end
 
     def supported_request_sources
@@ -33,7 +37,7 @@ module Danger
 
     def initialize(env)
       self.repo_slug = env["CI_REPO_NAME"]
-      self.pull_request_id = Danger::RequestSources::GitHub.new(self, env).get_pr_from_branch(env["CI_REPO_NAME"], env["CI_BRANCH"], self.class.owner_for_github(env))
+      self.pull_request_id = self.class.pr_from_env(env, self)
       self.repo_url = GitRepo.new.origins
     end
   end
