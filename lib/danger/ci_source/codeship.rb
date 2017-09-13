@@ -19,7 +19,7 @@ module Danger
     def self.validates_as_pr?(env)
       return false unless env["CI_BRANCH"] && !env["CI_BRANCH"].empty?
 
-      !pr_from_env(env, nil).nil?
+      !pr_from_env(env).nil?
     end
 
     def self.owner_for_github(env)
@@ -27,7 +27,7 @@ module Danger
     end
 
     # this is fairly hacky, see https://github.com/danger/danger/pull/892#issuecomment-329030616 for why
-    def self.pr_from_env(env, ci_source)
+    def self.pr_from_env(env)
       Danger::RequestSources::GitHub.new(nil, env).get_pr_from_branch(env["CI_REPO_NAME"], env["CI_BRANCH"], owner_for_github(env))
     end
 
@@ -37,7 +37,7 @@ module Danger
 
     def initialize(env)
       self.repo_slug = env["CI_REPO_NAME"]
-      self.pull_request_id = self.class.pr_from_env(env, self)
+      self.pull_request_id = self.class.pr_from_env(env)
       self.repo_url = GitRepo.new.origins
     end
   end
