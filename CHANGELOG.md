@@ -2,6 +2,9 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 * Add support for [Codeship](https://codeship.com/) - [@ghiculescu](https://github.com/ghiculescu)
+
+## 5.4.2
+
 * Fix `Violation#to_s` showing file and line when they are empty and not showing when they are set
 
 ## 5.4.1
