@@ -98,7 +98,7 @@ module Danger
 
       def setup_danger_branches
         # we can use a github specific feature here:
-        base_branch = self.pr_json["head"]["ref"]
+        base_branch = self.pr_json["base"]["ref"]
         base_commit = self.pr_json["base"]["sha"]
         head_branch = self.pr_json["head"]["ref"]
         head_commit = self.pr_json["head"]["sha"]
