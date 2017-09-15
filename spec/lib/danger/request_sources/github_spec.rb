@@ -540,7 +540,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
         [20, 74, 222, 625].each do |depth|
           # fetch it
-          expect(@g.scm).to receive(:exec).with("fetch --depth=#{depth} --prune origin +refs/heads/orta-circle_ci2:refs/remotes/origin/orta-circle_ci2")
+          expect(@g.scm).to receive(:exec).with("fetch --depth=#{depth} --prune origin +refs/heads/master:refs/remotes/origin/master")
           # still not in history
           expect(@g.scm).to receive(:exec).
             with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
