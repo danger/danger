@@ -64,17 +64,11 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      commitish_is_ref = commit_is_ref?(commitish)
+      return ensure_commitish_exists_on_branch!(commitish, commitish) if commit_is_ref?(commitish)
+      return if commit_exists?(commitish)
 
-      if commitish_is_ref
-        return ensure_commitish_exists_on_branch!(commitish, commitish)
-      end
-
-      git_in_depth_fetch if commit_not_exists?(commitish)
-
-      if commit_not_exists?(commitish)
-        raise_if_we_cannot_find_the_commit(commitish)
-      end
+      git_in_depth_fetch
+      raise_if_we_cannot_find_the_commit(commitish) if commit_not_exists?(commitish)
     end
 
     def ensure_commitish_exists_on_branch!(branch, commitish)
