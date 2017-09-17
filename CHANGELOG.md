@@ -1,6 +1,7 @@
 ## master
 
 * Fix removing comments when one danger_id is a substring of another - [@marcelofabri](https://github.com/marcelofabri)
+* Fix possible invalid binding.pry statement when Dangerfile does not have an empty new line at the end (`danger pr --pry`) - [@pedrovieira](https://github.com/pedrovieira)
 
 ## 5.4.3
 
