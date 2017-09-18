@@ -2,8 +2,38 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
-* Add actual support for [buddybuild](buddybuild.com) - [@palleas](https://github.com/palleas)
+## 5.4.3
+
+* Add support for [Codeship](https://codeship.com/) - [@ghiculescu](https://github.com/ghiculescu)
+
+## 5.4.2
+
+* Fix `Violation#to_s` showing file and line when they are empty and not showing when they are set
+
+## 5.4.1
+
+* Adds VSTS Dangerfile plugin - [@petester42](https://github.com/petester42)
+* Add support to pass in `DANGER_OCTOKIT_VERIFY_SSL` to toggle SSL Verification for Octokit - [@nikhilsh](https://github.com/nikhilsh)
+
+## 5.4.0
+
+* Add support for VSTS - [@petester42](https://github.com/petester42)
+
+## 5.3.5
+
+* Tightens up pronouns in `danger init`.
+* Add `--verify-ssl` option to bypass Octokit's SSL Verification - [@nikhilsh](https://github.com/nikhilsh)
+* Add `no_proxy_fix` gem as Ruby's no proxy is not working in `2.4.0/2.4.1` - [@nikhilsh](https://github.com/nikhilsh)
+
+## 5.3.4
+
+This release adds compatibility for GitLab API v4, you need to update the [danger-gitlab gem](https://github.com/danger/danger-gitlab-gem) to be version `6.x` when you migrate to the new API. 👍
+
+* Add actual support for [buddybuild](https://buddybuild.com) - [@palleas](https://github.com/palleas)
 * Add ability to add multiple messages - [@sleekybadger](https://github.com/sleekybadger)
+* Use gitlab api v4, instead of deprecated v3 - [@sleekybadger](https://github.com/sleekybadger)
+* Add support for GitLabCI - [@sleekybadger](https://github.com/sleekybadger)
+
 
 ## 5.3.3
 

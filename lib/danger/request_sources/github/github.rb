@@ -21,7 +21,7 @@ module Danger
       end
 
       def self.optional_env_vars
-        ["DANGER_GITHUB_HOST", "DANGER_GITHUB_API_BASE_URL"]
+        ["DANGER_GITHUB_HOST", "DANGER_GITHUB_API_BASE_URL", "DANGER_OCTOKIT_VERIFY_SSL"]
       end
 
       def initialize(ci_source, environment)
@@ -31,6 +31,13 @@ module Danger
         self.dismiss_out_of_range_messages = false
 
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
+      end
+
+      def get_pr_from_branch(repo_name, branch_name, owner)
+        prs = client.pull_requests(repo_name, head: "#{owner}:#{branch_name}")
+        unless prs.empty?
+          prs.first.number
+        end
       end
 
       def validates_as_api_source?
@@ -43,6 +50,10 @@ module Danger
 
       def host
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      end
+
+      def verify_ssl
+        @environment["DANGER_OCTOKIT_VERIFY_SSL"] == "false" ? false : true
       end
 
       # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
@@ -58,8 +69,10 @@ module Danger
 
       def client
         raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
-
         @client ||= begin
+          Octokit.configure do |config|
+            config.connection_options[:ssl] = { verify: verify_ssl }
+          end
           Octokit::Client.new(access_token: @token, auto_paginate: true, api_endpoint: api_url)
         end
       end

@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/danger
+    docker:
+      - image: ruby:2.1
+        environment:
+        - RAILS_ENV=test
+        - RACK_ENV=test
+    steps:
+      - checkout
+      - run: gem update --system 2.4.8
+      - run: gem install bundler
+      - restore_cache:
+          key: gem-cache-{{ .Branch }}-{{ checksum "Gemfile" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: gem-cache-{{ .Branch }}-{{ checksum "Gemfile" }}
+          paths:
+            - vendor/bundle
+      - run: git config --global user.email "danger@example.com"
+      - run: git config --global user.name "Danger McShane"
+      - run: bundle exec rake specs
+      - run: '[ ! -z $DANGER_GITHUB_API_TOKEN ] && bundle exec danger || echo "Skipping Danger for External Contributor"'
+      - run: bundle exec danger init --mousey --impatient

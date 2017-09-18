@@ -22,7 +22,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
   describe "the GitLab API endpoint" do
     it "sets the default GitLab API endpoint" do
-      expect(subject.endpoint).to eq("https://gitlab.com/api/v3")
+      expect(subject.endpoint).to eq("https://gitlab.com/api/v4")
     end
 
     it "allows the GitLab API endpoint to be overidden with `DANGER_GITLAB_API_BASE_URL`" do
@@ -40,7 +40,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
     end
 
     it "set the default API endpoint" do
-      expect(subject.client.endpoint).to eq("https://gitlab.com/api/v3")
+      expect(subject.client.endpoint).to eq("https://gitlab.com/api/v4")
     end
 
     it "respects overriding the API endpoint" do
@@ -161,7 +161,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           messages: violations_factory(["Test message"]),
           template: "gitlab"
         )
-        stub_request(:post, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes").with(
+        stub_request(:post, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes").with(
           body: "body=#{ERB::Util.url_encode(body)}",
           headers: expected_headers
         ).to_return(status: 200, body: "", headers: {})
@@ -196,8 +196,10 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             },
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
-            body: "body=#{ERB::Util.url_encode(body)}",
+          stub_request(:put, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+            body: {
+              body: body
+            },
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
 
@@ -215,8 +217,10 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
             messages: violations_factory(["Test message"]),
             template: "gitlab"
           )
-          stub_request(:put, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
-            body: "body=#{ERB::Util.url_encode(body)}",
+          stub_request(:put, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+            body: {
+              body: body
+            },
             headers: expected_headers
           ).to_return(status: 200, body: "", headers: {})
           subject.update_pull_request!(
@@ -240,7 +244,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         it "removes the previous danger comment if there are no new messages" do
-          stub_request(:delete, "https://gitlab.com/api/v3/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
+          stub_request(:delete, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/593728/notes/13471894").with(
             headers: expected_headers
           )
 

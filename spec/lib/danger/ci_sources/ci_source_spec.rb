@@ -18,7 +18,9 @@ RSpec.describe Danger::CI do
           "Danger::Surf",
           "Danger::TeamCity",
           "Danger::Travis",
-          "Danger::XcodeServer"
+          "Danger::VSTS",
+          "Danger::XcodeServer",
+          "Danger::Codeship",
         ]
       )
     end
