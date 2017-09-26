@@ -517,14 +517,14 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.fetch_details
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}")
-          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
+          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
 
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify 561827e46167077b5e53515b4b7349b8ae04610b^{commit}")
-          .and_return("561827e46167077b5e53515b4b7349b8ae04610b").twice
+          .and_return("561827e46167077b5e53515b4b7349b8ae04610b")
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
@@ -537,6 +537,16 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         expect(@g.scm).to receive(:exec).
           with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
           and_return("")
+
+        [20, 74, 222, 625].each do |depth|
+          # fetch it
+          expect(@g.scm).to receive(:exec).with("fetch --depth=#{depth} --prune origin +refs/heads/master:refs/remotes/origin/master")
+          # still not in history
+          expect(@g.scm).to receive(:exec).
+            with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
+            and_return("")
+        end
+
         # fetch it
         expect(@g.scm).to receive(:exec).with("fetch --depth 1000000")
         # still not in history

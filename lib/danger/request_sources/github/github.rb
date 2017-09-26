@@ -98,16 +98,18 @@ module Danger
 
       def setup_danger_branches
         # we can use a github specific feature here:
+        base_branch = self.pr_json["base"]["ref"]
         base_commit = self.pr_json["base"]["sha"]
+        head_branch = self.pr_json["head"]["ref"]
         head_commit = self.pr_json["head"]["sha"]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
-        scm.ensure_commitish_exists! base_commit
+        scm.ensure_commitish_exists_on_branch! base_branch, base_commit
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
 
         # OK, so we want to ensure that we have a known head branch, this will always represent
         # the head of the PR ( e.g. the most recent commit that will be merged. )
-        scm.ensure_commitish_exists! head_commit
+        scm.ensure_commitish_exists_on_branch! head_branch, head_commit
         self.scm.exec "branch #{EnvironmentManager.danger_head_branch} #{head_commit}"
       end
 

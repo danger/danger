@@ -64,17 +64,39 @@ module Danger
     end
 
     def ensure_commitish_exists!(commitish)
-      git_in_depth_fetch if commit_not_exists?(commitish)
+      return ensure_commitish_exists_on_branch!(commitish, commitish) if commit_is_ref?(commitish)
+      return if commit_exists?(commitish)
 
-      if commit_not_exists?(commitish)
-        raise_if_we_cannot_find_the_commit(commitish)
-      end
+      git_in_depth_fetch
+      raise_if_we_cannot_find_the_commit(commitish) if commit_not_exists?(commitish)
+    end
+
+    def ensure_commitish_exists_on_branch!(branch, commitish)
+      return if commit_exists?(commitish)
+
+      depth = 0
+      success =
+        (3..6).any? do |factor|
+          depth += Math.exp(factor).to_i
+
+          git_fetch_branch_to_depth(branch, depth)
+          commit_exists?(commitish)
+        end
+
+      return if success
+
+      git_in_depth_fetch
+      raise_if_we_cannot_find_the_commit(commitish) if commit_not_exists?(commitish)
     end
 
     private
 
     def git_in_depth_fetch
       exec("fetch --depth 1000000")
+    end
+
+    def git_fetch_branch_to_depth(branch, depth)
+      exec("fetch --depth=#{depth} --prune origin +refs/heads/#{branch}:refs/remotes/origin/#{branch}")
     end
 
     def default_env
@@ -95,15 +117,33 @@ module Danger
 
     def find_merge_base(repo, from, to)
       possible_merge_base = possible_merge_base(repo, from, to)
+      return possible_merge_base if possible_merge_base
 
-      unless possible_merge_base
-        git_in_depth_fetch
-        possible_merge_base = possible_merge_base(repo, from, to)
-      end
+      possible_merge_base = find_merge_base_with_incremental_fetch(repo, from, to)
+      return possible_merge_base if possible_merge_base
+
+      git_in_depth_fetch
+      possible_merge_base = possible_merge_base(repo, from, to)
 
       raise "Cannot find a merge base between #{from} and #{to}." unless possible_merge_base
 
       possible_merge_base
+    end
+
+    def find_merge_base_with_incremental_fetch(repo, from, to)
+      from_is_ref = commit_is_ref?(from)
+      to_is_ref = commit_is_ref?(to)
+
+      return unless from_is_ref || to_is_ref
+
+      depth = 0
+      (3..6).any? do |factor|
+        depth += Math.exp(factor).to_i
+
+        git_fetch_branch_to_depth(from, depth) if from_is_ref
+        git_fetch_branch_to_depth(to, depth) if to_is_ref
+        possible_merge_base(repo, from, to)
+      end
     end
 
     def possible_merge_base(repo, from, to)
@@ -112,6 +152,10 @@ module Danger
 
     def commits_in_branch_count(from, to)
       exec("rev-list #{from}..#{to} --count").to_i
+    end
+
+    def commit_is_ref?(commit)
+      /[a-f0-9]{5,40}/ !~ commit
     end
   end
 end
