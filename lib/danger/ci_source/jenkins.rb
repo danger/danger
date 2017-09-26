@@ -32,7 +32,11 @@ module Danger
   # #### General
   #
   # People occasionally see issues with Danger not classing your CI runs as a PR, to give you visibilty
-  # the Jenkins side of Danger expects to see one of these env vars: ghprbPullId, CHANGE_ID or gitlabMergeRequestIid
+  # the Jenkins side of Danger expects to see one of these env vars:
+  # - ghprbPullId
+  # - CHANGE_ID
+  # - gitlabMergeRequestIid
+  # - gitlabMergeRequestId
   #
   # ### Token Setup
   #
@@ -81,8 +85,10 @@ module Danger
         env["ghprbPullId"]
       elsif env["CHANGE_ID"]
         env["CHANGE_ID"]
-      else
+      elsif env["gitlabMergeRequestIid"]
         env["gitlabMergeRequestIid"]
+      else
+        env["gitlabMergeRequestId"]
       end
     end
 

@@ -76,6 +76,15 @@ module Danger
         yield(system_env)
       end
 
+      def with_jenkins_setup_gitlab_v3_and_is_a_pull_request
+        system_env = {
+          "JENKINS_URL" => "https://ci.swift.org/job/oss-swift-incremental-RA-osx/lastBuild/",
+          "gitlabMergeRequestId" => "42"
+        }
+
+        yield(system_env)
+      end
+
       def with_localgitrepo_setup
         system_env = {
           "DANGER_USE_LOCAL_GIT" => "true"
