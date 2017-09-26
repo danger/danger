@@ -2,6 +2,8 @@
 
 * Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
 
+## 5.5.0
+
 * Fix bug with gitlab v4 API- [@marocchino](https://github.com/marocchino)
 * Fix issue where a single branch git clone on the PR head never fetched the base branch - [@daveallie](https://github.com/daveallie)
 * Fix removing comments when one danger_id is a substring of another - [@marcelofabri](https://github.com/marcelofabri)
