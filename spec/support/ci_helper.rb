@@ -70,7 +70,7 @@ module Danger
       def with_jenkins_setup_gitlab_and_is_a_pull_request
         system_env = {
           "JENKINS_URL" => "https://ci.swift.org/job/oss-swift-incremental-RA-osx/lastBuild/",
-          "gitlabMergeRequestId" => "42"
+          "gitlabMergeRequestIid" => "42"
         }
 
         yield(system_env)

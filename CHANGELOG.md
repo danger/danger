@@ -1,5 +1,6 @@
 ## master
 
+* Fix env name of jenkins gitlab plugin - [@marocchino](https://github.com/marocchino)
 * Fix removing comments when one danger_id is a substring of another - [@marcelofabri](https://github.com/marcelofabri)
 
 ## 5.4.3
