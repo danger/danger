@@ -9,7 +9,7 @@ module Danger
       validate_pry_available
       FileUtils.cp dangerfile_path, DANGERFILE_COPY
       File.open(DANGERFILE_COPY, "a") do |f|
-        f.write("binding.pry; File.delete(\"#{DANGERFILE_COPY}\")")
+        f.write("\nbinding.pry; File.delete(\"#{DANGERFILE_COPY}\")")
       end
       DANGERFILE_COPY
     end
