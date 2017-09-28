@@ -1,6 +1,6 @@
 ## master
 
-* Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
+* Update documentation for BitRise CI now that it supports Secret Env Vars - [@AliSoftware](https://github.com/AliSoftware)
 
 ## 5.5.0
 
