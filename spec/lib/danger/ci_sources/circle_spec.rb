@@ -47,12 +47,23 @@ RSpec.describe Danger::CircleCI do
       expect(described_class.validates_as_pr?(valid_env)).to be true
     end
 
-    context "with missing `CI_PULL_REQUEST`" do
+    context "with missing `CI_PULL_REQUEST` and `CIRCLE_PULL_REQUEST`" do
       before do
         valid_env["CI_PULL_REQUEST"] = nil
         valid_env["CIRCLE_CI_API_TOKEN"] = "testtoken"
         build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
         allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "testtoken").and_return(build_response)
+      end
+
+      it "validates when required env variables are set" do
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+    end
+
+    context "uses `CIRCLE_PULL_REQUEST` if available" do
+      before do
+        valid_env["CI_PULL_REQUEST"] = nil
+        valid_env["CIRCLE_PULL_REQUEST"] = "https://github.com/artsy/eigen/pulls/800"
       end
 
       it "validates when required env variables are set" do

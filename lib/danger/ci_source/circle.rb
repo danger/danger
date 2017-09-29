@@ -42,6 +42,7 @@ module Danger
     def self.validates_as_pr?(env)
       # This will get used if it's available, instead of the API faffing.
       return true if env["CI_PULL_REQUEST"] && !env["CI_PULL_REQUEST"].empty?
+      return true if env["CIRCLE_PULL_REQUEST"] && !env["CIRCLE_PULL_REQUEST"].empty?
 
       # Real-world talk, it should be worrying if none of these are in the environment
       return false unless ["CIRCLE_CI_API_TOKEN", "CIRCLE_PROJECT_USERNAME", "CIRCLE_PROJECT_REPONAME", "CIRCLE_BUILD_NUM"].all? { |x| env[x] && !env[x].empty? }
@@ -57,7 +58,7 @@ module Danger
 
     def initialize(env)
       self.repo_url = env["CIRCLE_REPOSITORY_URL"]
-      pr_url = env["CI_PULL_REQUEST"]
+      pr_url = env["CI_PULL_REQUEST"] || env["CIRCLE_PULL_REQUEST"]
 
       # If it's not a real URL, use the Circle API
       unless pr_url && URI.parse(pr_url).kind_of?(URI::HTTP)
