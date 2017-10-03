@@ -82,6 +82,7 @@ module Danger
       end
 
       def setup_danger_branches
+        raise "Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes" if base_commit.empty?
         base_branch = self.mr_json.source_branch
         head_branch = self.mr_json.target_branch
         head_commit = self.scm.head_commit

@@ -126,32 +126,8 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
       it "raise error on empty commit" do
         subject.fetch_details
-        expect(subject.mr_json).to receive(:source_branch).
-          and_return("master")
-        expect(subject.mr_json).to receive(:target_branch).
-          and_return("")
-        expect(subject.scm).to receive(:head_commit).
-          and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
-        expect(subject.scm).to receive(:exec)
-          .with("fetch --depth=20 --prune origin +refs/heads/master:refs/remotes/origin/master")
-          .and_return("")
-        expect(subject.scm).to receive(:exec)
-          .with("fetch --depth=74 --prune origin +refs/heads/master:refs/remotes/origin/master")
-          .and_return("")
-        expect(subject.scm).to receive(:exec)
-          .with("fetch --depth=222 --prune origin +refs/heads/master:refs/remotes/origin/master")
-          .and_return("")
-        expect(subject.scm).to receive(:exec)
-          .with("fetch --depth=625 --prune origin +refs/heads/master:refs/remotes/origin/master")
-          .and_return("")
-        expect(subject.scm).to receive(:exec)
-          .with("fetch --depth 1000000")
-          .and_return("")
-        expect(subject.scm).to receive(:exec)
-          .with("rev-parse --quiet --verify ^{commit}")
-          .and_return("").exactly(6)
 
-        expect{ subject.setup_danger_branches }.to raise_error("Commit  doesn't exist. Are you running `danger local/pr` against the correct repository? Also this usually happens when you rebase/reset and force-pushed.")
+        expect{ subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
       end
     end
 
@@ -161,7 +137,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.scm).to receive(:head_commit).
         and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject).to receive(:base_commit).
-        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
+        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").thrice
       expect(subject.scm).to receive(:exec)
         .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}")
         .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
