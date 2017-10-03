@@ -275,6 +275,8 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
+        ui.puts "Before printing"
+        ui.puts "DangerID: #{danger_id} - New comment: #{new_comment}"
         post_results(danger_id, new_comment) unless danger_id.nil?
 
         # Print results in the terminal

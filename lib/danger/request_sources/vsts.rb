@@ -73,6 +73,8 @@ module Danger
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+        puts "Inside update_pull_request"
+        puts "new_comment = #{new_comment}"
         unless @api.supports_comments?
           return
         end
@@ -87,13 +89,18 @@ module Danger
                                   danger_id: danger_id,
                                    template: "vsts")
         if new_comment
+          puts "Posting new comment"
           @api.post_comment(comment)
         else
+          puts "Updating old comment"
           update_old_comment(comment, danger_id: danger_id)
         end
       end
 
       def update_old_comment(new_comment, danger_id: "danger")
+        puts "Trying to update last comment"
+        comments = @api.fetch_last_comments
+        puts "comments = #{comments}"
         @api.fetch_last_comments.each do |c|
           thread_id = c[:id]
           comment = c[:comments].first
