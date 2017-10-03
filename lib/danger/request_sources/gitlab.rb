@@ -58,8 +58,12 @@ module Danger
       end
 
       def base_commit
-        first_commit_in_branch = self.commits_json.last.id
-        @base_commit ||= self.scm.exec "rev-parse #{first_commit_in_branch}^1"
+        if self.commits_json.last
+          first_commit_in_branch = self.commits_json.last.id
+          @base_commit ||= self.scm.exec "rev-parse #{first_commit_in_branch}^1"
+        else
+          @base_commit = ""
+        end
       end
 
       def mr_comments
