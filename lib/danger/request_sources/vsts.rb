@@ -101,15 +101,13 @@ module Danger
           comment_id = comment[:id]
           comment_content = comment[:content].nil? ? "" : comment[:content]
           # Skip the comment if it wasn't posted by danger
-          next if !comment_content.include?("generated_by_#{danger_id}")
+          next unless comment_content.include?("generated_by_#{danger_id}")
           # Updated the danger posted comment
           @api.update_comment(thread_id, comment_id, new_comment)
           comment_updated = true
         end
-        if !comment_updated
-          # If not comment was updated, post a new one
-          @api.post_comment(new_comment)
-        end
+        # If no comment was updated, post a new one
+        @api.post_comment(new_comment) unless comment_updated
       end
     end
   end
