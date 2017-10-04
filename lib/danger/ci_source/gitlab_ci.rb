@@ -38,8 +38,8 @@ module Danger
       client = RequestSources::GitLab.new(nil, env).client
 
       merge_requests = client.merge_requests(project_id, state: :opened)
-      merge_request = merge_requests.auto_paginate.bsearch do |mr|
-        mr.sha >= base_commit
+      merge_request = merge_requests.auto_paginate.find do |mr|
+        mr.sha == base_commit
       end
 
       merge_request.nil? ? 0 : merge_request.iid
