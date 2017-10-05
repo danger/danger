@@ -87,10 +87,14 @@ module Danger
                                   danger_id: danger_id,
                                    template: "vsts")
         if new_comment
-          @api.post_comment(comment)
+          post_new_comment(comment)
         else
           update_old_comment(comment, danger_id: danger_id)
         end
+      end
+
+      def post_new_comment(comment)
+        @api.post_comment(comment)
       end
 
       def update_old_comment(new_comment, danger_id: "danger")
@@ -107,7 +111,7 @@ module Danger
           comment_updated = true
         end
         # If no comment was updated, post a new one
-        @api.post_comment(new_comment) unless comment_updated
+        post_new_comment(new_comment) unless comment_updated
       end
     end
   end
