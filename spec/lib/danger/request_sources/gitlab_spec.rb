@@ -109,13 +109,35 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.base_commit).to eq("0e4db308b6579f7cc733e5a354e026b272e1c076")
     end
 
+    context "works also on empty MR" do
+      before do
+        stub_merge_request_commits(
+          "merge_request_593728_no_commits_response",
+          "k0nserv%2Fdanger-test",
+          593_728
+        )
+      end
+      
+      it "return empty string if last commit do not exist" do
+        subject.fetch_details
+
+        expect(subject.base_commit).to eq("")
+      end
+
+      it "raise error on empty commit" do
+        subject.fetch_details
+
+        expect{ subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
+      end
+    end
+
     it "setups the danger branches" do
       subject.fetch_details
 
       expect(subject.scm).to receive(:head_commit).
         and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject).to receive(:base_commit).
-        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
+        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").thrice
       expect(subject.scm).to receive(:exec)
         .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}")
         .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
