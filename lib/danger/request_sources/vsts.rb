@@ -87,21 +87,31 @@ module Danger
                                   danger_id: danger_id,
                                    template: "vsts")
         if new_comment
-          @api.post_comment(comment)
+          post_new_comment(comment)
         else
           update_old_comment(comment, danger_id: danger_id)
         end
       end
 
+      def post_new_comment(comment)
+        @api.post_comment(comment)
+      end
+
       def update_old_comment(new_comment, danger_id: "danger")
+        comment_updated = false
         @api.fetch_last_comments.each do |c|
           thread_id = c[:id]
           comment = c[:comments].first
           comment_id = comment[:id]
           comment_content = comment[:content].nil? ? "" : comment[:content]
-
-          @api.update_comment(thread_id, comment_id, new_comment) if comment_content.include?("generated_by_#{danger_id}")
+          # Skip the comment if it wasn't posted by danger
+          next unless comment_content.include?("generated_by_#{danger_id}")
+          # Updated the danger posted comment
+          @api.update_comment(thread_id, comment_id, new_comment)
+          comment_updated = true
         end
+        # If no comment was updated, post a new one
+        post_new_comment(new_comment) unless comment_updated
       end
     end
   end

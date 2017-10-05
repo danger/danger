@@ -1,6 +1,6 @@
 ## master
 
-
+* Fix comment posting logic for VSTS integration. [@cyupa](https://github.com/cyupa)
 
 > _Add your own contributions to the next release on a new line line above this; please include your name too._
 > _Please don't set a new version if you are the first to make the section for `master`._
