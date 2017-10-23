@@ -15,7 +15,7 @@ module Danger
   # ```
   # ### Token Setup
   #
-  # Add the `DANGER_GITHUB_API_TOKEN` to your pipeline env variables.
+  # Add the `DANGER_GITLAB_API_TOKEN` to your pipeline env variables.
   class GitLabCI < CI
     def self.validates_as_ci?(env)
       env.key? "GITLAB_CI"
