@@ -32,7 +32,7 @@ module Danger
   #
   # @example Ensure that all PRs have an assignee
   #
-  #          warn "This PR does not have any assignees yet." unless bitbucket_server.pr_json["reviewers"].length == 0
+  #          warn "This PR does not have any assignees yet." if bitbucket_server.pr_json[:reviewers].length == 0
   #
   # @example Send a message with links to a collection of specific files
   #
