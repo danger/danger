@@ -3,6 +3,7 @@
 [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/orta/danger/blob/master/LICENSE)
 [![Gem](https://img.shields.io/gem/v/danger.svg?style=flat)](http://rubygems.org/gems/danger)
 [![Travis CI](https://img.shields.io/travis/danger/danger.svg?style=flat)](https://travis-ci.org/danger/danger)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/danger)
 
 Formalize your Pull Request etiquette.
 
