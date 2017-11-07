@@ -1,9 +1,11 @@
 ## master
 
-* Fix handling of filenames that contain square brackets (and possibly other characters) - [@allewun](https://github.com/allewun)
-
 > _Add your own contributions to the next release on a new line above this; please include your name too._
 > _Please don't set a new version if you are the first to make the section for `master`._
+
+## 5.5.4
+
+* Fix handling of filenames that contain square brackets (and possibly other characters) - [@allewun](https://github.com/allewun)
 
 ## 5.5.3
 
@@ -11,7 +13,7 @@
 
 ## 5.5.2
 
-* Fixes fetching merge request ID in GitLab CI - [@nikolaykasyanov](https://github.com/nikolaykasyanov) 
+* Fixes fetching merge request ID in GitLab CI - [@nikolaykasyanov](https://github.com/nikolaykasyanov)
 
 ## 5.5.1
 
