@@ -1,7 +1,8 @@
 ## master
 
+* Fix handling of filenames that contain square brackets (and possibly other characters) - [@allewun](https://github.com/allewun)
 
-> _Add your own contributions to the next release on a new line line above this; please include your name too._
+> _Add your own contributions to the next release on a new line above this; please include your name too._
 > _Please don't set a new version if you are the first to make the section for `master`._
 
 ## 5.5.3
