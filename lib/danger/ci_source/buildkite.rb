@@ -40,7 +40,7 @@ module Danger
       self.repo_url = env["BUILDKITE_REPO"]
       self.pull_request_id = env["BUILDKITE_PULL_REQUEST"]
 
-      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/]+?)(\.git$|$)})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?
     end
 
