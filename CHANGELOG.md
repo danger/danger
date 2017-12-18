@@ -22,7 +22,7 @@
 ## 5.5.1
 
 * Update documentation for BitRise CI now that it supports Secret Env Vars - [@AliSoftware](https://github.com/AliSoftware)
-* Improves Circle CI reliablilty - [@sean-clayton](https://github.com/sean-clayton) / [@orta](https://github.com/orta)
+* Improves Circle CI reliability - [@sean-clayton](https://github.com/sean-clayton) / [@orta](https://github.com/orta)
 
 ## 5.5.0
 
@@ -170,7 +170,7 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 * Fix inline comment url when using github enterprise - leonhartX
 * Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
 * Fix find wrong diff position for inline comment - leonhartX
-* gitlab project names dont need to be urlencoded anymore - hanneskaeufler
+* gitlab project names don't need to be urlencoded anymore - hanneskaeufler
 * Fix inline comment failed to fall back when there is only inline comments - leonhartX
 * Fix only inline markdown comments will fall back to main comment even in diff's range - leonhartX
 
@@ -370,7 +370,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.4.2...v3.5.0)
 
-* Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
+* Adds a template for creating a gem-based Dangerfile - dblock (+ orta)
 
   Adding two new commands:
 
@@ -461,7 +461,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 * Mask password on BitbucketServerAPI object - JuanitoFatas
-* Add `scm_provider` to the DSL allowing users and plugins ot check which scm provider is being used when running danger - K0nserv
+* Add `scm_provider` to the DSL allowing users and plugins to check which scm provider is being used when running danger - K0nserv
 * Deprecated `branch_for_merge` for GitLab. Use `branch_for_base` instead. - K0nserv
 * Added `branch_for_base` and `branch_for_head` for GitLab. - K0nserv
 
@@ -637,7 +637,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 
 * Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv
   Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
-  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
+  compatibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
 
 ## 2.1.6
 
