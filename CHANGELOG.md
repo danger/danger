@@ -3,6 +3,8 @@
 > _Add your own contributions to the next release on a new line above this; please include your name too._
 > _Please don't set a new version if you are the first to make the section for `master`._
 
+* Improves the inline docs on `danger local` and `danger pr`. [@orta](https://github.com/orta)
+
 ## 5.5.5
 
 * Fix handling of Github repos slugs with dots in them (for BuildKite CI). [@orj](https://github.com/orj)
