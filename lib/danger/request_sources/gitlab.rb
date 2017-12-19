@@ -40,6 +40,13 @@ module Danger
         abort
       end
 
+      def validates_as_ci?
+        includes_port = self.host.include? ":"
+        raise "Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners" if includes_port
+
+        super
+      end
+
       def validates_as_api_source?
         @token && !@token.empty?
       end
