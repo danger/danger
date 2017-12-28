@@ -20,8 +20,7 @@ module Danger
         self.ci_source = ci_source
         self.environment = environment
 
-        project, slug = ci_source.repo_slug.split("/")
-        @api = BitbucketCloudAPI.new(project, slug, ci_source.pull_request_id, environment)
+        @api = BitbucketCloudAPI.new(ci_source.repo_slug, ci_source.pull_request_id, nil, environment)
       end
 
       def validates_as_ci?
