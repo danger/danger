@@ -62,6 +62,7 @@ core_lint_output = `bundle exec yard stats #{core_plugins.join " "} --list-undoc
 
 if !core_lint_output.include?("100.00%")
   fail "The core plugins are not at 100% doc'd - see below:", sticky: false
+  markdown "```\n#{core_lint_output}```"
 elsif core_lint_output.include? "warning"
   warn "The core plugins are have yard warnings - see below", sticky: false
   markdown "```\n#{core_lint_output}```"
