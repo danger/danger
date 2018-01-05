@@ -223,7 +223,7 @@ module Danger
                   else
                     formatted
                   end
-          rows = violations[key]
+          rows = violations[key].uniq
           print_list(title, rows)
         end
 
@@ -246,10 +246,10 @@ module Danger
       violations = violation_report
 
       env.request_source.update_pull_request!(
-        warnings: violations[:warnings],
-        errors: violations[:errors],
-        messages: violations[:messages],
-        markdowns: status_report[:markdowns],
+        warnings: violations[:warnings].uniq,
+        errors: violations[:errors].uniq,
+        messages: violations[:messages].uniq,
+        markdowns: status_report[:markdowns].uniq,
         danger_id: danger_id,
         new_comment: new_comment
       )
