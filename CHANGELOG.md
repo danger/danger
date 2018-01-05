@@ -9,6 +9,7 @@
 
 * Improves the inline docs on `danger local` and `danger pr`. [@orta](https://github.com/orta)
 * Improves the GitLab CI error handling if port number is accidentally included in host. [@mbogh](https://github.com/mbogh)
+* Add Bitbucket Cloud support for TeamCity [@neilkimmett](https://github.com/neilkimmett)
 
 ## 5.5.5
 
