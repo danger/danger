@@ -17,6 +17,18 @@ module Danger
         other.line == line
     end
 
+    def hash
+      h = 1
+      h = h * 31 + message.hash
+      h = h * 17 + (file&.hash || 0)
+      h = h * 17 + (line&.hash || 0)
+      h
+    end
+
+    def eql?(other)
+      return self == other
+    end
+
     # @return [Boolean] returns true if is a file or line, false otherwise
     def inline?
       file || line

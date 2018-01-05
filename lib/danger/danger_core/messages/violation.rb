@@ -22,9 +22,9 @@ module Danger
     def hash
       h = 1
       h = h * 31 + message.hash
-      h = h * 13 + (sticky ? 1 : 0)
-      h = h * 17 + (file || 0)
-      h = h * 17 + (line || 0)
+      h = h * 13 + sticky.hash
+      h = h * 17 + (file&.hash || 0)
+      h = h * 17 + (line&.hash || 0)
       h
     end
 
