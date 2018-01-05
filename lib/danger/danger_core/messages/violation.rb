@@ -23,8 +23,8 @@ module Danger
       h = 1
       h = h * 31 + message.hash
       h = h * 13 + sticky.hash
-      h = h * 17 + (file&.hash || 0)
-      h = h * 17 + (line&.hash || 0)
+      h = h * 17 + file.hash
+      h = h * 17 + line.hash
       h
     end
 
