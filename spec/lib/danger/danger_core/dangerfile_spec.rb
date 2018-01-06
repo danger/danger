@@ -243,6 +243,33 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
       dm.post_results("danger-identifier", nil)
     end
+
+    it "delegates unique entries" do
+      code = "message 'message one'\n" \
+             "message 'message two'\n" \
+             "message 'message one'\n" \
+             "warn 'message one'\n" \
+             "warn 'message two'\n" \
+             "warn 'message two'\n"
+
+      dm = testing_dangerfile
+      dm.env.request_source.ignored_violations = []
+
+      dm.parse Pathname.new(""), code
+
+      results = dm.status_report
+
+      expect(dm.env.request_source).to receive(:update_pull_request!).with(
+        warnings: [anything(), anything()],
+        errors: [],
+        messages: [anything(), anything()],
+        markdowns: [],
+        danger_id: 'danger-identifier',
+        new_comment: nil
+      )
+
+      dm.post_results("danger-identifier", nil)
+    end
   end
 
   describe "#setup_for_running" do

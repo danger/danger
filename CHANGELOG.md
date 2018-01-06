@@ -1,6 +1,7 @@
 ## master
 
 * Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)
+* Use unique entries for the validation reports
 
 > _Add your own contributions to the next release on a new line above this; please include your name too._
 > _Please don't set a new version if you are the first to make the section for `master`._
