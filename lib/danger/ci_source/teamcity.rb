@@ -133,7 +133,7 @@ module Danger
 
     def extract_bitbucket_server_variables!(env)
       self.repo_slug       = env["BITBUCKETSERVER_REPO_SLUG"]
-      self.pull_request_id = env["BITBUCKETSERVER_PULL_REQUEST_ID"]
+      self.pull_request_id = env["BITBUCKETSERVER_PULL_REQUEST_ID"].to_i
       self.repo_url        = env["BITBUCKETSERVER_REPO_URL"]
     end
 
