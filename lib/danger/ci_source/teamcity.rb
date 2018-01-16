@@ -64,7 +64,7 @@ module Danger
   # - `BITBUCKETSERVER_PULL_REQUEST_ID`
   # - `BITBUCKETSERVER_REPO_URL`
   #
-  
+
   class TeamCity < CI
     class << self
       def validates_as_github_pr?(env)
@@ -78,7 +78,7 @@ module Danger
       def validates_as_bitbucket_cloud_pr?(env)
         ["BITBUCKET_REPO_SLUG", "BITBUCKET_BRANCH_NAME", "BITBUCKET_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
       end
-      
+
       def validates_as_bitbucket_server_pr?(env)
         ["BITBUCKETSERVER_REPO_SLUG", "BITBUCKETSERVER_PULL_REQUEST_ID", "BITBUCKETSERVER_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
       end
