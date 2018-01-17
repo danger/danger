@@ -64,7 +64,6 @@ module Danger
   # - `BITBUCKETSERVER_PULL_REQUEST_ID`
   # - `BITBUCKETSERVER_REPO_URL`
   #
-
   class TeamCity < CI
     class << self
       def validates_as_github_pr?(env)
