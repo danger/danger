@@ -53,6 +53,17 @@ module Danger
   # export BITBUCKET_BRANCH_NAME="%teamcity.build.branch%"
   # ```
   #
+  # #### BitBucket Server
+  #
+  # You will need to add the following environment variables as build parameters or by exporting them inside your
+  # Simple Command Runner.
+  # - `DANGER_BITBUCKETSERVER_USERNAME`
+  # - `DANGER_BITBUCKETSERVER_PASSWORD`
+  # - `DANGER_BITBUCKETSERVER_HOST`
+  # - `BITBUCKETSERVER_REPO_SLUG`
+  # - `BITBUCKETSERVER_PULL_REQUEST_ID`
+  # - `BITBUCKETSERVER_REPO_URL`
+  #
   class TeamCity < CI
     class << self
       def validates_as_github_pr?(env)
@@ -66,6 +77,10 @@ module Danger
       def validates_as_bitbucket_cloud_pr?(env)
         ["BITBUCKET_REPO_SLUG", "BITBUCKET_BRANCH_NAME", "BITBUCKET_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
       end
+
+      def validates_as_bitbucket_server_pr?(env)
+        ["BITBUCKETSERVER_REPO_SLUG", "BITBUCKETSERVER_PULL_REQUEST_ID", "BITBUCKETSERVER_REPO_URL"].all? { |x| env[x] && !env[x].empty? }
+      end
     end
 
     def self.validates_as_ci?(env)
@@ -73,24 +88,25 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      validates_as_github_pr?(env) || validates_as_gitlab_pr?(env) || validates_as_bitbucket_cloud_pr?(env)
+      validates_as_github_pr?(env) || validates_as_gitlab_pr?(env) || validates_as_bitbucket_cloud_pr?(env) || validates_as_bitbucket_server_pr?(env)
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab, Danger::RequestSources::BitbucketCloud]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab, Danger::RequestSources::BitbucketCloud, Danger::RequestSources::BitbucketServer]
     end
 
     def initialize(env)
       # NB: Unfortunately TeamCity doesn't provide these variables
       # automatically so you have to add these variables manually to your
       # project or build configuration
-
       if self.class.validates_as_github_pr?(env)
         extract_github_variables!(env)
       elsif self.class.validates_as_gitlab_pr?(env)
         extract_gitlab_variables!(env)
       elsif self.class.validates_as_bitbucket_cloud_pr?(env)
         extract_bitbucket_variables!(env)
+      elsif self.class.validates_as_bitbucket_server_pr?(env)
+        extract_bitbucket_server_variables!(env)
       end
     end
 
@@ -112,6 +128,12 @@ module Danger
       self.repo_slug       = env["BITBUCKET_REPO_SLUG"]
       self.pull_request_id = bitbucket_pr_from_env(env)
       self.repo_url        = env["BITBUCKET_REPO_URL"]
+    end
+
+    def extract_bitbucket_server_variables!(env)
+      self.repo_slug       = env["BITBUCKETSERVER_REPO_SLUG"]
+      self.pull_request_id = env["BITBUCKETSERVER_PULL_REQUEST_ID"].to_i
+      self.repo_url        = env["BITBUCKETSERVER_REPO_URL"]
     end
 
     # This is a little hacky, because Bitbucket doesn't provide us a PR id

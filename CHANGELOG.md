@@ -1,6 +1,7 @@
 ## master
 
 * Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)
+* Add Bitbucket Server support for TeamCity CI. [@davevdveen](https://github.com/davevdveen)
 * Use unique entries for the validation reports
 
 > _Add your own contributions to the next release on a new line above this; please include your name too._
