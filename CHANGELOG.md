@@ -1,11 +1,20 @@
+<!--
+
+// Please add your own contribution below inside the Master section, no need to 
+// set a version number, that happens during a deploy.
+//
+// These docs are aimed at users rather than danger developers, so please limit technical
+// terminology in here.
+
+-->
+
 ## master
+
+## 5.5.7
 
 * Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)
 * Add Bitbucket Server support for TeamCity CI. [@davevdveen](https://github.com/davevdveen)
 * Use unique entries for the validation reports
-
-> _Add your own contributions to the next release on a new line above this; please include your name too._
-> _Please don't set a new version if you are the first to make the section for `master`._
 
 ## 5.5.6
 
