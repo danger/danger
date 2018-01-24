@@ -15,12 +15,12 @@
 * Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)
 * Add Bitbucket Server support for TeamCity CI. [@davevdveen](https://github.com/davevdveen)
 * Use unique entries for the validation reports
+* Add Bitbucket Cloud support for TeamCity [@neilkimmett](https://github.com/neilkimmett)
 
 ## 5.5.6
 
 * Improves the inline docs on `danger local` and `danger pr`. [@orta](https://github.com/orta)
 * Improves the GitLab CI error handling if port number is accidentally included in host. [@mbogh](https://github.com/mbogh)
-* Add Bitbucket Cloud support for TeamCity [@neilkimmett](https://github.com/neilkimmett)
 
 ## 5.5.5
 
