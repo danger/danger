@@ -129,7 +129,7 @@ module Danger
         end
 
         if (previous_violations.empty? && (warnings + errors + messages + markdowns).empty?) || remove_previous_comments
-          # Just remove the comment, if there's nothing to say of --remove-previous-comments CLI was set.
+          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
           delete_old_comments!(danger_id: danger_id)
         else
           body = generate_comment(warnings: warnings,

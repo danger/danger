@@ -179,7 +179,7 @@ module Danger
         main_violations_sum = main_violations.values.inject(:+)
 
         if (previous_violations.empty? && main_violations_sum.empty?) || remove_previous_comments
-          # Just remove the comment, if there's nothing to say of --remove-previous-comments CLI was set.
+          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
           delete_old_comments!(danger_id: danger_id)
         end
 
