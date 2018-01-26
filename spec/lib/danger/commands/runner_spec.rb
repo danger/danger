@@ -51,7 +51,8 @@ RSpec.describe Danger::Runner do
         dangerfile_path: "Dangerfile",
         danger_id: "danger",
         new_comment: nil,
-        fail_on_errors: false
+        fail_on_errors: false,
+        remove_previous_comments: nil
       )
 
       runner.run
@@ -68,7 +69,8 @@ RSpec.describe Danger::Runner do
             "--dangerfile=MyDangerfile",
             "--danger_id=my-danger-id",
             "--new-comment",
-            "--fail-on-errors=true"
+            "--fail-on-errors=true",
+            "--remove-previous-comments"
           ]
         )
         runner = described_class.new(argv)
@@ -81,7 +83,8 @@ RSpec.describe Danger::Runner do
           dangerfile_path: "MyDangerfile",
           danger_id: "my-danger-id",
           new_comment: true,
-          fail_on_errors: "true"
+          fail_on_errors: "true",
+          remove_previous_comments: true
         )
 
         runner.run

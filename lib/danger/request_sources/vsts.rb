@@ -72,7 +72,7 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         unless @api.supports_comments?
           return
         end
@@ -86,7 +86,7 @@ module Danger
                         previous_violations: {},
                                   danger_id: danger_id,
                                    template: "vsts")
-        if new_comment
+        if new_comment || remove_previous_comments
           post_new_comment(comment)
         else
           update_old_comment(comment, danger_id: danger_id)

@@ -140,11 +140,11 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         comment_result = {}
         editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
         last_comment = editable_comments.last
-        should_create_new_comment = new_comment || last_comment.nil?
+        should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
 
         previous_violations =
           if should_create_new_comment
@@ -178,8 +178,8 @@ module Danger
 
         main_violations_sum = main_violations.values.inject(:+)
 
-        if previous_violations.empty? && main_violations_sum.empty?
-          # Just remove the comment, if there's nothing to say.
+        if (previous_violations.empty? && main_violations_sum.empty?) || remove_previous_comments
+          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
           delete_old_comments!(danger_id: danger_id)
         end
 

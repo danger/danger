@@ -70,8 +70,8 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
-        delete_old_comments(danger_id: danger_id) unless new_comment
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"

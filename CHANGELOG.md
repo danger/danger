@@ -10,6 +10,8 @@
 
 ## master
 
+* Add `--remove-previous-comments` functionality. [@JoeS](https://github.com/joesss)
+
 ## 5.5.7
 
 * Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)

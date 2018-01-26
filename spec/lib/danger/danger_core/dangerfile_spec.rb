@@ -241,7 +241,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
       expect(request_source).to receive(:update_pull_request!)
 
-      dm.post_results("danger-identifier", nil)
+      dm.post_results("danger-identifier", nil, nil)
     end
 
     it "delegates unique entries" do
@@ -265,10 +265,11 @@ RSpec.describe Danger::Dangerfile, host: :github do
         messages: [anything(), anything()],
         markdowns: [],
         danger_id: 'danger-identifier',
-        new_comment: nil
+        new_comment: nil,
+        remove_previous_comments: nil
       )
 
-      dm.post_results("danger-identifier", nil)
+      dm.post_results("danger-identifier", nil, nil)
     end
   end
 
@@ -315,7 +316,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
         expect(request_source).to receive(:update_pull_request!)
 
         expect do
-          dm.run("custom_danger_base", "custom_danger_head", path, 1, false)
+          dm.run("custom_danger_base", "custom_danger_head", path, 1, false, false)
         end.to raise_error(Danger::DSLError)
       end
 

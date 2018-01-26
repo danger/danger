@@ -58,6 +58,7 @@ module Danger
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
           nil,
+          nil,
           nil
         )
       end
