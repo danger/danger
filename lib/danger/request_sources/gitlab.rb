@@ -119,8 +119,7 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
-        should_create_new_comment = new_comment || editable_comments.empty?
-        should_remove_comments = remove_previous_comments || editable_comments.empty?
+        should_create_new_comment = new_comment || editable_comments.empty? || remove_previous_comments
 
         if should_create_new_comment
           previous_violations = {}
@@ -129,8 +128,8 @@ module Danger
           previous_violations = parse_comment(comment)
         end
 
-        if (previous_violations.empty? && (warnings + errors + messages + markdowns).empty?) || should_remove_comments
-          # Just remove the comment, if there"s nothing to say of --remove-previous-comments CLI was set.
+        if (previous_violations.empty? && (warnings + errors + messages + markdowns).empty?) || remove_previous_comments
+          # Just remove the comment, if there's nothing to say of --remove-previous-comments CLI was set.
           delete_old_comments!(danger_id: danger_id)
         else
           body = generate_comment(warnings: warnings,
