@@ -86,7 +86,7 @@ module Danger
                         previous_violations: {},
                                   danger_id: danger_id,
                                    template: "vsts")
-        if new_comment
+        if new_comment || remove_previous_comments
           post_new_comment(comment)
         else
           update_old_comment(comment, danger_id: danger_id)
