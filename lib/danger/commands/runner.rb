@@ -38,7 +38,7 @@ module Danger
       @head = argv.option("head")
       @fail_on_errors = argv.option("fail-on-errors", false)
       @new_comment = argv.flag?("new-comment")
-      @comment_at_tail = argv.flag?("comment-at-tail")
+      @remove_previous_comments = argv.flag?("remove-previous-comments")
       @danger_id = argv.option("danger_id", "danger")
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
@@ -60,7 +60,7 @@ module Danger
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
         ["--danger_id=<id>", "The identifier of this Danger instance"],
         ["--new-comment", "Makes Danger post a new comment instead of editing its previous one"],
-        ["--comment-at-tail", "Removes old comment and create a new one"]
+        ["--remove-previous-comments", "Removes all previous comment and create a new one in the end of the list"]
       ].concat(super)
     end
 
@@ -72,7 +72,7 @@ module Danger
         danger_id: @danger_id,
         new_comment: @new_comment,
         fail_on_errors: @fail_on_errors,
-        comment_at_tail: @comment_at_tail
+        remove_previous_comments: @remove_previous_comments
       )
     end
   end

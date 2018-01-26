@@ -13,7 +13,7 @@ module Danger
             danger_id: nil,
             new_comment: nil,
             fail_on_errors: nil,
-            comment_at_tail: nil)
+            remove_previous_comments: nil)
       # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
 
@@ -31,7 +31,7 @@ module Danger
           dangerfile_path,
           danger_id,
           new_comment,
-          comment_at_tail
+          remove_previous_comments
         )
       end
 

@@ -140,12 +140,12 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, comment_at_tail: false)
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         comment_result = {}
         editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
         last_comment = editable_comments.last
         should_create_new_comment = new_comment || last_comment.nil?
-        should_remove_comments = comment_at_tail || last_comment.nil?
+        should_remove_comments = remove_previous_comments || last_comment.nil?
 
         previous_violations =
           if should_create_new_comment
