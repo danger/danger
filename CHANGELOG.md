@@ -10,7 +10,10 @@
 
 ## master
 
-* Add `--remove-previous-comments` functionality. [@JoeS](https://github.com/joesss)
+## 5.5.8
+
+* Add `--remove-previous-comments` functionality, which means that a you can make a new comment 
+  at the bottom of the code review conversation. [@JoeS](https://github.com/joesss)
 
 ## 5.5.7
 
