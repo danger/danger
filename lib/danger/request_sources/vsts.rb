@@ -72,7 +72,7 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         unless @api.supports_comments?
           return
         end
