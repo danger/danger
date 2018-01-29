@@ -9,6 +9,14 @@ RSpec.describe Danger::Bitrise do
     }
   end
 
+  let(:alternate_valid_env) do
+    {
+      "BITRISE_PULL_REQUEST" => "4",
+      "BITRISE_IO" => "true",
+      "GIT_REPOSITORY_URL" => "git@github.com:artsy/artsy.github.io"
+    }
+  end
+
   let(:invalid_env) do
     {
       "CIRCLE" => "true"
@@ -17,9 +25,15 @@ RSpec.describe Danger::Bitrise do
 
   let(:source) { described_class.new(valid_env) }
 
+  let(:alternate_source) { described_class.new(alternate_valid_env) }
+
   describe ".validates_as_pr?" do
     it "validates when the required env variables are set" do
       expect(described_class.validates_as_pr?(valid_env)).to be true
+    end
+
+    it "validates when the required env variables are set with periods in repo name" do
+      expect(described_class.validates_as_pr?(alternate_valid_env)).to be true
     end
 
     it "does not validate when the required env variables are not set" do
@@ -37,6 +51,10 @@ RSpec.describe Danger::Bitrise do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
+    it "validates when the required env variables are set with periods in repo name" do
+      expect(described_class.validates_as_pr?(alternate_valid_env)).to be true
+    end
+
     it "does not validate when the required env variables are not set" do
       expect(described_class.validates_as_ci?(invalid_env)).to be false
     end
@@ -52,6 +70,10 @@ RSpec.describe Danger::Bitrise do
       expect(source.repo_slug).to eq("artsy/eigen")
     end
 
+    it "sets the repo_slug with periods in the repo name" do
+      expect(alternate_source.repo_slug).to eq("artsy/artsy.github.io")
+    end
+
     it "sets the pull_request_id" do
       expect(source.pull_request_id).to eq("4")
     end
@@ -59,6 +81,11 @@ RSpec.describe Danger::Bitrise do
     it "sets the repo_url", host: :github do
       with_git_repo(origin: "git@github.com:artsy/eigen") do
         expect(source.repo_url).to eq("git@github.com:artsy/eigen")
+      end
+    end
+    it "sets the repo_url with periods in the repo name", host: :github do
+      with_git_repo(origin: "git@github.com:artsy/artsy.github.io") do
+        expect(alternate_source.repo_url).to eq("git@github.com:artsy/artsy.github.io")
       end
     end
   end
