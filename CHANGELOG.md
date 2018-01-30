@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.5.9
+
 * Fix handling of Github repo slugs with dots in them (for Bitrise CI). [@provTheodoreNewell](https://github.com/provTheodoreNewell)
 
 ## 5.5.8
