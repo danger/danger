@@ -1,6 +1,6 @@
 <!--
 
-// Please add your own contribution below inside the Master section, no need to 
+// Please add your own contribution below inside the Master section, no need to
 // set a version number, that happens during a deploy.
 //
 // These docs are aimed at users rather than danger developers, so please limit technical
@@ -10,11 +10,11 @@
 
 ## master
 
-* Fix handling of Github repos slugs with dots in them (for Bitrise CI). [@provTheodoreNewell](https://github.com/provTheodoreNewell)
+* Fix handling of Github repo slugs with dots in them (for Bitrise CI). [@provTheodoreNewell](https://github.com/provTheodoreNewell)
 
 ## 5.5.8
 
-* Add `--remove-previous-comments` functionality, which means that a you can make a new comment
+* Add `--remove-previous-comments` functionality, which means that a you can make a new comment 
   at the bottom of the code review conversation. [@JoeS](https://github.com/joesss)
 
 ## 5.5.7
