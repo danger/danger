@@ -52,6 +52,12 @@ RSpec.describe Danger::Bitrise do
       expect(source.repo_slug).to eq("artsy/eigen")
     end
 
+    it "sets the repo_slug from a repo with dots in it", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "git@github.com:artsy/artsy.github.io"
+      expect(source.repo_slug).to eq("artsy/artsy.github.io")
+    end
+
+
     it "sets the pull_request_id" do
       expect(source.pull_request_id).to eq("4")
     end
