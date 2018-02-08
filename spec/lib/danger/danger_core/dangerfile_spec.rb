@@ -260,11 +260,11 @@ RSpec.describe Danger::Dangerfile, host: :github do
       results = dm.status_report
 
       expect(dm.env.request_source).to receive(:update_pull_request!).with(
-        warnings: [anything(), anything()],
+        warnings: [anything, anything],
         errors: [],
-        messages: [anything(), anything()],
+        messages: [anything, anything],
         markdowns: [],
-        danger_id: 'danger-identifier',
+        danger_id: "danger-identifier",
         new_comment: nil,
         remove_previous_comments: nil
       )
