@@ -34,7 +34,7 @@ module Danger
         url = "https://example.visualstudio.com/example/_apis/git/repositories/example/pullRequests/1/threads?api-version=3.0"
         WebMock.stub_request(:get, url).to_return(raw_file)
       end
-      
+
       def stub_get_comments_request_with_danger
         raw_file = File.new("spec/fixtures/vsts_api/danger_comments_response.json")
         url = "https://example.visualstudio.com/example/_apis/git/repositories/example/pullRequests/1/threads?api-version=3.0"

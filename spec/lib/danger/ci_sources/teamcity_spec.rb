@@ -210,61 +210,61 @@ RSpec.describe Danger::TeamCity do
   end
 
   context "with Bitbucket Server" do
-      before do
-          valid_env["BITBUCKETSERVER_REPO_SLUG"] = "foo/bar"
-          valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = "42"
-          valid_env["BITBUCKETSERVER_REPO_URL"] = "git@bitbucketserver.com:danger/danger.git"
+    before do
+      valid_env["BITBUCKETSERVER_REPO_SLUG"] = "foo/bar"
+      valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = "42"
+      valid_env["BITBUCKETSERVER_REPO_URL"] = "git@bitbucketserver.com:danger/danger.git"
+    end
+
+    describe ".validates_as_ci?" do
+      it "validates when required env variables are set" do
+        expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      describe ".validates_as_ci?" do
-          it "validates when required env variables are set" do
-              expect(described_class.validates_as_ci?(valid_env)).to be true
-          end
-
-          it "validates even when `BITBUCKETSERVER_PULL_REQUEST_ID` is missing" do
-              valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = nil
-              expect(described_class.validates_as_ci?(valid_env)).to be true
-          end
-
-          it "validates even when `BITBUCKETSERVER_PULL_REQUEST_ID` is empty" do
-              valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = ""
-              expect(described_class.validates_as_ci?(valid_env)).to be true
-          end
-
-          it "doesn't validate when required env variables are not set" do
-              expect(described_class.validates_as_ci?(invalid_env)).to be false
-          end
+      it "validates even when `BITBUCKETSERVER_PULL_REQUEST_ID` is missing" do
+        valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = nil
+        expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      describe ".validates_as_pr?" do
-          it "validates when the required variables are set" do
-              expect(described_class.validates_as_pr?(valid_env)).to be true
-          end
-
-          it "doesn't validate if `BITBUCKETSERVER_PULL_REQUEST_ID` is missing" do
-              valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = nil
-              expect(described_class.validates_as_pr?(valid_env)).to be false
-          end
-
-          it "doesn't validate_as_pr if `BITBUCKETSERVER_PULL_REQUEST_ID` is the empty string" do
-              valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = ""
-              expect(described_class.validates_as_pr?(valid_env)).to be false
-          end
+      it "validates even when `BITBUCKETSERVER_PULL_REQUEST_ID` is empty" do
+        valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = ""
+        expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
-      describe "#new" do
-          it "sets the repo_slug" do
-              expect(source.repo_slug).to eq("foo/bar")
-          end
-
-          it "sets the repo_url" do
-              expect(source.repo_url).to eq("git@bitbucketserver.com:danger/danger.git")
-          end
-
-          it "sets the pull_request_id" do
-              expect(source.pull_request_id).to eq(42)
-          end
+      it "doesn't validate when required env variables are not set" do
+        expect(described_class.validates_as_ci?(invalid_env)).to be false
       end
+    end
+
+    describe ".validates_as_pr?" do
+      it "validates when the required variables are set" do
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+
+      it "doesn't validate if `BITBUCKETSERVER_PULL_REQUEST_ID` is missing" do
+        valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = nil
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+
+      it "doesn't validate_as_pr if `BITBUCKETSERVER_PULL_REQUEST_ID` is the empty string" do
+        valid_env["BITBUCKETSERVER_PULL_REQUEST_ID"] = ""
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+    end
+
+    describe "#new" do
+      it "sets the repo_slug" do
+        expect(source.repo_slug).to eq("foo/bar")
+      end
+
+      it "sets the repo_url" do
+        expect(source.repo_url).to eq("git@bitbucketserver.com:danger/danger.git")
+      end
+
+      it "sets the pull_request_id" do
+        expect(source.pull_request_id).to eq(42)
+      end
+    end
   end
 
   describe "#supported_request_sources" do
@@ -279,9 +279,9 @@ RSpec.describe Danger::TeamCity do
     it "supports Bitbucket Cloud" do
       expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketCloud)
     end
-    
+
     it "supports Bitbucket Server" do
-        expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketServer)
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketServer)
     end
   end
 end

@@ -125,13 +125,7 @@ Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
 
-Style/MixinGrouping:
-  Enabled: false
-
 Style/FileName:
-  Enabled: false
-
-Style/IndentHeredoc:
   Enabled: false
 
 Style/SpecialGlobalVars:
@@ -148,6 +142,3 @@ PercentLiteralDelimiters:
     "%w": ()
     "%W": ()
     "%x": ()
-
-Security/YAMLLoad:
-  Enabled: false

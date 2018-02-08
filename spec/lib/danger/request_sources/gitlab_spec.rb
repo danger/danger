@@ -72,14 +72,14 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
       expect(result).to be_falsey
     end
-    
+
     it "does not validate as CI when there is a port number included in host" do
       env = stub_env
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com:2020"
 
-      expect{ Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
+      expect { Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
     end
-    
+
     it "does validate as CI when there is no port number included in host" do
       env = stub_env
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
@@ -87,11 +87,11 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       git_mock = Danger::GitRepo.new
       g = Danger::RequestSources::GitLab.new(stub_ci, env)
       g.scm = git_mock
-      
+
       allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@gitlab.example.com:artsy/eigen.git")
 
       result = g.validates_as_ci?
-      
+
       expect(result).to be_truthy
     end
   end
@@ -139,7 +139,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           593_728
         )
       end
-      
+
       it "return empty string if last commit do not exist" do
         subject.fetch_details
 
@@ -149,7 +149,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       it "raise error on empty commit" do
         subject.fetch_details
 
-        expect{ subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
+        expect { subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
       end
     end
 
