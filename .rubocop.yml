@@ -151,3 +151,6 @@ PercentLiteralDelimiters:
 
 Security/YAMLLoad:
   Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
