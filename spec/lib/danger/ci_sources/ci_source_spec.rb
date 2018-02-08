@@ -20,7 +20,7 @@ RSpec.describe Danger::CI do
           "Danger::Travis",
           "Danger::VSTS",
           "Danger::XcodeServer",
-          "Danger::Codeship",
+          "Danger::Codeship"
         ]
       )
     end

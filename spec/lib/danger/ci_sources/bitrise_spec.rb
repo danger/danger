@@ -57,7 +57,6 @@ RSpec.describe Danger::Bitrise do
       expect(source.repo_slug).to eq("artsy/artsy.github.io")
     end
 
-
     it "sets the pull_request_id" do
       expect(source.pull_request_id).to eq("4")
     end
