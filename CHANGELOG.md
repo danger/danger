@@ -10,13 +10,15 @@
 
 ## master
 
+* Update rubocop and yard dependencies for vulnerabilities - Juanito Fatas
+
 ## 5.5.9
 
 * Fix handling of Github repo slugs with dots in them (for Bitrise CI). [@provTheodoreNewell](https://github.com/provTheodoreNewell)
 
 ## 5.5.8
 
-* Add `--remove-previous-comments` functionality, which means that a you can make a new comment 
+* Add `--remove-previous-comments` functionality, which means that a you can make a new comment
   at the bottom of the code review conversation. [@JoeS](https://github.com/joesss)
 
 ## 5.5.7
