@@ -16,6 +16,16 @@ RSpec.describe Danger::Jenkins do
 
   let(:source) { described_class.new(valid_env) }
 
+  describe "errors" do
+    it "raises an error when no env passed in" do
+      expect { Danger::Jenkins.new(nil) }.to raise_error Danger::Jenkins::EnvNotFound
+    end
+
+    it "raises an error when empty env passed in" do
+      expect { Danger::Jenkins.new({}) }.to raise_error Danger::Jenkins::EnvNotFound
+    end
+  end
+
   context "with GitHub" do
     before do
       valid_env["ghprbPullId"] = "1234"
