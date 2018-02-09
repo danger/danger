@@ -10,8 +10,9 @@
 
 ## master
 
-* Improve Jenkins CI error handling when no ENV passed in - Juanito Fatas
-* Update rubocop and yard dependencies for vulnerabilities - Juanito Fatas
+* Improve Jenkins CI error handling when no ENV passed in - #954 Juanito Fatas
+* Update rubocop and yard dependencies for vulnerabilities - #955 Juanito Fatas
+* Update rubocop and yard dependencies for vulnerabilities - #957 Juanito Fatas
 
 ## 5.5.9
 
