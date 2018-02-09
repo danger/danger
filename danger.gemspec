@@ -31,22 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "terminal-table", "~> 1"
   spec.add_runtime_dependency "cork", "~> 0.1"
   spec.add_runtime_dependency "no_proxy_fix"
-
-  spec.add_development_dependency "bundler", "~> 1.10"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.4"
-  spec.add_development_dependency "rspec_junit_formatter", "~> 0.2"
-  spec.add_development_dependency "webmock", "~> 2.1"
-  spec.add_development_dependency "pry", "~> 0.10"
-  spec.add_development_dependency "pry-byebug"
-
-  spec.add_development_dependency "rubocop", "~> 0.49.0"
-  spec.add_development_dependency "yard", "~> 0.9.11"
-
-  spec.add_development_dependency "listen", "3.0.7"
-  spec.add_development_dependency "guard", "~> 2.14"
-  spec.add_development_dependency "guard-rspec", "~> 4.7"
-  spec.add_development_dependency "guard-rubocop", "~> 1.2"
-  spec.add_development_dependency "simplecov", "~> 0.12.0"
 end
 # rubocop:enable Metrics/BlockLength
