@@ -295,12 +295,12 @@ RSpec.describe Danger::Helpers::CommentsHelper do
       )
 
       summary = <<COMMENT
-<!--
-  1 Error: This is an error
-  1 Warning: Violations that are very very ...
-  1 Message: This is a message
-  1 Markdown
--->
+  <!--
+    1 Error: This is an error
+    1 Warning: Violations that are very very ...
+    1 Message: This is a message
+    1 Markdown
+  -->
 COMMENT
 
       expect(comment).to include(summary)
