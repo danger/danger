@@ -119,5 +119,9 @@ RSpec.describe Danger::CircleCI do
     it "supports GitHub" do
       expect(source.supported_request_sources).to include(Danger::RequestSources::GitHub)
     end
+
+    it "supports BitBucket Cloud" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketCloud)
+    end
   end
 end
