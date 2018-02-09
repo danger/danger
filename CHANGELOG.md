@@ -13,6 +13,7 @@
 * Improve Jenkins CI error handling when no ENV passed in - #954 Juanito Fatas
 * Update rubocop and yard dependencies for vulnerabilities - #955 Juanito Fatas
 * Update rubocop and yard dependencies for vulnerabilities - #957 Juanito Fatas
+* Enable BitBucket Cloud for Circle CI. [@andrewlord1990](https://github.com/andrewlord1990)
 
 ## 5.5.9
 
