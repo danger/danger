@@ -148,3 +148,6 @@ Security/YAMLLoad:
 
 Style/RaiseArgs:
   Enabled: false
+
+Layout/IndentHeredoc:
+  Enabled: false
