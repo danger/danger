@@ -193,7 +193,7 @@ module Danger
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
       same_repo = mr_json["project_id"] == mr_json["source_project_id"]
-      sender_repo = env.ci_source.repo_slug.split("/").first + "/" + mr_author
+      sender_repo = mr_author + "/" + env.ci_source.repo_slug.split("/")[1]
       repo = same_repo ? env.ci_source.repo_slug : sender_repo
       host = @gitlab.host
 

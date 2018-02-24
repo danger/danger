@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix GitLab `html_link` url's for external repos. [@sogame](https://github.com/sogame)
+
 ## 5.5.10
 
 * Improve Jenkins CI error handling when no ENV passed in - #954 Juanito Fatas
