@@ -165,7 +165,7 @@ module Git
     # Use git-merge-base https://git-scm.com/docs/git-merge-base to
     # find as good common ancestors as possible for a merge
     def merge_base(commit1, commit2, *other_commits)
-      Open3.popen2("git", "merge-base", "--all", commit1, commit2, *other_commits) { |_stdin, stdout, _wait_thr| stdout.read.rstrip }
+      Open3.popen2("git", "merge-base", commit1, commit2, *other_commits) { |_stdin, stdout, _wait_thr| stdout.read.rstrip }
     end
   end
 end
