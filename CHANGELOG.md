@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.5.11
+
 * Fix GitLab `html_link` url's for external repos. [@sogame](https://github.com/sogame)
 * Removing `--all` option for `git merge-base` [@tbrand](https://github.com/tbrand)
 
