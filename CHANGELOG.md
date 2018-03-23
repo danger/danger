@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
+
 ## 5.5.11
 
 * Fix GitLab `html_link` url's for external repos. [@sogame](https://github.com/sogame)

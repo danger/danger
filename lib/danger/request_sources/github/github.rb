@@ -465,7 +465,6 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         organisation ||= self.organisation
 
-        return @download_url unless @download_url.nil?
         begin
           # Retrieve the download URL (default branch on nil param)
           contents = client.contents("#{organisation}/#{repository}", path: path, ref: branch)
