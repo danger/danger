@@ -10,7 +10,7 @@
 
 ## master
 
-* Fix a Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
+* Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
 
 ## 5.5.11
 
