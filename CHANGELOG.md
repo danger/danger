@@ -11,6 +11,7 @@
 ## master
 
 * Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
+* Fixing typo: `ArraySublcass` -> `ArraySubclass` [@ivantse](https://github.com/ivantse)
 
 ## 5.5.11
 

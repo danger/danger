@@ -1,6 +1,6 @@
-RSpec.describe Danger::Helpers::ArraySublcass do
-  class List; include Danger::Helpers::ArraySublcass; end
-  class OtherList; include Danger::Helpers::ArraySublcass; end
+RSpec.describe Danger::Helpers::ArraySubclass do
+  class List; include Danger::Helpers::ArraySubclass; end
+  class OtherList; include Danger::Helpers::ArraySubclass; end
 
   it "acts as array" do
     first_list = List.new([1, 2, 3])
