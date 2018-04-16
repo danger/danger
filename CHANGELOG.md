@@ -12,6 +12,7 @@
 
 * Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
 * Fixing typo: `ArraySublcass` -> `ArraySubclass` [@ivantse](https://github.com/ivantse)
+* Fix crash when having messages with nil line on GitHub [@fwal](https://github.com/fwal)
 
 ## 5.5.11
 
