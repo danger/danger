@@ -489,8 +489,8 @@ module Danger
 
       def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
         cmp = proc do |a, b|
-          next -1 unless a.file
-          next 1 unless b.file
+          next -1 unless a.file && a.line
+          next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
           next a.file <=> b.file
