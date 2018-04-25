@@ -10,6 +10,8 @@
 
 ## master
 
+* Enable Bitbucket Cloud for Bitrise CI [@masahide318](https://github.com/masahide318)
+
 ## 5.5.12
 
 * Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
