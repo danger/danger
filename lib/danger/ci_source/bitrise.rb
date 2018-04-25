@@ -32,7 +32,8 @@ module Danger
       @supported_request_sources ||= [
         Danger::RequestSources::GitHub,
         Danger::RequestSources::GitLab,
-        Danger::RequestSources::BitbucketServer
+        Danger::RequestSources::BitbucketServer,
+        Danger::RequestSources::BitbucketCloud
       ]
     end
 
