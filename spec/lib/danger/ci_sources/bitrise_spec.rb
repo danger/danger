@@ -75,5 +75,11 @@ RSpec.describe Danger::Bitrise do
     it "supports GitLab" do
       expect(source.supported_request_sources).to include(Danger::RequestSources::GitLab)
     end
+    it "supports BitBucket Cloud" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketCloud)
+    end
+    it "supports BitBucket Server" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::BitbucketServer)
+    end
   end
 end
