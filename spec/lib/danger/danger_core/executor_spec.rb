@@ -56,7 +56,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         with_localgitrepo_setup do |system_env|
           ui = testing_ui
           expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
-          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
+          expect(ui.string).to include("Not a LocalGitRepo Pull Request - skipping `danger` run")
         end
       end
 
@@ -111,7 +111,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         not_a_pull_request do |system_env|
           ui = testing_ui
           expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
-          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
+          expect(ui.string).to include("Not a Travis Pull Request - skipping `danger` run")
         end
       end
     end
