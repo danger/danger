@@ -11,6 +11,7 @@
 ## master
 
 * Enable Bitbucket Cloud for Bitrise CI [@masahide318](https://github.com/masahide318)
+* Notes which CI is used when exiting with an invalid PR [@dbgrandi](https://github.com/dbgrandi)
 
 ## 5.5.12
 
