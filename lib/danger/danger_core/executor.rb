@@ -60,7 +60,7 @@ module Danger
     # Could we determine that the CI source is inside a PR?
     def validate_pr!(cork)
       unless EnvironmentManager.pr?(system_env)
-        ci_name = EnvironmentManager.local_ci_source(system_env).name.split('::').last
+        ci_name = EnvironmentManager.local_ci_source(system_env).name.split("::").last
         cork.puts "Not a #{ci_name} Pull Request - skipping `danger` run".yellow
         exit(0)
       end
