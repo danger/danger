@@ -93,6 +93,16 @@ module Danger
         yield(system_env)
       end
 
+      def with_screwdriver_setup_and_is_a_pull_request
+        system_env = {
+          "SCREWDRIVER" => "true",
+          "SD_PULL_REQUEST" => "42",
+          "SCM_URL" => "git@github.com:danger/danger"
+        }
+
+        yield(system_env)
+      end
+
       def with_semaphore_setup_and_is_a_pull_request
         system_env = {
           "SEMAPHORE" => "true",
