@@ -9,6 +9,7 @@
 -->
 
 ## master
+* Add support for [Screwdriver CI](http://screwdriver.cd) - [@dbgrandi](https://github.com/dbgrandi)
 
 ## 5.5.13
 
