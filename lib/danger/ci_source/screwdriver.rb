@@ -7,14 +7,14 @@ module Danger
   #
   # Install dependencies and add a danger step to your screwdriver.yaml:
   # ``` yml
-  #jobs:
-  #  danger:
-  #    requires: [~pr, ~commit]
-  #    steps:
-  #      - setup: bundle install --path vendor
-  #      - danger: bundle exec danger
-  #    secrets:
-  #      - DANGER_GITHUB_API_TOKEN
+  # jobs:
+  #   danger:
+  #     requires: [~pr, ~commit]
+  #     steps:
+  #       - setup: bundle install --path vendor
+  #       - danger: bundle exec danger
+  #     secrets:
+  #       - DANGER_GITHUB_API_TOKEN
   # ```
   #
   # ### Token Setup
@@ -37,7 +37,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SCM_URL"].split(':').last.gsub(".git","")
+      self.repo_slug = env["SCM_URL"].split(":").last.gsub(".git", "")
       self.repo_url = env["SCM_URL"]
       if env["SD_PULL_REQUEST"].to_i > 0
         self.pull_request_id = env["SD_PULL_REQUEST"]
