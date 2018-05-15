@@ -9,6 +9,8 @@
 -->
 
 ## master
+
+* Fix crash when messages are nil. [@allewun](https://github.com/allewun)
 * Add support for [Screwdriver CI](http://screwdriver.cd) - [@dbgrandi](https://github.com/dbgrandi)
 
 ## 5.5.13
