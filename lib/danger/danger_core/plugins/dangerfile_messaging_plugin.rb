@@ -107,7 +107,7 @@ module Danger
     # @!group Core
     # Print out a generate message on the PR
     #
-    # @param    [String, Array<String> message
+    # @param    [String, Array<String>] message
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
@@ -124,14 +124,14 @@ module Danger
       line = options.fetch(:line, nil)
 
       messages.flatten.each do |message|
-        @messages << Violation.new(message, sticky, file, line)
+        @messages << Violation.new(message, sticky, file, line) if message
       end
     end
 
     # @!group Core
     # Specifies a problem, but not critical
     #
-    # @param    [String, Array<String> message
+    # @param    [String, Array<String>] message
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
@@ -149,14 +149,14 @@ module Danger
 
       warnings.flatten.each do |warning|
         next if should_ignore_violation(warning)
-        @warnings << Violation.new(warning, sticky, file, line)
+        @warnings << Violation.new(warning, sticky, file, line) if warning
       end
     end
 
     # @!group Core
     # Declares a CI blocking error
     #
-    # @param    [String, Array<String> message
+    # @param    [String, Array<String>] message
     #           The message to present to the user
     # @param    [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
@@ -174,7 +174,7 @@ module Danger
 
       failures.flatten.each do |failure|
         next if should_ignore_violation(failure)
-        @errors << Violation.new(failure, sticky, file, line)
+        @errors << Violation.new(failure, sticky, file, line) if failure
       end
     end
 
