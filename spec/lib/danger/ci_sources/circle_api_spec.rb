@@ -16,7 +16,7 @@ RSpec.describe Danger::CircleAPI do
 
     expect(result).to have_attributes(
       repo_slug: "artsy/eigen",
-      pull_request_id: "1130"
+      pull_request_id: "2606"
     )
   end
 
@@ -32,13 +32,13 @@ RSpec.describe Danger::CircleAPI do
 
     result = Danger::CircleAPI.new.pull_request_url(env)
 
-    expect(result).to eq("https://github.com/artsy/eigen/pull/1130")
+    expect(result).to eq("https://github.com/artsy/eigen/pull/2606")
   end
 
   it "uses Circle CI API to grab the url if available" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",
-      "CIRCLE_CI_API_TOKEN" => "token",
+      "DANGER_CIRCLE_CI_API_TOKEN" => "token",
       "CIRCLE_PROJECT_USERNAME" => "artsy",
       "CIRCLE_PROJECT_REPONAME" => "eigen"
     }
@@ -47,13 +47,13 @@ RSpec.describe Danger::CircleAPI do
 
     result = Danger::CircleAPI.new.pull_request_url(env)
 
-    expect(result).to eq("https://github.com/artsy/eigen/pull/1130")
+    expect(result).to eq("https://github.com/artsy/eigen/pull/2606")
   end
 
   it "uses Circle CI API to and can tell you it's not a PR'" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",
-      "CIRCLE_CI_API_TOKEN" => "token",
+      "DANGER_CIRCLE_CI_API_TOKEN" => "token",
       "CIRCLE_PROJECT_USERNAME" => "artsy",
       "CIRCLE_PROJECT_REPONAME" => "eigen"
     }

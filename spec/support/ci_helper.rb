@@ -30,7 +30,7 @@ module Danger
         system_env = {
           "CIRCLE_BUILD_NUM" => "1589",
           "CI_PULL_REQUEST" => "https://circleci.com/gh/danger/danger/1589",
-          "CIRCLE_CI_API_TOKEN" => "circle api token",
+          "DANGER_CIRCLE_CI_API_TOKEN" => "circle api token",
           "CIRCLE_PROJECT_USERNAME" => "danger",
           "CIRCLE_PROJECT_REPONAME" => "danger"
         }
