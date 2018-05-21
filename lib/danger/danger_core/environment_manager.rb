@@ -111,7 +111,7 @@ module Danger
       ui.puts subtitle
       ui.puts "\nFound these keys in your ENV: #{env.keys.join(', '.freeze)}."
       ui.puts "\nFailing the build, Danger cannot run without API access.".freeze
-      ui.puts "You can see more information at http://danger.systems/guides/getting_started.html".freeze
+      ui.puts "You can see more information at https://danger.systems/guides/getting_started.html".freeze
     end
 
     def travis_note
