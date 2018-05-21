@@ -10,6 +10,8 @@
 
 ## master
 
+* Use HTTPS links where applicable. [@allewun](https://github.com/allewun)
+
 ## 5.6.0
 
 * Fix CircleCI API failing to detect PRs. [@allewun](https://github.com/allewun)
