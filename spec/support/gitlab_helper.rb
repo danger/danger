@@ -10,20 +10,20 @@ module Danger
 
       def stub_env
         {
-          "DRONE" => true,
-          "DRONE_REPO_OWNER" => "k0nserv",
-          "DRONE_REPO_NAME" => "danger-test",
-          "DRONE_PULL_REQUEST" => "593728",
+          "GITLAB_CI" => "1",
+          "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
+          "CI_PROJECT_PATH" => "k0nserv/danger-test",
+          "CI_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
           "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
         }
       end
 
-      def stub_ci
-        Danger::Drone.new(stub_env)
+      def stub_ci(env = stub_env)
+        Danger::GitLabCI.new(env)
       end
 
-      def stub_request_source
-        Danger::RequestSources::GitLab.new(stub_ci, stub_env)
+      def stub_request_source(env = stub_env)
+        Danger::RequestSources::GitLab.new(stub_ci(env), env)
       end
 
       def stub_merge_requests(fixture, slug)
