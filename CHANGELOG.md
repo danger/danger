@@ -11,6 +11,7 @@
 ## master
 
 * Use HTTPS links where applicable. [@allewun](https://github.com/allewun)
+* Fix `Danger::GitLabCI` to use `CI_PROJECT_PATH` instead of `CI_PROJECT_ID` for its `#repo_slug`. [@rymai](https://github.com/rymai)
 
 ## 5.6.0
 

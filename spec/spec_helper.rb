@@ -71,9 +71,9 @@ def testing_ui
 end
 # rubocop:enable Lint/NestedMethodDefinition
 
-def testing_dangerfile
-  env = Danger::EnvironmentManager.new(stub_env, testing_ui)
-  dm = Danger::Dangerfile.new(env, testing_ui)
+def testing_dangerfile(env = stub_env)
+  env_manager = Danger::EnvironmentManager.new(env, testing_ui)
+  dm = Danger::Dangerfile.new(env_manager, testing_ui)
 end
 
 def fixture_txt(file)

@@ -52,7 +52,7 @@ module Danger
         system_env = {
           "GITLAB_CI" => "true",
           "CI_MERGE_REQUEST_ID" => "42",
-          "CI_PROJECT_ID" => "danger/danger"
+          "CI_PROJECT_PATH" => "danger/danger"
         }
 
         yield(system_env)

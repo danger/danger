@@ -5,8 +5,8 @@ require "erb"
 require "danger/request_sources/gitlab"
 
 RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
-  let(:env) { stub_env }
-  let(:subject) { Danger::RequestSources::GitLab.new(stub_ci, env) }
+  let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 593_728) }
+  let(:subject) { stub_request_source(env) }
 
   describe "the GitLab host" do
     it "sets the default GitLab host" do
@@ -56,36 +56,32 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
     end
 
     it "does no validate as an API source when the API token is empty" do
-      env = stub_env
       env["DANGER_GITLAB_API_TOKEN"] = ""
 
-      result = Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_api_source?
+      result = stub_request_source(env).validates_as_api_source?
 
       expect(result).to be_falsey
     end
 
     it "does no validate as an API source when there is no API token" do
-      env = stub_env
       env.delete("DANGER_GITLAB_API_TOKEN")
 
-      result = Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_api_source?
+      result = stub_request_source(env).validates_as_api_source?
 
       expect(result).to be_falsey
     end
 
     it "does not validate as CI when there is a port number included in host" do
-      env = stub_env
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com:2020"
 
-      expect { Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
+      expect { stub_request_source(env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
     end
 
     it "does validate as CI when there is no port number included in host" do
-      env = stub_env
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
 
       git_mock = Danger::GitRepo.new
-      g = Danger::RequestSources::GitLab.new(stub_ci, env)
+      g = stub_request_source(env)
       g.scm = git_mock
 
       allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@gitlab.example.com:artsy/eigen.git")

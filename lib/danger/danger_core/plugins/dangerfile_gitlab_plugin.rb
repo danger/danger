@@ -192,15 +192,11 @@ module Danger
     def html_link(paths, full_path: true)
       paths = [paths] unless paths.kind_of?(Array)
       commit = head_commit
-      same_repo = mr_json["project_id"] == mr_json["source_project_id"]
-      sender_repo = mr_author + "/" + env.ci_source.repo_slug.split("/")[1]
-      repo = same_repo ? env.ci_source.repo_slug : sender_repo
-      host = @gitlab.host
 
       paths = paths.map do |path|
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        create_link("https://#{host}/#{repo}/blob/#{commit}#{url_path}", text)
+        create_link("#{env.ci_source.project_url}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2

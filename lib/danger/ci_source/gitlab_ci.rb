@@ -17,13 +17,15 @@ module Danger
   #
   # Add the `DANGER_GITLAB_API_TOKEN` to your pipeline env variables.
   class GitLabCI < CI
+    attr_reader :project_url
+
     def self.validates_as_ci?(env)
       env.key? "GITLAB_CI"
     end
 
     def self.validates_as_pr?(env)
       exists = [
-        "GITLAB_CI", "CI_PROJECT_ID"
+        "GITLAB_CI", "CI_PROJECT_PATH"
       ].all? { |x| env[x] }
 
       exists && determine_merge_request_id(env).to_i > 0
@@ -33,11 +35,11 @@ module Danger
       return env["CI_MERGE_REQUEST_ID"] if env["CI_MERGE_REQUEST_ID"]
       return 0 unless env["CI_COMMIT_SHA"]
 
-      project_id = env["CI_PROJECT_ID"]
+      project_path = env["CI_PROJECT_PATH"]
       base_commit = env["CI_COMMIT_SHA"]
       client = RequestSources::GitLab.new(nil, env).client
 
-      merge_requests = client.merge_requests(project_id, state: :opened)
+      merge_requests = client.merge_requests(project_path, state: :opened)
       merge_request = merge_requests.auto_paginate.find do |mr|
         mr.sha == base_commit
       end
@@ -46,12 +48,17 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["CI_PROJECT_ID"]
-      self.pull_request_id = self.class.determine_merge_request_id(env)
+      @env = env
+      @repo_slug = env["CI_PROJECT_PATH"]
+      @project_url = env["CI_PROJECT_URL"]
     end
 
     def supported_request_sources
       @supported_request_sources ||= [Danger::RequestSources::GitLab]
+    end
+
+    def pull_request_id
+      @pull_request_id ||= self.class.determine_merge_request_id(@env)
     end
   end
 end
