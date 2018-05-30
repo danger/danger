@@ -37,8 +37,8 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SCM_URL"].split(":").last.gsub(".git", "")
-      self.repo_url = env["SCM_URL"]
+      self.repo_slug = env["SCM_URL"].split(":").last.gsub(".git", "").split("#",2).first
+      self.repo_url = env["SCM_URL"].split("#",2).first
       if env["SD_PULL_REQUEST"].to_i > 0
         self.pull_request_id = env["SD_PULL_REQUEST"]
       end

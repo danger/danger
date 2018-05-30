@@ -5,7 +5,7 @@ RSpec.describe Danger::Screwdriver do
     {
         "SCREWDRIVER" => "true",
         "SD_PULL_REQUEST" => "42",
-        "SCM_URL" => "git@github.com:danger/danger"
+        "SCM_URL" => "git@github.com:danger/danger.git#branch"
     }
   end
 
@@ -42,7 +42,7 @@ RSpec.describe Danger::Screwdriver do
     it "sets the required attributes" do
       expect(source.repo_slug).to eq("danger/danger")
       expect(source.pull_request_id).to eq("42")
-      expect(source.repo_url).to eq("git@github.com:danger/danger")
+      expect(source.repo_url).to eq("git@github.com:danger/danger.git")
     end
   end
 end
