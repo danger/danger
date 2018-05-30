@@ -10,6 +10,8 @@
 
 ## master
 
+* Update [Screwdriver CI] to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf) 
+
 ## 5.6.1
 
 * Use HTTPS links where applicable. [@allewun](https://github.com/allewun)
