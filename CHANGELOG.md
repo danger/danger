@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.6.2
+
 * Update Screwdriver CI to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf) 
 
 ## 5.6.1
