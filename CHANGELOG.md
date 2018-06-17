@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix to detect not Pull Request on CircleCI. [@kompiro](https://github.com/kompiro)
+
 ## 5.6.2
 
 * Update Screwdriver CI to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf) 
