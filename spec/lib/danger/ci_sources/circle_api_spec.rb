@@ -1,6 +1,56 @@
 require "danger/ci_source/circle_api"
 
 RSpec.describe Danger::CircleAPI do
+  context "with `CIRCLE_PR_NUMBER`" do
+    let(:valid_env) {
+      {
+        "CIRCLE_BUILD_NUM" => "1500",
+        "DANGER_CIRCLE_CI_API_TOKEN" => "token2",
+        "CIRCLE_PROJECT_USERNAME" => "artsy",
+        "CIRCLE_PROJECT_REPONAME" => "eigen",
+        "CIRCLE_PR_NUMBER" => "800"
+      }
+    }
+
+    it "returns correct attributes" do
+      result = Danger::CircleCI.new(valid_env)
+    
+      expect(result).to have_attributes(
+        repo_slug: "artsy/eigen",
+        pull_request_id: "800"
+      )
+    end
+
+    context "and set `DANGER_GITHUB_HOST`" do
+      it "returns correct attributes" do
+        env = valid_env.merge!({ "DANGER_GITHUB_HOST" => "git.foobar.com" })
+        result = Danger::CircleCI.new(env)
+    
+        expect(result).to have_attributes(
+          repo_slug: "artsy/eigen",
+          pull_request_id: "800"
+        )
+      end
+    end
+  end
+  
+  it "uses CIRCLE_PR_NUMBER if avaliable" do
+    env = {
+      "CIRCLE_BUILD_NUM" => "1500",
+      "DANGER_CIRCLE_CI_API_TOKEN" => "token2",
+      "CIRCLE_PROJECT_USERNAME" => "artsy",
+      "CIRCLE_PROJECT_REPONAME" => "eigen",
+      "CIRCLE_PR_NUMBER" => "800"
+    }
+    
+    result = Danger::CircleCI.new(env)
+
+    expect(result).to have_attributes(
+      repo_slug: "artsy/eigen",
+      pull_request_id: "800"
+    )
+  end
+
   it "gets out a repo slug, pull request number and commit refs when PR url is not found" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",
@@ -34,7 +84,7 @@ RSpec.describe Danger::CircleAPI do
 
     expect(result).to eq("https://github.com/artsy/eigen/pull/2606")
   end
-
+  
   it "uses Circle CI API to grab the url if available" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",
