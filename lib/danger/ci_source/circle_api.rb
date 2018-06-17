@@ -16,8 +16,13 @@ module Danger
 
       if url.nil? && !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
         repo_slug = env["CIRCLE_PROJECT_USERNAME"] + "/" + env["CIRCLE_PROJECT_REPONAME"]
-        token = env["DANGER_CIRCLE_CI_API_TOKEN"]
-        url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"], token)
+        if !env["CIRCLE_PR_NUMBER"].nil?
+          host = env["DANGER_GITHUB_HOST"] || "github.com"
+          url = "https://" + host + "/" + repo_slug + "/pull/" + env["CIRCLE_PR_NUMBER"]
+        else
+          token = env["DANGER_CIRCLE_CI_API_TOKEN"]
+          url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"], token)
+        end
       end
       url
     end
