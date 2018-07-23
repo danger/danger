@@ -32,17 +32,6 @@ if !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
   fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).", sticky: false)
 end
 
-# Docs are critical, so let's re-run the docs part of the specs and show any issues:
-core_plugins_docs = `bundle exec danger plugins lint lib/danger/danger_core/plugins/*.rb --warnings-as-errors`
-
-# If it failed, fail the build, and include markdown with the output error.
-unless $?.success?
-  # We want to strip ANSI colors for our markdown, and make paths relative
-  colourless_error = core_plugins_docs.gsub(/\e\[(\d+)(;\d+)*m/, "")
-  markdown("### Core Docs Errors \n\n#{colourless_error}")
-  fail("Failing due to documentation issues, see below.", sticky: false)
-end
-
 # Oddly enough, it's quite possible to do some testing of Danger, inside Danger
 # So, you can ignore these, if you're looking at the Dangerfile to get ideas.
 #
