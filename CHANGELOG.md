@@ -11,6 +11,7 @@
 ## master
 
 * Fix to detect not Pull Request on CircleCI. [@kompiro](https://github.com/kompiro)
+* Add support for two slashes in repository slug like `organisation/team/repository` (for GitLab) [@dstranz](https://github.com/dstranz)
 
 ## 5.6.2
 
