@@ -10,6 +10,8 @@
 
 ## master
 
+* Update Bitrise CI to parse repo_slug with two slashes [@dstranz](https://github.com/dstranz)
+
 ## 5.6.3
 
 * Fix to detect not Pull Request on CircleCI. [@kompiro](https://github.com/kompiro)
