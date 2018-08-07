@@ -1,4 +1,4 @@
-#require "danger/ci_source/screwdriver"
+# require "danger/ci_source/screwdriver"
 
 RSpec.describe Danger::Screwdriver do
   let(:valid_env) do
@@ -33,10 +33,10 @@ RSpec.describe Danger::Screwdriver do
     end
 
     it "does not validate when the required repo url is not set" do
-        valid_env["SCM_URL"] = nil
-        expect(described_class.validates_as_pr?(valid_env)).to be false
-      end
+      valid_env["SCM_URL"] = nil
+      expect(described_class.validates_as_pr?(valid_env)).to be false
     end
+  end
 
   describe ".new" do
     it "sets the required attributes" do
