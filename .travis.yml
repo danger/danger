@@ -22,9 +22,6 @@ script:
   # Tests use real git commands
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
-  - echo "Linting"
-  - bundle exec rubocop -v
-  - bundle exec rubocop lib
   - echo "Running Tests"
   - bundle exec rake spec
   - echo "Linting the documentation for Danger's internal plugins"

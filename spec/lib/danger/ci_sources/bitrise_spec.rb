@@ -62,7 +62,6 @@ RSpec.describe Danger::Bitrise do
       expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
     end
 
-
     it "sets the repo_slug from a repo https url", host: :github do
       valid_env["GIT_REPOSITORY_URL"] = "https://github.com/artsy/ios/artsy.github.io"
       expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")

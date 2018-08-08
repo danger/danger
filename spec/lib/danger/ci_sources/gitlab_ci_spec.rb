@@ -2,7 +2,7 @@ require "danger/ci_source/gitlab_ci"
 
 RSpec.describe Danger::GitLabCI, host: :gitlab do
   context "valid environment" do
-    let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 28493) }
+    let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 28_493) }
 
     let(:ci_source) do
       described_class.new(env)
