@@ -10,6 +10,11 @@
 
 ## master
 
+## 5.6.5
+
+* Update the git gem so that Danger handles multi-byte chars correctly [@tbrand](https://github.com/tbrand)
+
+
 ## 5.6.4
 
 * Update Bitrise CI to parse repo_slug with two slashes [@dstranz](https://github.com/dstranz)
