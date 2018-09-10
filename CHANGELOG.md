@@ -10,10 +10,11 @@
 
 ## master
 
+* Adds `failure` as an alias to `fail` without incurring the wrath of default rubocop [@orta](https://github.com/orta)
+
 ## 5.6.5
 
 * Update the git gem so that Danger handles multi-byte chars correctly [@tbrand](https://github.com/tbrand)
-
 
 ## 5.6.4
 

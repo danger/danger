@@ -17,12 +17,12 @@ module Danger
   #
   # message 'Hello', 'World', file: "Dangerfile", line: 1
   # warn ['This', 'is', 'warning'], file: "Dangerfile", line: 1
-  # fail 'Ooops', 'bad bad error', sticky: false
+  # failure 'Ooops', 'bad bad error', sticky: false
   # markdown '# And', '# Even', '# Markdown', file: "Dangerfile", line: 1
   #
-  # By default, using `fail` would fail the corresponding build. Either via an API call, or
-  # via the return value for the danger command. If you have linters with errors for this call
-  # you can use `messaging.fail` instead.
+  # By default, using `failure` would fail the corresponding build. Either via an API call, or
+  # via the return value for the danger command. Older code examples use `fail` which is an alias
+  # of `failure`, but the default Rubocop settings would have an issue with it.
   #
   # You can optionally add `file` and `line` to provide inline feedback on a PR in GitHub, note that
   # only feedback inside the PR's diff will show up inline. Others will appear inside the main comment.
@@ -33,13 +33,13 @@ module Danger
   #
   # @example Failing a build
   #
-  #          fail "This build didn't pass tests"
-  #          fail "Ooops!", "Something bad happend"
-  #          fail ["This is example", "with array"]
+  #          failure "This build didn't pass tests"
+  #          failure "Ooops!", "Something bad happend"
+  #          failure ["This is example", "with array"]
   #
   # @example Failing a build, and note that on subsequent runs
   #
-  #          fail("This build didn't pass tests", sticky: true)
+  #          failure("This build didn't pass tests", sticky: true)
   #
   # @example Passing a warning
   #
@@ -177,6 +177,8 @@ module Danger
         @errors << Violation.new(failure, sticky, file, line) if failure
       end
     end
+
+    alias_method :failure, :fail
 
     # @!group Reporting
     # A list of all messages passed to Danger, including

@@ -14,11 +14,11 @@ module Danger
   # @example Don't allow a file to be deleted
   #
   #          deleted = git.deleted_files.include? "my/favourite.file"
-  #          fail "Don't delete my precious" if deleted
+  #          failure "Don't delete my precious" if deleted
   #
   # @example Fail really big diffs
   #
-  #          fail "We cannot handle the scale of this PR" if git.lines_of_code > 50_000
+  #          failure "We cannot handle the scale of this PR" if git.lines_of_code > 50_000
   #
   # @example Warn when there are merge commits in the diff
   #
