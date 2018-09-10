@@ -49,6 +49,17 @@ RSpec.describe Danger::Dangerfile, host: :github do
     expect(results[:warnings]).to eq(["A warning"])
   end
 
+
+  it "allows failure" do
+    code = "fail 'fail1'\n" \
+           "failure 'fail2'\n"
+    dm = testing_dangerfile
+    dm.parse Pathname.new(""), code
+    results = dm.status_report
+
+    expect(results[:errors]).to eq(["fail1", "fail2"])
+  end
+
   describe "#print_results" do
     it "Prints out 3 lists" do
       code = "message 'A message'\n" \
@@ -123,7 +134,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
       dm = testing_dangerfile
       methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
 
-      expect(methods).to eq %i(fail markdown message status_report violation_report warn)
+      expect(methods).to eq %i(fail failure markdown message status_report violation_report warn)
     end
 
     # These are things that require scoped access
