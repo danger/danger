@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.6.7
+
 * Fix `--no-ansi` behavior for decoloring output [@otaznik-net](https://github.com/otaznik-net)
 
 ## 5.6.6
