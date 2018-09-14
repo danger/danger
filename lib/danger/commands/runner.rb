@@ -42,6 +42,7 @@ module Danger
       @danger_id = argv.option("danger_id", "danger")
       @cork = Cork::Board.new(silent: argv.option("silent", false),
                               verbose: argv.option("verbose", false))
+      adjust_colored2_output(argv)
       super
     end
 
@@ -74,6 +75,15 @@ module Danger
         fail_on_errors: @fail_on_errors,
         remove_previous_comments: @remove_previous_comments
       )
+    end
+
+    private
+
+    def adjust_colored2_output(argv)
+      # disable/enable colored2 output
+      # consider it execution wide to avoid need to wrap #run and maintain state
+      # ARGV#options is non-destructive way to check flags
+      Colored2.public_send(argv.options.fetch("ansi", true) ? "enable!" : "disable!")
     end
   end
 end

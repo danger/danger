@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix `--no-ansi` behavior for decoloring output [@otaznik-net](https://github.com/otaznik-net)
+
 ## 5.6.6
 
 * Adds `failure` as an alias to `fail` without incurring the wrath of default rubocop [@orta](https://github.com/orta)
