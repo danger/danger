@@ -38,6 +38,30 @@ RSpec.describe Danger::Runner do
     end
   end
 
+  context "colored output" do
+    before do
+      expect(Danger::Executor).to receive(:new) { executor }
+      expect(executor).to receive(:run) { "Colored message".red }
+    end
+    after { Colored2.enable! } # reset to expected value to avoid false positives in other tests
+
+    let(:argv) { [] }
+    let(:runner) { described_class.new(CLAide::ARGV.new(argv)) }
+    let(:executor) { double("Executor") }
+
+    it "adds ansi codes to strings" do
+      expect(runner.run).to eq "\e[31mColored message\e[0m"
+    end
+
+    context "when no-ansi is specified" do
+      let(:argv) { ["--no-ansi"] }
+
+      it "does not add ansi codes to strings" do
+        expect(runner.run).to eq "Colored message"
+      end
+    end
+  end
+
   describe "#run" do
     it "invokes Executor" do
       argv = CLAide::ARGV.new([])
