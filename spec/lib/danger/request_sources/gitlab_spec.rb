@@ -5,8 +5,8 @@ require "erb"
 require "danger/request_sources/gitlab"
 
 RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
-  let(:env) { stub_env }
-  let(:subject) { Danger::RequestSources::GitLab.new(stub_ci, env) }
+  let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 593_728) }
+  let(:subject) { stub_request_source(env) }
 
   describe "the GitLab host" do
     it "sets the default GitLab host" do
@@ -56,21 +56,39 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
     end
 
     it "does no validate as an API source when the API token is empty" do
-      env = stub_env
       env["DANGER_GITLAB_API_TOKEN"] = ""
 
-      result = Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_api_source?
+      result = stub_request_source(env).validates_as_api_source?
 
       expect(result).to be_falsey
     end
 
     it "does no validate as an API source when there is no API token" do
-      env = stub_env
       env.delete("DANGER_GITLAB_API_TOKEN")
 
-      result = Danger::RequestSources::GitLab.new(stub_ci, env).validates_as_api_source?
+      result = stub_request_source(env).validates_as_api_source?
 
       expect(result).to be_falsey
+    end
+
+    it "does not validate as CI when there is a port number included in host" do
+      env["DANGER_GITLAB_HOST"] = "gitlab.example.com:2020"
+
+      expect { stub_request_source(env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
+    end
+
+    it "does validate as CI when there is no port number included in host" do
+      env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
+
+      git_mock = Danger::GitRepo.new
+      g = stub_request_source(env)
+      g.scm = git_mock
+
+      allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@gitlab.example.com:artsy/eigen.git")
+
+      result = g.validates_as_ci?
+
+      expect(result).to be_truthy
     end
   end
 
@@ -109,21 +127,43 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.base_commit).to eq("0e4db308b6579f7cc733e5a354e026b272e1c076")
     end
 
+    context "works also on empty MR" do
+      before do
+        stub_merge_request_commits(
+          "merge_request_593728_no_commits_response",
+          "k0nserv%2Fdanger-test",
+          593_728
+        )
+      end
+
+      it "return empty string if last commit do not exist" do
+        subject.fetch_details
+
+        expect(subject.base_commit).to eq("")
+      end
+
+      it "raise error on empty commit" do
+        subject.fetch_details
+
+        expect { subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
+      end
+    end
+
     it "setups the danger branches" do
       subject.fetch_details
 
       expect(subject.scm).to receive(:head_commit).
         and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject).to receive(:base_commit).
-        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
+        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").thrice
       expect(subject.scm).to receive(:exec)
         .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}")
-        .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
+        .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject.scm).to receive(:exec)
         .with("branch danger_head 345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject.scm).to receive(:exec)
         .with("rev-parse --quiet --verify 0e4db308b6579f7cc733e5a354e026b272e1c076^{commit}")
-        .and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").twice
+        .and_return("0e4db308b6579f7cc733e5a354e026b272e1c076")
       expect(subject.scm).to receive(:exec)
         .with("branch danger_base 0e4db308b6579f7cc733e5a354e026b272e1c076")
 

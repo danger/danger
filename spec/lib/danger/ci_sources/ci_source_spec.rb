@@ -10,17 +10,18 @@ RSpec.describe Danger::CI do
           "Danger::Buddybuild",
           "Danger::Buildkite",
           "Danger::CircleCI",
+          "Danger::Codeship",
           "Danger::DotCi",
           "Danger::Drone",
           "Danger::GitLabCI",
           "Danger::Jenkins",
+          "Danger::Screwdriver",
           "Danger::Semaphore",
           "Danger::Surf",
           "Danger::TeamCity",
           "Danger::Travis",
           "Danger::VSTS",
-          "Danger::XcodeServer",
-          "Danger::Codeship",
+          "Danger::XcodeServer"
         ]
       )
     end

@@ -8,7 +8,7 @@ require "no_proxy_fix"
 
 module Danger
   class PR < Runner
-    self.summary = "Run the Dangerfile against Pull Requests (works with forks, too).".freeze
+    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR.".freeze
     self.command = "pr".freeze
 
     def self.options
@@ -62,6 +62,7 @@ module Danger
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
+          nil,
           nil,
           nil
         )

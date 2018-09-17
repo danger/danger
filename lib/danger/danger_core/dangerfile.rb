@@ -223,7 +223,7 @@ module Danger
                   else
                     formatted
                   end
-          rows = violations[key]
+          rows = violations[key].uniq
           print_list(title, rows)
         end
 
@@ -242,16 +242,17 @@ module Danger
       violation_report[:errors].count > 0
     end
 
-    def post_results(danger_id, new_comment)
+    def post_results(danger_id, new_comment, remove_previous_comments)
       violations = violation_report
 
       env.request_source.update_pull_request!(
-        warnings: violations[:warnings],
-        errors: violations[:errors],
-        messages: violations[:messages],
-        markdowns: status_report[:markdowns],
+        warnings: violations[:warnings].uniq,
+        errors: violations[:errors].uniq,
+        messages: violations[:messages].uniq,
+        markdowns: status_report[:markdowns].uniq,
         danger_id: danger_id,
-        new_comment: new_comment
+        new_comment: new_comment,
+        remove_previous_comments: remove_previous_comments
       )
     end
 
@@ -260,7 +261,7 @@ module Danger
       env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
     end
 
-    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment)
+    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments)
       # Setup internal state
       init_plugins
       env.fill_environment_vars
@@ -275,7 +276,7 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
-        post_results(danger_id, new_comment) unless danger_id.nil?
+        post_results(danger_id, new_comment, remove_previous_comments) unless danger_id.nil?
 
         # Print results in the terminal
         print_results

@@ -16,15 +16,15 @@ module Danger
   #
   # @example Ensure that labels have been used on the PR
   #
-  #          fail "Please add labels to this PR" if bitbucket_cloud.pr_labels.empty?
+  #          failure "Please add labels to this PR" if bitbucket_cloud.pr_labels.empty?
   #
   # @example Ensure there is a summary for a PR
   #
-  #          fail "Please provide a summary in the Pull Request description" if bitbucket_cloud.pr_body.length < 5
+  #          failure "Please provide a summary in the Pull Request description" if bitbucket_cloud.pr_body.length < 5
   #
   # @example Only accept PRs to the develop branch
   #
-  #          fail "Please re-submit this PR to develop, we may have already fixed your issue." if bitbucket_cloud.branch_for_base != "develop"
+  #          failure "Please re-submit this PR to develop, we may have already fixed your issue." if bitbucket_cloud.branch_for_base != "develop"
   #
   # @example Highlight when a celebrity makes a pull request
   #
@@ -32,7 +32,7 @@ module Danger
   #
   # @example Ensure that all PRs have an assignee
   #
-  #          warn "This PR does not have any assignees yet." unless bitbucket_cloud.pr_json["reviewers"].length == 0
+  #          warn "This PR does not have any assignees yet." if bitbucket_cloud.pr_json[:reviewers].length == 0
   #
   # @example Send a message with links to a collection of specific files
   #

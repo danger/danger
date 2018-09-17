@@ -49,6 +49,17 @@ RSpec.describe Danger::Dangerfile, host: :github do
     expect(results[:warnings]).to eq(["A warning"])
   end
 
+
+  it "allows failure" do
+    code = "fail 'fail1'\n" \
+           "failure 'fail2'\n"
+    dm = testing_dangerfile
+    dm.parse Pathname.new(""), code
+    results = dm.status_report
+
+    expect(results[:errors]).to eq(["fail1", "fail2"])
+  end
+
   describe "#print_results" do
     it "Prints out 3 lists" do
       code = "message 'A message'\n" \
@@ -123,7 +134,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
       dm = testing_dangerfile
       methods = dm.core_dsl_attributes.map { |hash| hash[:methods] }.flatten.sort
 
-      expect(methods).to eq %i(fail markdown message status_report violation_report warn)
+      expect(methods).to eq %i(fail failure markdown message status_report violation_report warn)
     end
 
     # These are things that require scoped access
@@ -241,7 +252,35 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
       expect(request_source).to receive(:update_pull_request!)
 
-      dm.post_results("danger-identifier", nil)
+      dm.post_results("danger-identifier", nil, nil)
+    end
+
+    it "delegates unique entries" do
+      code = "message 'message one'\n" \
+             "message 'message two'\n" \
+             "message 'message one'\n" \
+             "warn 'message one'\n" \
+             "warn 'message two'\n" \
+             "warn 'message two'\n"
+
+      dm = testing_dangerfile
+      dm.env.request_source.ignored_violations = []
+
+      dm.parse Pathname.new(""), code
+
+      results = dm.status_report
+
+      expect(dm.env.request_source).to receive(:update_pull_request!).with(
+        warnings: [anything, anything],
+        errors: [],
+        messages: [anything, anything],
+        markdowns: [],
+        danger_id: "danger-identifier",
+        new_comment: nil,
+        remove_previous_comments: nil
+      )
+
+      dm.post_results("danger-identifier", nil, nil)
     end
   end
 
@@ -288,7 +327,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
         expect(request_source).to receive(:update_pull_request!)
 
         expect do
-          dm.run("custom_danger_base", "custom_danger_head", path, 1, false)
+          dm.run("custom_danger_base", "custom_danger_head", path, 1, false, false)
         end.to raise_error(Danger::DSLError)
       end
 

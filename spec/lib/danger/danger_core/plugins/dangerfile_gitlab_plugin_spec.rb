@@ -1,5 +1,6 @@
 RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
-  let(:dangerfile) { testing_dangerfile }
+  let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 593_728) }
+  let(:dangerfile) { testing_dangerfile(env) }
   let(:plugin) { described_class.new(dangerfile) }
   before do
     stub_merge_request(

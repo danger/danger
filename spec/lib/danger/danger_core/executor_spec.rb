@@ -46,11 +46,23 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         end
       end
 
+      it "not raises error on Jenkins (GitLab v3)" do
+        with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
+        end
+      end
+
       it "not raises error on Local Git Repo" do
         with_localgitrepo_setup do |system_env|
           ui = testing_ui
           expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
-          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
+          expect(ui.string).to include("Not a LocalGitRepo Pull Request - skipping `danger` run")
+        end
+      end
+
+      it "not raises error on Screwdriver" do
+        with_screwdriver_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env) }.not_to raise_error
         end
       end
 
@@ -105,7 +117,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         not_a_pull_request do |system_env|
           ui = testing_ui
           expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
-          expect(ui.string).to include("Not a Pull Request - skipping `danger` run")
+          expect(ui.string).to include("Not a Travis Pull Request - skipping `danger` run")
         end
       end
     end

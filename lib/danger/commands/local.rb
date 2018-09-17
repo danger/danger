@@ -8,7 +8,7 @@ require "tmpdir"
 
 module Danger
   class Local < Runner
-    self.summary = "Run the Dangerfile locally."
+    self.summary = "Run the Dangerfile locally. This command is generally deprecated in favor of `danger pr`."
     self.command = "local"
 
     def self.options
@@ -57,6 +57,7 @@ module Danger
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
+          nil,
           nil,
           nil
         )

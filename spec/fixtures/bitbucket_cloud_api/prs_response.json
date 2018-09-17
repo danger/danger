@@ -1,0 +1,175 @@
+HTTP/1.1 200 OK
+
+{
+  "values": [{
+    "merge_commit": null,
+    "description": "",
+    "links": {
+      "decline": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/decline"
+      },
+      "commits": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/commits"
+      },
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080"
+      },
+      "comments": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/comments"
+      },
+      "merge": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/merge"
+      },
+      "html": {
+        "href": "https://bitbucket.org/ios/fancyapp/pull-requests/2080"
+      },
+      "activity": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/activity"
+      },
+      "diff": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/diff"
+      },
+      "approve": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/approve"
+      },
+      "statuses": {
+        "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/statuses"
+      }
+    },
+    "title": "This is a danger test",
+    "close_source_branch": false,
+    "reviewers": [],
+    "destination": {
+      "commit": {
+        "hash": "9c823062cf99",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/commit/9c823062cf99"
+          }
+        }
+      },
+      "repository": {
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp"
+          },
+          "html": {
+            "href": "https://bitbucket.org/ios/fancyapp"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/ios/fancyapp/avatar/32/"
+          }
+        },
+        "type": "repository",
+        "name": "fancyapp",
+        "full_name": "ios/fancyapp",
+        "uuid": "{123456-4675-45d3-a8a0-df38734aa1ea}"
+      },
+      "branch": {
+        "name": "develop"
+      }
+    },
+    "state": "OPEN",
+    "closed_by": null,
+    "source": {
+      "commit": {
+        "hash": "b6f5656b6ac9",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/commit/b6f5656b6ac9"
+          }
+        }
+      },
+      "repository": {
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp"
+          },
+          "html": {
+            "href": "https://bitbucket.org/ios/fancyapp"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/ios/fancyapp/avatar/32/"
+          }
+        },
+        "type": "repository",
+        "name": "fancyapp",
+        "full_name": "ios/fancyapp",
+        "uuid": "{123456-4675-45d3-a8a0-df38734aa1ea}"
+      },
+      "branch": {
+        "name": "feature/test_danger"
+      }
+    },
+    "comment_count": 2,
+    "author": {
+      "username": "AName",
+      "display_name": "Name",
+      "type": "user",
+      "uuid": "{123456-b28d-43ad-be76-2185a0183d3b}",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/AName"
+        },
+        "html": {
+          "href": "https://bitbucket.org/AName/"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/AName/avatar/32/"
+        }
+      }
+    },
+    "created_on": "2016-09-16T10:11:34.994585+00:00",
+    "participants": [
+      {
+        "role": "PARTICIPANT",
+        "type": "participant",
+        "user": {
+          "username": "AName",
+          "display_name": "Name",
+          "type": "user",
+          "uuid": "{123456-3399-4f12-8609-d1332c891369}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/"
+            },
+            "html": {
+              "href": "https://bitbucket.org/AName/"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/account/AName/avatar/32/"
+            }
+          }
+        },
+        "approved": false
+      },
+      {
+        "role": "PARTICIPANT",
+        "type": "participant",
+        "user": {
+          "username": "AName",
+          "display_name": "Name",
+          "type": "user",
+          "uuid": "{123456-b28d-43ad-be76-2185a0183d3b}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/AName"
+            },
+            "html": {
+              "href": "https://bitbucket.org/AName/"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/account/AName/avatar/32/"
+            }
+          }
+        },
+        "approved": false
+      }
+    ],
+    "reason": "",
+    "updated_on": "2016-09-16T15:19:42.053756+00:00",
+    "type": "pullrequest",
+    "id": 2080,
+    "task_count": 0
+  }]
+}

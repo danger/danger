@@ -2,11 +2,13 @@ begin
   require "bundler/gem_tasks"
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:specs)
+  require "rubocop/rake_task"
+  RuboCop::RakeTask.new
 rescue LoadError
   puts "Please use `bundle exec` to get all the rake commands"
 end
 
-task default: :spec
+task default: %w(rubocop spec)
 
 desc "Danger's tests"
 task :spec do

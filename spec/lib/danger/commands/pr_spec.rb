@@ -18,7 +18,7 @@ RSpec.describe Danger::PR do
     it "returns the summary for PR command" do
       result = described_class.summary
 
-      expect(result).to eq "Run the Dangerfile against Pull Requests (works with forks, too)."
+      expect(result).to eq "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR."
     end
   end
 

@@ -40,6 +40,15 @@ RSpec.describe Danger::FindRepoInfoFromURL do
         id: "42"
       )
     end
+
+    it "works with two trailing slashes" do
+      result = described_class.new("https://gitlab.com/gitlab-org/gitlab-group/gitlab-ce/merge_requests/42/").call
+
+      expect(result).to have_attributes(
+        slug: "gitlab-org/gitlab-group/gitlab-ce",
+        id: "42"
+      )
+    end
   end
 
   context "Bitbucket" do

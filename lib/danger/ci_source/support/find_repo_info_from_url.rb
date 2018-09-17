@@ -3,7 +3,8 @@ require "danger/ci_source/support/repo_info"
 module Danger
   class FindRepoInfoFromURL
     REGEXP = %r{
-      (?<slug>[^/]+/[^/]+)
+      ://[^/]+/
+      (?<slug>[^/]+(/[^/]+){1,2})
       (/(pull|merge_requests|pull-requests)/)
       (?<id>\d+)
     }x

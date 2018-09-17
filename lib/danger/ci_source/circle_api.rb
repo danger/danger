@@ -16,8 +16,13 @@ module Danger
 
       if url.nil? && !env["CIRCLE_PROJECT_USERNAME"].nil? && !env["CIRCLE_PROJECT_REPONAME"].nil?
         repo_slug = env["CIRCLE_PROJECT_USERNAME"] + "/" + env["CIRCLE_PROJECT_REPONAME"]
-        token = env["DANGER_CIRCLE_CI_API_TOKEN"] || env["CIRCLE_CI_API_TOKEN"]
-        url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"], token)
+        if !env["CIRCLE_PR_NUMBER"].nil?
+          host = env["DANGER_GITHUB_HOST"] || "github.com"
+          url = "https://" + host + "/" + repo_slug + "/pull/" + env["CIRCLE_PR_NUMBER"]
+        else
+          token = env["DANGER_CIRCLE_CI_API_TOKEN"]
+          url = fetch_pull_request_url(repo_slug, env["CIRCLE_BUILD_NUM"], token)
+        end
       end
       url
     end
@@ -29,7 +34,9 @@ module Danger
     # Ask the API if the commit is inside a PR
     def fetch_pull_request_url(repo_slug, build_number, token)
       build_json = fetch_build(repo_slug, build_number, token)
-      build_json[:pull_request_urls].first
+      pull_requests = build_json[:pull_requests]
+      return nil unless pull_requests.first
+      pull_requests.first[:url]
     end
 
     # Make the API call, and parse the JSON

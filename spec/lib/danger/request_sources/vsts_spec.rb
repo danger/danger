@@ -46,4 +46,28 @@ RSpec.describe Danger::RequestSources::VSTS, host: :vsts do
       end
     end
   end
+
+  describe "#no_danger_comments" do
+    before do
+      stub_get_comments_request_no_danger
+    end
+
+    it "has to post a new comment" do
+      allow(subject).to receive(:post_new_comment)
+      expect(subject).to receive(:post_new_comment)
+      subject.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+    end
+  end
+
+  describe "#danger_comment_update" do
+    before do
+      stub_get_comments_request_with_danger
+    end
+
+    it "it has to update the previous comment" do
+      allow(subject).to receive(:update_old_comment)
+      expect(subject).to receive(:update_old_comment)
+      subject.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+    end
+  end
 end
