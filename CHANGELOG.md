@@ -9,6 +9,7 @@
 -->
 
 ## master
+* Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
 
 ## 5.6.7
 

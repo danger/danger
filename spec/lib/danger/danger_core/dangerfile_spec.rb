@@ -49,7 +49,6 @@ RSpec.describe Danger::Dangerfile, host: :github do
     expect(results[:warnings]).to eq(["A warning"])
   end
 
-
   it "allows failure" do
     code = "fail 'fail1'\n" \
            "failure 'fail2'\n"
