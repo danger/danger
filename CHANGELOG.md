@@ -10,6 +10,10 @@
 
 ## master
 
+## 5.6.8
+
+* Fix `--remove-previous-comments` for gitlab
+
 ## 5.6.7
 
 * Fix `--no-ansi` behavior for decoloring output [@otaznik-net](https://github.com/otaznik-net)
