@@ -2,6 +2,7 @@ module Danger
   class Runner < CLAide::Command
     require "danger/commands/init"
     require "danger/commands/local"
+    require "danger/commands/dry_run"
     require "danger/commands/systems"
     require "danger/commands/pr"
 
