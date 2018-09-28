@@ -12,7 +12,7 @@
 
 ## 5.6.8
 
-* Fix `--remove-previous-comments` for gitlab
+* Fix `--remove-previous-comments` for gitlab [@joesss](https://github.com/JoeSSS)
 
 ## 5.6.7
 
