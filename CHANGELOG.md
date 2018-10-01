@@ -11,6 +11,10 @@
 ## master
 * Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
 
+## 5.6.8
+
+* Fix `--remove-previous-comments` for gitlab [@joesss](https://github.com/JoeSSS)
+
 ## 5.6.7
 
 * Fix `--no-ansi` behavior for decoloring output [@otaznik-net](https://github.com/otaznik-net)
