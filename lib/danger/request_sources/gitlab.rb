@@ -172,6 +172,13 @@ module Danger
       def organisation
         nil # TODO: Implement this
       end
+
+      # @return [String] A URL to the specific file, ready to be downloaded
+      def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
+        branch ||= 'master'
+
+        "https://#{host}/#{organisation}/#{repository}/raw/#{branch}/#{path}"
+      end
     end
   end
 end

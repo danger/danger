@@ -296,5 +296,22 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
       end
     end
+
+    describe "#file_url" do
+      it "returns a valid URL with the minimum parameters" do
+        url = subject.file_url(organisation: "artsy", repository: "danger", path: "Dangerfile")
+        expect(url).to eq("https://gitlab.com/artsy/danger/raw/master/Dangerfile")
+      end
+
+      it "returns a valid URL with more parameters" do
+        url = subject.file_url(repository: "danger", organisation: "artsy", branch: "master", path: "path/Dangerfile")
+        expect(url).to eq("https://gitlab.com/artsy/danger/raw/master/path/Dangerfile")
+      end
+
+      it "returns a valid fallback URL" do
+        url = subject.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
+        expect(url).to eq("https://gitlab.com/teapot/danger/raw/master/Dangerfile")
+      end
+    end
   end
 end
