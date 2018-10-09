@@ -11,6 +11,7 @@
 ## master
 * Fixes importing a Dangerfile from a GitLab repository [@koffeinfrei](https://github.com/koffeinfrei/)
 * Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
+* VSTS URLs can have spaces in them which doesnt work when they are parsed by URI. Spaces are replaced by %20.
 
 ## 5.6.7
 
