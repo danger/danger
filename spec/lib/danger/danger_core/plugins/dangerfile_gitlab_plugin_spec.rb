@@ -8,11 +8,6 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
       "k0nserv%2Fdanger-test",
       593_728
     )
-    stub_merge_request_commits(
-      "merge_request_593728_commits_response",
-      "k0nserv%2Fdanger-test",
-      593_728
-    )
   end
 
   [
@@ -70,9 +65,9 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
           id iid project_id title description state created_at
           updated_at target_branch source_branch upvotes downvotes
           author assignee source_project_id target_project_id labels
-          work_in_progress milestone merge_when_build_succeeds merge_status
+          work_in_progress milestone merge_when_pipeline_succeeds merge_status
           subscribed user_notes_count approvals_before_merge
-          should_remove_source_branch force_remove_source_branch
+          should_remove_source_branch force_remove_source_branch diff_refs
         ).each do |key|
           key_present = plugin.pr_json.key?(key.to_s)
           expect(key_present).to be_truthy, "Expected key #{key} not found"
@@ -84,9 +79,13 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   describe "#html_link" do
     it "should render a html link to the given file" do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
+        head_commit = "04e58de1fa97502d7e28c1394d471bb8fb1fc4a8";
         dangerfile.env.request_source.fetch_details
 
-        expect(plugin.html_link("CHANGELOG.md")).to eq("<a href='https://gitlab.com/k0nserv/danger-test/blob/345e74fabb2fecea93091e8925b1a7a208b48ba6/CHANGELOG.md'>CHANGELOG.md</a>")
+        expect(plugin).to receive(:head_commit).
+          and_return(head_commit)
+
+        expect(plugin.html_link("CHANGELOG.md")).to eq("<a href='https://gitlab.com/k0nserv/danger-test/blob/#{head_commit}/CHANGELOG.md'>CHANGELOG.md</a>")
       end
     end
   end
