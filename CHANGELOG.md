@@ -9,6 +9,9 @@
 -->
 
 ## master
+
+## 5.7.0
+
 * Fixes importing a Dangerfile from a GitLab repository [@koffeinfrei](https://github.com/koffeinfrei/)
 * Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
 * GitLab: Determine base_commit from the MR API instead of querying the commits [@leipert](https://github.com/leipert)
