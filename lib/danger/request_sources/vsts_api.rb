@@ -23,6 +23,7 @@ module Danger
         end
 
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"
+        self.pr_api_endpoint = self.pr_api_endpoint.gsub(" ", "%20")
       end
 
       def supports_comments?
