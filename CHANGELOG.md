@@ -10,6 +10,8 @@
 
 ## master
 
+* Add CodeBuild support [@s-faychatelard](https://github.com/s-faychatelard)
+
 ## 5.7.0
 
 * Fixes importing a Dangerfile from a GitLab repository [@koffeinfrei](https://github.com/koffeinfrei/)
