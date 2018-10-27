@@ -11,6 +11,7 @@ RSpec.describe Danger::CI do
           "Danger::Buddybuild",
           "Danger::Buildkite",
           "Danger::CircleCI",
+          "Danger::CodeBuild",
           "Danger::Codeship",
           "Danger::DotCi",
           "Danger::Drone",
