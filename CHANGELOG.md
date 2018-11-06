@@ -10,6 +10,8 @@
 
 ## master
 
+* Add AppVeyor support [@tumugin](https://github.com/tumugin)
+
 ## 5.7.1
 
 * Add CodeBuild support [@s-faychatelard](https://github.com/s-faychatelard)

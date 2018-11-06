@@ -23,7 +23,8 @@ RSpec.describe Danger::CI do
           "Danger::TeamCity",
           "Danger::Travis",
           "Danger::VSTS",
-          "Danger::XcodeServer"
+          "Danger::XcodeServer",
+          "Danger::AppVeyor"
         ]
       )
     end
