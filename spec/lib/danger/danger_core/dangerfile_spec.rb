@@ -330,6 +330,31 @@ RSpec.describe Danger::Dangerfile, host: :github do
         end.to raise_error(Danger::DSLError)
       end
 
+      it "doesn't crash if path is reassigned" do
+        path = Pathname.new(File.join("spec", "fixtures", "dangerfile_with_error_and_path_reassignment"))
+        env_manager = double("Danger::EnvironmentManager", {
+          pr?: false,
+          clean_up: true,
+          fill_environment_vars: true,
+          ensure_danger_branches_are_setup: false
+        })
+        scm = double("Danger::GitRepo", {
+          class: Danger::GitRepo,
+          diff_for_folder: true
+        })
+        request_source = double("Danger::RequestSources::GitHub")
+        dm = Danger::Dangerfile.new(env_manager, testing_ui)
+
+        allow(env_manager).to receive(:scm) { scm }
+        allow(env_manager).to receive(:request_source) { request_source }
+
+        expect(request_source).to receive(:update_pull_request!)
+
+        expect do
+          dm.run("custom_danger_base", "custom_danger_head", path, 1, false, false)
+        end.to raise_error(Danger::DSLError)
+      end
+
       after { allow(Danger).to receive(:danger_outdated?).and_call_original }
     end
   end
