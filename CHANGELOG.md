@@ -10,6 +10,8 @@
 
 ## master
 
+* Update `BitbucketServerAPI` error message to include response body [@cnoon](https://github.com/cnoon)
+
 ## 5.8.0
 
 * Add AppVeyor support [@tumugin](https://github.com/tumugin)
