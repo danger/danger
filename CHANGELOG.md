@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.8.1
+
 * Update `BitbucketServerAPI` error message to include response body [@cnoon](https://github.com/cnoon)
 
 ## 5.8.0
