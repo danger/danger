@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix diff range detection logic [@r7kamura](https://github.com/r7kamura)
+
 ## 5.8.1
 
 * Update `BitbucketServerAPI` error message to include response body [@cnoon](https://github.com/cnoon)
