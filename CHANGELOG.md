@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.8.2
+
 * Fix diff range detection logic [@r7kamura](https://github.com/r7kamura)
 
 ## 5.8.1
