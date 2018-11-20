@@ -369,7 +369,7 @@ module Danger
       end
 
       def find_position_in_diff(diff_lines, message, kind)
-        range_header_regexp = /@@ -([0-9]+),([0-9]+) \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
+        range_header_regexp = /@@ -([0-9]+)(,([0-9]+))? \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
         file_header_regexp = %r{^diff --git a/.*}
 
         pattern = "+++ b/" + message.file + "\n"

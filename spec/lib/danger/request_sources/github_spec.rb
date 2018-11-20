@@ -561,4 +561,48 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
     end
   end
+
+  describe "#find_position_in_diff" do
+    subject do
+      github.find_position_in_diff(diff_lines, message, kind)
+    end
+
+    let(:diff_lines) do
+      <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+      DIFF
+    end
+
+    let(:file_path) do
+      "dummy"
+    end
+
+    let(:github) do
+      described_class.new(stub_ci, "DANGER_GITHUB_API_TOKEN" => "hi")
+    end
+
+    let(:kind) do
+      :dummy
+    end
+
+    let(:message) do
+      double(
+        file: file_path,
+        line: 1,
+      )
+    end
+
+    context "when the lines count for the original file is omitted" do
+      it "returns correct position" do
+        is_expected.to eq(2)
+      end
+    end
+  end
 end
