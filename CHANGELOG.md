@@ -162,10 +162,6 @@
 * Add `--verify-ssl` option to bypass Octokit's SSL Verification - [@nikhilsh](https://github.com/nikhilsh)
 * Add `no_proxy_fix` gem as Ruby's no proxy is not working in `2.4.0/2.4.1` - [@nikhilsh](https://github.com/nikhilsh)
 
-## 5.4.0
-
-* Request reviewers for a Pull Request - [@hotbott](https://github.com/hotbott)
-
 ## 5.3.4
 
 This release adds compatibility for GitLab API v4, you need to update the [danger-gitlab gem](https://github.com/danger/danger-gitlab-gem) to be version `6.x` when you migrate to the new API. 👍

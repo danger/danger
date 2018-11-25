@@ -87,14 +87,6 @@ module Danger
           @markdowns << Markdown.new(message, file, line)
         end
 
-        def request_reviewers(reviewers: [])
-          begin
-            @review_json = @client.request_pull_request_review(@ci_source.repo_slug, @ci_source.pull_request_id, reviewers, :accept => 'application/vnd.github.black-cat-preview+json')
-          rescue Octokit::ClientError
-            puts $!.message
-          end
-        end
-
         private
 
         # The only reason to request changes for the PR is to have errors from Danger
