@@ -16,6 +16,16 @@ RSpec.describe Danger::Jenkins do
 
   let(:source) { described_class.new(valid_env) }
 
+  describe "errors" do
+    it "raises an error when no env passed in" do
+      expect { Danger::Jenkins.new(nil) }.to raise_error Danger::Jenkins::EnvNotFound
+    end
+
+    it "raises an error when empty env passed in" do
+      expect { Danger::Jenkins.new({}) }.to raise_error Danger::Jenkins::EnvNotFound
+    end
+  end
+
   context "with GitHub" do
     before do
       valid_env["ghprbPullId"] = "1234"
@@ -52,7 +62,7 @@ RSpec.describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
 
-      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+      it "doesn't validate_as_pr if `ghprbPullId` is the empty string" do
         valid_env["ghprbPullId"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
@@ -67,7 +77,8 @@ RSpec.describe Danger::Jenkins do
 
   context "with GitLab" do
     before do
-      valid_env["gitlabMergeRequestId"] = "1234"
+      valid_env["gitlabMergeRequestIid"] = "1234"
+      valid_env["gitlabMergeRequestId"] = "2345"
       valid_env["GIT_URL"] = "https://gitlab.com/danger/danger.git"
     end
 
@@ -76,8 +87,18 @@ RSpec.describe Danger::Jenkins do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
+      it "validates even when `gitlabMergeRequestIid` is missing" do
+        valid_env["gitlabMergeRequestIid"] = nil
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
       it "validates even when `gitlabMergeRequestId` is missing" do
         valid_env["gitlabMergeRequestId"] = nil
+        expect(described_class.validates_as_ci?(valid_env)).to be true
+      end
+
+      it "validates even when `gitlabMergeRequestIid` is empty" do
+        valid_env["gitlabMergeRequestIid"] = ""
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 
@@ -96,12 +117,24 @@ RSpec.describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
-      it "doesn't validate if `gitlabMergeRequestId` is missing" do
+      it "validates if `gitlabMergeRequestIid` is missing and `gitlabMergeRequestId` is set" do
+        valid_env["gitlabMergeRequestIid"] = nil
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+
+      it "doesn't validate_as_pr if `gitlabMergeRequestIid` is the empty string" do
+        valid_env["gitlabMergeRequestIid"] = ""
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
+
+      it "doesn't validate if `gitlabMergeRequestIid` is missing and `gitlabMergeRequestId` is missing" do
+        valid_env["gitlabMergeRequestIid"] = nil
         valid_env["gitlabMergeRequestId"] = nil
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
 
-      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+      it "doesn't validate_as_pr if `gitlabMergeRequestIid` is missing and `gitlabMergeRequestId` is the empty string" do
+        valid_env["gitlabMergeRequestIid"] = nil
         valid_env["gitlabMergeRequestId"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
@@ -151,7 +184,7 @@ RSpec.describe Danger::Jenkins do
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
 
-      it "doesn't validate_as_pr if pull_request_repo is the empty string" do
+      it "doesn't validate_as_pr if `CHANGE_ID` is the empty string" do
         valid_env["CHANGE_ID"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end

@@ -1,6 +1,6 @@
 module Danger
   module Helpers
-    module ArraySublcass
+    module ArraySubclass
       include Comparable
 
       def initialize(array)

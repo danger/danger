@@ -65,6 +65,13 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(messages.last.file).to eq("foo.rb")
       expect(messages.last.line).to eq(1)
     end
+
+    it "does nothing when given a nil message" do
+      dangerfile.parse(nil, "message(nil)")
+      messages = added_messages(dangerfile, :messages)
+
+      expect(messages).to be_empty
+    end
   end
 
   describe "#warn" do
@@ -98,6 +105,13 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(warnings.last.file).to eq("foo.rb")
       expect(warnings.last.line).to eq(1)
     end
+
+    it "does nothing when given a nil warning" do
+      dangerfile.parse(nil, "warn(nil)")
+      warnings = added_messages(dangerfile, :warnings)
+
+      expect(warnings).to be_empty
+    end
   end
 
   describe "#fail" do
@@ -130,6 +144,13 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(failures.last.message).to eq("bye")
       expect(failures.last.file).to eq("foo.rb")
       expect(failures.last.line).to eq(1)
+    end
+
+    it "does nothing when given a nil failure" do
+      dangerfile.parse(nil, "fail(nil)")
+      failures = added_messages(dangerfile, :errors)
+
+      expect(failures).to be_empty
     end
   end
 

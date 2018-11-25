@@ -76,11 +76,11 @@ module Danger
           http.request(req)
         end
 
-        # show error to the user when BitBucket Server returned an error
+        # show error to the user when Bitbucket Server returned an error
         case res
         when Net::HTTPClientError, Net::HTTPServerError
           # HTTP 4xx - 5xx
-          abort "\nError posting comment to BitBucket Server: #{res.code} (#{res.message})\n\n"
+          abort "\nError posting comment to Bitbucket Server: #{res.code} (#{res.message}) - #{res.body}\n\n"
         end
       end
 

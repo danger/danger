@@ -255,7 +255,7 @@ module Danger
       ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
       ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
       ui.say "We have a guide for all supported CI systems on danger.systems:"
-      ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
+      ui.link "https://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
     end
 
     def note_about_clicking_links
@@ -272,7 +272,7 @@ module Danger
       ui.header "Useful info"
       ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger pr".yellow + "."
       ui.pause 0.6
-      ui.say "- You can have Danger output all of its variables to the console via the " + "--verbose".yellow + " option."
+      ui.say "- You can have Danger output all of her variables to the console via the " + "--verbose".yellow + " option."
       ui.pause 0.6
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
@@ -286,8 +286,8 @@ module Danger
       ui.pause 0.6
 
       ui.say "And you're good to go. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
-      ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
-      ui.say "If you don't like it, help us improve it! xxx"
+      ui.say "If you like Danger, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
+      ui.say "If you don't like Danger, help us improve the project! xxx"
     end
 
     def darwin?

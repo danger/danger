@@ -1,6 +1,166 @@
+<!--
+
+// Please add your own contribution below inside the Master section, no need to
+// set a version number, that happens during a deploy.
+//
+// These docs are aimed at users rather than danger developers, so please limit technical
+// terminology in here.
+
+-->
+
 ## master
 
-* Add your own contributions to the next release on the line below this, please include your name too. Please don't set a new version if you are the first to make the section for `master`.
+## 5.8.2
+
+* Fix diff range detection logic [@r7kamura](https://github.com/r7kamura)
+
+## 5.8.1
+
+* Update `BitbucketServerAPI` error message to include response body [@cnoon](https://github.com/cnoon)
+
+## 5.8.0
+
+* Add AppVeyor support [@tumugin](https://github.com/tumugin)
+
+## 5.7.1
+
+* Add CodeBuild support [@s-faychatelard](https://github.com/s-faychatelard)
+
+## 5.7.0
+
+* Fixes importing a Dangerfile from a GitLab repository [@koffeinfrei](https://github.com/koffeinfrei/)
+* Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
+* GitLab: Determine base_commit from the MR API instead of querying the commits [@leipert](https://github.com/leipert)
+
+## 5.6.7
+
+* Fix `--no-ansi` behavior for decoloring output [@otaznik-net](https://github.com/otaznik-net)
+
+## 5.6.6
+
+* Adds `failure` as an alias to `fail` without incurring the wrath of default rubocop [@orta](https://github.com/orta)
+
+## 5.6.5
+
+* Update the git gem so that Danger handles multi-byte chars correctly [@tbrand](https://github.com/tbrand)
+
+## 5.6.4
+
+* Update Bitrise CI to parse repo_slug with two slashes [@dstranz](https://github.com/dstranz)
+
+## 5.6.3
+
+* Fix to detect not Pull Request on CircleCI. [@kompiro](https://github.com/kompiro)
+* Add support for two slashes in repository slug like `organisation/team/repository` (for GitLab) [@dstranz](https://github.com/dstranz)
+
+## 5.6.2
+
+* Update Screwdriver CI to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf)
+
+## 5.6.1
+
+* Use HTTPS links where applicable. [@allewun](https://github.com/allewun)
+* Fix `Danger::GitLabCI` to use `CI_PROJECT_PATH` instead of `CI_PROJECT_ID` for its `#repo_slug`. [@rymai](https://github.com/rymai)
+
+## 5.6.0
+
+* Fix CircleCI API failing to detect PRs. [@allewun](https://github.com/allewun)
+* Fix crash when messages are nil. [@allewun](https://github.com/allewun)
+* Add support for [Screwdriver CI](http://screwdriver.cd) - [@dbgrandi](https://github.com/dbgrandi)
+
+## 5.5.13
+
+* Enable Bitbucket Cloud for Bitrise CI [@masahide318](https://github.com/masahide318)
+* Notes which CI is used when exiting with an invalid PR [@dbgrandi](https://github.com/dbgrandi)
+
+## 5.5.12
+
+* Fix a multistage `import_dangerfile` error [@tbrand](https://github.com/tbrand)
+* Fixing typo: `ArraySublcass` -> `ArraySubclass` [@ivantse](https://github.com/ivantse)
+* Fix crash when having messages with nil line on GitHub [@fwal](https://github.com/fwal)
+
+## 5.5.11
+
+* Fix GitLab `html_link` url's for external repos. [@sogame](https://github.com/sogame)
+* Removing `--all` option for `git merge-base` [@tbrand](https://github.com/tbrand)
+
+## 5.5.10
+
+* Improve Jenkins CI error handling when no ENV passed in - #954 Juanito Fatas
+* Update rubocop and yard dependencies for vulnerabilities - #955 #957 Juanito Fatas
+* Enable BitBucket Cloud for Circle CI. [@andrewlord1990](https://github.com/andrewlord1990)
+
+## 5.5.9
+
+* Fix handling of Github repo slugs with dots in them (for Bitrise CI). [@provTheodoreNewell](https://github.com/provTheodoreNewell)
+
+## 5.5.8
+
+* Add `--remove-previous-comments` functionality, which means that a you can make a new comment
+  at the bottom of the code review conversation. [@JoeS](https://github.com/joesss)
+
+## 5.5.7
+
+* Add Bitbucket Server support for Bitrise CI. [@copini](https://github.com/copini)
+* Add Bitbucket Server support for TeamCity CI. [@davevdveen](https://github.com/davevdveen)
+* Use unique entries for the validation reports
+* Add Bitbucket Cloud support for TeamCity [@neilkimmett](https://github.com/neilkimmett)
+
+## 5.5.6
+
+* Improves the inline docs on `danger local` and `danger pr`. [@orta](https://github.com/orta)
+* Improves the GitLab CI error handling if port number is accidentally included in host. [@mbogh](https://github.com/mbogh)
+
+## 5.5.5
+
+* Fix handling of Github repos slugs with dots in them (for BuildKite CI). [@orj](https://github.com/orj)
+
+## 5.5.4
+
+* Fix handling of filenames that contain square brackets (and possibly other characters) - [@allewun](https://github.com/allewun)
+
+## 5.5.3
+
+* Fix comment posting logic for VSTS integration. [@cyupa](https://github.com/cyupa)
+
+## 5.5.2
+
+* Fixes fetching merge request ID in GitLab CI - [@nikolaykasyanov](https://github.com/nikolaykasyanov)
+
+## 5.5.1
+
+* Update documentation for BitRise CI now that it supports Secret Env Vars - [@AliSoftware](https://github.com/AliSoftware)
+* Improves Circle CI reliability - [@sean-clayton](https://github.com/sean-clayton) / [@orta](https://github.com/orta)
+
+## 5.5.0
+
+* Fix bug with gitlab v4 API- [@marocchino](https://github.com/marocchino)
+* Fix issue where a single branch git clone on the PR head never fetched the base branch - [@daveallie](https://github.com/daveallie)
+* Fix removing comments when one danger_id is a substring of another - [@marcelofabri](https://github.com/marcelofabri)
+* Fix possible invalid binding.pry statement when Dangerfile does not have an empty new line at the end (`danger pr --pry`) - [@pedrovieira](https://github.com/pedrovieira)
+
+## 5.4.3
+
+* Add support for [Codeship](https://codeship.com/) - [@ghiculescu](https://github.com/ghiculescu)
+
+## 5.4.2
+
+* Fix `Violation#to_s` showing file and line when they are empty and not showing when they are set
+
+## 5.4.1
+
+* Adds VSTS Dangerfile plugin - [@petester42](https://github.com/petester42)
+* Add support to pass in `DANGER_OCTOKIT_VERIFY_SSL` to toggle SSL Verification for Octokit - [@nikhilsh](https://github.com/nikhilsh)
+
+## 5.4.0
+
+* Add support for VSTS - [@petester42](https://github.com/petester42)
+
+## 5.3.5
+
+* Tightens up pronouns in `danger init`.
+* Add `--verify-ssl` option to bypass Octokit's SSL Verification - [@nikhilsh](https://github.com/nikhilsh)
+* Add `no_proxy_fix` gem as Ruby's no proxy is not working in `2.4.0/2.4.1` - [@nikhilsh](https://github.com/nikhilsh)
 
 ## 5.4.0
 
@@ -122,7 +282,7 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 * Fix inline comment url when using github enterprise - leonhartX
 * Fix repo slug `nil` when using a GitHub repo that contains dot in name - johnlinvc
 * Fix find wrong diff position for inline comment - leonhartX
-* gitlab project names dont need to be urlencoded anymore - hanneskaeufler
+* gitlab project names don't need to be urlencoded anymore - hanneskaeufler
 * Fix inline comment failed to fall back when there is only inline comments - leonhartX
 * Fix only inline markdown comments will fall back to main comment even in diff's range - leonhartX
 
@@ -322,7 +482,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.4.2...v3.5.0)
 
-* Adds a template for for creating a gem-based Dangerfile - dblock (+ orta)
+* Adds a template for creating a gem-based Dangerfile - dblock (+ orta)
 
   Adding two new commands:
 
@@ -413,7 +573,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 * Improved the width handling for the output of the `danger local` table - orta
 * Update comment & remove unused regexp name in request_source.rb - JuanitoFatas
 * Mask password on BitbucketServerAPI object - JuanitoFatas
-* Add `scm_provider` to the DSL allowing users and plugins ot check which scm provider is being used when running danger - K0nserv
+* Add `scm_provider` to the DSL allowing users and plugins to check which scm provider is being used when running danger - K0nserv
 * Deprecated `branch_for_merge` for GitLab. Use `branch_for_base` instead. - K0nserv
 * Added `branch_for_base` and `branch_for_head` for GitLab. - K0nserv
 
@@ -589,7 +749,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 
 * Rename `DANGER_GITHUB_API_HOST` to `DANGER_GITHUB_API_BASE_URL`. - k0nserv
   Using `DANGER_GITHUB_API_HOST` is still supported to preserve backwards
-  comaptibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
+  compatibility, but using `DANGER_GITHUB_API_BASE_URL` is encouraged.
 
 ## 2.1.6
 

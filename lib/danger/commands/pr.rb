@@ -4,17 +4,19 @@ require "faraday/http_cache"
 require "fileutils"
 require "octokit"
 require "tmpdir"
+require "no_proxy_fix"
 
 module Danger
   class PR < Runner
-    self.summary = "Run the Dangerfile against Pull Requests (works with forks, too).".freeze
+    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR.".freeze
     self.command = "pr".freeze
 
     def self.options
       [
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."],
-        ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"]
+        ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
+        ["--verify-ssl", "Verify SSL in Octokit"]
       ]
     end
 
@@ -24,6 +26,7 @@ module Danger
       @pr_url = argv.shift_argument
       @clear_http_cache = argv.flag?("clear-http-cache", false)
       dangerfile = argv.option("dangerfile", "Dangerfile")
+      @verify_ssl = argv.flag?("verify-ssl", true)
 
       # Currently CLAide doesn't support short option like -h https://github.com/CocoaPods/CLAide/pull/60
       # when user pass in -h, mimic the behavior of passing in --help.
@@ -60,6 +63,7 @@ module Danger
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
           nil,
+          nil,
           nil
         )
       end
@@ -71,6 +75,9 @@ module Danger
       # setup caching for Github calls to hitting the API rate limit too quickly
       cache_file = File.join(cache_dir, "danger_local_cache")
       cache = HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
+      Octokit.configure do |config|
+        config.connection_options[:ssl] = { verify: @verify_ssl }
+      end
       Octokit.middleware = Faraday::RackBuilder.new do |builder|
         builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
         builder.use Octokit::Response::RaiseError

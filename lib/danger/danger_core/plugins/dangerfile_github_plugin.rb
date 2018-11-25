@@ -14,7 +14,7 @@ module Danger
   #
   # @example Ensure that labels have been used on the PR
   #
-  #          fail "Please add labels to this PR" if github.pr_labels.empty?
+  #          failure "Please add labels to this PR" if github.pr_labels.empty?
   #
   # @example Check if a user is in a specific GitHub org, and message them if so
   #
@@ -24,11 +24,11 @@ module Danger
   #
   # @example Ensure there is a summary for a PR
   #
-  #          fail "Please provide a summary in the Pull Request description" if github.pr_body.length < 5
+  #          failure "Please provide a summary in the Pull Request description" if github.pr_body.length < 5
   #
   # @example Only accept PRs to the develop branch
   #
-  #          fail "Please re-submit this PR to develop, we may have already fixed your issue." if github.branch_for_base != "develop"
+  #          failure "Please re-submit this PR to develop, we may have already fixed your issue." if github.branch_for_base != "develop"
   #
   # @example Note when PRs don't reference a milestone, which goes away when it does
   #

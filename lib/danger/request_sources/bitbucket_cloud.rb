@@ -20,8 +20,7 @@ module Danger
         self.ci_source = ci_source
         self.environment = environment
 
-        project, slug = ci_source.repo_slug.split("/")
-        @api = BitbucketCloudAPI.new(project, slug, ci_source.pull_request_id, environment)
+        @api = BitbucketCloudAPI.new(ci_source.repo_slug, ci_source.pull_request_id, nil, environment)
       end
 
       def validates_as_ci?
@@ -46,16 +45,18 @@ module Danger
       end
 
       def setup_danger_branches
+        base_branch = self.pr_json[:destination][:branch][:name]
         base_commit = self.pr_json[:destination][:commit][:hash]
+        head_branch = self.pr_json[:source][:branch][:name]
         head_commit = self.pr_json[:source][:commit][:hash]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
-        scm.ensure_commitish_exists! base_commit
+        scm.ensure_commitish_exists_on_branch! base_branch, base_commit
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
 
         # OK, so we want to ensure that we have a known head branch, this will always represent
         # the head of the PR ( e.g. the most recent commit that will be merged. )
-        scm.ensure_commitish_exists! head_commit
+        scm.ensure_commitish_exists_on_branch! head_branch, head_commit
         self.scm.exec "branch #{EnvironmentManager.danger_head_branch} #{head_commit}"
       end
 
@@ -63,8 +64,8 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
-        delete_old_comments(danger_id: danger_id) unless new_comment
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"

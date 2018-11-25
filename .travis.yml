@@ -4,9 +4,11 @@ cache:
     - bundle
 
 rvm:
-  - 2.4.0
-  - 2.3.3
-  - 2.1.9
+  - 2.5.3
+  - 2.4.5
+  - 2.3.8
+  - 2.2.10
+  - 2.1.10
   - 2.0
 
 bundler_args: "--without documentation --path bundle"
@@ -22,8 +24,11 @@ script:
   # Tests use real git commands
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
-  - bundle exec rubocop lib
+  - echo "Running Tests"
   - bundle exec rake spec
+  - echo "Linting the documentation for Danger's internal plugins"
+  - bundle exec danger plugins lint lib/danger/danger_core/plugins/*.rb --warnings-as-errors
+  - echo "Running the Dangerfile for this repo"
   - bundle exec danger --verbose
+  - echo "Validating that danger init is working fine"
   - bundle exec danger init --mousey --impatient
-

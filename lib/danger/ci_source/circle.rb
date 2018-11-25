@@ -6,29 +6,36 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
-  # For setting up Circle CI, we recommend turning on "Only Build pull requests." in "Advanced Setting." Without this enabled,
-  # it is _really_ tricky for Danger to know whether you are in a pull request or not, as the environment metadata
-  # isn't reliable.
+  # For setting up CircleCI, we recommend turning on "Only build pull requests" in "Advanced Settings." Without this enabled,
+  # it's trickier for Danger to determine whether you're in a pull request or not, as the environment metadata
+  # isn't as reliable.
   #
-  # With that set up, you can you add `bundle exec danger` to your `circle.yml`. If you override the default
-  # `test:` section, then add it as an extra step. Otherwise add a new `pre` section to the test:
+  # A common scenario is when CircleCI begins building a commit before the commit becomes associated with a PR
+  # (e.g. a developer pushes their branch to the remote repo for the first time. CircleCI spins up and begins building.
+  # Moments later the developer creates a PR on GitHub. Since the build process started before the PR existed,
+  # Danger won't be able to use the Circle-provided environment variables to retrieve PR metadata.)
   #
-  #  ``` ruby
-  #   test:
-  #     override:
-  #        - bundle exec danger
+  # With "Only build pull requests" enabled, you can add `bundle exec danger` to your `config.yml` (Circle 2.0).
+  #
+  # e.g.
+  #
+  #  ``` yaml
+  #  - run: bundle exec danger --verbose
   #  ```
+  #
+  # And that should be it!
   #
   # ### Token Setup
   #
-  # There is no difference here for OSS vs Closed, add your `DANGER_GITHUB_API_TOKEN` to the Environment variable settings page.
+  # If "Only build pull requests" can't be enabled for your project, Danger _can_ still work by relying on CircleCI's API
+  # to retrieve PR metadata, which will require an API token.
   #
-  # ### I still want to run commit builds
+  # 1. Go to your project > Settings > API Permissions. Create a token with scope "view-builds" and a label like "DANGER_CIRCLE_CI_API_TOKEN".
+  # 2. Settings > Environement Variables. Add the token as a CircleCI environment variable, which exposes it to the Danger process.
   #
-  # OK, alright. So, if you add a `DANGER_CIRCLE_CI_API_TOKEN` then Danger will use the Circle API to look up
-  # the status of whether a commit is inside a PR or not. You can generate a token from inside the project set_trace_func
-  # then go to Permissions > "API Permissions" and generate a token with access to Status. Take that token and add
-  # it to Build Settings > "Environment Variables".
+  # There is no difference here for OSS vs Closed, both scenarios will need this environment variable.
+  #
+  # With these pieces in place, Danger should be able to work as expected.
   #
   class CircleCI < CI
     # Side note: CircleCI is complicated. The env vars for PRs are not guaranteed to exist
@@ -42,9 +49,10 @@ module Danger
     def self.validates_as_pr?(env)
       # This will get used if it's available, instead of the API faffing.
       return true if env["CI_PULL_REQUEST"] && !env["CI_PULL_REQUEST"].empty?
+      return true if env["CIRCLE_PULL_REQUEST"] && !env["CIRCLE_PULL_REQUEST"].empty?
 
       # Real-world talk, it should be worrying if none of these are in the environment
-      return false unless ["CIRCLE_CI_API_TOKEN", "CIRCLE_PROJECT_USERNAME", "CIRCLE_PROJECT_REPONAME", "CIRCLE_BUILD_NUM"].all? { |x| env[x] && !env[x].empty? }
+      return false unless ["DANGER_CIRCLE_CI_API_TOKEN", "CIRCLE_PROJECT_USERNAME", "CIRCLE_PROJECT_REPONAME", "CIRCLE_BUILD_NUM"].all? { |x| env[x] && !env[x].empty? }
 
       # Uses the Circle API to determine if it's a PR otherwise
       api = CircleAPI.new
@@ -52,12 +60,12 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::BitbucketCloud]
     end
 
     def initialize(env)
       self.repo_url = env["CIRCLE_REPOSITORY_URL"]
-      pr_url = env["CI_PULL_REQUEST"]
+      pr_url = env["CI_PULL_REQUEST"] || env["CIRCLE_PULL_REQUEST"]
 
       # If it's not a real URL, use the Circle API
       unless pr_url && URI.parse(pr_url).kind_of?(URI::HTTP)

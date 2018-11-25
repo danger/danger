@@ -149,5 +149,13 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
         end
       end
     end
+
+    context "VSTS", host: :vsts do
+      it "is `:vsts`" do
+        with_git_repo(origin: "https://artsy.visualstudio.com/artsy/_git/eigen") do
+          expect(dm.danger.scm_provider).to eq(:vsts)
+        end
+      end
+    end
   end
 end

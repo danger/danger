@@ -43,6 +43,36 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
     end
   end
 
+  describe "ssl verification" do
+    it "sets ssl verification environment variable to false" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "false" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_falsey
+    end
+
+    it "sets ssl verification environment variable to true" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "true" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+
+    it "sets ssl verification environment variable to wrong input" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "wronginput" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+
+    it "unsets ssl verification environment variable" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).verify_ssl
+      expect(result).to be_truthy
+    end
+  end
+
   describe "valid server response" do
     before do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
@@ -251,7 +281,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist" do
-        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
@@ -261,7 +291,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "creates a new comment instead of updating the issue if --new-comment is provided" do
-        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
@@ -271,7 +301,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
-        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        comments = [{ "body" => '"generated_by_another_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [], danger_id: "another_danger")
@@ -281,7 +311,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything" do
-        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
@@ -291,7 +321,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
-        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        comments = [{ "body" => '"generated_by_another_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
 
@@ -429,7 +459,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "removes inline comments if they are not included" do
-        issues = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        issues = [{ "body" => "'generated_by_another_danger'", "id" => "12" }]
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
 
         allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
@@ -487,14 +517,14 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.fetch_details
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}")
-          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
+          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
 
         expect(@g.scm).to receive(:exec)
           .with("rev-parse --quiet --verify 561827e46167077b5e53515b4b7349b8ae04610b^{commit}")
-          .and_return("561827e46167077b5e53515b4b7349b8ae04610b").twice
+          .and_return("561827e46167077b5e53515b4b7349b8ae04610b")
 
         expect(@g.scm).to receive(:exec)
           .with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
@@ -507,6 +537,16 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         expect(@g.scm).to receive(:exec).
           with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
           and_return("")
+
+        [20, 74, 222, 625].each do |depth|
+          # fetch it
+          expect(@g.scm).to receive(:exec).with("fetch --depth=#{depth} --prune origin +refs/heads/master:refs/remotes/origin/master")
+          # still not in history
+          expect(@g.scm).to receive(:exec).
+            with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
+            and_return("")
+        end
+
         # fetch it
         expect(@g.scm).to receive(:exec).with("fetch --depth 1000000")
         # still not in history
@@ -518,6 +558,50 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           @g.fetch_details
           @g.setup_danger_branches
         end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
+      end
+    end
+  end
+
+  describe "#find_position_in_diff" do
+    subject do
+      github.find_position_in_diff(diff_lines, message, kind)
+    end
+
+    let(:diff_lines) do
+      <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+      DIFF
+    end
+
+    let(:file_path) do
+      "dummy"
+    end
+
+    let(:github) do
+      described_class.new(stub_ci, "DANGER_GITHUB_API_TOKEN" => "hi")
+    end
+
+    let(:kind) do
+      :dummy
+    end
+
+    let(:message) do
+      double(
+        file: file_path,
+        line: 1,
+      )
+    end
+
+    context "when the lines count for the original file is omitted" do
+      it "returns correct position" do
+        is_expected.to eq(2)
       end
     end
   end

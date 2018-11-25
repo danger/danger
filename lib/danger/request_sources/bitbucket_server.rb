@@ -47,16 +47,22 @@ module Danger
       end
 
       def setup_danger_branches
+        base_branch = self.pr_json[:toRef][:id].sub("refs/heads/", "")
         base_commit = self.pr_json[:toRef][:latestCommit]
+        # Support for older versions of Bitbucket Server
+        base_commit = self.pr_json[:toRef][:latestChangeset] if self.pr_json[:fromRef].key? :latestChangeset
+        head_branch = self.pr_json[:fromRef][:id].sub("refs/heads/", "")
         head_commit = self.pr_json[:fromRef][:latestCommit]
+        # Support for older versions of Bitbucket Server
+        head_commit = self.pr_json[:fromRef][:latestChangeset] if self.pr_json[:fromRef].key? :latestChangeset
 
         # Next, we want to ensure that we have a version of the current branch at a known location
-        scm.ensure_commitish_exists! base_commit
+        scm.ensure_commitish_exists_on_branch! base_branch, base_commit
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
 
         # OK, so we want to ensure that we have a known head branch, this will always represent
         # the head of the PR ( e.g. the most recent commit that will be merged. )
-        scm.ensure_commitish_exists! head_commit
+        scm.ensure_commitish_exists_on_branch! head_branch, head_commit
         self.scm.exec "branch #{EnvironmentManager.danger_head_branch} #{head_commit}"
       end
 
@@ -64,8 +70,8 @@ module Danger
         nil
       end
 
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
-        delete_old_comments(danger_id: danger_id) unless new_comment
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"

@@ -56,3 +56,7 @@ junit-results.xml
 
 # our forked RSpec JUnit Formatter
 /.xml_dump_failures
+
+# Mac OS
+.DS_Store
+

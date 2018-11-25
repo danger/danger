@@ -21,7 +21,7 @@ module Danger
       end
 
       def self.optional_env_vars
-        ["DANGER_GITHUB_HOST", "DANGER_GITHUB_API_BASE_URL"]
+        ["DANGER_GITHUB_HOST", "DANGER_GITHUB_API_BASE_URL", "DANGER_OCTOKIT_VERIFY_SSL"]
       end
 
       def initialize(ci_source, environment)
@@ -31,6 +31,13 @@ module Danger
         self.dismiss_out_of_range_messages = false
 
         @token = @environment["DANGER_GITHUB_API_TOKEN"]
+      end
+
+      def get_pr_from_branch(repo_name, branch_name, owner)
+        prs = client.pull_requests(repo_name, head: "#{owner}:#{branch_name}")
+        unless prs.empty?
+          prs.first.number
+        end
       end
 
       def validates_as_api_source?
@@ -43,6 +50,10 @@ module Danger
 
       def host
         @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
+      end
+
+      def verify_ssl
+        @environment["DANGER_OCTOKIT_VERIFY_SSL"] == "false" ? false : true
       end
 
       # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
@@ -58,8 +69,10 @@ module Danger
 
       def client
         raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
-
         @client ||= begin
+          Octokit.configure do |config|
+            config.connection_options[:ssl] = { verify: verify_ssl }
+          end
           Octokit::Client.new(access_token: @token, auto_paginate: true, api_endpoint: api_url)
         end
       end
@@ -85,16 +98,18 @@ module Danger
 
       def setup_danger_branches
         # we can use a github specific feature here:
+        base_branch = self.pr_json["base"]["ref"]
         base_commit = self.pr_json["base"]["sha"]
+        head_branch = self.pr_json["head"]["ref"]
         head_commit = self.pr_json["head"]["sha"]
 
         # Next, we want to ensure that we have a version of the current branch at a known location
-        scm.ensure_commitish_exists! base_commit
+        scm.ensure_commitish_exists_on_branch! base_branch, base_commit
         self.scm.exec "branch #{EnvironmentManager.danger_base_branch} #{base_commit}"
 
         # OK, so we want to ensure that we have a known head branch, this will always represent
         # the head of the PR ( e.g. the most recent commit that will be merged. )
-        scm.ensure_commitish_exists! head_commit
+        scm.ensure_commitish_exists_on_branch! head_branch, head_commit
         self.scm.exec "branch #{EnvironmentManager.danger_head_branch} #{head_commit}"
       end
 
@@ -125,11 +140,11 @@ module Danger
       end
 
       # Sending data to GitHub
-      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false)
+      def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         comment_result = {}
         editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
         last_comment = editable_comments.last
-        should_create_new_comment = new_comment || last_comment.nil?
+        should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
 
         previous_violations =
           if should_create_new_comment
@@ -163,8 +178,8 @@ module Danger
 
         main_violations_sum = main_violations.values.inject(:+)
 
-        if previous_violations.empty? && main_violations_sum.empty?
-          # Just remove the comment, if there's nothing to say.
+        if (previous_violations.empty? && main_violations_sum.empty?) || remove_previous_comments
+          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
           delete_old_comments!(danger_id: danger_id)
         end
 
@@ -354,7 +369,7 @@ module Danger
       end
 
       def find_position_in_diff(diff_lines, message, kind)
-        range_header_regexp = /@@ -([0-9]+),([0-9]+) \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
+        range_header_regexp = /@@ -([0-9]+)(,([0-9]+))? \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
         file_header_regexp = %r{^diff --git a/.*}
 
         pattern = "+++ b/" + message.file + "\n"
@@ -450,7 +465,6 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         organisation ||= self.organisation
 
-        return @download_url unless @download_url.nil?
         begin
           # Retrieve the download URL (default branch on nil param)
           contents = client.contents("#{organisation}/#{repository}", path: path, ref: branch)
@@ -475,8 +489,8 @@ module Danger
 
       def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
         cmp = proc do |a, b|
-          next -1 unless a.file
-          next 1 unless b.file
+          next -1 unless a.file && a.line
+          next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
           next a.file <=> b.file

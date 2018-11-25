@@ -24,14 +24,14 @@ Lint/UselessAssignment:
     - '**/spec/**/*'
 
 # We could potentially enable the 2 below:
-Style/IndentHash:
+Layout/IndentHash:
   Enabled: false
 
-Style/AlignHash:
+Layout/AlignHash:
   Enabled: false
 
 # HoundCI doesn't like this rule
-Style/DotPosition:
+Layout/DotPosition:
   Enabled: false
 
 # We allow !! as it's an easy way to convert ot boolean
@@ -116,7 +116,7 @@ Style/IfInsideElse:
 Style/BlockComments:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
 # FIXME: 25
@@ -125,13 +125,7 @@ Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
 
-Style/MixinGrouping:
-  Enabled: false
-
 Style/FileName:
-  Enabled: false
-
-Style/IndentHeredoc:
   Enabled: false
 
 Style/SpecialGlobalVars:
@@ -150,4 +144,10 @@ PercentLiteralDelimiters:
     "%x": ()
 
 Security/YAMLLoad:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Layout/IndentHeredoc:
   Enabled: false

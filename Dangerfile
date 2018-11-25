@@ -13,8 +13,6 @@ message(":tada:") if is_version_bump && github.pr_author != "orta"
 
 # Make a note about contributors not in the organization
 unless github.api.organization_member?("danger", github.pr_author)
-  message "@#{github.pr_author} is not a contributor yet, would you like to join the Danger org?"
-
   # Pay extra attention if they modify the gemspec
   if git.modified_files.include?("*.gemspec")
     warn "External contributor has edited the Gemspec"
@@ -34,17 +32,6 @@ if !git.modified_files.include?("CHANGELOG.md") && !declared_trivial
   fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/danger/danger/blob/master/CHANGELOG.md).", sticky: false)
 end
 
-# Docs are critical, so let's re-run the docs part of the specs and show any issues:
-core_plugins_docs = `bundle exec danger plugins lint lib/danger/danger_core/plugins/*.rb --warnings-as-errors`
-
-# If it failed, fail the build, and include markdown with the output error.
-unless $?.success?
-  # We want to strip ANSI colors for our markdown, and make paths relative
-  colourless_error = core_plugins_docs.gsub(/\e\[(\d+)(;\d+)*m/, "")
-  markdown("### Core Docs Errors \n\n#{colourless_error}")
-  fail("Failing due to documentation issues, see below.", sticky: false)
-end
-
 # Oddly enough, it's quite possible to do some testing of Danger, inside Danger
 # So, you can ignore these, if you're looking at the Dangerfile to get ideas.
 #
@@ -61,7 +48,8 @@ core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
 core_lint_output = `bundle exec yard stats #{core_plugins.join " "} --list-undoc --tag tags`
 
 if !core_lint_output.include?("100.00%")
-  fail "The core plugins are not at 100% doc'd - see below:", sticky: false
+  # fail "The core plugins are not at 100% doc'd - see below:", sticky: false
+  # markdown "```\n#{core_lint_output}```"
 elsif core_lint_output.include? "warning"
   warn "The core plugins are have yard warnings - see below", sticky: false
   markdown "```\n#{core_lint_output}```"

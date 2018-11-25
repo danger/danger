@@ -62,6 +62,11 @@ RSpec.describe Danger::Buildkite do
         valid_env["BUILDKITE_REPO"] = "https://github.com/Danger/danger.git"
         expect(source.repo_slug).to eq("Danger/danger")
       end
+
+      it "gets out a repo slug from a repo with dots in it" do
+        valid_env["BUILDKITE_REPO"] = "https://github.com/Danger/danger.systems.git"
+        expect(source.repo_slug).to eq("Danger/danger.systems")
+      end
     end
 
     it "sets the pull request id" do

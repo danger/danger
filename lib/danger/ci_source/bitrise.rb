@@ -17,8 +17,7 @@ module Danger
   #
   # ### Token Setup
   #
-  # Add the `DANGER_GITHUB_API_TOKEN` to your workflow's App Env Vars.
-  # Warning: adding the token as a Secret Env Var will not work for PR builds, as [Bitrise does not expose secret vars to PRs](https://bitrise.uservoice.com/forums/235233-general/suggestions/11701587-make-secret-env-variables-available-for-prs-from-t).
+  # Add the `DANGER_GITHUB_API_TOKEN` to your workflow's [Secret App Env Vars](https://blog.bitrise.io/anyone-even-prs-can-have-secrets).
   #
   class Bitrise < CI
     def self.validates_as_ci?(env)
@@ -30,14 +29,19 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab]
+      @supported_request_sources ||= [
+        Danger::RequestSources::GitHub,
+        Danger::RequestSources::GitLab,
+        Danger::RequestSources::BitbucketServer,
+        Danger::RequestSources::BitbucketCloud
+      ]
     end
 
     def initialize(env)
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
 
-      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
+      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?
     end
   end

@@ -19,6 +19,19 @@ module Danger
         other.line == line
     end
 
+    def hash
+      h = 1
+      h = h * 31 + message.hash
+      h = h * 13 + sticky.hash
+      h = h * 17 + file.hash
+      h = h * 17 + line.hash
+      h
+    end
+
+    def eql?(other)
+      return self == other
+    end
+
     # @return [Boolean] returns true if is a file or line, false otherwise
     def inline?
       file || line
@@ -26,9 +39,9 @@ module Danger
 
     def to_s
       extra = []
-      extra << "sticky: true" if sticky
-      extra << "file: #{file}" unless file
-      extra << "line: #{line}" unless line
+      extra << "sticky: #{sticky}"
+      extra << "file: #{file}" if file
+      extra << "line: #{line}" if line
 
       "Violation #{message} { #{extra.join ', '.freeze} }"
     end
