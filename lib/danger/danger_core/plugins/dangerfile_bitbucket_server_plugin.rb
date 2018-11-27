@@ -169,6 +169,19 @@ module Danger
     def markdown_link(paths, full_path: true)
       create_link(paths, full_path) { |href, text| create_markdown_link(href, text) }
     end
+    
+    # @!group Bitbucket Server Misc
+    # Updates the PR with build status and build server job link.
+    # @param    [String] status
+    #           SUCCESSFUL, FAILED and INPROGRESS
+    # @param    [String] build_job_link
+    #           Build server job link
+    # @param    [String] description
+    #           Build status description
+    #
+    def update_pr_build_status(status, build_job_link, description)
+        @bs.update_pr_build_status(status, build_job_link, description)
+    end
 
     private
 
