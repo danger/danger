@@ -78,8 +78,6 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
     it "gets commits" do
       log = ["hi"]
       allow(@repo).to receive(:log).and_return(log)
-      puts log
-      puts @dsl.commits
 
       expect(@dsl.commits).to eq(log)
     end
