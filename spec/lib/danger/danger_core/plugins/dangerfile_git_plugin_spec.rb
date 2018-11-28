@@ -83,7 +83,7 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
     end
 
     it "gets tags" do
-      tags = "1.0.0"
+      tags = ["1.0.0"]
       allow(@repo).to receive(:tags).and_return(tags)
 
       expect(@dsl.tags).to eq(tags)
