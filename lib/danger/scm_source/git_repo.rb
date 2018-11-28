@@ -60,7 +60,7 @@ module Danger
     end
 
     def tags
-      exec('tag')
+      exec("tag")
     end
 
     def origins
