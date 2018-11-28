@@ -88,7 +88,7 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
       tag = "1.0.0\n2.0.0"
       allow(@repo).to receive(:tags).and_return(tag)
 
-      expect(@dsl.tags.all?).to_not be_nil
+      expect(@dsl.tags).to all be_a(String)
     end
 
     describe "getting diff for a specific file" do
