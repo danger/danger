@@ -8,6 +8,7 @@ def run_in_repo_with_diff
       File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
       `git commit -m "adding file1 & file2"`
+      `git tag 1.0.0`
       `git checkout -b new-branch --quiet`
       File.open(dir + "/file2", "w") { |f| f.write "Pants!" }
       `git add .`
@@ -79,6 +80,13 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
       allow(@repo).to receive(:log).and_return(log)
 
       expect(@dsl.commits).to eq(log)
+    end
+
+    it "gets tags" do
+      tags = "1.0.0"
+      allow(@repo).to receive(:tags).and_return(tags)
+
+      expect(@dsl.tags).to eq(tags)
     end
 
     describe "getting diff for a specific file" do
