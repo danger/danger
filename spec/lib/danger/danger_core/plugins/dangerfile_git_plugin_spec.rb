@@ -78,15 +78,17 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
     it "gets commits" do
       log = ["hi"]
       allow(@repo).to receive(:log).and_return(log)
+      puts log
+      puts @dsl.commits
 
       expect(@dsl.commits).to eq(log)
     end
 
     it "gets tags" do
-      tags = ["1.0.0"]
-      allow(@repo).to receive(:tags).and_return(tags)
+      tag = "1.0.0\n2.0.0"
+      allow(@repo).to receive(:tags).and_return(tag)
 
-      expect(@dsl.tags).to eq(tags)
+      expect(@dsl.tags.all?).to_not be_nil
     end
 
     describe "getting diff for a specific file" do
