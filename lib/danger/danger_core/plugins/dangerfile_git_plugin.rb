@@ -146,5 +146,13 @@ module Danger
         after: diff.blob(:dst).contents
       }
     end
+
+    # @!group Git Metadata
+    # List of remote tags
+    # @return [String]
+    #
+    def tags
+      @git.tags.each_line
+    end
   end
 end
