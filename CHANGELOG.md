@@ -10,6 +10,10 @@
 
 ## master
 
+## 5.9.0
+
+* Add `git.tags` to get a list of existing Git tags [@hotbott](https://github.com/hotbott)
+
 ## 5.8.2
 
 * Fix diff range detection logic [@r7kamura](https://github.com/r7kamura)
