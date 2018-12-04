@@ -74,4 +74,25 @@ RSpec.describe Danger::FindRepoInfoFromURL do
       end
     end
   end
+
+  context "Bitbucket Server" do
+    it "works" do
+      result = described_class.new("https://tools.adidas-group.com/bitbucket/projects/MA/repos/ios-fanatics/pull-requests/1946").call
+
+      expect(result).to have_attributes(
+        slug: "MA/ios-fanatics",
+        id: "1946"
+      )
+    end
+    
+    it "works with http + trailing slash" do
+      result = described_class.new("http://tools.adidas-group.com/bitbucket/projects/MA/repos/ios-fanatics/pull-requests/1946/").call
+
+      expect(result).to have_attributes(
+        slug: "MA/ios-fanatics",
+        id: "1946"
+      )
+    
+    end
+  end    
 end
