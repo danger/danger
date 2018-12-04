@@ -400,6 +400,7 @@ module Danger
           # We need to count how many diff lines are between us and
           # the line we're looking for
           position += 1
+          position += 1 if line.eql?("\\ No newline at end of file\n")
 
           next unless match
 
