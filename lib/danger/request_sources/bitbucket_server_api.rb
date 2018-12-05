@@ -31,6 +31,10 @@ module Danger
         @username && !@username.empty? && @password && !@password.empty?
       end
 
+      def pull_request(repo_slug, pr_id)
+        fetch_pr_json
+      end
+
       def fetch_pr_json
         uri = URI(pr_api_endpoint)
         fetch_json(uri)
