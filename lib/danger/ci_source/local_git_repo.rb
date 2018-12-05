@@ -89,7 +89,9 @@ module Danger
           PullRequestFinder.new(
             remote_info.id,
             remote_info.slug,
-            remote: true
+            remote: true,
+            remote_url: env["LOCAL_GIT_PR_URL"],
+            env: env
           ).call
         else
           PullRequestFinder.new(
