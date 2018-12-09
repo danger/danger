@@ -381,6 +381,11 @@ module Danger
         file_line = nil
 
         diff_lines.drop(file_start).each do |line|
+          # If the line has `No newline` annotation, position need increment
+          if line.eql?("\ No newline at end of file\n")
+            position += 1
+            next
+          end
           # If we found the start of another file diff, we went too far
           break if line.match file_header_regexp
 

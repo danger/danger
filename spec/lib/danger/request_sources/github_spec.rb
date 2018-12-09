@@ -604,5 +604,26 @@ index 0000000..0000001 100644
         is_expected.to eq(2)
       end
     end
+
+    context "when diff contain `No newline` annotation before added lines" do
+      let(:diff_lines) do
+        <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,3 @@
+-foo
+\ No newline at end of file
++foo
++bar
++baz
+        DIFF
+      end
+
+      it "returns correct position" do
+        is_expected.to eq(3)
+      end
+    end
   end
 end
