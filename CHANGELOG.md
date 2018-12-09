@@ -13,7 +13,7 @@
 ## 5.9.0
 
 * Add `git.tags` to get a list of existing Git tags [@hotbott](https://github.com/hotbott)
-* Amend diff position caluculation when diff includes `No newline` annotation [@colorbox](https://github.com/colorbox)
+* Fix diff position caluculation when diff includes `No newline` annotation [@colorbox](https://github.com/colorbox)
 
 ## 5.8.2
 
