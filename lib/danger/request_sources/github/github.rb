@@ -381,6 +381,8 @@ module Danger
         file_line = nil
 
         diff_lines.drop(file_start).each do |line|
+          # If the line has No newline annotation, position need increment
+          position += 1 if line.eql?("\ No newline at end of file\n")
           # If we found the start of another file diff, we went too far
           break if line.match file_header_regexp
 
@@ -400,7 +402,6 @@ module Danger
           # We need to count how many diff lines are between us and
           # the line we're looking for
           position += 1
-          position += 1 if line.eql?("\\ No newline at end of file\n")
 
           next unless match
 
