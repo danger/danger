@@ -10,10 +10,13 @@
 
 ## master
 
+## 5.9.1
+
+* Fix diff position calculation when diff includes `No newline` annotation [@colorbox](https://github.com/colorbox)
+
 ## 5.9.0
 
 * Add `git.tags` to get a list of existing Git tags [@hotbott](https://github.com/hotbott)
-* Fix diff position caluculation when diff includes `No newline` annotation [@colorbox](https://github.com/colorbox)
 
 ## 5.8.2
 
