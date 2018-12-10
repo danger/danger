@@ -84,7 +84,11 @@ RSpec.describe Danger::FindRepoInfoFromURL do
         id: "1946"
       )
     end
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> bea8e4a44a1faa3bc5dd053dac5f51e3a77f0a2a
     it "works with http + trailing slash" do
       result = described_class.new("http://tools.adidas-group.com/bitbucket/projects/MA/repos/ios-fanatics/pull-requests/1946/").call
 
@@ -92,6 +96,12 @@ RSpec.describe Danger::FindRepoInfoFromURL do
         slug: "MA/ios-fanatics",
         id: "1946"
       )
+<<<<<<< HEAD
     end
   end
+=======
+    
+    end
+  end    
+>>>>>>> bea8e4a44a1faa3bc5dd053dac5f51e3a77f0a2a
 end
