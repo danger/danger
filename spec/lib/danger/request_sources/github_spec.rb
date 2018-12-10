@@ -614,7 +614,7 @@ index 0000000..0000001 100644
 +++ b/#{file_path}
 @@ -1 +1,3 @@
 -foo
-\ No newline at end of file
+\\ No newline at end of file
 +foo
 +bar
 +baz

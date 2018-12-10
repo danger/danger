@@ -10,12 +10,11 @@
 
 ## master
 
-<!-- Your new comment here -->
+* Fix wrong test and implementation about `No newline` annotation [@colorbox](https://github.com/colorbox)
 
 ## 5.10.0
 
 * `danger pr` now supports Bitbucket Server repos [@jmromanos](https://github.com/jmromanos) 
-
 
 ## 5.9.1
 
