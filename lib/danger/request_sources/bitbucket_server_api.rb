@@ -31,7 +31,7 @@ module Danger
         @username && !@username.empty? && @password && !@password.empty?
       end
 
-      def pull_request(repo_slug, pr_id)
+      def pull_request(*)
         fetch_pr_json
       end
 

@@ -8,7 +8,7 @@ module Danger
       (/(pull|merge_requests|pull-requests)/)
       (?<id>\d+)
     }x
-    
+
     # Regex used to extract info from Bitbucket server URLs, as they use a quite different format
     REGEXPBB = %r{
       (?:[\/:])projects
@@ -30,8 +30,8 @@ module Danger
       else
         matched = url.match(REGEXP)
         if matched
-          RepoInfo.new(matched[:slug], matched[:id])  
-      end  
+          RepoInfo.new(matched[:slug], matched[:id])
+        end
       end
     end
 

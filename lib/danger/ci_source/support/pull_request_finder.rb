@@ -10,7 +10,7 @@ module Danger
       @repo_slug = repo_slug
       @remote = to_boolean(remote)
       @remote_url = remote_url
-      @env = env 
+      @env = env
     end
 
     def call
@@ -62,7 +62,7 @@ module Danger
     end
 
     def generate_remote_pull_request
-      if remote_url =~ /\/pull-requests\//
+      if remote_url =~ %r{/pull-requests/}
         RemotePullRequest.new(
           remote_pull_request[:id].to_s,
           remote_pull_request[:fromRef][:latestCommit],
@@ -75,7 +75,7 @@ module Danger
           remote_pull_request.base.sha
         )
       end
-    end  
+    end
 
     def remote_pull_request
       @_remote_pull_request ||= begin
@@ -125,7 +125,7 @@ module Danger
     end
 
     def client
-      if remote_url =~ /\/pull-requests\//
+      if remote_url =~ %r{/pull-requests/}
         require "danger/request_sources/bitbucket_server_api"
         project, slug = repo_slug.split("/")
         RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)

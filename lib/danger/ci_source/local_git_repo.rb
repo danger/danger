@@ -33,7 +33,7 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub,Danger::RequestSources::BitbucketServer]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::BitbucketServer]
     end
 
     def initialize(env = {})
