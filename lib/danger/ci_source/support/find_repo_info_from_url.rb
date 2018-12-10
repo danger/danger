@@ -39,13 +39,8 @@ module Danger
       else
         matched = url.match(REGEXP)
         if matched
-<<<<<<< HEAD
           RepoInfo.new(matched[:slug], matched[:id])
         end
-=======
-          RepoInfo.new(matched[:slug], matched[:id])  
-      end  
->>>>>>> bea8e4a44a1faa3bc5dd053dac5f51e3a77f0a2a
       end
     end
 
