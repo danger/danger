@@ -4,11 +4,13 @@ require "danger/ci_source/support/no_pull_request"
 
 module Danger
   class PullRequestFinder
-    def initialize(specific_pull_request_id, repo_slug = nil, remote: false, git_logs: "")
+    def initialize(specific_pull_request_id, repo_slug = nil, remote: false, git_logs: "", remote_url: "", env: nil)
       @specific_pull_request_id = specific_pull_request_id
       @git_logs = git_logs
       @repo_slug = repo_slug
       @remote = to_boolean(remote)
+      @remote_url = remote_url
+      @env = env
     end
 
     def call
@@ -19,7 +21,7 @@ module Danger
 
     private
 
-    attr_reader :specific_pull_request_id, :git_logs, :repo_slug, :remote
+    attr_reader :specific_pull_request_id, :git_logs, :repo_slug, :remote, :remote_url, :env
 
     def to_boolean(maybe_string)
       ["true", "1", "yes", "y", true].include?(maybe_string)
@@ -47,11 +49,7 @@ module Danger
         elsif only_squash_and_merged_pull_request_present?
           LocalPullRequest.new(most_recent_squash_and_merged_pull_request)
         elsif remote && remote_pull_request
-          RemotePullRequest.new(
-            remote_pull_request.number.to_s,
-            remote_pull_request.head.sha,
-            remote_pull_request.base.sha
-          )
+          generate_remote_pull_request
         else
           NoPullRequest.new
         end
@@ -61,6 +59,22 @@ module Danger
     # @return [String] "#42"
     def pull_request_ref
       !specific_pull_request_id.empty? ? "##{specific_pull_request_id}" : "#\\d+".freeze
+    end
+
+    def generate_remote_pull_request
+      if remote_url =~ %r{/pull-requests/}
+        RemotePullRequest.new(
+          remote_pull_request[:id].to_s,
+          remote_pull_request[:fromRef][:latestCommit],
+          remote_pull_request[:toRef][:latestCommit]
+        )
+      else
+        RemotePullRequest.new(
+          remote_pull_request.number.to_s,
+          remote_pull_request.head.sha,
+          remote_pull_request.base.sha
+        )
+      end
     end
 
     def remote_pull_request
@@ -111,8 +125,14 @@ module Danger
     end
 
     def client
-      require "octokit"
-      Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"], api_endpoint: api_url)
+      if remote_url =~ %r{/pull-requests/}
+        require "danger/request_sources/bitbucket_server_api"
+        project, slug = repo_slug.split("/")
+        RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
+      else
+        require "octokit"
+        Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"], api_endpoint: api_url)
+      end
     end
 
     def api_url

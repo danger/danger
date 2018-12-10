@@ -17,6 +17,7 @@
 ## 5.9.0
 
 * Add `git.tags` to get a list of existing Git tags [@hotbott](https://github.com/hotbott)
+* `danger pr` now supports Bitbucket Server repos [@jmromanos](https://github.com/jmromanos) 
 
 ## 5.8.2
 
