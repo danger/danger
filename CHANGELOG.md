@@ -10,6 +10,10 @@
 
 ## master
 
+<!-- Your new comment below here -->
+
+## 5.10.1
+
 * Fix wrong test and implementation about `No newline` annotation [@colorbox](https://github.com/colorbox)
 
 ## 5.10.0
