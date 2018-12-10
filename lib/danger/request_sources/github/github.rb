@@ -382,7 +382,7 @@ module Danger
 
         diff_lines.drop(file_start).each do |line|
           # If the line has `No newline` annotation, position need increment
-          if line.eql?("\ No newline at end of file\n")
+          if line.eql?("\\ No newline at end of file\n")
             position += 1
             next
           end
