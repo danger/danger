@@ -262,6 +262,24 @@ RSpec.describe Danger::Jenkins do
 
         expect(source.repo_slug).to eq("DANGER/danger")
       end
+
+      it "gets out a repo slug with multiple groups ssh" do
+        valid_env["GIT_URL"] = "git@gitlab.com:danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
+      end
+
+      it "gets out a repo slug with multiple groups http" do
+        valid_env["GIT_URL"] = "http://gitlab.com/danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
+      end
+
+      it "gets out a repo slug with multiple groups https" do
+        valid_env["GIT_URL"] = "https://gitlab.com/danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
+      end
     end
   end
 
