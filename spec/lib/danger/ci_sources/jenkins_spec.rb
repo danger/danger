@@ -66,6 +66,11 @@ RSpec.describe Danger::Jenkins do
         valid_env["ghprbPullId"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
+
+      it "doesn't validate_as_pr if `ghprbPullId` is not a number" do
+        valid_env["ghprbPullId"] = "false"
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
     end
 
     describe "#new" do

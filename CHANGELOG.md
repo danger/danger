@@ -11,6 +11,10 @@
 ## master
 
 <!-- Your new comment below here -->
+## 5.10.3
+
+* Fix issue in `Jenkins` lib with PR detection logic [@serg-kovalev](https://github.com/serg-kovalev)
+
 
 ## 5.10.2
 
@@ -22,7 +26,7 @@
 
 ## 5.10.0
 
-* `danger pr` now supports Bitbucket Server repos [@jmromanos](https://github.com/jmromanos) 
+* `danger pr` now supports Bitbucket Server repos [@jmromanos](https://github.com/jmromanos)
 
 ## 5.9.1
 
