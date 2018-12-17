@@ -12,7 +12,7 @@
 
 <!-- Your new comment below here -->
 
-## 5.11.0
+## 5.10.2
 
 * Support multiple gitlab groups using jenkins ci extracting `repo_slug` [@kyaak](https://github.com/kyaak)
 
