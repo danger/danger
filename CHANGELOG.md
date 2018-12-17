@@ -12,6 +12,10 @@
 
 <!-- Your new comment below here -->
 
+## 5.11.0
+
+* Support multiple gitlab groups using jenkins ci extracting `repo_slug` [@kyaak](https://github.com/kyaak)
+
 ## 5.10.1
 
 * Fix wrong test and implementation about `No newline` annotation [@colorbox](https://github.com/colorbox)
