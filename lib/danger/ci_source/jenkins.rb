@@ -59,7 +59,7 @@ module Danger
 
     def self.validates_as_pr?(env)
       id = pull_request_id(env)
-      !id.nil? && !id.empty?
+      !id.nil? && !id.empty? && !!id.match(%r{^\d+$})
     end
 
     def supported_request_sources
