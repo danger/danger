@@ -1,5 +1,5 @@
 install:
-  - set PATH=C:\Ruby22\bin;%PATH%
+  - set PATH=C:\Ruby23\bin;%PATH%
   - bundle install
 
 build: off
