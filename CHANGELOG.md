@@ -12,6 +12,8 @@
 
 <!-- Your new comment below here, and above the most recent release -->
 
+* Fix duplicated REGEXPBB warning [@jmromanos](https://github.com/jmromanos)
+
 ## 5.10.3
 
 * Fix issue in `Jenkins` lib with PR detection logic [@serg-kovalev](https://github.com/serg-kovalev)
