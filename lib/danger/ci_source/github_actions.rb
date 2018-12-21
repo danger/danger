@@ -42,7 +42,7 @@ module Danger
       self.repo_url = pull_request_event['repository']['clone_url']
 
       # if environment variable DANGER_GITHUB_API_TOKEN is not set, use env GITHUB_TOKEN
-      if env.key? "GITHUB_ACTION" && !env.key?('DANGER_GITHUB_API_TOKEN')
+      if (env.key? "GITHUB_ACTION") && (!env.key? 'DANGER_GITHUB_API_TOKEN')
         env['DANGER_GITHUB_API_TOKEN'] = env['GITHUB_TOKEN']
       end
     end
