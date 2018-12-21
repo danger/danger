@@ -19,6 +19,8 @@ module Danger
       pull_request_event = JSON.parse(File.read(env["GITHUB_EVENT_PATH"]))
       self.pull_request_id = pull_request_event['number']
       self.repo_url = pull_request_event['repository']['clone_url']
+
+      env['DANGER_GITHUB_API_TOKEN'] = env['GITHUB_TOKEN'] unless env.key? 'DANGER_GITHUB_API_TOKEN'
     end
   end
 end
