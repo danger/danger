@@ -1,6 +1,27 @@
 require "danger/request_sources/github/github"
 
 module Danger
+  # ### CI Setup
+  #
+  # You can use `duck8823/actions/danger` Action in your .github/main.workflow.
+  #
+  #  ```
+  # action "Danger" {
+  #    uses = "duck8823/actions/danger"
+  # }
+  #  ```
+  #
+  # ### Token Setup
+  #
+  # Set DANGER_GITHUB_API_TOKEN to secrets, or you can also use GITHUB_TOKEN.
+  #
+  # ```
+  # action "Danger" {
+  #    uses = "duck8823/actions/danger"
+  #    secrets = ["GITHUB_TOKEN"]
+  # }
+  # ```
+  #
   class GitHubActions < CI
     def self.validates_as_ci?(env)
       env.key? "GITHUB_ACTION"
@@ -20,7 +41,10 @@ module Danger
       self.pull_request_id = pull_request_event['number']
       self.repo_url = pull_request_event['repository']['clone_url']
 
-      env['DANGER_GITHUB_API_TOKEN'] = env['GITHUB_TOKEN'] unless env.key? 'DANGER_GITHUB_API_TOKEN'
+      # if environment variable DANGER_GITHUB_API_TOKEN is not set, use env GITHUB_TOKEN
+      if env.key? "GITHUB_ACTION" && !env.key?('DANGER_GITHUB_API_TOKEN')
+        env['DANGER_GITHUB_API_TOKEN'] = env['GITHUB_TOKEN']
+      end
     end
   end
 end
