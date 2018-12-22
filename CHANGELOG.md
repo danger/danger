@@ -12,6 +12,8 @@
 
 <!-- Your new comment below here, and above the most recent release -->
 
+## 5.11.0
+
 * Add supports GitHub Actions [@duck8823](https://github.com/duck8823)
 
 ## 5.10.3
