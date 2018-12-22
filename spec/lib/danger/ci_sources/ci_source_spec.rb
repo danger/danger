@@ -24,7 +24,8 @@ RSpec.describe Danger::CI do
           "Danger::Travis",
           "Danger::VSTS",
           "Danger::XcodeServer",
-          "Danger::AppVeyor"
+          "Danger::AppVeyor",
+          "Danger::GitHubActions"
         ]
       )
     end
