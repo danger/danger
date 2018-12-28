@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your new comment below here, and above the most recent release -->
+* Add supports Appcenter [@rishabhtayal](https://github.com/rishabhtayal)
 
 ## 5.11.0
 
