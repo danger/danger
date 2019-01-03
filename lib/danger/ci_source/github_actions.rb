@@ -3,11 +3,11 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
-  # You can use `duck8823/actions/danger` Action in your .github/main.workflow.
+  # You can use `duck8823/danger` Action in your .github/main.workflow.
   #
   #  ```
   # action "Danger" {
-  #    uses = "duck8823/actions/danger"
+  #    uses = "duck8823/danger"
   # }
   #  ```
   #
@@ -17,7 +17,7 @@ module Danger
   #
   # ```
   # action "Danger" {
-  #    uses = "duck8823/actions/danger"
+  #    uses = "duck8823/danger"
   #    secrets = ["GITHUB_TOKEN"]
   # }
   # ```
