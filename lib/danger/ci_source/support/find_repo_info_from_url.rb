@@ -18,15 +18,6 @@ module Danger
       \/(\d+)
     }x
 
-    # Regex used to extract info from Bitbucket server URLs, as they use a quite different format
-    REGEXPBB = %r{
-      (?:[\/:])projects
-      \/([^\/.]+)
-      \/repos\/([^\/.]+)
-      \/pull-requests
-      \/(\d+)
-    }x
-
     def initialize(url)
       @url = url
     end
