@@ -11,6 +11,9 @@
 ## master
 
 <!-- Your new comment below here, and above the most recent release -->
+
+## 5.11.1
+
 * Fix duplicated REGEXPBB warning [@jmromanos](https://github.com/jmromanos)
 
 ## 5.11.0
