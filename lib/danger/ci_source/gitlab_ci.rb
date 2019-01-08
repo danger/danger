@@ -32,6 +32,7 @@ module Danger
     end
 
     def self.determine_merge_request_id(env)
+      return env["CI_MERGE_REQUEST_IID"] if env["CI_MERGE_REQUEST_IID"]
       return env["CI_MERGE_REQUEST_ID"] if env["CI_MERGE_REQUEST_ID"]
       return 0 unless env["CI_COMMIT_SHA"]
 
