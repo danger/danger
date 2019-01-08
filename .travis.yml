@@ -7,9 +7,10 @@ rvm:
   - 2.5.3
   - 2.4.5
   - 2.3.8
-  - 2.2.10
-  - 2.1.10
-  - 2.0
+  # Bundler broke the CI for all these versions
+  # - 2.2.10
+  # - 2.1.10
+  # - 2.0
 
 bundler_args: "--without documentation --path bundle"
 
