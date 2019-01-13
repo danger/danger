@@ -35,7 +35,7 @@ HTTP/1.1 200 OK
       "href": "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/statuses"
     }
   },
-  "title": "This is a danger test",
+  "title": "This is a danger test for bitbucket cloud",
   "close_source_branch": false,
   "reviewers": [],
   "destination": {

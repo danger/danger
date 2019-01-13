@@ -53,7 +53,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
 
   context "Bitbucket" do
     context "bitbucket.org" do
-      it "works" do
+      it "works with regular url" do
         result = described_class.new("https://bitbucket.org/ged/ruby-pg/pull-requests/42").call
 
         expect(result).to have_attributes(
@@ -61,6 +61,33 @@ RSpec.describe Danger::FindRepoInfoFromURL do
           id: "42"
         )
       end
+
+      it "works with another url" do
+        result = described_class.new("https://bitbucket.org/some-org/awesomerepo/pull-requests/1324").call
+
+        expect(result).to have_attributes(
+          slug: "some-org/awesomerepo",
+          id: "1324"
+        )
+      end
+
+      it "works with trailing slash" do
+        result = described_class.new("https://bitbucket.org/some-org/awesomerepo/pull-requests/1324/").call
+
+        expect(result).to have_attributes(
+          slug: "some-org/awesomerepo",
+          id: "1324"
+        )
+      end
+
+      it "works with trailing information" do
+        result = described_class.new("https://bitbucket.org/some-org/awesomerepo/pull-requests/1324/update-compile-targetsdk-to-28/diff").call
+
+        expect(result).to have_attributes(
+          slug: "some-org/awesomerepo",
+          id: "1324"
+        )
+      end  
     end
 
     context "bitbucket.com" do

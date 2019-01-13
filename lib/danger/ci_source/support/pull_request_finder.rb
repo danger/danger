@@ -62,18 +62,29 @@ module Danger
     end
 
     def generate_remote_pull_request
-      if remote_url =~ %r{/pull-requests/}
+      scm_provider = find_scm_provider(remote_url)
+
+      case scm_provider
+      when :bitbucket_cloud
+        RemotePullRequest.new(
+          remote_pull_request[:id].to_s,
+          remote_pull_request[:source][:commit][:hash],
+          remote_pull_request[:destination][:commit][:hash]
+        )
+      when :bitbucket_server
         RemotePullRequest.new(
           remote_pull_request[:id].to_s,
           remote_pull_request[:fromRef][:latestCommit],
           remote_pull_request[:toRef][:latestCommit]
         )
-      else
+      when :github
         RemotePullRequest.new(
           remote_pull_request.number.to_s,
           remote_pull_request.head.sha,
           remote_pull_request.base.sha
         )
+      else
+        raise "SCM provider not supported: #{scm_provider}"
       end
     end
 
@@ -125,13 +136,25 @@ module Danger
     end
 
     def client
-      if remote_url =~ %r{/pull-requests/}
+      scm_provider = find_scm_provider(remote_url)
+    
+      case scm_provider
+      when :bitbucket_cloud
+        require "danger/request_sources/bitbucket_cloud_api"
+        branch_name = ENV["DANGER_BITBUCKET_TARGET_BRANCH"] # Optional env variable (specifying the target branch) to help find the PR.
+        RequestSources::BitbucketCloudAPI.new(repo_slug, specific_pull_request_id, branch_name, env)
+
+      when :bitbucket_server
         require "danger/request_sources/bitbucket_server_api"
         project, slug = repo_slug.split("/")
         RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
-      else
+
+      when :github
         require "octokit"
         Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"], api_endpoint: api_url)
+
+      else
+        raise "SCM provider not supported: #{scm_provider}"
       end
     end
 
@@ -140,6 +163,16 @@ module Danger
         ENV.fetch("DANGER_GITHUB_API_BASE_URL") do
           "https://api.github.com/".freeze
         end
+      end
+    end
+
+    def find_scm_provider(remote_url)
+      if remote_url =~ %r{/bitbucket.org/}
+        :bitbucket_cloud
+      elsif remote_url =~ %r{/pull-requests/}
+        :bitbucket_server
+      else
+        :github
       end
     end
   end
