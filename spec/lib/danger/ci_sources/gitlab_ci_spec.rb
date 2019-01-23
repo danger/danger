@@ -2,7 +2,7 @@ require "danger/ci_source/gitlab_ci"
 
 RSpec.describe Danger::GitLabCI, host: :gitlab do
   context "valid environment" do
-    let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 28_493) }
+    let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 28_493) }
 
     let(:ci_source) do
       described_class.new(env)
@@ -21,10 +21,10 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
     end
 
     describe ".determine_merge_request_id" do
-      context "when CI_MERGE_REQUEST_ID present in environment" do
-        it "returns CI_MERGE_REQUEST_ID" do
+      context "when CI_MERGE_REQUEST_IID present in environment" do
+        it "returns CI_MERGE_REQUEST_IID" do
           expect(described_class.determine_merge_request_id({
-            "CI_MERGE_REQUEST_ID" => 1
+            "CI_MERGE_REQUEST_IID" => 1
           })).to eq(1)
         end
       end
@@ -40,7 +40,7 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
           stub_merge_requests("merge_requests_response", "k0nserv%2Fdanger-test")
 
           expect(described_class.determine_merge_request_id({
-            "CI_PROJECT_PATH" => "k0nserv/danger-test",
+            "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
             "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
             "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
           })).to eq(3)
@@ -62,13 +62,13 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
 
     describe "#project_url" do
       it "sets the project_url" do
-        expect(ci_source.project_url).to eq(env["CI_PROJECT_URL"])
+        expect(ci_source.project_url).to eq(env["CI_MERGE_REQUEST_PROJECT_URL"])
       end
     end
 
     describe "#pull_request_id" do
       it "sets the pull_request_id" do
-        expect(ci_source.pull_request_id).to eq(env["CI_MERGE_REQUEST_ID"])
+        expect(ci_source.pull_request_id).to eq(env["CI_MERGE_REQUEST_IID"])
       end
     end
   end

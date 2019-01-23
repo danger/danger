@@ -1,12 +1,12 @@
 RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
-  let(:env) { stub_env.merge("CI_MERGE_REQUEST_ID" => 593_728) }
+  let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 1) }
   let(:dangerfile) { testing_dangerfile(env) }
   let(:plugin) { described_class.new(dangerfile) }
   before do
     stub_merge_request(
-      "merge_request_593728_response",
+      "merge_request_1_response",
       "k0nserv%2Fdanger-test",
-      593_728
+      1
     )
   end
 
@@ -35,9 +35,9 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   describe "#mr_diff" do
     before do
       stub_merge_request_changes(
-        "merge_request_593728_changes_response",
+        "merge_request_1_changes_response",
         "k0nserv\%2Fdanger-test",
-        593_728
+        1
       )
     end
 

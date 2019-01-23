@@ -10,7 +10,7 @@
 
 ## master
 
-<!-- Your new comment below here, and above the most recent release -->
+* Fixed interface with GitLab CI [@pbendersky](https://github.com/pbendersky)
 
 ## 5.11.1
 

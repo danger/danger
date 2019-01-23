@@ -12,8 +12,8 @@ module Danger
         {
           "GITLAB_CI" => "1",
           "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
-          "CI_PROJECT_PATH" => "k0nserv/danger-test",
-          "CI_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
+          "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
+          "CI_MERGE_REQUEST_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
           "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
         }
       end
