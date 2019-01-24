@@ -12,6 +12,8 @@
 
 * Fixed interface with GitLab CI [@pbendersky](https://github.com/pbendersky)
 
+* `danger pr` now supports Bitbucket Cloud repos [@RicardoBelchior](https://github.com/RicardoBelchior)
+
 ## 5.11.1
 
 * Fix duplicated REGEXPBB warning [@jmromanos](https://github.com/jmromanos)

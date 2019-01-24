@@ -1,12 +1,13 @@
 require "danger/ci_source/support/pull_request_finder"
 
 RSpec.describe Danger::PullRequestFinder do
-  def finder(pull_request_id: "", logs: nil, repo_slug: "danger/danger", remote: "false")
+  def finder(pull_request_id: "", logs: nil, repo_slug: "danger/danger", remote: "false", remote_url: "")
     described_class.new(
       pull_request_id,
       repo_slug,
       remote: remote,
-      git_logs: logs
+      git_logs: logs,
+      remote_url: remote_url
     )
   end
 
@@ -128,4 +129,33 @@ RSpec.describe Danger::PullRequestFinder do
       end
     end
   end
+
+  describe "#find_scm_provider" do
+
+  def find_scm_provider(url)
+    finder(remote: "true").send(:find_scm_provider, url)
+  end
+
+    it "detects url for bitbucket cloud" do
+      url = "https://bitbucket.org/ged/ruby-pg/pull-requests/42"
+      expect(find_scm_provider(url)).to eq :bitbucket_cloud
+    end
+
+    it "detects url for bitbucket server" do
+      url = "https://example.com/bitbucket/projects/Test/repos/test/pull-requests/1946"
+      expect(find_scm_provider(url)).to eq :bitbucket_server
+    end
+
+    it "detects url for bitbucket github" do
+      url = "http://www.github.com/torvalds/linux/pull/42"
+      expect(find_scm_provider(url)).to eq :github
+    end
+
+    it "defaults to github when unknown url" do
+      url = "http://www.default-url.com/"
+      expect(find_scm_provider(url)).to eq :github
+    end
+
+  end
+
 end

@@ -28,6 +28,42 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
     end
   end
 
+  describe "#pull_request_id" do
+    it "gets set from pull_request_id" do
+      api = described_class.new("org/repo", 1, nil, stub_env)
+
+      expect(api.pull_request_id).to eq(1)
+    end
+  end
+
+  describe "#host" do
+    it "gets set from host" do
+      api = described_class.new("org/repo", 1, nil, stub_env)
+
+      expect(api.host).to eq("https://bitbucket.org/")
+    end
+  end
+  
+  describe "#credentials_given" do
+    it "#fetch_json raise error when missing credentials" do
+      empty_env = {}
+      api = described_class.new("ios/fancyapp", "123", nil, empty_env)
+      expect { api.pull_request }.to raise_error
+    end
+
+    it "#post raise error when missing credentials" do
+      empty_env = {}
+      api = described_class.new("ios/fancyapp", "123", nil, empty_env)
+      expect { api.post("http://post-url.org", {}) }.to raise_error
+    end
+
+    it "#delete raise error when missing credentials" do
+      empty_env = {}
+      api = described_class.new("ios/fancyapp", "123", nil, empty_env)
+      expect { api.delete("http://delete-url.org") }.to raise_error
+    end
+  end
+
   describe "#fetch_pr_id" do
     it "gets called if pull_request_id is nil" do
       stub_pull_requests
@@ -36,4 +72,5 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
       expect(api.pull_request_id).to eq(2080)
     end
   end
+
 end
