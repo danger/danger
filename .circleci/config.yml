@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: gem update --system 2.4.8
-      - run: gem install bundler
+      - run: gem install bundler -v '1.17.3'
       - restore_cache:
           key: gem-cache-{{ .Branch }}-{{ checksum "Gemfile" }}
       - run: bundle install --path vendor/bundle
