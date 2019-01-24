@@ -4,6 +4,7 @@ cache:
     - bundle
 
 rvm:
+  - 2.6.0
   - 2.5.3
   - 2.4.5
   - 2.3.8
@@ -15,7 +16,7 @@ bundler_args: "--without documentation --path bundle"
 
 before_install:
   - git fetch --depth=1000000
-  - gem install bundler
+  - gem install bundler -v '1.17.3'
 
 after_install:
   - rake install
