@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Wed, 23 Jan 2019 16:54:22 GMT
+Content-Type: application/json
+Content-Length: 1658
+Cache-Control: max-age=0, private, must-revalidate
+Etag: W/"63fa6da2558d13827e3ce19a6c61f5a1"
+Vary: Origin
+X-Request-Id: Xq9HIN76754
+X-Runtime: 0.058471
+
+{"id":593728,"iid":1,"project_id":1342007,"title":"Add a","description":"The descriptions is here\r\n\r\n\u003e Danger: ignore \"Developer specific files shouldn't be changed\"\r\n\r\n\u003e Danger: ignore \"Testing\"","state":"opened","created_at":"2016-06-27T11:04:02.114Z","updated_at":"2016-09-19T20:25:31.077Z","merged_by":null,"merged_at":null,"closed_by":null,"closed_at":null,"target_branch":"master","source_branch":"mr-test","upvotes":0,"downvotes":0,"author":{"id":483414,"name":"Hugo Tunius","username":"k0nserv","state":"active","avatar_url":"https://secure.gravatar.com/avatar/7300342f996dcc9d4e22418cc9a70b14?s=80\u0026d=identicon","web_url":"https://gitlab.com/k0nserv"},"assignee":null,"source_project_id":1342007,"target_project_id":1342007,"labels":["test-label"],"work_in_progress":false,"milestone":null,"merge_when_pipeline_succeeds":false,"merge_status":"can_be_merged","sha":"04e58de1fa97502d7e28c1394d471bb8fb1fc4a8","merge_commit_sha":null,"user_notes_count":2,"discussion_locked":null,"should_remove_source_branch":null,"force_remove_source_branch":null,"web_url":"https://gitlab.com/k0nserv/danger-test/merge_requests/1","time_stats":{"time_estimate":0,"total_time_spent":0,"human_time_estimate":null,"human_total_time_spent":null},"squash":false,"subscribed":false,"changes_count":"3","latest_build_started_at":null,"latest_build_finished_at":null,"first_deployed_to_production_at":null,"pipeline":null,"diff_refs":{"base_sha":"0e4db308b6579f7cc733e5a354e026b272e1c076","head_sha":"04e58de1fa97502d7e28c1394d471bb8fb1fc4a8","start_sha":"0e4db308b6579f7cc733e5a354e026b272e1c076"},"merge_error":null,"approvals_before_merge":null}

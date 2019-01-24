@@ -32,10 +32,10 @@ module Danger
     end
 
     def self.determine_merge_request_id(env)
-      return env["CI_MERGE_REQUEST_ID"] if env["CI_MERGE_REQUEST_ID"]
+      return env["CI_MERGE_REQUEST_IID"] if env["CI_MERGE_REQUEST_IID"]
       return 0 unless env["CI_COMMIT_SHA"]
 
-      project_path = env["CI_PROJECT_PATH"]
+      project_path = env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
       base_commit = env["CI_COMMIT_SHA"]
       client = RequestSources::GitLab.new(nil, env).client
 
@@ -49,8 +49,8 @@ module Danger
 
     def initialize(env)
       @env = env
-      @repo_slug = env["CI_PROJECT_PATH"]
-      @project_url = env["CI_PROJECT_URL"]
+      @repo_slug = env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
+      @project_url = env["CI_MERGE_REQUEST_PROJECT_URL"] || env["CI_PROJECT_URL"]
     end
 
     def supported_request_sources
