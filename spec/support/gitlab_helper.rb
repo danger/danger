@@ -67,6 +67,19 @@ module Danger
         url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests/#{merge_request_id}/notes?per_page=100"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
       end
+
+      def stub_merge_request_discussions(fixture, slug, merge_request_id)
+        raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
+        url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests/#{merge_request_id}/discussions"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
+      def stub_version(version)
+        url = "https://gitlab.com/api/v4/version"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(
+          body: "{\"version\":\"#{version}\",\"revision\":\"1d9280e\"}"
+        )
+      end
     end
   end
 end

@@ -10,6 +10,8 @@ module Danger
       include Danger::Helpers::CommentsHelper
       attr_accessor :mr_json, :commits_json
 
+      FIRST_VERSION_WITH_INLINE_COMMENTS = Gem::Version.new("10.8.0")
+
       def self.env_vars
         ["DANGER_GITLAB_API_TOKEN"]
       end
@@ -68,9 +70,16 @@ module Danger
 
       def mr_comments
         @comments ||= begin
-          client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
-            .auto_paginate
-            .map { |comment| Comment.from_gitlab(comment) }
+          if supports_inline_comments
+            client.merge_request_discussions(ci_source.repo_slug, ci_source.pull_request_id)
+              .auto_paginate
+              .flat_map(&:notes)
+              .map { |comment| Comment.from_gitlab_discussion(comment) }
+          else
+            client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
+              .auto_paginate
+              .map { |comment| Comment.from_gitlab(comment) }
+          end
         end
       end
 
@@ -107,7 +116,55 @@ module Danger
         GetIgnoredViolation.new(self.mr_json.description).call
       end
 
+      def supports_inline_comments
+        @supports_inline_comments ||= begin
+          current_version = Gem::Version.new(client.version.version)
+
+          current_version >= FIRST_VERSION_WITH_INLINE_COMMENTS
+        end
+      end
+
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        if supports_inline_comments
+          update_pull_request_with_inline_comments!(warnings: warnings, errors: errors, messages: messages, markdowns: markdowns, danger_id: danger_id, new_comment: new_comment, remove_previous_comments: remove_previous_comments)
+        else
+          update_pull_request_without_inline_comments!(warnings: warnings, errors: errors, messages: messages, markdowns: markdowns, danger_id: danger_id, new_comment: new_comment, remove_previous_comments: remove_previous_comments)
+        end
+      end
+
+      def update_pull_request_with_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
+
+        should_create_new_comment = new_comment || editable_comments.empty? || remove_previous_comments
+
+        if should_create_new_comment
+          previous_violations = {}
+        else
+          comment = editable_comments.first.body
+          previous_violations = parse_comment(comment)
+        end
+
+        regular_violations = regular_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
+
+        inline_violations = inline_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
+
+        rest_inline_violations = submit_inline_comments!({
+          danger_id: danger_id,
+          previous_violations: previous_violations
+        }.merge(inline_violations))
+      end
+
+      def update_pull_request_without_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
 
         should_create_new_comment = new_comment || editable_comments.empty? || remove_previous_comments
@@ -170,6 +227,149 @@ module Danger
 
         "https://#{host}/#{organisation}/#{repository}/raw/#{branch}/#{path}"
       end
+
+      def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        {
+          warnings: warnings.reject(&:inline?),
+          errors: errors.reject(&:inline?),
+          messages: messages.reject(&:inline?),
+          markdowns: markdowns.reject(&:inline?)
+        }
+      end
+
+      def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        cmp = proc do |a, b|
+          next -1 unless a.file && a.line
+          next 1 unless b.file && b.line
+
+          next a.line <=> b.line if a.file == b.file
+          next a.file <=> b.file
+        end
+
+        # Sort to group inline comments by file
+        {
+          warnings: warnings.select(&:inline?).sort(&cmp),
+          errors: errors.select(&:inline?).sort(&cmp),
+          messages: messages.select(&:inline?).sort(&cmp),
+          markdowns: markdowns.select(&:inline?).sort(&cmp)
+        }
+      end
+
+      def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
+        # Avoid doing any fetchs if there's no inline comments
+        return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
+
+        # diff_lines = self.mr_diff.lines
+        comments = client.merge_request_discussions(ci_source.repo_slug, ci_source.pull_request_id)
+          .auto_paginate
+          .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
+
+        danger_comments = comments.select { |comment| Comment.from_gitlab_discussion(comment).generated_by_danger?(danger_id) }
+        non_danger_comments = comments - danger_comments
+
+        diff_lines = []
+
+        warnings = submit_inline_comments_for_kind!(:warning, warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
+        errors = submit_inline_comments_for_kind!(:error, errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
+        messages = submit_inline_comments_for_kind!(:message, messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
+        markdowns = submit_inline_comments_for_kind!(:markdown, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
+
+        # submit removes from the array all comments that are still in force
+        # so we strike out all remaining ones
+        danger_comments.each do |comment|
+          violation = violations_from_table(comment["body"]).first
+          if !violation.nil? && violation.sticky
+            body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "gitlab")
+            client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+          else
+            # We remove non-sticky violations that have no replies
+            # Since there's no direct concept of a reply in GH, we simply consider
+            # the existance of non-danger comments in that line as replies
+            replies = non_danger_comments.select do |potential|
+              potential["path"] == comment["path"] &&
+                potential["position"] == comment["position"] &&
+                potential["commit_id"] == comment["commit_id"]
+            end
+
+            client.delete_merge_request_comment(ci_source.repo_slug, ci_source.pull_request_id, comment["id"]) if replies.empty?
+          end
+        end
+
+        {
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        }
+      end
+
+      def submit_inline_comments_for_kind!(kind, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
+        previous_violations ||= []
+        is_markdown_content = kind == :markdown
+        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
+
+        messages.reject do |m|
+          next false unless m.file && m.line
+
+          # position = find_position_in_diff diff_lines, m, kind
+
+          # Keep the change if it's line is not in the diff and not in dismiss mode
+          # next dismiss_out_of_range_messages_for(kind) if position.nil?
+
+          # Once we know we're gonna submit it, we format it
+          if is_markdown_content
+            body = generate_inline_markdown_body(m, danger_id: danger_id, template: "gitlab")
+          else
+            # Hide the inline link behind a span
+            m = process_markdown(m, true)
+            body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "gitlab")
+            # A comment might be in previous_violations because only now it's part of the unified diff
+            # We remove from the array since it won't have a place in the table anymore
+            previous_violations.reject! { |v| messages_are_equivalent(v, m) }
+          end
+
+          matching_comments = danger_comments.select do |comment_data|
+            if comment_data["path"] == m.file && comment_data["position"] == position
+              # Parse it to avoid problems with strikethrough
+              violation = violations_from_table(comment_data["body"]).first
+              if violation
+                messages_are_equivalent(violation, m)
+              else
+                blob_regexp = %r{blob/[0-9a-z]+/}
+                comment_data["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
+              end
+            else
+              false
+            end
+          end
+
+          if matching_comments.empty?
+            params = {
+              body: body,
+              position: {
+                position_type: 'text',
+                new_path: m.file,
+                new_line: m.line,
+                base_sha: self.mr_json.diff_refs.base_sha,
+                start_sha: self.mr_json.diff_refs.start_sha,
+                head_sha: self.mr_json.diff_refs.head_sha
+              }
+            }
+            client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, params)
+          else
+            # Remove the surviving comment so we don't strike it out
+            danger_comments.reject! { |c| matching_comments.include? c }
+
+            # Update the comment to remove the strikethrough if present
+            comment = matching_comments.first
+            client.update_merge_request_comment(ci_source.repo_slug, comment["id"], body)
+          end
+
+          # Remove this element from the array
+          next true
+        end
+      end
+
     end
   end
 end
