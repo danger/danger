@@ -5,7 +5,8 @@ RSpec.describe Danger::BitbucketPipeline do
     {
       "BITBUCKET_BUILD_NUMBER" => "2",
       "BITBUCKET_PR_ID" => "4",
-      "BITBUCKET_REPO_SLUG" => "foobar"
+      "BITBUCKET_REPO_OWNER" => "foo",
+      "BITBUCKET_REPO_SLUG" => "bar"
     }
   end
 
@@ -39,7 +40,7 @@ RSpec.describe Danger::BitbucketPipeline do
 
   describe ".new" do
     it "sets the repository slug" do
-      expect(source.repo_slug).to eq("foobar")
+      expect(source.repo_slug).to eq("foo/bar")
       expect(source.pull_request_id).to eq("4")
     end
   end

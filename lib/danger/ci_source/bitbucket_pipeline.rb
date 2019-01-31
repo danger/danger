@@ -20,7 +20,7 @@ module Danger
 
     def initialize(env)
       self.repo_url = env["BITBUCKET_GIT_HTTP_ORIGIN"]
-      self.repo_slug = env["BITBUCKET_REPO_SLUG"]
+      self.repo_slug = "#{env["BITBUCKET_REPO_OWNER"]}/#{env["BITBUCKET_REPO_SLUG"]}"
       self.pull_request_id = env["BITBUCKET_PR_ID"]
     end
   end
