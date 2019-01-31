@@ -4,6 +4,17 @@ require "uri"
 module Danger
   # ### CI Setup
   #
+  # Install dependencies and add a danger step to your `bitbucket-pipelines.yml`.
+  # ```yaml
+  #   script:
+  #     - bundle exec danger --verbose
+  # ```
+  #
+  # #### Token Setup
+  # 
+  # Add `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_USERNAME` to your pipeline repository variable.
+  # Settings > Pipelines > Repository Variables
+
   class BitbucketPipeline < CI
 
     def self.validates_as_ci?(env)
