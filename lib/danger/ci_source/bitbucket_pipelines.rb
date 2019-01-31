@@ -1,6 +1,3 @@
-# https://circleci.com/docs/environment-variables
-require "uri"
-
 module Danger
   # ### CI Setup
   #
