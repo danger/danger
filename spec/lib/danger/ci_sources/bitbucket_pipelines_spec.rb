@@ -1,6 +1,6 @@
-require "danger/ci_source/bitbucket_pipeline"
+require "danger/ci_source/bitbucket_pipelines"
 
-RSpec.describe Danger::BitbucketPipeline do
+RSpec.describe Danger::BitbucketPipelines do
   let(:valid_env) do
     {
       "BITBUCKET_BUILD_NUMBER" => "2",

@@ -15,7 +15,7 @@ module Danger
   # Add `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_USERNAME` to your pipeline repository variable.
   # Settings > Pipelines > Repository Variables
 
-  class BitbucketPipeline < CI
+  class BitbucketPipelines < CI
 
     def self.validates_as_ci?(env)
       env.key? "BITBUCKET_BUILD_NUMBER"
