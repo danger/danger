@@ -1,11 +1,17 @@
 require "danger/ci_source/bitbucket_pipeline"
 
-RSpec.describe Danger::BitbucketPipeline\ do
+RSpec.describe Danger::BitbucketPipeline do
   let(:valid_env) do
     {
       "BITBUCKET_BUILD_NUMBER" => "2",
       "BITBUCKET_PR_ID" => "4",
       "BITBUCKET_REPO_SLUG" => "foobar"
+    }
+  end
+
+  let(:invalid_env) do
+    {
+      "BITRISE_IO" => "true"
     }
   end
 
@@ -17,8 +23,7 @@ RSpec.describe Danger::BitbucketPipeline\ do
     end
 
     it "does not validate when the required env vars are not set" do
-      valid_env["BITBUCKET_BUILD_NUMBER"] = nil
-      expect(described_class.validates_as_ci?(valid_env)).to be false
+      expect(described_class.validates_as_ci?(invalid_env)).to be false
     end
   end
 
@@ -28,8 +33,7 @@ RSpec.describe Danger::BitbucketPipeline\ do
     end
 
     it "does not validate when the required env vars are not set" do
-      valid_env["BITBUCKET_PR_ID"] = nil
-      expect(described_class.validates_as_pr?(valid_env)).to be false
+      expect(described_class.validates_as_pr?(invalid_env)).to be false
     end
   end
 
