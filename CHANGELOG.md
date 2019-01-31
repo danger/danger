@@ -14,6 +14,7 @@
 
 * Fixed interface with GitLab CI [@pbendersky](https://github.com/pbendersky)
 * `danger pr` now supports Bitbucket Cloud repos [@RicardoBelchior](https://github.com/RicardoBelchior)
+* Add supports Bitbucket Pipelines [@HelloCore](https://github.com/HelloCore)
 
 ## 5.11.1
 
