@@ -13,12 +13,13 @@ module Danger
             danger_id: nil,
             new_comment: nil,
             fail_on_errors: nil,
+            fail_if_no_pr: nil,
             remove_previous_comments: nil)
       # Create a silent Cork instance if cork is nil, as it's likely a test
       cork ||= Cork::Board.new(silent: false, verbose: false)
 
       # Run some validations
-      validate!(cork)
+      validate!(cork, fail_if_no_pr: fail_if_no_pr)
 
       # OK, we now know that Danger can run in this enviroment
       env ||= EnvironmentManager.new(system_env, cork)
@@ -41,9 +42,9 @@ module Danger
       exit(1) if fail_on_errors && ran_status
     end
 
-    def validate!(cork)
+    def validate!(cork, fail_if_no_pr: false)
       validate_ci!
-      validate_pr!(cork)
+      validate_pr!(cork, fail_if_no_pr)
     end
 
     private
@@ -58,11 +59,12 @@ module Danger
     end
 
     # Could we determine that the CI source is inside a PR?
-    def validate_pr!(cork)
+    def validate_pr!(cork, fail_if_no_pr)
       unless EnvironmentManager.pr?(system_env)
         ci_name = EnvironmentManager.local_ci_source(system_env).name.split("::").last
         cork.puts "Not a #{ci_name} Pull Request - skipping `danger` run".yellow
-        exit(0)
+
+        exit(fail_if_no_pr ? 1 : 0)
       end
     end
 

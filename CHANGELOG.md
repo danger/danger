@@ -10,6 +10,8 @@
 
 ## master
 
+* Add `--fail-if-no-pr` flag, breaks builds if no PR is found [@ghiculescu](https://github.com/ghiculescu)
+
 ## 5.13.0
 
 * Add support for Bitbucket Pipelines [@HelloCore](https://github.com/HelloCore)
