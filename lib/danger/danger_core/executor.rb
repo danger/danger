@@ -19,7 +19,7 @@ module Danger
       cork ||= Cork::Board.new(silent: false, verbose: false)
 
       # Run some validations
-      validate!(cork, fail_if_no_pr)
+      validate!(cork, fail_if_no_pr: fail_if_no_pr)
 
       # OK, we now know that Danger can run in this enviroment
       env ||= EnvironmentManager.new(system_env, cork)
