@@ -27,6 +27,7 @@ RSpec.describe Danger::Runner do
         "@base" => nil,
         "@head" => nil,
         "@fail_on_errors" => false,
+        "@fail_if_no_pr" => false,
         "@danger_id" => "danger",
         "@new_comment" => nil
       )
@@ -76,6 +77,7 @@ RSpec.describe Danger::Runner do
         danger_id: "danger",
         new_comment: nil,
         fail_on_errors: false,
+        fail_if_no_pr: false,
         remove_previous_comments: nil
       )
 
@@ -94,6 +96,7 @@ RSpec.describe Danger::Runner do
             "--danger_id=my-danger-id",
             "--new-comment",
             "--fail-on-errors=true",
+            "--fail-if-no-pr=true",
             "--remove-previous-comments"
           ]
         )
@@ -108,6 +111,7 @@ RSpec.describe Danger::Runner do
           danger_id: "my-danger-id",
           new_comment: true,
           fail_on_errors: "true",
+          fail_if_no_pr: "true",
           remove_previous_comments: true
         )
 
