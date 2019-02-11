@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.14.0
+
 * Add `--fail-if-no-pr` flag, breaks builds if no PR is found [@ghiculescu](https://github.com/ghiculescu)
 
 ## 5.13.0
