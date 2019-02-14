@@ -1,0 +1,27 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 14 Feb 2019 20:13:19 GMT
+Content-Type: application/json
+Content-Length: 7789
+Cache-Control: max-age=0, private, must-revalidate
+Etag: W/"5b77db1f9b56d74e705229cc87b3d5a6"
+Link: <https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/discussions?id=k0nserv%2Fdanger-test&noteable_id=1&page=1&per_page=20>; rel="first", <https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/discussions?id=k0nserv%2Fdanger-test&noteable_id=1&page=1&per_page=20>; rel="last"
+Vary: Origin
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-Next-Page: 
+X-Page: 1
+X-Per-Page: 20
+X-Prev-Page: 
+X-Request-Id: OCKNUgQKAc3
+X-Runtime: 0.189194
+X-Total: 9
+X-Total-Pages: 1
+Strict-Transport-Security: max-age=31536000
+RateLimit-Limit: 600
+RateLimit-Observed: 1
+RateLimit-Remaining: 599
+RateLimit-Reset: 1550175259
+RateLimit-ResetTime: Fri, 14 Feb 2019 20:14:19 GMT
+
+[]

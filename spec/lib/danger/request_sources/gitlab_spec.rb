@@ -193,8 +193,8 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
       before do
         @version_stub = stub_version("11.7.0")
-        @discussions_stub = stub_merge_request_discussions(
-          "merge_request_1_discussions_response",
+        stub_merge_request_discussions(
+          "merge_request_1_discussions_empty_response",
           "k0nserv%2Fdanger-test",
           1
         )
@@ -225,16 +225,6 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           errors: violations_factory(["Test error"]),
           messages: violations_factory(["Test message"])
         )
-      end
-
-      it "adds new comments inline" do
-        expect(subject.client).to receive(:create_merge_request_discussion)
-        expect(subject.client).to receive(:update_merge_request_discussion_note)
-
-        subject.fetch_details
-
-        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
-        subject.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
       context "doesn't support inline comments" do
@@ -334,8 +324,68 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           stub_version("11.7.0")
         end
 
-        it "deletes all inline comments if there are no violations at all" do
+        it "adds new comments inline" do
+          expect(subject.client).to receive(:create_merge_request_discussion)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+  
+          subject.fetch_details
+  
+          v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+          subject.update_pull_request!(warnings: [], errors: [], messages: [v])
         end
+
+        it "edits existing inline comment instead of creating a new one if file/line matches" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+
+          v = Danger::Violation.new("Updated danger comment", true, "a", 1)
+          body = subject.generate_inline_comment_body("warning", subject.process_markdown(v, true), danger_id: "danger", template: "gitlab")
+
+          expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141485123, body)
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+
+          subject.fetch_details
+
+          subject.update_pull_request!(warnings: [v], errors: [], messages: [])
+        end
+
+        it "deletes all comments if no violations are present" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+
+          # Global comment gets updated as its sticky
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+
+          # Global comment
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 13471894)
+          # Inline comment
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 141485123)
+
+          subject.update_pull_request!(warnings: [], errors: [], messages: [])
+        end
+
+        it "deletes inline comments if those are no longer relevant" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+
+          expect(subject.client).to receive(:edit_merge_request_note)
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 141485123)
+
+          v = Danger::Violation.new("Test error", true)
+          subject.update_pull_request!(warnings: [], errors: [v], messages: [])
+        end
+  
       end
     end
 
