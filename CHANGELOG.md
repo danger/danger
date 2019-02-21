@@ -10,6 +10,10 @@
 
 ## master
 
+* Fix `--new-comment` for GitLab to actually create the new comment instead of
+  updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
+  Original issue: https://github.com/danger/danger/issues/1084
+
 ## 5.14.0
 
 * Add `--fail-if-no-pr` flag, breaks builds if no PR is found [@ghiculescu](https://github.com/ghiculescu)
