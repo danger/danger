@@ -1,6 +1,6 @@
 <!--
 
-// Please add your own contribution below inside the Master section, no need to
+// Please add your own contribution below inside the "master" section, no need to
 // set a version number, that happens during a deploy.
 //
 // These docs are aimed at users rather than danger developers, so please limit technical
@@ -9,6 +9,8 @@
 -->
 
 ## master
+
+* Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
 
 ## 5.14.0
 
@@ -1144,3 +1146,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets PR details from GitHub - orta
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
+
+
+[@glensc]: https://github.com/glensc
