@@ -283,7 +283,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
               messages: violations_factory(["Test message"]),
               template: "gitlab"
             )
-            stub_request(:put, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes/13471894").with(
+            stub_request(:post, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes").with(
               body: {
                 body: body
               },
