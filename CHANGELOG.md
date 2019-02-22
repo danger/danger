@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.15.0
+
 * Fix `--new-comment` for GitLab to actually create the new comment instead of
   updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
   Original issue: https://github.com/danger/danger/issues/1084
