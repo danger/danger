@@ -10,6 +10,9 @@
 
 ## master
 
+* Fix `--new-comment` for GitLab to actually create the new comment instead of
+  updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
+  Original issue: https://github.com/danger/danger/issues/1084
 * Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
 
 ## 5.14.0

@@ -131,7 +131,7 @@ module Danger
                                  danger_id: danger_id,
                                   template: "gitlab")
 
-          if editable_comments.empty?
+          if editable_comments.empty? or should_create_new_comment
             client.create_merge_request_comment(
               ci_source.repo_slug, ci_source.pull_request_id, body
             )
