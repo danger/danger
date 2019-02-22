@@ -1,6 +1,6 @@
 <!--
 
-// Please add your own contribution below inside the Master section, no need to
+// Please add your own contribution below inside the "master" section, no need to
 // set a version number, that happens during a deploy.
 //
 // These docs are aimed at users rather than danger developers, so please limit technical
@@ -10,7 +10,15 @@
 
 ## master
 
+
 * Add support for Visual Studio App Center [@rishabhtayal](https://github.com/rishabhtayal) / [@cojoj](https://github.com/cojoj)
+
+## 5.15.0
+
+* Fix `--new-comment` for GitLab to actually create the new comment instead of
+  updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
+  Original issue: https://github.com/danger/danger/issues/1084
+* Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
 
 ## 5.14.0
 
@@ -1146,3 +1154,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets PR details from GitHub - orta
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
+
+
+[@glensc]: https://github.com/glensc

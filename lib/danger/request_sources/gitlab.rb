@@ -1,8 +1,7 @@
 # coding: utf-8
-
+require "uri"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
-
 require "danger/request_sources/support/get_ignored_violation"
 
 module Danger
@@ -56,12 +55,11 @@ module Danger
       end
 
       def endpoint
-        @endpoint ||= @environment["DANGER_GITLAB_API_BASE_URL"] ||
-                      "https://gitlab.com/api/v4"
+        @endpoint ||= @environment["DANGER_GITLAB_API_BASE_URL"] || @environment["CI_API_V4_URL"] || "https://gitlab.com/api/v4"
       end
 
       def host
-        @host ||= @environment["DANGER_GITLAB_HOST"] || "gitlab.com"
+        @host ||= @environment["DANGER_GITLAB_HOST"] || URI.parse(endpoint).host || "gitlab.com"
       end
 
       def base_commit
@@ -133,7 +131,7 @@ module Danger
                                  danger_id: danger_id,
                                   template: "gitlab")
 
-          if editable_comments.empty?
+          if editable_comments.empty? or should_create_new_comment
             client.create_merge_request_comment(
               ci_source.repo_slug, ci_source.pull_request_id, body
             )
