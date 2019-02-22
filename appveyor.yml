@@ -1,5 +1,6 @@
 install:
   - set PATH=C:\Ruby23\bin;%PATH%
+  - gem install bundler -v '1.17.3'
   - bundle install
 
 build: off
