@@ -10,6 +10,7 @@ module Danger
       include Danger::Helpers::CommentsHelper
       attr_accessor :mr_json, :commits_json
 
+      FIRST_GITLAB_GEM_WITH_VERSION_CHECK = Gem::Version.new("4.6.0")
       FIRST_VERSION_WITH_INLINE_COMMENTS = Gem::Version.new("10.8.0")
 
       def self.env_vars
@@ -122,9 +123,14 @@ module Danger
 
       def supports_inline_comments
         @supports_inline_comments ||= begin
-          current_version = Gem::Version.new(client.version.version)
+          # If we can't check GitLab's version, we assume we don't support inline comments
+          if Gem.loaded_specs["gitlab"].version < FIRST_GITLAB_GEM_WITH_VERSION_CHECK
+            false
+          else
+            current_version = Gem::Version.new(client.version.version)
 
-          current_version >= FIRST_VERSION_WITH_INLINE_COMMENTS
+            current_version >= FIRST_VERSION_WITH_INLINE_COMMENTS
+          end
         end
       end
 

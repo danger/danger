@@ -169,6 +169,10 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
     describe "#supports_inline_comments" do
 
+      before do
+        skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
+      end
+
       it "is false on verions before 10.8" do
         stub_version("10.6.4")
 
@@ -201,6 +205,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       end
 
       it "checks if the server supports inline comments" do
+        skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
         subject.update_pull_request!(
           warnings: [],
           errors: [],
@@ -230,7 +235,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       context "doesn't support inline comments" do
 
         before do
-          stub_version("10.7.0") 
+          stub_version("10.7.0")
         end
 
         context "existing comment" do
@@ -322,6 +327,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       context "supports inline comments" do
         before do
           stub_version("11.7.0")
+          skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
         end
 
         it "adds new comments inline" do
