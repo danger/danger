@@ -10,6 +10,8 @@
 
 ## master
 
+* Add more helptext explaining what to do if Danger didn't run on a CircleCI build. [@ghiculescu](https://github.com/ghiculescu)
+
 ## 5.15.0
 
 * Fix `--new-comment` for GitLab to actually create the new comment instead of
