@@ -10,6 +10,7 @@
 
 ## master
 
+* Add support for Visual Studio App Center [@rishabhtayal](https://github.com/rishabhtayal) / [@cojoj](https://github.com/cojoj)
 * Add more helptext explaining what to do if Danger didn't run on a CircleCI build. [@ghiculescu](https://github.com/ghiculescu)
 
 ## 5.15.0
