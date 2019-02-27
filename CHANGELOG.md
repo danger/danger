@@ -19,6 +19,7 @@
   updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
   Original issue: https://github.com/danger/danger/issues/1084
 * Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
+* Add support for inline comments on GitLab (for versions >= 10.8.0) [@pbendersky](https://github.com/pbendersky)
 
 ## 5.14.0
 

@@ -167,7 +167,53 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       )
     end
 
+    describe "#supports_inline_comments" do
+
+      before do
+        skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
+      end
+
+      it "is false on verions before 10.8" do
+        stub_version("10.6.4")
+
+        expect(subject.supports_inline_comments).to be_falsey
+      end
+
+      it "is true on version 10.8" do
+        stub_version("10.8.0")
+
+        expect(subject.supports_inline_comments).to be_truthy
+      end
+
+      it "is true on versions after 10.8" do
+        stub_version("11.7.0")
+
+        expect(subject.supports_inline_comments).to be_truthy
+      end
+
+    end
+
     describe "#update_pull_request!" do
+
+      before do
+        @version_stub = stub_version("11.7.0")
+        stub_merge_request_discussions(
+          "merge_request_1_discussions_empty_response",
+          "k0nserv%2Fdanger-test",
+          1
+        )
+      end
+
+      it "checks if the server supports inline comments" do
+        skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
+        subject.update_pull_request!(
+          warnings: [],
+          errors: [],
+          messages: []
+        )
+        expect(@version_stub).to have_been_made
+      end
+
       it "creates a new comment when there is not one already" do
         body = subject.generate_comment(
           warnings: violations_factory(["Test warning"]),
@@ -186,88 +232,166 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         )
       end
 
-      context "existing comment" do
+      context "doesn't support inline comments" do
+
         before do
-          remove_request_stub(@comments_stub)
-
-          @comments_stub = stub_merge_request_comments(
-            "merge_request_1_comments_existing_danger_comment_response",
-            "k0nserv%2Fdanger-test",
-            1
-          )
+          stub_version("10.7.0")
         end
 
-        it "updates the existing comment instead of creating a new one" do
-          allow(subject).to receive(:random_compliment).and_return("random compliment")
-          body = subject.generate_comment(
-            warnings: violations_factory(["New Warning"]),
-            errors: [],
-            messages: [],
-            previous_violations: {
-              warning: [],
-              error: violations_factory(["Test error"]),
-              message: []
-            },
-            template: "gitlab"
-          )
-          stub_request(:put, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes/13471894").with(
-            body: {
-              body: body
-            },
-            headers: expected_headers
-          ).to_return(status: 200, body: "", headers: {})
+        context "existing comment" do
+          before do
+            remove_request_stub(@comments_stub)
 
-          subject.update_pull_request!(
-            warnings: violations_factory(["New Warning"]),
-            errors: [],
-            messages: []
-          )
+            @comments_stub = stub_merge_request_comments(
+              "merge_request_1_comments_existing_danger_comment_response",
+              "k0nserv%2Fdanger-test",
+              1
+            )
+          end
+
+          it "updates the existing comment instead of creating a new one" do
+            allow(subject).to receive(:random_compliment).and_return("random compliment")
+            body = subject.generate_comment(
+              warnings: violations_factory(["New Warning"]),
+              errors: [],
+              messages: [],
+              previous_violations: {
+                warning: [],
+                error: violations_factory(["Test error"]),
+                message: []
+              },
+              template: "gitlab"
+            )
+            stub_request(:put, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes/13471894").with(
+              body: {
+                body: body
+              },
+              headers: expected_headers
+            ).to_return(status: 200, body: "", headers: {})
+
+            subject.update_pull_request!(
+              warnings: violations_factory(["New Warning"]),
+              errors: [],
+              messages: []
+            )
+          end
+
+          it "creates a new comment instead of updating the existing one if --new-comment is provided" do
+            body = subject.generate_comment(
+              warnings: violations_factory(["Test warning"]),
+              errors: violations_factory(["Test error"]),
+              messages: violations_factory(["Test message"]),
+              template: "gitlab"
+            )
+            stub_request(:post, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes").with(
+              body: {
+                body: body
+              },
+              headers: expected_headers
+            ).to_return(status: 200, body: "", headers: {})
+            subject.update_pull_request!(
+              warnings: violations_factory(["Test warning"]),
+              errors: violations_factory(["Test error"]),
+              messages: violations_factory(["Test message"]),
+              new_comment: true
+            )
+          end
         end
 
-        it "creates a new comment instead of updating the existing one if --new-comment is provided" do
-          body = subject.generate_comment(
-            warnings: violations_factory(["Test warning"]),
-            errors: violations_factory(["Test error"]),
-            messages: violations_factory(["Test message"]),
-            template: "gitlab"
-          )
-          stub_request(:post, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes").with(
-            body: {
-              body: body
-            },
-            headers: expected_headers
-          ).to_return(status: 200, body: "", headers: {})
-          subject.update_pull_request!(
-            warnings: violations_factory(["Test warning"]),
-            errors: violations_factory(["Test error"]),
-            messages: violations_factory(["Test message"]),
-            new_comment: true
-          )
+        context "existing comment with no sticky messages" do
+          before do
+            remove_request_stub(@comments_stub)
+
+            @comments_stub = stub_merge_request_comments(
+              "merge_request_1_comments_no_stickies_response",
+              "k0nserv%2Fdanger-test",
+              1
+            )
+          end
+
+          it "removes the previous danger comment if there are no new messages" do
+            stub_request(:delete, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes/13471894").with(
+              headers: expected_headers
+            )
+
+            subject.update_pull_request!(
+              warnings: [],
+              errors: [],
+              messages: []
+            )
+          end
         end
+
       end
 
-      context "existing comment with no sticky messages" do
+      context "supports inline comments" do
         before do
-          remove_request_stub(@comments_stub)
+          stub_version("11.7.0")
+          skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
+        end
 
-          @comments_stub = stub_merge_request_comments(
-            "merge_request_1_comments_no_stickies_response",
+        it "adds new comments inline" do
+          expect(subject.client).to receive(:create_merge_request_discussion)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+  
+          subject.fetch_details
+  
+          v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+          subject.update_pull_request!(warnings: [], errors: [], messages: [v])
+        end
+
+        it "edits existing inline comment instead of creating a new one if file/line matches" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
             "k0nserv%2Fdanger-test",
             1
           )
+
+          v = Danger::Violation.new("Updated danger comment", true, "a", 1)
+          body = subject.generate_inline_comment_body("warning", subject.process_markdown(v, true), danger_id: "danger", template: "gitlab")
+
+          expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141485123, body)
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+
+          subject.fetch_details
+
+          subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
 
-        it "removes the previous danger comment if there are no new messages" do
-          stub_request(:delete, "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/notes/13471894").with(
-            headers: expected_headers
+        it "deletes all comments if no violations are present" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
           )
 
-          subject.update_pull_request!(
-            warnings: [],
-            errors: [],
-            messages: []
-          )
+          # Global comment gets updated as its sticky
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+
+          # Global comment
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 13471894)
+          # Inline comment
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 141485123)
+
+          subject.update_pull_request!(warnings: [], errors: [], messages: [])
         end
+
+        it "deletes inline comments if those are no longer relevant" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+
+          expect(subject.client).to receive(:edit_merge_request_note)
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 141485123)
+
+          v = Danger::Violation.new("Test error", true)
+          subject.update_pull_request!(warnings: [], errors: [v], messages: [])
+        end
+  
       end
     end
 
