@@ -10,8 +10,11 @@
 
 ## master
 
+## 5.16.0
+
 * Add support for Visual Studio App Center [@rishabhtayal](https://github.com/rishabhtayal) / [@cojoj](https://github.com/cojoj)
 * Add more helptext explaining what to do if Danger didn't run on a CircleCI build. [@ghiculescu](https://github.com/ghiculescu)
+* Add support for inline comments on GitLab (for versions >= 10.8.0) [@pbendersky](https://github.com/pbendersky)
 
 ## 5.15.0
 
@@ -19,7 +22,6 @@
   updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
   Original issue: https://github.com/danger/danger/issues/1084
 * Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
-* Add support for inline comments on GitLab (for versions >= 10.8.0) [@pbendersky](https://github.com/pbendersky)
 
 ## 5.14.0
 
