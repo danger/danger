@@ -62,7 +62,15 @@ module Danger
     def validate_pr!(cork, fail_if_no_pr)
       unless EnvironmentManager.pr?(system_env)
         ci_name = EnvironmentManager.local_ci_source(system_env).name.split("::").last
-        cork.puts "Not a #{ci_name} Pull Request - skipping `danger` run".yellow
+
+        msg = "Not a #{ci_name} Pull Request - skipping `danger` run. "
+        # circle won't run danger properly if the commit is pushed and build runs before the PR exists
+        # https://danger.systems/guides/troubleshooting.html#circle-ci-doesnt-run-my-build-consistently
+        # the best solution is to enable `fail_if_no_pr`, and then re-run the job once the PR is up
+        if ci_name == "CircleCI"
+          msg << "If you only created the PR recently, try re-running your workflow."
+        end
+        cork.puts msg.strip.yellow
 
         exit(fail_if_no_pr ? 1 : 0)
       end
