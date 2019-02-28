@@ -10,6 +10,8 @@
 
 ## master
 
+## 5.16.1
+
 * Fixes GitLab inline comments when violations happened in files outside of the MR diff [@pbendersky](https://github.com/pbendersky), #1092
 
 ## 5.16.0
