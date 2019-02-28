@@ -90,8 +90,23 @@ module Danger
 
       def mr_diff
         @mr_diff ||= begin
-          client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
+          mr_changes
             .changes.map { |change| change["diff"] }.join("\n")
+        end
+      end
+
+      def mr_changed_paths
+        @mr_changed_paths ||= begin
+          mr_changes
+            .changes.map { |change| change["new_path"] }
+        end
+
+        @mr_changed_paths
+      end
+
+      def mr_changes
+        @mr_changes ||= begin
+          client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
         end
       end
 
@@ -359,10 +374,8 @@ module Danger
         messages.reject do |m|
           next false unless m.file && m.line
 
-          # position = find_position_in_diff diff_lines, m, kind
-
-          # Keep the change if it's line is not in the diff and not in dismiss mode
-          # next dismiss_out_of_range_messages_for(kind) if position.nil?
+          # Keep the change it's in a file changed in this diff
+          next if !mr_changed_paths.include?(m.file)
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content

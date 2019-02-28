@@ -331,12 +331,18 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         it "adds new comments inline" do
+          stub_merge_request_changes(
+            "merge_request_1_changes_response",
+            "k0nserv\%2Fdanger-test",
+            1
+          )
+
           expect(subject.client).to receive(:create_merge_request_discussion)
           allow(subject.client).to receive(:delete_merge_request_comment)
   
           subject.fetch_details
   
-          v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+          v = Danger::Violation.new("Sure thing", true, "a", 4)
           subject.update_pull_request!(warnings: [], errors: [], messages: [v])
         end
 
@@ -344,6 +350,11 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
             "k0nserv%2Fdanger-test",
+            1
+          )
+          stub_merge_request_changes(
+            "merge_request_1_changes_response",
+            "k0nserv\%2Fdanger-test",
             1
           )
 
@@ -390,6 +401,29 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           v = Danger::Violation.new("Test error", true)
           subject.update_pull_request!(warnings: [], errors: [v], messages: [])
+        end
+
+        it "skips inline comments for files that are not part of the diff" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+          stub_merge_request_changes(
+            "merge_request_1_changes_response",
+            "k0nserv\%2Fdanger-test",
+            1
+          )
+
+          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+          allow(subject.client).to receive(:edit_merge_request_note)
+
+          v = Danger::Violation.new("Error on not-on-diff file", true, "not-on-diff", 1)
+
+          subject.fetch_details
+
+          subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
   
       end
