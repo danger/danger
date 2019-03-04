@@ -91,4 +91,4 @@ We try to keep as much discussion as possible in GitHub issues, but also have a 
 
 > This project subscribes to the [Moya Contributors Guidelines](https://github.com/Moya/contributors) which TLDR: means we give out push access easily and often.
 
-> Contributors subscribe to the [Contributor Code of Conduct](http://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](http://contributor-covenant.org) version 1.3.0.
+> Contributors subscribe to the [Contributor Code of Conduct](https://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](https://contributor-covenant.org) version 1.3.0.
