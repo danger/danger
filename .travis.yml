@@ -33,3 +33,5 @@ script:
   - bundle exec danger --verbose
   - echo "Validating that danger init is working fine"
   - bundle exec danger init --mousey --impatient
+
+sudo: required
