@@ -1,7 +1,7 @@
 FROM ruby:2.5
 
 LABEL "com.github.actions.name"="Danger" \
-      "com.github.actions.description"="Runs danger in a docker container such as Github Actions" \
+      "com.github.actions.description"="Runs danger in a docker container such as GitHub Actions" \
       "com.github.actions.icon"="mic" \
       "com.github.actions.color"="purple" \
       "repository"="http://github.com/danger/danger" \
