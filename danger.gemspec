@@ -26,9 +26,13 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "colored2", "~> 3.1"
   spec.add_runtime_dependency "faraday", "~> 0.9"
   spec.add_runtime_dependency "faraday-http-cache", "~> 1.0"
+  if RUBY_VERSION >= "2.3.0"
+    spec.add_runtime_dependency "kramdown", "~> 2.0"
+    spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
+  else
+    spec.add_runtime_dependency "kramdown", "~> 1.5"
+  end
   spec.add_runtime_dependency "octokit", "~> 4.7"
-  spec.add_runtime_dependency "kramdown", ">= 1.5"
-  spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
   spec.add_runtime_dependency "terminal-table", "~> 1"
   spec.add_runtime_dependency "cork", "~> 0.1"
   spec.add_runtime_dependency "no_proxy_fix"
