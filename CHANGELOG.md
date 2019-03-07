@@ -10,6 +10,8 @@
 
 ## master
 
+* Fixes issue with Github where some filenames have trailing tabs, preventing inline comments from being posted correctly. [@daniel-beard](https://github.com/daniel-beard)
+
 ## 5.16.1
 
 * Fixes GitLab inline comments when violations happened in files outside of the MR diff [@pbendersky](https://github.com/pbendersky), #1092
