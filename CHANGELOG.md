@@ -10,6 +10,15 @@
 
 ## master
 
+## 6.0.0
+
+* Support Kramdown 2.0+ (requires Ruby 2.3) [@davidstosik](https://github.com/davidstosik), #1100
+
+### Breaking changes
+
+* Danger requires Kramdown 2.0 or more recent and will not work with lower versions.
+* Danger requires Ruby 2.3 or more recent and will not work with lower versions.
+
 ## 5.16.1
 
 * Fixes GitLab inline comments when violations happened in files outside of the MR diff [@pbendersky](https://github.com/pbendersky), #1092
