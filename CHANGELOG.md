@@ -10,6 +10,7 @@
 
 ## master
 
+* Rescues from failures when submitting inline comments to GitLab [@pbendersky](https://github.com/pbendersky), #1097
 * Fixes issue with Github where some filenames have trailing tabs, preventing inline comments from being posted correctly. [@daniel-beard](https://github.com/daniel-beard)
 
 ## 5.16.1

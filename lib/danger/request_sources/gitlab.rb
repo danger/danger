@@ -399,26 +399,33 @@ module Danger
             end
           end
 
-          if matching_comments.empty?
-            params = {
-              body: body,
-              position: {
-                position_type: 'text',
-                new_path: m.file,
-                new_line: m.line,
-                base_sha: self.mr_json.diff_refs.base_sha,
-                start_sha: self.mr_json.diff_refs.start_sha,
-                head_sha: self.mr_json.diff_refs.head_sha
+          begin
+            if matching_comments.empty?
+              params = {
+                body: body,
+                position: {
+                  position_type: 'text',
+                  new_path: m.file,
+                  new_line: m.line,
+                  base_sha: self.mr_json.diff_refs.base_sha,
+                  start_sha: self.mr_json.diff_refs.start_sha,
+                  head_sha: self.mr_json.diff_refs.head_sha
+                }
               }
-            }
-            client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, params)
-          else
-            # Remove the surviving comment so we don't strike it out
-            danger_comments.reject! { |c| matching_comments.include? c }
+              client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, params)
+            else
+              # Remove the surviving comment so we don't strike it out
+              danger_comments.reject! { |c| matching_comments.include? c }
 
-            # Update the comment to remove the strikethrough if present
-            comment = matching_comments.first
-            client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+              # Update the comment to remove the strikethrough if present
+              comment = matching_comments.first
+              client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+            end
+          rescue Gitlab::Error::Error => e
+            message = [e, "body: #{body}", "position: #{params[:position].inspect}"].join("\n")
+            puts message
+
+            next false
           end
 
           # Remove this element from the array
