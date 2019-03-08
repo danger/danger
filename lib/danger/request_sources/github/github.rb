@@ -375,6 +375,12 @@ module Danger
         pattern = "+++ b/" + message.file + "\n"
         file_start = diff_lines.index(pattern)
 
+        # Files containing spaces sometimes have a trailing tab
+        if file_start.nil?
+          pattern = "+++ b/" + message.file + "\t\n"
+          file_start = diff_lines.index(pattern)
+        end
+
         return nil if file_start.nil?
 
         position = -1

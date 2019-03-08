@@ -77,6 +77,17 @@ index 5817675..30499d7 100644
  * Show appropriate error message when GitHub repo was moved - KrauseFx
  * `danger plugins json [gem]` will now give gem metadata too - orta
  
+diff --git a/ios/Example/App Delegates/README.md b/ios/Example/App Delegates/README.md
+index 5817675..30499d7 100644
+--- a/ios/Example/App Delegates/README.md	
++++ b/ios/Example/App Delegates/README.md	
+@@ -1,5 +1,6 @@
+ ## Master
+ 
++* add `file` and `line` optional parameters to methods on the messaging plugin
+ * Show appropriate error message when GitHub repo was moved - KrauseFx
+ * `danger plugins json [gem]` will now give gem metadata too - orta
+ 
 diff --git a/Dangerfile b/Dangerfile
 index 16e75d7..50e35a9 100644
 --- a/Dangerfile
