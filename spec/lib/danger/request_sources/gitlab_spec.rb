@@ -425,6 +425,29 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
+
+        it "doesn't crash if an inline comment fails to publish" do
+          stub_merge_request_discussions(
+            "merge_request_1_discussions_empty_response",
+            "k0nserv%2Fdanger-test",
+            1
+          )
+          stub_merge_request_changes(
+            "merge_request_1_changes_response",
+            "k0nserv\%2Fdanger-test",
+            1
+          )
+
+          url = "https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/discussions"
+          WebMock.stub_request(:post, url).to_return(status: [400, "Note {:line_code=>[\"can't be blank\", \"must be a valid line code\"]}"])
+
+          v = Danger::Violation.new("Some error", true, "a", 1)
+
+          allow(subject.client).to receive(:create_merge_request_note)
+
+          subject.fetch_details
+          subject.update_pull_request!(warnings: [v], errors: [], messages: [])
+        end
   
       end
     end
