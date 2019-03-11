@@ -14,6 +14,9 @@
 
 * Support Kramdown 2.0+ (requires Ruby 2.3) [@davidstosik](https://github.com/davidstosik), #1100
 
+* Rescues from failures when submitting inline comments to GitLab [@pbendersky](https://github.com/pbendersky), #1097
+* Fixes issue with GitHub where some filenames have trailing tabs, preventing inline comments from being posted correctly. [@daniel-beard](https://github.com/daniel-beard)
+
 ### Breaking changes
 
 * Danger requires Kramdown 2.0 or more recent and will not work with lower versions.

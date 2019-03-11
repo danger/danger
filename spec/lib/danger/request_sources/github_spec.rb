@@ -397,6 +397,19 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
+      it "correctly handles trailing tabs in diff" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "ios/Example/App Delegates/README.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "ios/Example/App Delegates/README.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
       it "adds main comment when inline out of range" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
