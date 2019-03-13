@@ -399,33 +399,40 @@ module Danger
             end
           end
 
-          begin
-            if matching_comments.empty?
-              params = {
-                body: body,
-                position: {
-                  position_type: 'text',
-                  new_path: m.file,
-                  new_line: m.line,
-                  base_sha: self.mr_json.diff_refs.base_sha,
-                  start_sha: self.mr_json.diff_refs.start_sha,
-                  head_sha: self.mr_json.diff_refs.head_sha
-                }
+          if matching_comments.empty?
+            params = {
+              body: body,
+              position: {
+                position_type: 'text',
+                new_path: m.file,
+                new_line: m.line,
+                base_sha: self.mr_json.diff_refs.base_sha,
+                start_sha: self.mr_json.diff_refs.start_sha,
+                head_sha: self.mr_json.diff_refs.head_sha
               }
+            }
+            begin
               client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, params)
-            else
-              # Remove the surviving comment so we don't strike it out
-              danger_comments.reject! { |c| matching_comments.include? c }
+            rescue Gitlab::Error::Error => e
+              message = [e, "body: #{body}", "position: #{params[:position].inspect}"].join("\n")
+              puts message
 
-              # Update the comment to remove the strikethrough if present
-              comment = matching_comments.first
-              client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+              next false
             end
-          rescue Gitlab::Error::Error => e
-            message = [e, "body: #{body}", "position: #{params[:position].inspect}"].join("\n")
-            puts message
+          else
+            # Remove the surviving comment so we don't strike it out
+            danger_comments.reject! { |c| matching_comments.include? c }
 
-            next false
+            # Update the comment to remove the strikethrough if present
+            comment = matching_comments.first
+            begin
+              client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+            rescue Gitlab::Error::Error => e
+              message = [e, "body: #{body}"].join("\n")
+              puts message
+              
+              next false
+            end
           end
 
           # Remove this element from the array
