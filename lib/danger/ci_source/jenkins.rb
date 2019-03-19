@@ -47,7 +47,7 @@ module Danger
   # As you own the machine, it's up to you to add the environment variable for the `DANGER_GITLAB_API_TOKEN`.
   #
   class Jenkins < CI
-    attr_reader :project_url
+    attr_accessor :project_url
     class EnvNotFound < StandardError
       def initialize
         super("ENV not found, please check your Jenkins. Related: https://stackoverflow.com/search?q=jenkins+env+null")
