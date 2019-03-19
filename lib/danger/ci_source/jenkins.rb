@@ -80,7 +80,7 @@ module Danger
       self.repo_url = self.class.repo_url(env)
       self.pull_request_id = self.class.pull_request_id(env)
       self.repo_slug = self.class.repo_slug(self.repo_url)
-      self.project_url = env["CI_MERGE_REQUEST_PROJECT_URL"] || env["CI_PROJECT_URL"]
+      @project_url = env["CI_MERGE_REQUEST_PROJECT_URL"] || env["CI_PROJECT_URL"]
     end
 
     def self.repo_slug(repo_url)
