@@ -6,7 +6,7 @@ module Danger
   # ### CI Setup
   #
   # Install dependencies and add a danger step to your .gitlab-ci.yml:
-  # ``` yml
+  # ```yml
   # before_script:
   #  - bundle install
   # danger:
