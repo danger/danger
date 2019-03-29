@@ -10,6 +10,10 @@
 
 ## master
 
+## 6.0.2
+
+* Added Cirrus CI support [@RDIL](https://github.com/RDIL), #1114
+
 ## 6.0.1
 
 * Fixed error management with GitLab inline comments [@pbendersky](https://github.com/pbendersky), #1106
