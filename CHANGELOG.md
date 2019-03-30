@@ -13,6 +13,7 @@
 ## 6.0.2
 
 * Add project URL to Jenkins if available, [@qyhongfan](https://github.com/qyhongfan) #1109
+* Added Cirrus CI support [@RDIL](https://github.com/RDIL), #1114
 
 ## 6.0.1
 
