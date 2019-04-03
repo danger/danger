@@ -12,7 +12,7 @@
 
 ## 6.0.3
 
-* Support bitbucket cloud OAuth [@susan335](https://github.com/susan335) #1115
+* Support Bitbucket cloud OAuth [@susan335](https://github.com/susan335) #1115
 
 ## 6.0.2
 
