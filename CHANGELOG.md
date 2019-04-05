@@ -10,6 +10,10 @@
 
 ## master
 
+## 6.0.3
+
+* Fixed error of GitLab inline comments @oboenikui, #1111
+
 ## 6.0.2
 
 * Add project URL to Jenkins if available, [@qyhongfan](https://github.com/qyhongfan) #1109
