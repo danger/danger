@@ -73,4 +73,30 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
     end
   end
 
+  describe "#fetch_access_token" do
+    it "gets called if auth environment variables is not nil" do
+      stub_access_token
+      env = stub_env
+      env["DANGER_BITBUCKETCLOUD_OAUTH_KEY"] = "XXX"
+      env["DANGER_BITBUCKETCLOUD_OAUTH_SECRET"] = "YYY"
+      api = described_class.new("ios/fancyapp", "123", "feature_branch", env)
+
+      expect(api.access_token).to eq("a_token")
+    end
+
+    it "gets called if auth environment variables is insufficiency" do
+      stub_access_token
+      env = stub_env
+      env["DANGER_BITBUCKETCLOUD_OAUTH_KEY"] = "XXX"
+      api = described_class.new("ios/fancyapp", "123", "feature_branch", env)
+
+      expect(api.access_token).to be nil
+    end
+
+    it "gets called if auth environment variables is insufficiency" do
+      api = described_class.new("ios/fancyapp", "123", "feature_branch", stub_env)
+
+      expect(api.access_token).to be nil
+    end
+  end
 end

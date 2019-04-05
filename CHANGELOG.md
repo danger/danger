@@ -10,6 +10,10 @@
 
 ## master
 
+## 6.0.3
+
+* Support Bitbucket cloud OAuth [@susan335](https://github.com/susan335) #1115
+
 ## 6.0.2
 
 * Add project URL to Jenkins if available, [@qyhongfan](https://github.com/qyhongfan) #1109
