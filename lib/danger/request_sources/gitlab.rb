@@ -406,6 +406,8 @@ module Danger
                 position_type: 'text',
                 new_path: m.file,
                 new_line: m.line,
+                old_path: m.file,
+                old_line: m.line,
                 base_sha: self.mr_json.diff_refs.base_sha,
                 start_sha: self.mr_json.diff_refs.start_sha,
                 head_sha: self.mr_json.diff_refs.head_sha
