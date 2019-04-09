@@ -5,12 +5,13 @@ require "danger/helpers/comments_helper"
 module Danger
   module RequestSources
     class BitbucketCloudAPI
-      attr_accessor :host, :project, :slug, :pull_request_id
+      attr_accessor :host, :project, :slug, :access_token, :pull_request_id
 
       def initialize(repo_slug, pull_request_id, branch_name, environment)
         @username = environment["DANGER_BITBUCKETCLOUD_USERNAME"]
         @password = environment["DANGER_BITBUCKETCLOUD_PASSWORD"]
         self.project, self.slug = repo_slug.split("/")
+        self.access_token = fetch_access_token(environment)
         self.pull_request_id = pull_request_id || fetch_pr_from_branch(branch_name)
         self.host = "https://bitbucket.org/"
       end
@@ -77,11 +78,32 @@ module Danger
         fetch_json(uri)[:values][0][:id]
       end
 
+      def fetch_access_token(environment)
+        oauth_key = environment["DANGER_BITBUCKETCLOUD_OAUTH_KEY"]
+        oauth_secret = environment["DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
+        return nil if oauth_key.nil?
+        return nil if oauth_secret.nil?
+        
+        uri = URI.parse("https://bitbucket.org/site/oauth2/access_token")
+        req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
+        req.basic_auth oauth_key, oauth_secret
+        req.set_form_data({'grant_type' => 'client_credentials'})
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+            http.request(req)
+        end
+    
+        JSON.parse(res.body, symbolize_names: true)[:access_token]
+      end
+
       def fetch_json(uri)
         raise credentials_not_available unless credentials_given?
 
         req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        if access_token.nil?
+          req.basic_auth @username, @password
+        else
+          req["Authorization"] = "Bearer #{access_token}"
+        end
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
@@ -94,7 +116,11 @@ module Danger
         raise credentials_not_available unless credentials_given?
 
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        if access_token.nil?
+          req.basic_auth @username, @password
+        else
+          req["Authorization"] = "Bearer #{access_token}"
+        end
         req.body = body
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
@@ -105,7 +131,11 @@ module Danger
         raise credentials_not_available unless credentials_given?
         
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
-        req.basic_auth @username, @password
+        if access_token.nil?
+          req.basic_auth @username, @password
+        else
+          req["Authorization"] = "Bearer #{access_token}"
+        end        
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end

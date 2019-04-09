@@ -8,9 +8,11 @@ module Danger
   # ```
   #
   # #### Token Setup
-  # 
-  # Add `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_USERNAME` to your pipeline repository variable.
-  # Settings > Pipelines > Repository Variables
+  #
+  # Add `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_USERNAME` to your pipeline repository variable
+  # or instead using `DANGER_BITBUCKETCLOUD_OAUTH_KEY` and `DANGER_BITBUCKETCLOUD_OAUTH_SECRET`.
+  #
+  # You can find them in Settings > Pipelines > Repository Variables
 
   class BitbucketPipelines < CI
 

@@ -16,6 +16,10 @@ module Danger
         ]
       end
 
+      def self.optional_env_vars
+        ["DANGER_BITBUCKETCLOUD_OAUTH_KEY", "DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment

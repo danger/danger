@@ -10,9 +10,13 @@
 
 ## master
 
-## 6.0.3
+## Release number TBD
 
 * Fixed error of GitLab inline comments @oboenikui, #1111
+
+## 6.0.3
+
+* Support Bitbucket cloud OAuth [@susan335](https://github.com/susan335) #1115
 
 ## 6.0.2
 

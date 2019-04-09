@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+
+{
+  "access_token": "a_token",
+  "scopes": "pullrequest:write",
+  "expires_in": 7200,
+  "refresh_token": "a_refresh",
+  "token_type": "bearer"
+}
