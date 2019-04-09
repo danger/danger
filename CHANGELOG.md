@@ -10,8 +10,6 @@
 
 ## master
 
-## Release number TBD
-
 * Fixed error of GitLab inline comments @oboenikui, #1111
 
 ## 6.0.3
