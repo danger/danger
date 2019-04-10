@@ -9,7 +9,7 @@ jobs:
         - RACK_ENV=test
     steps:
       - checkout
-      - run: gem update --system 2.4.8
+      - run: gem update --system 2.5.0
       - run: gem install bundler -v '2.0.1'
       - restore_cache:
           key: gem-cache-{{ .Branch }}-{{ checksum "Gemfile" }}
