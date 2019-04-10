@@ -6,8 +6,6 @@ module Danger
   #
   # Adding this to your `.cirrus.yml` allows Danger to fail your build, both on the Cirrus CI website and within your Pull Request.
   # With that set up, you can edit your task to add `bundler exec danger` in any script instruction.
-  #
-  # ### Token Setup
   class Cirrus < CI
     def self.validates_as_ci?(env)
       env.key? "CIRRUS_CI"
