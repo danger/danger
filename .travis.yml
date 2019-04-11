@@ -18,10 +18,12 @@ before_install:
 after_install:
   - rake install
 
-script:
+before_script:
   # Tests use real git commands
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
+
+script:
   - echo "Running Tests"
   - bundle exec rake spec
   - echo "Linting the documentation for Danger's internal plugins"
