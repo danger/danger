@@ -74,7 +74,7 @@ module Danger
         # @comments contains Comment objects (that have less information)
         @comments ||= begin
           if supports_inline_comments
-            @raw_comments = client.merge_request_discussions(ci_source.repo_slug, ci_source.pull_request_id)
+            @raw_comments = mr_discussions
               .auto_paginate
               .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
             @raw_comments
@@ -86,6 +86,10 @@ module Danger
               .map { |comment| Comment.from_gitlab(comment) }
           end
         end
+      end
+
+      def mr_discussions
+        @mr_discussions ||= client.merge_request_discussions(ci_source.repo_slug, ci_source.pull_request_id)
       end
 
       def mr_diff
@@ -158,9 +162,10 @@ module Danger
       end
 
       def update_pull_request_with_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        editable_comments = mr_comments.select { |comment| comment.generated_by_danger?(danger_id) }
+        editable_regular_comments = mr_comments.select {|comment| comment.generated_by_danger?(danger_id)}
+                                      .reject(&:inline?)
 
-        last_comment = editable_comments.last
+        last_comment = editable_regular_comments.last
         should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
 
         previous_violations =
@@ -323,7 +328,7 @@ module Danger
       end
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        comments = client.merge_request_discussions(ci_source.repo_slug, ci_source.pull_request_id)
+        comments = mr_discussions
           .auto_paginate
           .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
 
@@ -343,7 +348,7 @@ module Danger
           violation = violations_from_table(comment["body"]).first
           if !violation.nil? && violation.sticky
             body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "gitlab")
-            client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+            client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body: body)
           else
             # We remove non-sticky violations that have no replies
             # Since there's no direct concept of a reply in GH, we simply consider
@@ -400,14 +405,17 @@ module Danger
           end
 
           if matching_comments.empty?
+            old_position = find_old_position_in_diff mr_changes.changes, m
+            next false if old_position.nil?
+
             params = {
               body: body,
               position: {
                 position_type: 'text',
                 new_path: m.file,
                 new_line: m.line,
-                old_path: m.file,
-                old_line: m.line,
+                old_path: old_position[:path],
+                old_line: old_position[:line],
                 base_sha: self.mr_json.diff_refs.base_sha,
                 start_sha: self.mr_json.diff_refs.start_sha,
                 head_sha: self.mr_json.diff_refs.head_sha
@@ -428,11 +436,11 @@ module Danger
             # Update the comment to remove the strikethrough if present
             comment = matching_comments.first
             begin
-              client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body)
+              client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body: body)
             rescue Gitlab::Error::Error => e
               message = [e, "body: #{body}"].join("\n")
               puts message
-              
+
               next false
             end
           end
@@ -442,6 +450,52 @@ module Danger
         end
       end
 
+      def find_old_position_in_diff(changes, message)
+        range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
+
+        change = changes.find { |c| c["new_path"] == message.file }
+
+        # If there is no changes or rename only or deleted, return nil.
+        return nil if change.nil? || change["diff"].empty? || change["deleted_file"]
+
+        modified_position = {
+          path: change["old_path"],
+          line: nil
+        }
+
+        return modified_position if change["new_file"]
+
+        current_old_line = 0
+        current_new_line = 0
+
+        change["diff"].each_line do |line|
+          match = line.match range_header_regexp
+
+          if match
+            break if message.line.to_i < match[:new].to_i
+            current_old_line = match[:old].to_i - 1
+            current_new_line = match[:new].to_i - 1
+            next
+          end
+
+          if line.start_with?("-")
+            current_old_line += 1
+          elsif line.start_with?("+")
+            current_new_line += 1
+            return modified_position if current_new_line == message.line.to_i
+          elsif !line.eql?("\\ No newline at end of file\n")
+            current_old_line += 1
+            current_new_line += 1
+            break if current_new_line == message.line.to_i
+          end
+        end
+
+        {
+          path: change["old_path"],
+          line: current_old_line - current_new_line + message.line.to_i
+        }
+      end
     end
   end
 end
+
