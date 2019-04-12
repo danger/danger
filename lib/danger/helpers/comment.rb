@@ -14,7 +14,7 @@ module Danger
 
     def self.from_gitlab(comment)
       if comment.respond_to?(:id) && comment.respond_to?(:body)
-        type = comment.respond_to?(:type) ? comment.type : comment["type"]
+        type = comment.respond_to?(:type) ? comment.type : nil
         self.new(comment.id, comment.body, type == "DiffNote")
       else
         self.new(comment["id"], comment["body"], comment["type"] == "DiffNote")

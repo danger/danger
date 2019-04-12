@@ -162,8 +162,9 @@ module Danger
       end
 
       def update_pull_request_with_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        editable_regular_comments = mr_comments.select {|comment| comment.generated_by_danger?(danger_id)}
-                                      .reject(&:inline?)
+        editable_regular_comments = mr_comments
+          .select { |comment| comment.generated_by_danger?(danger_id) }
+          .reject(&:inline?)
 
         last_comment = editable_regular_comments.last
         should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
@@ -220,7 +221,6 @@ module Danger
               client.edit_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, last_comment.id, body)
             end
         end
-        
       end
 
       def update_pull_request_without_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
@@ -331,6 +331,7 @@ module Danger
         comments = mr_discussions
           .auto_paginate
           .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
+          .select { |comment| Comment.from_gitlab(comment).inline? }
 
         danger_comments = comments.select { |comment| Comment.from_gitlab(comment).generated_by_danger?(danger_id) }
         non_danger_comments = comments - danger_comments

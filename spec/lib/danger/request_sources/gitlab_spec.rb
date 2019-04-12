@@ -361,7 +361,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           v = Danger::Violation.new("Updated danger comment", true, "a", 1)
           body = subject.generate_inline_comment_body("warning", subject.process_markdown(v, true), danger_id: "danger", template: "gitlab")
 
-          expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141485123, body)
+          expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141485123, body: body)
           allow(subject.client).to receive(:update_merge_request_discussion_note)
           allow(subject.client).to receive(:delete_merge_request_comment)
 
@@ -370,7 +370,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
 
-        it "deletes all comments if no violations are present" do
+        it "deletes non-sticky comments if no violations are present" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
             "k0nserv%2Fdanger-test",
@@ -378,10 +378,8 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           )
 
           # Global comment gets updated as its sticky
-          allow(subject.client).to receive(:update_merge_request_discussion_note)
+          allow(subject.client).to receive(:edit_merge_request_note)
 
-          # Global comment
-          expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 13471894)
           # Inline comment
           expect(subject.client).to receive(:delete_merge_request_comment).with("k0nserv/danger-test", 1, 141485123)
 
@@ -466,6 +464,228 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       it "returns a valid fallback URL" do
         url = subject.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
         expect(url).to eq("https://gitlab.com/teapot/danger/raw/master/Dangerfile")
+      end
+    end
+
+    describe "#find_old_position_in_diff" do
+      let(:new_path) do
+        "dummy"
+      end
+
+      let(:old_path) do
+        "dummy"
+      end
+
+      let(:new_file) do
+        false
+      end
+
+      let(:renamed_file) do
+        false
+      end
+
+      let(:deleted_file) do
+        false
+      end
+
+      let(:diff_lines) do
+        ""
+      end
+
+      let(:changes) do
+        [{
+           "new_path" => new_path,
+           "old_path" => old_path,
+           "diff" => diff_lines,
+           "new_file" => new_file,
+           "renamed_file" => renamed_file,
+           "deleted_file" => deleted_file
+         }]
+      end
+
+      context "new file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -0,0 +1,3 @@
++foo
++bar
++baz
+          DIFF
+        end
+
+        let(:new_file) do
+          true
+        end
+
+        it "returns path only" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 1))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to be_nil
+        end
+      end
+
+      context "slightly modified file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+          DIFF
+        end
+
+        it "returns path only" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 1))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to be_nil
+        end
+      end
+
+      context "heavily modified files" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -2,7 +2,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+@@ -21,7 +22,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+          DIFF
+        end
+
+        it "returns path only when message line is new" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 5))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to be_nil
+        end
+
+        it "returns path and correct line when message line isn't new" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 3))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to eq(3)
+        end
+
+        it "returns path and correct line when the line is before diffs" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 1))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to eq(1)
+        end
+
+        it "returns path and correct line when the line is between diffs" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 15))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to eq(14)
+        end
+
+        it "returns path and correct line when the line is after diffs" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 35))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to eq(33)
+        end
+      end
+
+      context "deleted file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1,3 +0,0 @@
+-foo
+-bar
+-baz
+          DIFF
+        end
+
+        let(:deleted_file) do
+          true
+        end
+
+        it "returns nil" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 1))
+          expect(position).to be_nil
+        end
+      end
+
+      context "renamed only file" do
+
+        let(:renamed_file) do
+          true
+        end
+
+        let(:new_path) do
+          "new_dummy"
+        end
+
+        it "returns nil" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 1))
+          expect(position).to be_nil
+        end
+      end
+
+      context "renamed and modified file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1 +1,2 @@
+@@ -2,7 +2,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+          DIFF
+        end
+
+        let(:renamed_file) do
+          true
+        end
+
+        let(:new_path) do
+          "dummy_new"
+        end
+
+        it "returns old path only when message line is new" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 5))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to be_nil
+        end
+
+        it "returns old path and correct line when message line isn't new" do
+          position = subject.find_old_position_in_diff(changes, double(file: new_path, line: 3))
+          expect(position[:path]).to eq(old_path)
+          expect(position[:line]).to eq(3)
+        end
+      end
+
+      context "unchanged file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -0,0 +1,3 @@
++foo
++bar
++baz
+          DIFF
+        end
+
+        it "returns nil" do
+          position = subject.find_old_position_in_diff(changes, double(file: "dummy_unchanged", line: 5))
+          expect(position).to be_nil
+        end
       end
     end
   end
