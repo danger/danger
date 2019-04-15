@@ -464,6 +464,7 @@ module Danger
           line: nil
         }
 
+        # If the file is new one, old line number must be nil.
         return modified_position if change["new_file"]
 
         current_old_line = 0
@@ -473,7 +474,10 @@ module Danger
           match = line.match range_header_regexp
 
           if match
+            # If the message line is at before next diffs, break from loop.
             break if message.line.to_i < match[:new].to_i
+
+            # The match [:old] line does not appear yet at the header position, so reduce line number.
             current_old_line = match[:old].to_i - 1
             current_new_line = match[:new].to_i - 1
             next
@@ -483,10 +487,12 @@ module Danger
             current_old_line += 1
           elsif line.start_with?("+")
             current_new_line += 1
+            # If the message line starts with '+', old line number must be nil.
             return modified_position if current_new_line == message.line.to_i
           elsif !line.eql?("\\ No newline at end of file\n")
             current_old_line += 1
             current_new_line += 1
+            # If the message line doesn't start with '+', old line number must be specified.
             break if current_new_line == message.line.to_i
           end
         end
