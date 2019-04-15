@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.0.4
+
 * For GitLab >= 10.7, use a newer faster API to find the MR for the commit
 
 ## 6.0.3
