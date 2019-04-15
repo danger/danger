@@ -39,11 +39,16 @@ module Danger
       base_commit = env["CI_COMMIT_SHA"]
       client = RequestSources::GitLab.new(nil, env).client
 
-      merge_requests = client.merge_requests(project_path, state: :opened)
-      merge_request = merge_requests.auto_paginate.find do |mr|
-        mr.sha == base_commit
+      if (Gem::Version.new(client.version.version) >= Gem::Version.new("10.7"))
+        #Use the 'list merge requests associated with a commit' API, for speeed
+        # (GET /projects/:id/repository/commits/:sha/merge_requests) available for GitLab >= 10.7
+        merge_request = client.commit_merge_requests(project_path, base_commit, state: :opened).first
+      else
+        merge_requests = client.merge_requests(project_path, state: :opened)
+        merge_request = merge_requests.auto_paginate.find do |mr|
+          mr.sha == base_commit
+        end
       end
-
       merge_request.nil? ? 0 : merge_request.iid
     end
 
