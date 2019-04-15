@@ -13,15 +13,17 @@ bundler_args: "--without documentation --path bundle"
 
 before_install:
   - git fetch --depth=1000000
-  - gem install bundler -v '1.17.3'
+  - gem install bundler -v '2.0.1'
 
 after_install:
   - rake install
 
-script:
+before_script:
   # Tests use real git commands
   - git config --global user.email "danger@example.com"
   - git config --global user.name "Danger McShane"
+
+script:
   - echo "Running Tests"
   - bundle exec rake spec
   - echo "Linting the documentation for Danger's internal plugins"

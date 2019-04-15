@@ -36,14 +36,31 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       end
 
       context "when CI_COMMIT_SHA present in environment" do
-        it "uses gitlab api to find merge request id" do
-          stub_merge_requests("merge_requests_response", "k0nserv%2Fdanger-test")
+        context "before version 10.7" do
+          it "uses gitlab api to find merge request id" do
+            stub_version("10.6.4")
+            stub_merge_requests("merge_requests_response", "k0nserv%2Fdanger-test")
 
-          expect(described_class.determine_merge_request_id({
-            "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
-            "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
-            "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
-          })).to eq(3)
+            expect(described_class.determine_merge_request_id({
+              "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
+              "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
+              "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
+            })).to eq(3)
+          end
+        end
+        context "version 10.7 or later" do
+          it "uses gitlab api to find merge request id" do
+            #Arbitrary version, as tested manually, including text components to exercise the version comparison
+            stub_version("11.10.0-rc6-ee")
+            commit_sha = "3333333333333333333333333333333333333333"
+            stub_commit_merge_requests("commit_merge_requests", "k0nserv%2Fdanger-test", commit_sha)
+
+            expect(described_class.determine_merge_request_id({
+              "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
+              "CI_COMMIT_SHA" => commit_sha,
+              "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
+            })).to eq(1)
+          end
         end
       end
     end

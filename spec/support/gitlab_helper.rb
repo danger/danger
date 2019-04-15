@@ -74,6 +74,13 @@ module Danger
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
       end
 
+      def stub_commit_merge_requests(fixture, slug, commit_sha)
+        raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
+
+        url = "https://gitlab.com/api/v4/projects/#{slug}/repository/commits/#{commit_sha}/merge_requests?state=opened"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
       def stub_version(version)
         url = "https://gitlab.com/api/v4/version"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(
