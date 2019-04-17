@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.0.5
+
 * Fixed error of GitLab inline comments @oboenikui, #1111
 
 ## 6.0.4
