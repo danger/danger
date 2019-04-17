@@ -10,6 +10,8 @@
 
 ## master
 
+* Fixed error of GitLab inline comments @oboenikui, #1111
+
 ## 6.0.4
 
 * For GitLab >= 10.7, use a newer faster API to find the MR for the commit
