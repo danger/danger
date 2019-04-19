@@ -94,8 +94,15 @@ module Danger
 
       def mr_diff
         @mr_diff ||= begin
-          mr_changes
-            .changes.map { |change| change["diff"] }.join("\n")
+          diffs = mr_changes.changes.map do |change|
+            diff = change["diff"]
+            if diff.start_with?('--- a/')
+              diff
+            else
+              "--- a/#{change["old_path"]}\n+++ b/#{change["new_path"]}\n#{diff}"
+            end
+          end
+          diffs.join("\n")
         end
       end
 
