@@ -10,6 +10,8 @@
 
 ## master
 
+* Fixed missing Unified diff headers for `gitlab.mr_diff` due to a Gitlab API bug (See https://gitlab.com/gitlab-org/gitlab-ce/issues/53229).
+
 ## 6.0.5
 
 * Fixed error of GitLab inline comments @oboenikui, #1111
