@@ -4,8 +4,8 @@ LABEL "com.github.actions.name"="Danger" \
       "com.github.actions.description"="Runs danger in a docker container such as GitHub Actions" \
       "com.github.actions.icon"="mic" \
       "com.github.actions.color"="purple" \
-      "repository"="http://github.com/danger/danger" \
-      "homepage"="http://github.com/danger/danger" \
+      "repository"="https://github.com/danger/danger" \
+      "homepage"="https://github.com/danger/danger" \
       "maintainer"="Rishabh Tayal <rtayal11@gmail.com>"
 
 RUN apt-get update -qq && apt-get install -y build-essential p7zip unzip
