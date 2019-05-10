@@ -10,6 +10,8 @@
 
 ## master
 
+* Update `faraday-http-cache` dependency from 1.0 to 2.0
+
 ## 6.0.6
 
 * Fixed missing Unified diff headers for `gitlab.mr_diff` due to a Gitlab API bug (See https://gitlab.com/gitlab-org/gitlab-ce/issues/53229).
