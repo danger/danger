@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "colored2", "~> 3.1"
   spec.add_runtime_dependency "faraday", "~> 0.9"
-  spec.add_runtime_dependency "faraday-http-cache", "~> 1.0"
+  spec.add_runtime_dependency "faraday-http-cache", "~> 2.0"
   spec.add_runtime_dependency "kramdown", "~> 2.0"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
   spec.add_runtime_dependency "octokit", "~> 4.7"
