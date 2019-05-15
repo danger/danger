@@ -297,8 +297,8 @@ module Danger
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         branch ||= 'master'
-
-        "https://#{host}/#{organisation}/#{repository}/raw/#{branch}/#{path}"
+        token = @environment["DANGER_GITLAB_API_TOKEN"]
+        "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{branch}&private_token=#{token}"
       end
 
       def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])

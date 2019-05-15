@@ -11,6 +11,7 @@
 ## master
 
 * Update `faraday-http-cache` dependency from 1.0 to 2.0
+* Fixed importing Dangerfile from Gitlab (uses Gitlab API now)
 
 ## 6.0.6
 

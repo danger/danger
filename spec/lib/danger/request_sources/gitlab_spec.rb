@@ -452,18 +452,18 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
     describe "#file_url" do
       it "returns a valid URL with the minimum parameters" do
-        url = subject.file_url(organisation: "artsy", repository: "danger", path: "Dangerfile")
-        expect(url).to eq("https://gitlab.com/artsy/danger/raw/master/Dangerfile")
+        url = subject.file_url(repository: 1, path: "Dangerfile")
+        expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/Dangerfile/raw?ref=master&private_token=a86e56d46ac78b")
       end
 
       it "returns a valid URL with more parameters" do
-        url = subject.file_url(repository: "danger", organisation: "artsy", branch: "master", path: "path/Dangerfile")
-        expect(url).to eq("https://gitlab.com/artsy/danger/raw/master/path/Dangerfile")
+        url = subject.file_url(repository: 1, organisation: "artsy", branch: "develop", path: "path/Dangerfile")
+        expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/path/Dangerfile/raw?ref=develop&private_token=a86e56d46ac78b")
       end
 
       it "returns a valid fallback URL" do
-        url = subject.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
-        expect(url).to eq("https://gitlab.com/teapot/danger/raw/master/Dangerfile")
+        url = subject.file_url(repository: 1, organisation: "teapot", path: "Dangerfile")
+        expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/Dangerfile/raw?ref=master&private_token=a86e56d46ac78b")
       end
     end
 
