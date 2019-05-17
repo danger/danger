@@ -27,7 +27,7 @@ module Danger
   #
   # @example Run a Dangerfile from inside a repo
   #
-  #          danger.import_dangerfile(gitlab: "ruby-grape/danger")
+  #          danger.import_dangerfile(gitlab_project_id: 1345)
   #
   # @example Run a Dangerfile from inside a repo branch and path
   #
@@ -85,7 +85,7 @@ module Danger
         elsif opts.key?(:gem)
           import_dangerfile_from_gem(opts[:gem])
         else
-          raise "`import` requires a Hash with either :github or :gem"
+          raise "`import` requires a Hash with either :github, :gitlab, :gem, or :path"
         end
       else
         raise "`import` requires a Hash" unless opts.kind_of?(Hash)
