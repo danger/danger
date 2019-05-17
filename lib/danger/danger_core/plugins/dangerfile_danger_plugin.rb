@@ -88,7 +88,7 @@ module Danger
           raise "`import` requires a Hash with either :github, :gitlab, :gem, or :path"
         end
       else
-        raise "`import` requires a Hash" unless opts.kind_of?(Hash)
+        raise "`import` requires a Hash"
       end
     end
 
