@@ -78,8 +78,8 @@ module Danger
       elsif opts.kind_of?(Hash)
         if opts.key?(:github)
           import_dangerfile_from_github(opts[:github], opts[:branch], opts[:path])
-        elsif opts.key?(:gitlab_project_id)
-          import_dangerfile_from_gitlab(opts[:gitlab_project_id], opts[:branch], opts[:path])
+        elsif opts.key?(:gitlab)
+          import_dangerfile_from_gitlab(opts[:gitlab], opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
@@ -166,17 +166,16 @@ module Danger
     # @!group Danger
     # Download and execute a remote Dangerfile.
     #
-    # @param    [Int] project_id
-    #           The id of the repo where the Dangerfile is.
+    # @param    [Int] slug_or_project_id
+    #           The slug or id of the repo where the Dangerfile is.
     # @param    [String] branch
     #           A branch from repo where the Dangerfile is.
     # @param    [String] path
     #           The path at the repo where Dangerfile is.
     # @return   [void]
     #
-    def import_dangerfile_from_gitlab(project_id, branch = nil, path = nil)
-      raise "`import_dangerfile_from_gitlab` requires a integer" unless project_id.kind_of?(Integer)
-      download_url = env.request_source.file_url(repository: project_id, branch: branch, path: path || "Dangerfile")
+    def import_dangerfile_from_gitlab(slug_or_project_id, branch = nil, path = nil)
+      download_url = env.request_source.file_url(repository: slug_or_project_id, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
       @dangerfile.parse(Pathname.new(local_path))
     end
