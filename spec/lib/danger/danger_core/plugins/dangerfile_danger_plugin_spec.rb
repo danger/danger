@@ -103,14 +103,14 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       end
 
       it "gitlab: 'repo/name'" do
-        outer_dangerfile = "danger.import_dangerfile(gitlab_project_id: 1)"
+        outer_dangerfile = "danger.import_dangerfile(gitlab: 1)"
 
         dm.parse(Pathname.new("."), outer_dangerfile)
         expect(dm.status_report[:messages]).to eq(["OK"])
       end
 
       it "gitlab: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangerfile'" do
-        outer_dangerfile = "danger.import_dangerfile(gitlab_project_id: 1, branch: 'custom-branch', path: 'path/to/Dangerfile')"
+        outer_dangerfile = "danger.import_dangerfile(gitlab: 1, branch: 'custom-branch', path: 'path/to/Dangerfile')"
 
         dm.parse(Pathname.new("."), outer_dangerfile)
         expect(dm.status_report[:messages]).to eq(["OK"])
