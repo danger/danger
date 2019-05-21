@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.0.8
+
 * Fix regression introduced in 6.0.6 using import_dangerfile() for GitLab [@jk](https://github.com/jk) #1128 #1130
 
 ## 6.0.7
