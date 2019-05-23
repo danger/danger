@@ -45,7 +45,7 @@ RSpec.describe Danger::DangerfileBitbucketCloudPlugin, host: :bitbucket_cloud do
 
     describe "#branch_for_head" do
       it "has a fetched branch for head" do
-        expect(plugin.branch_for_head).to eq("develop")
+        expect(plugin.branch_for_head).to eq("feature/test_danger")
       end
     end
 
