@@ -10,6 +10,9 @@
 
 ## master
 
+* Added support for Codefresh CI/CD Platform [@br4in3x](https://github.com/br4in3x)
+* Fixed branch_for_head API of Bitbucket cloud [@susan335](https://github.com/susan335) #1133
+
 ## 6.0.8
 
 * Fix regression introduced in 6.0.6 using import_dangerfile() for GitLab [@jk](https://github.com/jk) #1128 #1130
