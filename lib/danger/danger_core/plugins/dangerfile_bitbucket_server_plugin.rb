@@ -178,6 +178,7 @@ module Danger
     #           Build server job link
     # @param    [String] description
     #           Build status description
+    # @return   [String]
     #
     def update_pr_build_status(status, build_job_link, description)
         @bs.update_pr_build_status(status, build_job_link, description)
