@@ -14,6 +14,18 @@ module Danger
           "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
           "CI_PROJECT_PATH" => "k0nserv/danger-test",
           "CI_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
+          "CI_MERGE_REQUEST_PROJECT_PATH" => "k0nserv/danger-test",
+          "CI_MERGE_REQUEST_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
+          "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
+        }
+      end
+      
+      def stub_env_pre_11_6
+        {
+          "GITLAB_CI" => "1",
+          "CI_COMMIT_SHA" => "3333333333333333333333333333333333333333",
+          "CI_PROJECT_PATH" => "k0nserv/danger-test",
+          "CI_PROJECT_URL" => "https://gitlab.com/k0nserv/danger-test",
           "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
         }
       end
@@ -54,6 +66,26 @@ module Danger
         raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
         url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests/#{merge_request_id}/notes?per_page=100"
         WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
+      def stub_merge_request_discussions(fixture, slug, merge_request_id)
+        raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
+        url = "https://gitlab.com/api/v4/projects/#{slug}/merge_requests/#{merge_request_id}/discussions"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
+      def stub_commit_merge_requests(fixture, slug, commit_sha)
+        raw_file = File.new("spec/fixtures/gitlab_api/#{fixture}.json")
+
+        url = "https://gitlab.com/api/v4/projects/#{slug}/repository/commits/#{commit_sha}/merge_requests?state=opened"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(raw_file)
+      end
+
+      def stub_version(version)
+        url = "https://gitlab.com/api/v4/version"
+        WebMock.stub_request(:get, url).with(headers: expected_headers).to_return(
+          body: "{\"version\":\"#{version}\",\"revision\":\"1d9280e\"}"
+        )
       end
     end
   end

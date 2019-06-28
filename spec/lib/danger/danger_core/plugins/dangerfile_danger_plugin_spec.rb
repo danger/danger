@@ -90,18 +90,31 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
 
-    it "gitlab: 'repo/name'" do
-      outer_dangerfile = "danger.import_dangerfile(gitlab: 'example/example')"
+    context "Gitlab", host: :gitlab do
+      before do
+        allow_any_instance_of(Danger::GitRepo).to receive(:origins).and_return("https://gitlab.com/author/repo.github.io.git")
 
-      dm.parse(Pathname.new("."), outer_dangerfile)
-      expect(dm.status_report[:messages]).to eq(["OK"])
-    end
+        download_url = "https://gitlab.com/api/v4/projects/1/repository/files/Dangerfile/raw?private_token=a86e56d46ac78b&ref=master"
+        download_url_custom = "https://gitlab.com/api/v4/projects/1/repository/files/path/to/Dangerfile/raw?private_token=a86e56d46ac78b&ref=custom-branch"
+        mock_dangerfile = "message('OK')"
 
-    it "gitlab: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangerfile'" do
-      outer_dangerfile = "danger.import_dangerfile(gitlab: 'example/example', branch: 'custom-branch', path: 'path/to/Dangerfile')"
+        stub_request(:get, download_url).to_return(status: 200, body: mock_dangerfile)
+        stub_request(:get, download_url_custom).to_return(status: 200, body: mock_dangerfile)
+      end
 
-      dm.parse(Pathname.new("."), outer_dangerfile)
-      expect(dm.status_report[:messages]).to eq(["OK"])
+      it "gitlab: 'repo/name'" do
+        outer_dangerfile = "danger.import_dangerfile(gitlab: 1)"
+
+        dm.parse(Pathname.new("."), outer_dangerfile)
+        expect(dm.status_report[:messages]).to eq(["OK"])
+      end
+
+      it "gitlab: 'repo/name', branch: 'custom-branch', path: 'path/to/Dangerfile'" do
+        outer_dangerfile = "danger.import_dangerfile(gitlab: 1, branch: 'custom-branch', path: 'path/to/Dangerfile')"
+
+        dm.parse(Pathname.new("."), outer_dangerfile)
+        expect(dm.status_report[:messages]).to eq(["OK"])
+      end
     end
 
     it "path: 'path'" do

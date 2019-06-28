@@ -38,6 +38,19 @@ module Danger
         yield(system_env)
       end
 
+      def with_codefresh_setup_and_is_a_pull_request
+        system_env = {
+          "CF_BUILD_ID" => "89",
+          "CF_BUILD_URL" => "https://g.codefresh.io//build/qwerty123456",
+          "CF_PULL_REQUEST_NUMBER" => "41",
+          "CF_REPO_OWNER" => "Danger",
+          "CF_REPO_NAME" => "danger",
+          "CF_COMMIT_URL" => "https://github.com/danger/danger/commit/qwerty123456"
+        }
+
+        yield(system_env)
+      end
+
       def with_drone_setup_and_is_a_pull_request
         system_env = {
           "DRONE_REPO_NAME" => "danger",
@@ -51,8 +64,9 @@ module Danger
       def with_gitlabci_setup_and_is_a_pull_request
         system_env = {
           "GITLAB_CI" => "true",
-          "CI_MERGE_REQUEST_ID" => "42",
-          "CI_PROJECT_PATH" => "danger/danger"
+          "CI_PROJECT_PATH" => "danger/danger",
+          "CI_MERGE_REQUEST_IID" => "42",
+          "CI_MERGE_REQUEST_PROJECT_PATH" => "danger/danger"
         }
 
         yield(system_env)

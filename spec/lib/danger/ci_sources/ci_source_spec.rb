@@ -6,10 +6,15 @@ RSpec.describe Danger::CI do
       expect(described_class.available_ci_sources.map(&:to_s)).to match_array(
         [
           "Danger::LocalGitRepo",
+          "Danger::LocalOnlyGitRepo",
+          "Danger::Appcenter",
+          "Danger::BitbucketPipelines",
           "Danger::Bitrise",
           "Danger::Buddybuild",
           "Danger::Buildkite",
           "Danger::CircleCI",
+          "Danger::CodeBuild",
+          "Danger::Codefresh",
           "Danger::Codeship",
           "Danger::DotCi",
           "Danger::Drone",
@@ -21,7 +26,10 @@ RSpec.describe Danger::CI do
           "Danger::TeamCity",
           "Danger::Travis",
           "Danger::VSTS",
-          "Danger::XcodeServer"
+          "Danger::XcodeServer",
+          "Danger::AppVeyor",
+          "Danger::GitHubActions",
+          "Danger::Cirrus"
         ]
       )
     end

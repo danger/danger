@@ -66,6 +66,11 @@ RSpec.describe Danger::Jenkins do
         valid_env["ghprbPullId"] = ""
         expect(described_class.validates_as_pr?(valid_env)).to be false
       end
+
+      it "doesn't validate_as_pr if `ghprbPullId` is not a number" do
+        valid_env["ghprbPullId"] = "false"
+        expect(described_class.validates_as_pr?(valid_env)).to be false
+      end
     end
 
     describe "#new" do
@@ -261,6 +266,24 @@ RSpec.describe Danger::Jenkins do
         valid_env["CHANGE_URL"] = "https://bitbucket.example.com/projects/DANGER/repos/danger/pull-requests/1/overview"
 
         expect(source.repo_slug).to eq("DANGER/danger")
+      end
+
+      it "gets out a repo slug with multiple groups ssh" do
+        valid_env["GIT_URL"] = "git@gitlab.com:danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
+      end
+
+      it "gets out a repo slug with multiple groups http" do
+        valid_env["GIT_URL"] = "http://gitlab.com/danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
+      end
+
+      it "gets out a repo slug with multiple groups https" do
+        valid_env["GIT_URL"] = "https://gitlab.com/danger/systems/danger.git"
+
+        expect(source.repo_slug).to eq("danger/systems/danger")
       end
     end
   end

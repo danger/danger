@@ -369,11 +369,17 @@ module Danger
       end
 
       def find_position_in_diff(diff_lines, message, kind)
-        range_header_regexp = /@@ -([0-9]+),([0-9]+) \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
+        range_header_regexp = /@@ -([0-9]+)(,([0-9]+))? \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
         file_header_regexp = %r{^diff --git a/.*}
 
         pattern = "+++ b/" + message.file + "\n"
         file_start = diff_lines.index(pattern)
+
+        # Files containing spaces sometimes have a trailing tab
+        if file_start.nil?
+          pattern = "+++ b/" + message.file + "\t\n"
+          file_start = diff_lines.index(pattern)
+        end
 
         return nil if file_start.nil?
 
@@ -381,6 +387,11 @@ module Danger
         file_line = nil
 
         diff_lines.drop(file_start).each do |line|
+          # If the line has `No newline` annotation, position need increment
+          if line.eql?("\\ No newline at end of file\n")
+            position += 1
+            next
+          end
           # If we found the start of another file diff, we went too far
           break if line.match file_header_regexp
 

@@ -1,6 +1,6 @@
 <!--
 
-// Please add your own contribution below inside the Master section, no need to
+// Please add your own contribution below inside the "master" section, no need to
 // set a version number, that happens during a deploy.
 //
 // These docs are aimed at users rather than danger developers, so please limit technical
@@ -9,6 +9,141 @@
 -->
 
 ## master
+
+## 6.0.9
+
+* Added support for Codefresh CI/CD Platform [@br4in3x](https://github.com/br4in3x)
+* Fixed branch_for_head API of Bitbucket cloud [@susan335](https://github.com/susan335) #1133
+
+## 6.0.8
+
+* Fix regression introduced in 6.0.6 using import_dangerfile() for GitLab [@jk](https://github.com/jk) #1128 #1130
+
+## 6.0.7
+
+* Update `faraday-http-cache` dependency from 1.0 to 2.0
+* Fixed importing Dangerfile from Gitlab (uses Gitlab API now)
+
+## 6.0.6
+
+* Fixed missing Unified diff headers for `gitlab.mr_diff` due to a Gitlab API bug (See https://gitlab.com/gitlab-org/gitlab-ce/issues/53229).
+
+## 6.0.5
+
+* Fixed error of GitLab inline comments @oboenikui, #1111
+
+## 6.0.4
+
+* For GitLab >= 10.7, use a newer faster API to find the MR for the commit
+
+## 6.0.3
+
+* Support Bitbucket cloud OAuth [@susan335](https://github.com/susan335) #1115
+
+## 6.0.2
+
+* Add project URL to Jenkins if available, [@qyhongfan](https://github.com/qyhongfan) #1109
+* Added Cirrus CI support [@RDIL](https://github.com/RDIL), #1114
+
+## 6.0.1
+
+* Fixed error management with GitLab inline comments [@pbendersky](https://github.com/pbendersky), #1106
+
+## 6.0.0
+
+* Support Kramdown 2.0+ (requires Ruby 2.3) [@davidstosik](https://github.com/davidstosik), #1100
+
+* Rescues from failures when submitting inline comments to GitLab [@pbendersky](https://github.com/pbendersky), #1097
+* Fixes issue with GitHub where some filenames have trailing tabs, preventing inline comments from being posted correctly. [@daniel-beard](https://github.com/daniel-beard)
+
+### Breaking changes
+
+* Danger requires Kramdown 2.0 or more recent and will not work with lower versions.
+* Danger requires Ruby 2.3 or more recent and will not work with lower versions.
+
+## 5.16.1
+
+* Fixes GitLab inline comments when violations happened in files outside of the MR diff [@pbendersky](https://github.com/pbendersky), #1092
+
+## 5.16.0
+
+* Add support for Visual Studio App Center [@rishabhtayal](https://github.com/rishabhtayal) / [@cojoj](https://github.com/cojoj)
+* Add more helptext explaining what to do if Danger didn't run on a CircleCI build. [@ghiculescu](https://github.com/ghiculescu)
+* Add support for inline comments on GitLab (for versions >= 10.8.0) [@pbendersky](https://github.com/pbendersky)
+
+## 5.15.0
+
+* Fix `--new-comment` for GitLab to actually create the new comment instead of
+  updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
+  Original issue: https://github.com/danger/danger/issues/1084
+* Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
+
+## 5.14.0
+
+* Add `--fail-if-no-pr` flag, breaks builds if no PR is found [@ghiculescu](https://github.com/ghiculescu)
+
+## 5.13.0
+
+* Add support for Bitbucket Pipelines [@HelloCore](https://github.com/HelloCore)
+
+## 5.12.0
+
+* Fixed interface with GitLab CI [@pbendersky](https://github.com/pbendersky)
+* `danger pr` now supports Bitbucket Cloud repos [@RicardoBelchior](https://github.com/RicardoBelchior)
+
+## 5.11.1
+
+* Fix duplicated REGEXPBB warning [@jmromanos](https://github.com/jmromanos)
+
+## 5.11.0
+
+* Add supports GitHub Actions [@duck8823](https://github.com/duck8823)
+
+## 5.10.3
+
+* Fix issue in `Jenkins` lib with PR detection logic [@serg-kovalev](https://github.com/serg-kovalev)
+
+## 5.10.2
+
+* Support multiple gitlab groups using jenkins ci extracting `repo_slug` [@kyaak](https://github.com/kyaak)
+
+## 5.10.1
+
+* Fix wrong test and implementation about `No newline` annotation [@colorbox](https://github.com/colorbox)
+
+## 5.10.0
+
+* `danger pr` now supports Bitbucket Server repos [@jmromanos](https://github.com/jmromanos)
+
+## 5.9.1
+
+* Fix diff position calculation when diff includes `No newline` annotation [@colorbox](https://github.com/colorbox)
+
+## 5.9.0
+
+* Add `git.tags` to get a list of existing Git tags [@hotbott](https://github.com/hotbott)
+
+## 5.8.2
+
+* Fix diff range detection logic [@r7kamura](https://github.com/r7kamura)
+
+## 5.8.1
+
+* Update `BitbucketServerAPI` error message to include response body [@cnoon](https://github.com/cnoon)
+
+## 5.8.0
+
+* Add AppVeyor support [@tumugin](https://github.com/tumugin)
+
+## 5.7.1
+
+* Add CodeBuild support [@s-faychatelard](https://github.com/s-faychatelard)
+
+## 5.7.0
+
+* Fixes importing a Dangerfile from a GitLab repository [@koffeinfrei](https://github.com/koffeinfrei/)
+* Adds `dry_run` command to allow running danger on localhost without actual PR/MR [@otaznik-net](https://github.com/otaznik-net)
+* GitLab: Determine base_commit from the MR API instead of querying the commits [@leipert](https://github.com/leipert)
 
 ## 5.6.7
 
@@ -33,7 +168,7 @@
 
 ## 5.6.2
 
-* Update Screwdriver CI to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf) 
+* Update Screwdriver CI to parse repo_slug/repo_url correctly. [@fandyfyf](https://github.com/fandyfyf)
 
 ## 5.6.1
 
@@ -1077,3 +1212,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets PR details from GitHub - orta
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
+
+
+[@glensc]: https://github.com/glensc

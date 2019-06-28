@@ -397,6 +397,19 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
+      it "correctly handles trailing tabs in diff" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "ios/Example/App Delegates/README.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "ios/Example/App Delegates/README.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
       it "adds main comment when inline out of range" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
@@ -558,6 +571,71 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           @g.fetch_details
           @g.setup_danger_branches
         end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
+      end
+    end
+  end
+
+  describe "#find_position_in_diff" do
+    subject do
+      github.find_position_in_diff(diff_lines, message, kind)
+    end
+
+    let(:diff_lines) do
+      <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+      DIFF
+    end
+
+    let(:file_path) do
+      "dummy"
+    end
+
+    let(:github) do
+      described_class.new(stub_ci, "DANGER_GITHUB_API_TOKEN" => "hi")
+    end
+
+    let(:kind) do
+      :dummy
+    end
+
+    let(:message) do
+      double(
+        file: file_path,
+        line: 1,
+      )
+    end
+
+    context "when the lines count for the original file is omitted" do
+      it "returns correct position" do
+        is_expected.to eq(2)
+      end
+    end
+
+    context "when diff contain `No newline` annotation before added lines" do
+      let(:diff_lines) do
+        <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,3 @@
+-foo
+\\ No newline at end of file
++foo
++bar
++baz
+        DIFF
+      end
+
+      it "returns correct position" do
+        is_expected.to eq(3)
       end
     end
   end

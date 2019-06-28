@@ -148,7 +148,7 @@ module Danger
     # @return [String]
     #
     def base_commit
-      @gitlab.base_commit
+      @gitlab.mr_json.diff_refs.base_sha
     end
 
     # @!group MR Commit Metadata
@@ -156,7 +156,7 @@ module Danger
     # @return [String]
     #
     def head_commit
-      @gitlab.commits_json.first.id
+      @gitlab.mr_json.diff_refs.head_sha
     end
 
     # @!group GitLab Misc

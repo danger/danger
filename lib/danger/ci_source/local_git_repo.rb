@@ -33,7 +33,7 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::BitbucketServer, Danger::RequestSources::BitbucketCloud]
     end
 
     def initialize(env = {})
@@ -89,7 +89,9 @@ module Danger
           PullRequestFinder.new(
             remote_info.id,
             remote_info.slug,
-            remote: true
+            remote: true,
+            remote_url: env["LOCAL_GIT_PR_URL"],
+            env: env
           ).call
         else
           PullRequestFinder.new(

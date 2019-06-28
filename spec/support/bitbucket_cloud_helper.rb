@@ -30,6 +30,12 @@ module Danger
         url = "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests?q=source.branch.name=%22feature_branch%22"
         WebMock.stub_request(:get, url).to_return(raw_file)
       end
+
+      def stub_access_token
+        raw_file = File.new("spec/fixtures/bitbucket_cloud_api/oauth2_response.json")
+        url = "https://bitbucket.org/site/oauth2/access_token"
+        WebMock.stub_request(:post, url).to_return(raw_file)
+      end
     end
   end
 end

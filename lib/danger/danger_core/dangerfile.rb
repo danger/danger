@@ -11,6 +11,7 @@ require "danger/danger_core/plugins/dangerfile_gitlab_plugin"
 require "danger/danger_core/plugins/dangerfile_bitbucket_server_plugin"
 require "danger/danger_core/plugins/dangerfile_bitbucket_cloud_plugin"
 require "danger/danger_core/plugins/dangerfile_vsts_plugin"
+require "danger/danger_core/plugins/dangerfile_local_only_plugin"
 
 module Danger
   class Dangerfile
@@ -38,7 +39,7 @@ module Danger
 
     # The ones that everything would break without
     def self.essential_plugin_classes
-      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin, DangerfileBitbucketServerPlugin, DangerfileBitbucketCloudPlugin, DangerfileVSTSPlugin]
+      [DangerfileMessagingPlugin, DangerfileGitPlugin, DangerfileDangerPlugin, DangerfileGitHubPlugin, DangerfileGitLabPlugin, DangerfileBitbucketServerPlugin, DangerfileBitbucketCloudPlugin, DangerfileVSTSPlugin, DangerfileLocalOnlyPlugin]
     end
 
     # Both of these methods exist on all objects
@@ -196,9 +197,7 @@ module Danger
       instance_eval do
         # rubocop:disable Lint/RescueException
         begin
-          # rubocop:disable Eval
-          eval(contents, nil, path.to_s)
-          # rubocop:enable Eval
+          eval_file(contents, path)
         rescue Exception => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
           raise DSLError.new(message, path, e.backtrace, contents)
@@ -293,6 +292,10 @@ module Danger
     end
 
     private
+
+    def eval_file(contents, path)
+      eval(contents, nil, path.to_s) # rubocop:disable Eval
+    end
 
     def print_list(title, rows)
       unless rows.empty?

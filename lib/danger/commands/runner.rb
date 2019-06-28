@@ -2,6 +2,7 @@ module Danger
   class Runner < CLAide::Command
     require "danger/commands/init"
     require "danger/commands/local"
+    require "danger/commands/dry_run"
     require "danger/commands/systems"
     require "danger/commands/pr"
 
@@ -37,6 +38,7 @@ module Danger
       @base = argv.option("base")
       @head = argv.option("head")
       @fail_on_errors = argv.option("fail-on-errors", false)
+      @fail_if_no_pr = argv.option("fail-if-no-pr", false)
       @new_comment = argv.flag?("new-comment")
       @remove_previous_comments = argv.flag?("remove-previous-comments")
       @danger_id = argv.option("danger_id", "danger")
@@ -58,6 +60,7 @@ module Danger
         ["--base=[master|dev|stable]", "A branch/tag/commit to use as the base of the diff"],
         ["--head=[master|dev|stable]", "A branch/tag/commit to use as the head"],
         ["--fail-on-errors=<true|false>", "Should always fail the build process, defaults to false"],
+        ["--fail-if-no-pr=<true|false>", "Should fail the build process if no PR is found (useful for CircleCI), defaults to false"],
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
         ["--danger_id=<id>", "The identifier of this Danger instance"],
         ["--new-comment", "Makes Danger post a new comment instead of editing its previous one"],
@@ -73,6 +76,7 @@ module Danger
         danger_id: @danger_id,
         new_comment: @new_comment,
         fail_on_errors: @fail_on_errors,
+        fail_if_no_pr: @fail_if_no_pr,
         remove_previous_comments: @remove_previous_comments
       )
     end

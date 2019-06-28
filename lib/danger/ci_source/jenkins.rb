@@ -47,6 +47,7 @@ module Danger
   # As you own the machine, it's up to you to add the environment variable for the `DANGER_GITLAB_API_TOKEN`.
   #
   class Jenkins < CI
+    attr_accessor :project_url
     class EnvNotFound < StandardError
       def initialize
         super("ENV not found, please check your Jenkins. Related: https://stackoverflow.com/search?q=jenkins+env+null")
@@ -59,7 +60,7 @@ module Danger
 
     def self.validates_as_pr?(env)
       id = pull_request_id(env)
-      !id.nil? && !id.empty?
+      !id.nil? && !id.empty? && !!id.match(%r{^\d+$})
     end
 
     def supported_request_sources
@@ -78,14 +79,36 @@ module Danger
 
       self.repo_url = self.class.repo_url(env)
       self.pull_request_id = self.class.pull_request_id(env)
+      self.repo_slug = self.class.repo_slug(self.repo_url)
+      self.project_url = env["CI_MERGE_REQUEST_PROJECT_URL"] || env["CI_PROJECT_URL"]
+    end
 
-      repo_matches = self.repo_url.match(%r{(?:[\/:])projects\/([^\/.]+)\/repos\/([^\/.]+)}) # Bitbucket Server
-      if repo_matches
-        self.repo_slug = "#{repo_matches[1]}/#{repo_matches[2]}"
-      else
-        repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/]+)$})
-        self.repo_slug = repo_matches[2].gsub(/\.git$/, "") unless repo_matches.nil?
-      end
+    def self.repo_slug(repo_url)
+      slug = self.slug_ssh(repo_url)
+      slug = self.slug_http(repo_url) unless slug
+      slug = self.slug_bitbucket(repo_url) unless slug
+      slug = self.slug_fallback(repo_url) unless slug
+      return slug.gsub(/\.git$/, "") unless slug.nil?
+    end
+
+    def self.slug_bitbucket(repo_url)
+      repo_matches = repo_url.match(%r{(?:[\/:])projects\/([^\/.]+)\/repos\/([^\/.]+)})
+      return "#{repo_matches[1]}/#{repo_matches[2]}" if repo_matches
+    end
+
+    def self.slug_ssh(repo_url)
+      repo_matches = repo_url.match(%r{^git@.+:(.+)})
+      return repo_matches[1] if repo_matches
+    end
+
+    def self.slug_http(repo_url)
+      repo_matches = repo_url.match(%r{^https?.+(?>\.\w*\d*\/)(.+.git$)})
+      return repo_matches[1] if repo_matches
+    end
+
+    def self.slug_fallback(repo_url)
+      repo_matches = repo_url.match(%r{([\/:])([^\/]+\/[^\/]+)$})
+      return repo_matches[2]
     end
 
     def self.pull_request_id(env)

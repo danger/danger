@@ -24,7 +24,7 @@ Danger runs after your CI, automating your team's conventions surrounding code r
 
 This provides another logical step in your process, through this Danger can help lint your rote tasks in daily code review.
 
-You can use Danger to codify your teams norms, leaving humans to think about harder problems.
+You can use Danger to codify your team's norms, leaving humans to think about harder problems.
 
 ## For example?
 
@@ -91,4 +91,4 @@ We try to keep as much discussion as possible in GitHub issues, but also have a 
 
 > This project subscribes to the [Moya Contributors Guidelines](https://github.com/Moya/contributors) which TLDR: means we give out push access easily and often.
 
-> Contributors subscribe to the [Contributor Code of Conduct](http://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](http://contributor-covenant.org) version 1.3.0.
+> Contributors subscribe to the [Contributor Code of Conduct](https://contributor-covenant.org/version/1/3/0/) based on the [Contributor Covenant](https://contributor-covenant.org) version 1.3.0.

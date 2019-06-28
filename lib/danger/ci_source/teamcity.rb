@@ -42,10 +42,18 @@ module Danger
   #
   # You will need to add the following environment variables as build parameters or by exporting them inside your
   # Simple Command Runner.
-  # - `DANGER_BITBUCKETCLOUD_USERNAME`
-  # - `DANGER_BITBUCKETCLOUD_PASSWORD`
+  #
+  #
   # - `BITBUCKET_REPO_SLUG`
   # - `BITBUCKET_REPO_URL`
+  #
+  # - `DANGER_BITBUCKETCLOUD_USERNAME`
+  # - `DANGER_BITBUCKETCLOUD_PASSWORD`
+  #
+  # or
+  #
+  # - `DANGER_BITBUCKETCLOUD_OAUTH_KEY`
+  # - `DANGER_BITBUCKETCLOUD_OAUTH_SECRET`
   #
   # You will also need to set the `BITBUCKET_BRANCH_NAME` environment variable.
   # TeamCity provides `%teamcity.build.branch%`, which you can use at the top of your Simple Command Runner:
@@ -57,6 +65,7 @@ module Danger
   #
   # You will need to add the following environment variables as build parameters or by exporting them inside your
   # Simple Command Runner.
+  #
   # - `DANGER_BITBUCKETSERVER_USERNAME`
   # - `DANGER_BITBUCKETSERVER_PASSWORD`
   # - `DANGER_BITBUCKETSERVER_HOST`
