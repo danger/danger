@@ -10,6 +10,10 @@
 
 ## master
 
+## 6.0.10
+
+* Integrated build status Bitbucket Server REST API
+
 ## 6.0.9
 
 * Added support for Codefresh CI/CD Platform [@br4in3x](https://github.com/br4in3x)
