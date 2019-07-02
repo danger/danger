@@ -13,6 +13,7 @@
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API
+* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335) 
 
 ## 6.0.9
 
