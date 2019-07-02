@@ -45,13 +45,17 @@ module Danger
       end
 
       def delete_comment(id)
-        uri = URI("#{pr_api_endpoint_v1}/comments/#{id}")
+        uri = URI("#{pr_api_endpoint}/comments/#{id}")
         delete(uri)
       end
 
       def post_comment(text)
-        uri = URI("#{pr_api_endpoint_v1}/comments")
-        body = { content: text }.to_json
+        uri = URI("#{pr_api_endpoint}/comments")
+        body = {
+          content: { 
+            raw: text
+          }
+        }.to_json
         post(uri, body)
       end
 
@@ -63,10 +67,6 @@ module Danger
 
       def pr_api_endpoint
         "#{base_url(2)}/#{pull_request_id}"
-      end
-
-      def pr_api_endpoint_v1
-        "#{base_url(1)}/#{pull_request_id}"
       end
 
       def prs_api_endpoint(branch_name)
