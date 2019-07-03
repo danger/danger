@@ -91,6 +91,15 @@ module Danger
           @api.delete_comment(c[:id], c[:version]) if c[:text] =~ /generated_by_#{danger_id}/
         end
       end
+        
+      def update_pr_build_status(status, build_job_link, description)
+        changeset = self.pr_json[:fromRef][:latestCommit]
+        # Support for older versions of Bitbucket Server
+        changeset = self.pr_json[:fromRef][:latestChangeset] if self.pr_json[:fromRef].key? :latestChangeset
+        puts "Changeset: " + changeset
+        puts self.pr_json.to_json
+        @api.update_pr_build_status(status, changeset, build_job_link, description)
+      end
     end
   end
 end
