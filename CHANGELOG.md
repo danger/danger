@@ -10,6 +10,8 @@
 
 ## master
 
+* Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135
+
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API
