@@ -35,7 +35,7 @@ module Danger
     def fetch_pull_request_url(repo_slug, build_number, token)
       build_json = fetch_build(repo_slug, build_number, token)
       pull_requests = build_json[:pull_requests]
-      return nil unless pull_requests.first
+      return nil unless pull_requests && pull_requests.first
       pull_requests.first[:url]
     end
 
