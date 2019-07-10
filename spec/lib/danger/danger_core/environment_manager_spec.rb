@@ -218,6 +218,22 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
   end
 
+  describe "#danger_id" do
+    it "returns the default identifier when none is provided" do
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui)
+        expect(env_manager.danger_id).to eq("danger")
+      end
+    end
+
+    it "returns the identifier user by danger" do
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui, "test_identifier")
+        expect(env_manager.danger_id).to eq("test_identifier")
+      end
+    end
+  end
+
   def git_repo_with_danger_branches_setup
     Dir.mktmpdir do |dir|
       Dir.chdir dir do

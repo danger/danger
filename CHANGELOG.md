@@ -10,6 +10,8 @@
 
 ## master
 
+* Exposes danger_id publicly via `EnvironmentManager`. Access it in the `Dangerfile` via `danger.env.danger_id` [@rpassis](https://github.com/rpassis/)
+
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API

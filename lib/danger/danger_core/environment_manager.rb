@@ -3,7 +3,7 @@ require "danger/request_sources/request_source"
 
 module Danger
   class EnvironmentManager
-    attr_accessor :ci_source, :request_source, :scm, :ui
+    attr_accessor :ci_source, :request_source, :scm, :ui, :danger_id
 
     # Finds a Danger::CI class based on the ENV
     def self.local_ci_source(env)
@@ -25,10 +25,11 @@ module Danger
       "danger_base".freeze
     end
 
-    def initialize(env, ui = nil)
+    def initialize(env, ui = nil, danger_id = "danger")
       ci_klass = self.class.local_ci_source(env)
       self.ci_source = ci_klass.new(env)
       self.ui = ui || Cork::Board.new(silent: false, verbose: false)
+      self.danger_id = danger_id
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
         next unless self.ci_source.supports?(klass)
