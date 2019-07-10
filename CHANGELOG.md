@@ -12,6 +12,10 @@
 
 * Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135
 
+## 6.0.11
+
+* Exposes danger_id publicly via `EnvironmentManager`. Access it in the `Dangerfile` via `danger.env.danger_id` [@rpassis](https://github.com/rpassis/)
+
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API
