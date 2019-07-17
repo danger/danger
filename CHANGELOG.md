@@ -11,6 +11,7 @@
 ## master
 
 * Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135
+* Fixes a crash in FileList include [@chemouna](https://github.com/chemouna)
 
 ## 6.0.11
 
