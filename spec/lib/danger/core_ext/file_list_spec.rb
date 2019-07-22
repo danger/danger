@@ -24,5 +24,9 @@ RSpec.describe Danger::FileList do
     it "returns false if nothing was found" do
       expect(@filelist.include?("notFound")).to eq(false)
     end
+    it "returns false if file path is nil" do
+      @filelist = Danger::FileList.new([nil])
+      expect(@filelist.include?("pattern")).to eq(false)
+    end
   end
 end
