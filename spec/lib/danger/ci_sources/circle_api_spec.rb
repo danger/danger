@@ -34,7 +34,7 @@ RSpec.describe Danger::CircleAPI do
     end
   end
 
-  it "uses CIRCLE_PR_NUMBER if avaliable" do
+  it "uses CIRCLE_PR_NUMBER if available" do
     env = {
       "CIRCLE_BUILD_NUM" => "1500",
       "DANGER_CIRCLE_CI_API_TOKEN" => "token2",

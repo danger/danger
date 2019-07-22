@@ -21,7 +21,7 @@ module Danger
       # Run some validations
       validate!(cork, fail_if_no_pr: fail_if_no_pr)
 
-      # OK, we now know that Danger can run in this enviroment
+      # OK, we now know that Danger can run in this environment
       env ||= EnvironmentManager.new(system_env, cork, danger_id)
       dm ||= Dangerfile.new(env, cork)
 

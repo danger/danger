@@ -428,7 +428,7 @@ index 0f96cd6..b5fa1d1 100644
 +      # request_source implementations are invited to override this method.
 +      # This is mostly here to enable sources to detect when inlines change only in their
 +      # commit hash and not in content per-se. since the link is implementation dependant
-+      # so should be the comparision.
++      # so should be the comparison.
 +      #
 +      # @param [Violation or Markdown] m1
 +      # @param [Violation or Markdown] m2
@@ -685,7 +685,7 @@ index b122911..e0aff3d 100644
 +          else
 +            # We remove non-sticky violations that have no replies
 +            # Since there's no direct concept of a reply in GH, we simply consider
-+            # the existance of non-danger comments in that line as replies
++            # the existence of non-danger comments in that line as replies
 +            replies = non_danger_comments.select do |potential|
 +              potential[:path] == comment[:path] &&
 +                potential[:position] == comment[:position] &&
