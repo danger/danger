@@ -34,7 +34,7 @@ module Danger
   # @example Failing a build
   #
   #          failure "This build didn't pass tests"
-  #          failure "Ooops!", "Something bad happend"
+  #          failure "Ooops!", "Something bad happened"
   #          failure ["This is example", "with array"]
   #
   # @example Failing a build, and note that on subsequent runs

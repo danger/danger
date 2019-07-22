@@ -4,7 +4,7 @@ require "danger/request_sources/vsts"
 module Danger
   # ### CI Setup
   #
-  # You need to go to your project's build definiton. Then add a "Command Line" Task with the "Tool" field set to  "bundle"
+  # You need to go to your project's build definition. Then add a "Command Line" Task with the "Tool" field set to  "bundle"
   # and the "Arguments" field set to "exec danger".
   #
   # ### Token Setup

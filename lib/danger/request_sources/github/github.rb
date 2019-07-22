@@ -276,7 +276,7 @@ module Danger
           else
             # We remove non-sticky violations that have no replies
             # Since there's no direct concept of a reply in GH, we simply consider
-            # the existance of non-danger comments in that line as replies
+            # the existence of non-danger comments in that line as replies
             replies = non_danger_comments.select do |potential|
               potential["path"] == comment["path"] &&
                 potential["position"] == comment["position"] &&

@@ -1,6 +1,6 @@
 require "danger/danger_core/dangerfile_generator"
 
-# Mainly so we can have a nice strucutre for commands
+# Mainly so we can have a nice structure for commands
 
 module Danger
   class DangerfileCommand < Runner

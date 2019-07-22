@@ -2,7 +2,7 @@ require "danger/plugin_support/plugin"
 
 module Danger
   # A way to interact with Danger herself. Offering APIs to import plugins,
-  # and Dangerfiles from muliple sources.
+  # and Dangerfiles from multiple sources.
   #
   # @example Import a plugin available over HTTP
   #
