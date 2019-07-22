@@ -32,7 +32,7 @@ RSpec.describe Danger::RequestSources::BitbucketServerAPI, host: :bitbucket_serv
       expect(api.send(:use_ssl)).to eq(true)
     end
     
-    it "post build successfull" do
+    it "post build successful" do
         allow(ENV).to receive(:[]).with("ENVDANGER_BITBUCKETSERVER_PASSWORD") { "supertopsecret" }
          stub_request(:post, "https://stash.example.com/rest/build-status/1.0/commits/04dede05fb802bf1e6c69782ae98592d29c03b80").
          with(:body => "{\"state\":\"SUCCESSFUL\",\"key\":\"danger\",\"url\":\"build_job_link\",\"description\":\"description\"}",
