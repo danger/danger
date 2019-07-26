@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.1.0
+
 * Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135
 * Fixes a crash in FileList include [@chemouna](https://github.com/chemouna)
 * Fix typos across danger repository [@kittenking](https://github.com/kittenking) #1144
