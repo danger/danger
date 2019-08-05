@@ -10,6 +10,8 @@
 
 ## master
 
+* Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
+
 ## 6.1.0
 
 * Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135

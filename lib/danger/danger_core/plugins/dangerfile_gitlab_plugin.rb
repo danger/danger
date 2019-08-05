@@ -53,6 +53,19 @@ module Danger
   #
   #         warn "#{gitlab.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
   #
+  # @example Select a random group member as assignee if no assignee is selected
+  #
+  #         if gitlab.mr_json["assignee"].nil?
+  #           reviewer = gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).sample
+  #           if gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).length > 1
+  #             while reviewer.to_hash["id"] == gitlab.mr_json["author"]["id"] do
+  #               reviewer = gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).sample
+  #             end
+  #           end
+  #           message "Reviewer roulete rolled for: #{reviewer.to_hash['name']} (@#{reviewer.to_hash['username']})"
+  #           gitlab.api.update_merge_request(project_id, mr_id, { assignee_id: reviewer.to_hash["id"] })
+  #         end
+  # 
   #
   # @see  danger/danger
   # @tags core, gitlab
