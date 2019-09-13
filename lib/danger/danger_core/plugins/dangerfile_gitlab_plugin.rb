@@ -193,6 +193,17 @@ module Danger
     end
 
     # @!group GitLab Misc
+    # Returns the web_url of the source project.
+    # @return [String]
+    #
+    def repository_web_url
+      @repository_web_url ||= begin
+        project = api.project(mr_json["source_project_id"])
+        project.web_url
+      end
+    end
+
+    # @!group GitLab Misc
     # Returns a list of HTML anchors for a file, or files in the head repository. An example would be:
     # `<a href='https://gitlab.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`. It returns a string of multiple anchors if passed an array.
     # @param    [String or Array<String>] paths
@@ -209,7 +220,7 @@ module Danger
       paths = paths.map do |path|
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        create_link("#{env.ci_source.project_url}/blob/#{commit}#{url_path}", text)
+        create_link("#{repository_web_url}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2
