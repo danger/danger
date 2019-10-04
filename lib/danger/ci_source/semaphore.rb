@@ -1,4 +1,4 @@
-# https://semaphoreci.com/docs/available-environment-variables.html
+# https://docs.semaphoreci.com/article/12-environment-variables
 require "danger/request_sources/github/github"
 
 module Danger
@@ -18,7 +18,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] && !env[x].empty? }
+      ["SEMAPHORE_GIT_REPO_SLUG", "SEMAPHORE_GIT_PR_NUMBER"].all? { |x| env[x] && !env[x].empty? }
     end
 
     def supported_request_sources
@@ -26,9 +26,9 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SEMAPHORE_REPO_SLUG"]
-      self.pull_request_id = env["PULL_REQUEST_NUMBER"]
-      self.repo_url = GitRepo.new.origins # Semaphore doesn't provide a repo url env variable :/
+      self.repo_slug = env["SEMAPHORE_GIT_REPO_SLUG"]
+      self.pull_request_id = env["SEMAPHORE_GIT_PR_NUMBER"]
+      self.repo_url = env["SEMAPHORE_GIT_URL"]
     end
   end
 end
