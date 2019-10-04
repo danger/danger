@@ -12,6 +12,7 @@
 
 * Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
 * Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
+* Updated Semaphore to work with Semaphore 2.0. **this is a breaking change** [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1158](https://github.com/danger/danger/pull/1158)
 
 ## 6.1.0
 
@@ -27,7 +28,7 @@
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API
-* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335) 
+* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335)
 
 ## 6.0.9
 
