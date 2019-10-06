@@ -18,7 +18,10 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      ["SEMAPHORE_GIT_REPO_SLUG", "SEMAPHORE_GIT_PR_NUMBER"].all? { |x| env[x] && !env[x].empty? }
+      one = ["SEMAPHORE_REPO_SLUG", "PULL_REQUEST_NUMBER"].all? { |x| env[x] && !env[x].empty? }
+      two = ["SEMAPHORE_GIT_REPO_SLUG", "SEMAPHORE_GIT_PR_NUMBER"].all? { |x| env[x] && !env[x].empty? }
+
+      one || two
     end
 
     def supported_request_sources
@@ -26,9 +29,9 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_slug = env["SEMAPHORE_GIT_REPO_SLUG"]
-      self.pull_request_id = env["SEMAPHORE_GIT_PR_NUMBER"]
-      self.repo_url = env["SEMAPHORE_GIT_URL"]
+      self.repo_slug = env["SEMAPHORE_GIT_REPO_SLUG"] || env["SEMAPHORE_REPO_SLUG"]
+      self.pull_request_id = env["SEMAPHORE_GIT_PR_NUMBER"] || env["PULL_REQUEST_NUMBER"]
+      self.repo_url = env["SEMAPHORE_GIT_URL"] || GitRepo.new.origins
     end
   end
 end
