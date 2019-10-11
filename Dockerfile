@@ -21,4 +21,4 @@ RUN bundle install
 
 COPY . $APP_HOME
 
-CMD bundle exec danger pr
+ENTRYPOINT ["bundle", "exec", "danger"]
