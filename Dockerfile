@@ -16,5 +16,6 @@ RUN mkdir /myapp
 WORKDIR /myapp
 COPY . /myapp
 
+RUN gem install bundler
 RUN bundle install
 ENTRYPOINT ["bundle", "exec", "danger"]
