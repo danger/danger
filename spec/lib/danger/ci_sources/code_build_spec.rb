@@ -6,9 +6,11 @@ RSpec.describe Danger::CodeBuild do
     {
       "CODEBUILD_BUILD_ID" => "codebuild:cf613895-4a78-4456-8568-a53784fa75c5",
       "CODEBUILD_SOURCE_VERSION" => "pr/1234",
-      "CODEBUILD_SOURCE_REPO_URL" => "https://github.com/danger/danger.git"
+      "CODEBUILD_SOURCE_REPO_URL" => source_repo_url
     }
   end
+
+  let(:source_repo_url) { "https://github.com/danger/danger.git" }
 
   let(:source) { described_class.new(valid_env) }
 
@@ -66,6 +68,14 @@ RSpec.describe Danger::CodeBuild do
     describe "repo slug" do
       it "gets out a repo slug" do
         expect(source.repo_slug).to eq("danger/danger")
+      end
+
+      context "when `CODEBUILD_SOURCE_REPO_URL` is not ended with '.git'" do
+        let(:source_repo_url) { "https://github.com/danger/danger" }
+
+        it "also gets out a repo slug" do
+          expect(source.repo_slug).to eq("danger/danger")
+        end
       end
     end
 

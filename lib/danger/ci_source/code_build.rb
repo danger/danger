@@ -32,7 +32,7 @@ module Danger
     def self.extract_repo_slug(env)
       return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
 
-      env["CODEBUILD_SOURCE_REPO_URL"].gsub(%r{^.*?github\.com\/(.*?)\.git$}, '\1')
+      env["CODEBUILD_SOURCE_REPO_URL"].gsub(%r{^.*?github\.com\/(.*?)(\.git)?$}, '\1')
     end
 
     def self.extract_repo_url(env)
