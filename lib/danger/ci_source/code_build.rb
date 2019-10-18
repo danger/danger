@@ -16,8 +16,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      return false unless url = self.extract_pr_url(env)
-      url
+      !!self.extract_pr_url(env)
     end
 
     def supported_request_sources
@@ -26,7 +25,7 @@ module Danger
 
     def initialize(env)
       self.repo_slug = self.class.extract_repo_slug(env)
-      self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1]
+      self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1].to_i
       self.repo_url = self.class.extract_repo_url(env)
     end
 
