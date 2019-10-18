@@ -12,7 +12,8 @@ RSpec.describe Danger::CodeBuild do
 
   let(:source_repo_url) { "https://github.com/danger/danger.git" }
 
-  let(:source) { described_class.new(valid_env) }
+  let(:env) { valid_env }
+  let(:source) { described_class.new(env) }
 
   context "with GitHub" do
     describe ".validates_as_ci?" do
@@ -72,6 +73,15 @@ RSpec.describe Danger::CodeBuild do
 
       context "when `CODEBUILD_SOURCE_REPO_URL` is not ended with '.git'" do
         let(:source_repo_url) { "https://github.com/danger/danger" }
+
+        it "also gets out a repo slug" do
+          expect(source.repo_slug).to eq("danger/danger")
+        end
+      end
+
+      context "when `CODEBUILD_SOURCE_REPO_URL` is hosted on github enterprise" do
+        let(:env) { valid_env.merge({ "DANGER_GITHUB_HOST" => "github.example.com" }) }
+        let(:source_repo_url) { "https://github.example.com/danger/danger" }
 
         it "also gets out a repo slug" do
           expect(source.repo_slug).to eq("danger/danger")
