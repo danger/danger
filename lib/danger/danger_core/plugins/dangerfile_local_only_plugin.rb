@@ -9,7 +9,7 @@ module Danger
   # @example Check that added lines contains agreed form of words 
   #
   #       git.diff.each do |chunk|
-  #         chunk.patch.lines.grep(/^+/).each do |added_line|
+  #         chunk.patch.lines.grep(/^\+/).each do |added_line|
   #           if added_line.gsub!(/(?<cancel>cancel)(?<rest>[^l[[:space:]][[:punct:]]]+)/i, '>>\k<cancel>-l-\k<rest><<')
   #             fail "Single 'L' for cancellation-alike words in '#{added_line}'" 
   #           end
