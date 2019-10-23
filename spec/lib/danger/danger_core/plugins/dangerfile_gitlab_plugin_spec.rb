@@ -101,6 +101,7 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
         expect(plugin).to receive("mr_json").
           and_return({:source_project_id => "15"})
 
+        require "gitlab"
         project = Gitlab::ObjectifiedHash.new({:web_url => "https://gitlab.com/k0nserv/danger-test"})
 
         expect(plugin.api).to receive("project").
