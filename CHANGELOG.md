@@ -12,7 +12,7 @@
 
 * Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
 * Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
-* Updated Semaphore to work with Semaphore 2.0. **this is a breaking change** [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1165](https://github.com/danger/danger/pull/1165)
+* Updated Semaphore to also work with Semaphore 2.0. [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1165](https://github.com/danger/danger/pull/1165)
 
 ## 6.1.0
 
