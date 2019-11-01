@@ -10,6 +10,8 @@
 
 ## master
 
+* Add github enterprise support to CodeBuild
+* Fix CodeBuild to allow repo url which not ended `.git`
 * Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
 * Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
 

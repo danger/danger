@@ -16,8 +16,7 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      return false unless url = self.extract_pr_url(env)
-      url
+      !!self.extract_pr_url(env)
     end
 
     def supported_request_sources
@@ -26,32 +25,33 @@ module Danger
 
     def initialize(env)
       self.repo_slug = self.class.extract_repo_slug(env)
-      self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1]
+      self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1].to_i
       self.repo_url = self.class.extract_repo_url(env)
     end
 
-    private
-      def self.extract_repo_slug(env)
-        return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
+    def self.extract_repo_slug(env)
+      return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
 
-        env["CODEBUILD_SOURCE_REPO_URL"].gsub(/^.*?github\.com\/(.*?)\.git$/, '\1')
-      end
+      gh_host = env["DANGER_GITHUB_HOST"] || "github.com"
 
-      def self.extract_repo_url(env)
-        return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
+      env["CODEBUILD_SOURCE_REPO_URL"].gsub(%r{^.*?#{Regexp.escape(gh_host)}\/(.*?)(\.git)?$}, '\1')
+    end
 
-        env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
-      end
+    def self.extract_repo_url(env)
+      return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
 
-      def self.extract_pr_url(env)
-        return nil unless env.key? "CODEBUILD_SOURCE_VERSION"
-        return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
-        return nil unless env["CODEBUILD_SOURCE_VERSION"].split("/").length == 2
+      env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
+    end
 
-        source_origin, pr_number = env["CODEBUILD_SOURCE_VERSION"].split("/")
-        github_repo_url = env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
+    def self.extract_pr_url(env)
+      return nil unless env.key? "CODEBUILD_SOURCE_VERSION"
+      return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
+      return nil unless env["CODEBUILD_SOURCE_VERSION"].split("/").length == 2
 
-        "#{github_repo_url}/pull/#{pr_number}"
-      end
+      _source_origin, pr_number = env["CODEBUILD_SOURCE_VERSION"].split("/")
+      github_repo_url = env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
+
+      "#{github_repo_url}/pull/#{pr_number}"
+    end
   end
 end
