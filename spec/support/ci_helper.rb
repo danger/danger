@@ -120,8 +120,9 @@ module Danger
       def with_semaphore_setup_and_is_a_pull_request
         system_env = {
           "SEMAPHORE" => "true",
-          "SEMAPHORE_REPO_SLUG" => "danger/danger",
-          "PULL_REQUEST_NUMBER" => "42"
+          "SEMAPHORE_GIT_PR_NUMBER" => "800",
+          "SEMAPHORE_GIT_REPO_SLUG" => "artsy/eigen",
+          "SEMAPHORE_GIT_URL" => "git@github.com:artsy/eigen"
         }
 
         yield(system_env)
