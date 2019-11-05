@@ -19,6 +19,14 @@ module Danger
   #
   # Add the `DANGER_GITHUB_API_TOKEN` to your workflow's [Secret App Env Vars](https://blog.bitrise.io/anyone-even-prs-can-have-secrets).
   #
+  # ### bitbucket server and bitrsie
+  #
+  # Danger will read the environemnt variable GIT_REPOSITORY_URL to construct the Bitbucket Server API URL 
+  # finding the project and repo slug in the GIT_REPOSITORY_URL variable. This GIT_REPOSITORY_URL variable 
+  # comes from the App Settings tab for your Bitrsie App. If you are manually setting a repo URL in the 
+  # Git Clone Repo step, you may need to set adjust this propery in the settings tab, maybe even fake it.
+  # The pattern used is `(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)}`.
+  #
   class Bitrise < CI
     def self.validates_as_ci?(env)
       env.key? "BITRISE_IO"
