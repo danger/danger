@@ -2,7 +2,6 @@ require "set"
 
 module Danger
   class Bamboo < CI
-
     def supported_request_sources
       @supported_request_sources ||= [
         Danger::RequestSources::BitbucketServer
