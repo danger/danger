@@ -4,6 +4,12 @@ require "danger/danger_core/executor"
 RSpec.describe Danger::Executor, use: :ci_helper do
   describe "#validate!" do
     context "with CI + is a PR" do
+      it "not raises error on Bamboo" do
+        with_bamboo_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
+        end
+      end
+
       it "not raises error on Bitrise" do
         with_bitrise_setup_and_is_a_pull_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
