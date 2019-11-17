@@ -4,8 +4,9 @@ RSpec.describe Danger::Semaphore do
   let(:valid_env) do
     {
       "SEMAPHORE" => "true",
-      "PULL_REQUEST_NUMBER" => "800",
-      "SEMAPHORE_REPO_SLUG" => "artsy/eigen"
+      "SEMAPHORE_GIT_PR_NUMBER" => "800",
+      "SEMAPHORE_GIT_REPO_SLUG" => "artsy/eigen",
+      "SEMAPHORE_GIT_URL" => "git@github.com:artsy/eigen"
     }
   end
 
@@ -22,12 +23,14 @@ RSpec.describe Danger::Semaphore do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
-    it "validates when `PULL_REQUEST_NUMBER` is missing" do
+    it "validates when `SEMAPHORE_GIT_PR_NUMBER` is missing" do
+      valid_env["SEMAPHORE_GIT_PR_NUMBER"] = nil
       valid_env["PULL_REQUEST_NUMBER"] = nil
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
-    it "validates when `SEMAPHORE_REPO_SLUG` is missing" do
+    it "validates when `SEMAPHORE_GIT_REPO_SLUG` is missing" do
+      valid_env["SEMAPHORE_GIT_REPO_SLUG"] = nil
       valid_env["SEMAPHORE_REPO_SLUG"] = nil
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
@@ -42,22 +45,26 @@ RSpec.describe Danger::Semaphore do
       expect(described_class.validates_as_pr?(valid_env)).to be true
     end
 
-    it "does not validate if `PULL_REQUEST_NUMBER` is missing" do
+    it "does not validate if `SEMAPHORE_GIT_PR_NUMBER` is missing" do
+      valid_env["SEMAPHORE_GIT_PR_NUMBER"] = nil
       valid_env["PULL_REQUEST_NUMBER"] = nil
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end
 
-    it "does not validate if `PULL_REQUEST_NUMBER` is empty" do
+    it "does not validate if `SEMAPHORE_GIT_PR_NUMBER` is empty" do
+      valid_env["SEMAPHORE_GIT_PR_NUMBER"] = ""
       valid_env["PULL_REQUEST_NUMBER"] = ""
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end
 
-    it "does not validate if `SEMAPHORE_REPO_SLUG` is missing" do
+    it "does not validate if `SEMAPHORE_GIT_REPO_SLUG` is missing" do
+      valid_env["SEMAPHORE_GIT_REPO_SLUG"] = nil
       valid_env["SEMAPHORE_REPO_SLUG"] = nil
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end
 
-    it "does not validate if `SEMAPHORE_REPO_SLUG` is empty" do
+    it "does not validate if `SEMAPHORE_GIT_REPO_SLUG` is empty" do
+      valid_env["SEMAPHORE_GIT_REPO_SLUG"] = ""
       valid_env["SEMAPHORE_REPO_SLUG"] = ""
       expect(described_class.validates_as_pr?(valid_env)).to be false
     end

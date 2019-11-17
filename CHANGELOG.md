@@ -15,6 +15,8 @@
 * Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
 * Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
 * Adds support for Atlassian Bamboo CI #985
+* Updated Semaphore to also work with Semaphore 2.0. [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1165](https://github.com/danger/danger/pull/1165)
+* adding documentation in bitrise.rb with respect to [#1164](https://github.com/danger/danger/issues/1164)
 
 ## 6.1.0
 
@@ -30,7 +32,7 @@
 ## 6.0.10
 
 * Integrated build status Bitbucket Server REST API
-* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335) 
+* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335)
 
 ## 6.0.9
 
