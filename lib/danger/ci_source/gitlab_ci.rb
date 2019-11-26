@@ -26,7 +26,7 @@ module Danger
 
   class GitLabCI < CI
     def self.validates_as_ci?(env)
-      env.key? "GITLAB_CI"
+      false
     end
 
     def self.validates_as_pr?(env)
