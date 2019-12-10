@@ -16,6 +16,7 @@
 * Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
 * Updated Semaphore to also work with Semaphore 2.0. [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1165](https://github.com/danger/danger/pull/1165)
 * adding documentation in bitrise.rb with respect to [#1164](https://github.com/danger/danger/issues/1164)
+* Fix GitHub Pull Request identifier in Azure Pipelines [@Dahlgren](https://github.com/Dahlgren)
 
 ## 6.1.0
 
