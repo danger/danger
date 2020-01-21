@@ -122,6 +122,8 @@ def with_git_repo(origin: "git@github.com:artsy/eigen")
       `git commit -m "another"`
       `git remote add origin #{origin}`
 
+      Dir.mkdir(dir + "/subdir")
+
       yield dir
     end
   end

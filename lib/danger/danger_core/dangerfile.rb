@@ -257,7 +257,7 @@ module Danger
 
     def setup_for_running(base_branch, head_branch)
       env.ensure_danger_branches_are_setup
-      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
+      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch, lookup_top_level: true)
     end
 
     def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments)
