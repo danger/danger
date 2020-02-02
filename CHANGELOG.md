@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix Bitbucket Pipelines documentation
+
 ## 6.2.0
 
 * Enable Danger to be run from a subfolder of a git repository [@scranen](https://github.com/scranen) [#1177](https://github.com/danger/danger/issues/1177)
