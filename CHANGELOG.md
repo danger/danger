@@ -11,6 +11,7 @@
 ## master
 
 * Fix Bitbucket Pipelines documentation
+* Update Ruby-Git to 1.6.0 to fix output encoding
 
 ## 6.2.0
 
