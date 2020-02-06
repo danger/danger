@@ -56,7 +56,8 @@ module Danger
             raw: text
           }
         }
-        body.merge(inline: { path: file, line: line }) if file && line
+        body.merge(inline: { path: file, to: line }) if file && line
+
         post(uri, body.to_json)
       end
 

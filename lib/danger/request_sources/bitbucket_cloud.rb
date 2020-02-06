@@ -73,15 +73,47 @@ module Danger
 
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"
+
+        warnings = update_inline_comments_for_kind!(:warnings, warnings)
+        errors = update_inline_comments_for_kind!(:errors, errors)
+        messages = update_inline_comments_for_kind!(:messages, messages)
+        markdowns = update_inline_comments_for_kind!(:markdowns, markdowns)
+
         comment += generate_comment(warnings: warnings,
-                                     errors: errors,
-                                   messages: messages,
-                                  markdowns: markdowns,
-                        previous_violations: {},
-                                  danger_id: danger_id,
-                                   template: "bitbucket_server")
+                                    errors: errors,
+                                    messages: messages,
+                                    markdowns: markdowns,
+                                    previous_violations: {},
+                                    danger_id: danger_id,
+                                    template: "bitbucket_server")
 
         @api.post_comment(comment)
+      end
+
+      def update_inline_comments_for_kind!(type, messages)
+        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
+
+        messages.reject do |message|
+          next false unless message.file && message.line
+
+          body = ""
+
+          if kind == :markdown
+            body = generate_inline_comment_body(message,
+                                                previous_violations: {},
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server")
+          else
+            body = generate_inline_comment_body(emoji, message,
+                                                previous_violations: {},
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server")
+          end
+
+          @api.post_comment(body, file: message.file, line: message.line)
+
+          true
+        end
       end
 
       def delete_old_comments(danger_id: "danger")
