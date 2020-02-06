@@ -30,6 +30,11 @@ module Danger
         @username && !@username.empty? && @password && !@password.empty?
       end
 
+      def my_uuid
+        uri = URI("https://api.bitbucket.org/2.0/users/#{@username}")
+        @my_uuid ||= fetch_json(uri)[:uuid]
+      end
+
       def pull_request(*)
         fetch_pr_json
       end
@@ -40,8 +45,10 @@ module Danger
       end
 
       def fetch_last_comments
-        uri = URI("#{pr_api_endpoint}/activity?limit=1000")
-        fetch_json(uri)[:values].select { |v| v[:comment] }.map { |v| v[:comment] }
+        # TODO: use :next to loop and get all comments
+        # TODO: filter to only include comments by this user
+        uri = URI("#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false")
+        fetch_json(uri)[:values]
       end
 
       def delete_comment(id)
@@ -56,7 +63,7 @@ module Danger
             raw: text
           }
         }
-        body.merge(inline: { path: file, to: line }) if file && line
+        body.merge!(inline: { path: file, to: line }) if file && line
 
         post(uri, body.to_json)
       end
@@ -85,7 +92,7 @@ module Danger
         oauth_secret = environment["DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
         return nil if oauth_key.nil?
         return nil if oauth_secret.nil?
-        
+
         uri = URI.parse("https://bitbucket.org/site/oauth2/access_token")
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth oauth_key, oauth_secret
@@ -93,7 +100,7 @@ module Danger
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
             http.request(req)
         end
-    
+
         JSON.parse(res.body, symbolize_names: true)[:access_token]
       end
 
@@ -131,13 +138,13 @@ module Danger
 
       def delete(uri)
         raise credentials_not_available unless credentials_given?
-        
+
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         if access_token.nil?
           req.basic_auth @username, @password
         else
           req["Authorization"] = "Bearer #{access_token}"
-        end        
+        end
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end

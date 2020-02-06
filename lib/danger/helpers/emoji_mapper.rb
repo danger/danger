@@ -16,7 +16,8 @@ module Danger
     }.freeze
 
     def initialize(template)
-      @template = DATA.include?(template) ? template : "github"
+      template.sub!('_inline', '')
+      @template = DATA.has_key?(template) ? template : "github"
     end
 
     def map(emoji)

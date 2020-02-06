@@ -71,13 +71,13 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
-        comment = generate_description(warnings: warnings, errors: errors)
+        comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
         comment += "\n\n"
 
-        warnings = update_inline_comments_for_kind!(:warnings, warnings)
-        errors = update_inline_comments_for_kind!(:errors, errors)
-        messages = update_inline_comments_for_kind!(:messages, messages)
-        markdowns = update_inline_comments_for_kind!(:markdowns, markdowns)
+        warnings = update_inline_comments_for_kind!(:warnings, warnings, danger_id: danger_id)
+        errors = update_inline_comments_for_kind!(:errors, errors, danger_id: danger_id)
+        messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
+        markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
 
         comment += generate_comment(warnings: warnings,
                                     errors: errors,
@@ -90,8 +90,8 @@ module Danger
         @api.post_comment(comment)
       end
 
-      def update_inline_comments_for_kind!(type, messages)
-        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
+      def update_inline_comments_for_kind!(kind, messages, danger_id: "danger")
+        emoji = { warnings: "warning", errors: "no_entry_sign", messages: "book" }[kind]
 
         messages.reject do |message|
           next false unless message.file && message.line
@@ -99,13 +99,11 @@ module Danger
           body = ""
 
           if kind == :markdown
-            body = generate_inline_comment_body(message,
-                                                previous_violations: {},
+            body = generate_inline_markdown_body(message,
                                                 danger_id: danger_id,
                                                 template: "bitbucket_server")
           else
             body = generate_inline_comment_body(emoji, message,
-                                                previous_violations: {},
                                                 danger_id: danger_id,
                                                 template: "bitbucket_server")
           end
@@ -118,6 +116,7 @@ module Danger
 
       def delete_old_comments(danger_id: "danger")
         @api.fetch_last_comments.each do |c|
+          next if c[:user][:uuid] != @api.my_uuid
           @api.delete_comment(c[:id]) if c[:content][:raw] =~ /generated_by_#{danger_id}/
         end
       end
