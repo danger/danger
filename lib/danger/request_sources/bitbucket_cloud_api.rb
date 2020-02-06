@@ -14,7 +14,7 @@ module Danger
         self.access_token = fetch_access_token(environment)
         self.pull_request_id = pull_request_id || fetch_pr_from_branch(branch_name)
         self.host = "https://bitbucket.org/"
-     end
+      end
 
       def inspect
         inspected = super
@@ -52,8 +52,8 @@ module Danger
           json = fetch_json(URI(uri))
           values += json[:values]
           uri = json[:next]
-        while
-        values
+          values
+        end
       end
 
       def delete_comment(id)
@@ -103,7 +103,7 @@ module Danger
         req.basic_auth oauth_key, oauth_secret
         req.set_form_data({'grant_type' => 'client_credentials'})
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-            http.request(req)
+          http.request(req)
         end
 
         JSON.parse(res.body, symbolize_names: true)[:access_token]
