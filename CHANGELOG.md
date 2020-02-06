@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.2.1
+
 * Fix Bitbucket Pipelines documentation
 * Update Ruby-Git to 1.6.0 to fix output encoding
 * Add inline-comments support to Bitbucket Cloud [@telyn](https://github.com/telyn) [#1182](https://github.com/danger/danger/pull/1182)
