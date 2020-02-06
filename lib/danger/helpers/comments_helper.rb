@@ -104,7 +104,7 @@ module Danger
         )
       end
 
-      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: false, template: "github")
+      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: [], template: "github")
         apply_template(
           tables: [{ content: [message], resolved: resolved, emoji: emoji }],
           danger_id: danger_id,
@@ -120,11 +120,12 @@ module Danger
         )
       end
 
-      def generate_description(warnings: nil, errors: nil)
+      def generate_description(warnings: nil, errors: nil, template: "github")
+        emoji_mapper = EmojiMapper.new(template)
         if errors.empty? && warnings.empty?
           return "All green. #{random_compliment}"
         else
-          message = "⚠️ "
+          message = "#{emoji_mapper.map('warning')} "
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?
           message += "#{'Warning'.danger_pluralize(warnings.count)}. " unless warnings.empty?
           message += "Don't worry, everything is fixable."

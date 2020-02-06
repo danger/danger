@@ -30,6 +30,11 @@ module Danger
         @username && !@username.empty? && @password && !@password.empty?
       end
 
+      def my_uuid
+        uri = URI("https://api.bitbucket.org/2.0/users/#{@username}")
+        @my_uuid ||= fetch_json(uri)[:uuid]
+      end
+
       def pull_request(*)
         fetch_pr_json
       end
@@ -39,9 +44,16 @@ module Danger
         fetch_json(uri)
       end
 
-      def fetch_last_comments
-        uri = URI("#{pr_api_endpoint}/activity?limit=1000")
-        fetch_json(uri)[:values].select { |v| v[:comment] }.map { |v| v[:comment] }
+      def fetch_comments
+        values = []
+        # TODO: use a url parts encoder to encode the query
+        uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.username+%7E+%22#{@username}%22"
+        while(uri)
+          json = fetch_json(URI(uri))
+          values += json[:values]
+          uri = json[:next]
+          values
+        end
       end
 
       def delete_comment(id)
@@ -49,14 +61,16 @@ module Danger
         delete(uri)
       end
 
-      def post_comment(text)
+      def post_comment(text, file: nil, line: nil)
         uri = URI("#{pr_api_endpoint}/comments")
         body = {
-          content: { 
+          content: {
             raw: text
           }
-        }.to_json
-        post(uri, body)
+        }
+        body.merge!(inline: { path: file, to: line }) if file && line
+
+        post(uri, body.to_json)
       end
 
       private
@@ -83,15 +97,15 @@ module Danger
         oauth_secret = environment["DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
         return nil if oauth_key.nil?
         return nil if oauth_secret.nil?
-        
+
         uri = URI.parse("https://bitbucket.org/site/oauth2/access_token")
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth oauth_key, oauth_secret
         req.set_form_data({'grant_type' => 'client_credentials'})
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-            http.request(req)
+          http.request(req)
         end
-    
+
         JSON.parse(res.body, symbolize_names: true)[:access_token]
       end
 
@@ -129,13 +143,13 @@ module Danger
 
       def delete(uri)
         raise credentials_not_available unless credentials_given?
-        
+
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         if access_token.nil?
           req.basic_auth @username, @password
         else
           req["Authorization"] = "Bearer #{access_token}"
-        end        
+        end
         Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
