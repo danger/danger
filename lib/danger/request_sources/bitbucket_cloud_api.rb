@@ -49,14 +49,15 @@ module Danger
         delete(uri)
       end
 
-      def post_comment(text)
+      def post_comment(text, file: nil, line: nil)
         uri = URI("#{pr_api_endpoint}/comments")
         body = {
-          content: { 
+          content: {
             raw: text
           }
-        }.to_json
-        post(uri, body)
+        }
+        body.merge(inline: { path: file, line: line }) if file && line
+        post(uri, body.to_json)
       end
 
       private
