@@ -14,7 +14,7 @@ module Danger
         self.access_token = fetch_access_token(environment)
         self.pull_request_id = pull_request_id || fetch_pr_from_branch(branch_name)
         self.host = "https://bitbucket.org/"
-      end
+     end
 
       def inspect
         inspected = super
@@ -44,11 +44,16 @@ module Danger
         fetch_json(uri)
       end
 
-      def fetch_last_comments
-        # TODO: use :next to loop and get all comments
-        # TODO: filter to only include comments by this user
-        uri = URI("#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false")
-        fetch_json(uri)[:values]
+      def fetch_comments
+        values = []
+        # TODO: use a url parts encoder to encode the query
+        uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.username+%7E+%22#{@username}%22"
+        while(uri)
+          json = fetch_json(URI(uri))
+          values += json[:values]
+          uri = json[:next]
+        while
+        values
       end
 
       def delete_comment(id)
