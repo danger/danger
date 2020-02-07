@@ -10,6 +10,8 @@
 
 ## master
 
+## 6.2.2
+
 * Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn](https://github.com/telyn) [#1184](https://github.com/danger/danger/pull/1184)
 
 ## 6.2.1
