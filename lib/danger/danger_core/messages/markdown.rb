@@ -41,5 +41,9 @@ module Danger
 
       "Markdown #{message} { #{extra.join ', '.freeze} }"
     end
+
+    def type
+      :markdown
+    end
   end
 end

@@ -1,12 +1,15 @@
 module Danger
   class Violation
-    attr_accessor :message, :sticky, :file, :line
+    VALID_TYPES = %I[error warning message]
+    attr_accessor :message, :sticky, :file, :line, :type
 
-    def initialize(message, sticky, file = nil, line = nil)
+    def initialize(message, sticky, file = nil, line = nil, type: :warning)
       self.message = message
       self.sticky = sticky
       self.file = file
       self.line = line
+      raise ArgumentError unless VALID_TYPES.include?(type)
+      self.type = type
     end
 
     def ==(other)
@@ -42,6 +45,7 @@ module Danger
       extra << "sticky: #{sticky}"
       extra << "file: #{file}" if file
       extra << "line: #{line}" if line
+      extra << "type: #{type}"
 
       "Violation #{message} { #{extra.join ', '.freeze} }"
     end
