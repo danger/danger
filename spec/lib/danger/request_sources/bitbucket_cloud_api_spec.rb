@@ -43,7 +43,7 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
       expect(api.host).to eq("https://bitbucket.org/")
     end
   end
-  
+
   describe "#credentials_given" do
     it "#fetch_json raise error when missing credentials" do
       empty_env = {}

@@ -48,12 +48,13 @@ module Danger
         values = []
         # TODO: use a url parts encoder to encode the query
         uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.username+%7E+%22#{@username}%22"
-        while(uri)
+
+        while uri
           json = fetch_json(URI(uri))
           values += json[:values]
           uri = json[:next]
-          values
         end
+        values
       end
 
       def delete_comment(id)
