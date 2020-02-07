@@ -115,7 +115,7 @@ module Danger
       end
 
       def delete_old_comments(danger_id: "danger")
-        @api.fetch_last_comments.each do |c|
+        @api.fetch_comments.each do |c|
           next if c[:user][:uuid] != @api.my_uuid
           @api.delete_comment(c[:id]) if c[:content][:raw] =~ /generated_by_#{danger_id}/
         end
