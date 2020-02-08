@@ -45,5 +45,11 @@ module Danger
     def type
       :markdown
     end
+
+    def <=>(other)
+      return 0 if other.type == :markdown
+
+      1
+    end
   end
 end
