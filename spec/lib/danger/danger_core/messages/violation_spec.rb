@@ -133,4 +133,21 @@ RSpec.describe Danger::Violation do
       include_examples "compares less than Markdown"
     end
   end
+  describe "#to_s" do
+    it "formats a message" do
+      expect(violation_factory("hello!").to_s).to eq("Violation hello! { sticky: false, type: warning }")
+    end
+
+    it "formats a sticky message" do
+      expect(violation_factory("hello!", sticky: true).to_s).to eq("Violation hello! { sticky: true, type: warning }")
+    end
+
+    it "formats a message with file and line" do
+      expect(violation_factory("hello!", file: "foo.rb", line: 2).to_s).to eq("Violation hello! { sticky: false, file: foo.rb, line: 2, type: warning }")
+    end
+
+    it "formats a message with file, line and custom type" do
+      expect(violation_factory("hello!", file: "foo.rb", line: 2, type: :error).to_s).to eq("Violation hello! { sticky: false, file: foo.rb, line: 2, type: error }")
+    end
+  end
 end

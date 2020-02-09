@@ -92,8 +92,8 @@ def diff_fixture(file)
   File.read("spec/fixtures/#{file}.diff")
 end
 
-def violation_factory(message, sticky: false, file: nil, line: nil)
-  Danger::Violation.new(message, sticky, file, line)
+def violation_factory(message, sticky: false, file: nil, line: nil, **hash_args)
+  Danger::Violation.new(message, sticky, file, line, **hash_args)
 end
 
 def violations_factory(messages, sticky: false)
