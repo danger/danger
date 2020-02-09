@@ -1,3 +1,4 @@
+require_relative "./shared_examples"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"
 
@@ -54,82 +55,10 @@ RSpec.describe Danger::Violation do
     let(:file) { "hello.txt" }
     let(:line) { 50 }
 
-    shared_examples_for "compares by line" do
-      context "when line is nil" do
-        let(:line) { nil }
-
-        context "when other_line is nil" do
-          let(:other_line) { nil }
-          it { is_expected.to eq(0) }
-        end
-
-        context "when other_line is not nil" do
-          let(:other_line) { 1 }
-          it { is_expected.to eq(-1) }
-        end
-      end
-
-      context "when line is not nil" do
-        context "when other_line is nil" do
-          let(:other_line) { nil }
-          it { is_expected.to eq(1) }
-        end
-        context "when lines are the same" do
-          let(:other_line) { line }
-          it { is_expected.to eq 0 }
-        end
-
-        context "when line < other_line" do
-          let(:other_line) { line + 10 }
-          it { is_expected.to eq(-1) }
-        end
-
-        context "when line < other_line" do
-          let(:other_line) { line - 10 }
-          it { is_expected.to eq(1) }
-        end
-      end
-    end
-
-    shared_examples_for "compares by file and line" do |_other_type|
+    RSpec.shared_examples_for "compares by file and line when other is" do |_other_type|
       context "when other_type is :#{_other_type}" do
         let(:other_type) { _other_type }
-
-        context "when file is nil" do
-          let(:file) { nil }
-
-          context "when other_file is nil" do
-            let(:other_file) { nil }
-            it { is_expected.to eq(0) }
-          end
-
-          context "when other_file is not nil" do
-            let(:other_file) { 1 }
-            it { is_expected.to eq(-1) }
-          end
-        end
-
-        context "when file is not nil" do
-          context "when other_file is nil" do
-            let(:other_file) { nil }
-            it { is_expected.to eq(1) }
-          end
-          context "when files are the same" do
-            let(:other_file) { file }
-
-            include_examples "compares by line"
-          end
-
-          context "when file < other_file" do
-            let(:other_file) { "world.txt" }
-            it { is_expected.to eq(-1) }
-          end
-
-          context "when file > other_file" do
-            let(:other_file) { "aardvark.txt" }
-            it { is_expected.to eq 1 }
-          end
-        end
+        include_examples "compares by file and line"
       end
     end
 
@@ -167,10 +96,8 @@ RSpec.describe Danger::Violation do
 
       context "when other is a Violation" do
         let(:other) { Danger::Violation.new("hello world", false, other_file, other_line, type: other_type) }
-        let(:other_file) { file }
-        let(:other_line) { line }
 
-        include_examples "compares by file and line", :error
+        include_examples "compares by file and line when other is", :error
         include_examples "compares less than", :warning
         include_examples "compares less than", :message
       end
@@ -183,11 +110,9 @@ RSpec.describe Danger::Violation do
 
       context "when other is a Violation" do
         let(:other) { Danger::Violation.new("hello world", false, other_file, other_line, type: other_type) }
-        let(:other_file) { file }
-        let(:other_line) { line }
 
         include_examples "compares more than", :error
-        include_examples "compares by file and line", :warning
+        include_examples "compares by file and line when other is", :warning
         include_examples "compares less than", :message
       end
 
@@ -199,12 +124,10 @@ RSpec.describe Danger::Violation do
 
       context "when other is a Violation" do
         let(:other) { Danger::Violation.new("hello world", false, other_file, other_line, type: other_type) }
-        let(:other_file) { file }
-        let(:other_line) { line }
 
         include_examples "compares more than", :error
         include_examples "compares more than", :warning
-        include_examples "compares by file and line", :message
+        include_examples "compares by file and line when other is", :message
       end
 
       include_examples "compares less than Markdown"
