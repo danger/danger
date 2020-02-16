@@ -25,7 +25,7 @@ module Danger
   # finding the project and repo slug in the GIT_REPOSITORY_URL variable. This GIT_REPOSITORY_URL variable 
   # comes from the App Settings tab for your Bitrsie App. If you are manually setting a repo URL in the 
   # Git Clone Repo step, you may need to set adjust this propery in the settings tab, maybe even fake it.
-  # The pattern used is `(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)}`.
+  # The pattern used is `(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)}`.
   #
   class Bitrise < CI
     def self.validates_as_ci?(env)
@@ -49,7 +49,7 @@ module Danger
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
 
-      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)})
+      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?
     end
   end
