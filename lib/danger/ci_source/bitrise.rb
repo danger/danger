@@ -48,9 +48,15 @@ module Danger
     def initialize(env)
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
-
-      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})
-      self.repo_slug = repo_matches[2] unless repo_matches.nil?
+  
+      if repo_url.include? ".com/"
+        repo_matches = self.repo_url.match(%r{\.com/(.*)})[1]
+      elsif repo_url.include? ".com:"
+        repo_matches = self.repo_url.match(%r{\.com:(.*)})[1]
+      end
+      
+      self.repo_slug = repo_matches unless repo_matches.nil?
+      
     end
   end
 end
