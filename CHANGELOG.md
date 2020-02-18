@@ -9,21 +9,21 @@
 -->
 
 ## master
-* Refactor shared code from Violation and Markdown into a base class [@telyn][@telyn] [#1186](https://github.com/danger/danger/pull/1184)
-* Add <=> methods to Violation and Markdown [@telyn][@telyn] [#1186](https://github.com/danger/danger/pull/1184)
+* Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
+* Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
 * Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
-  inline-comment grouping support [@telyn][@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+  inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
 
 ## 6.2.2
 
-* Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn][@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+* Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
 
 ## 6.2.1
 
 * Fix Bitbucket Pipelines documentation
 * Update Ruby-Git to 1.6.0 to fix output encoding
-* Add inline-comments support to Bitbucket Cloud [@telyn][@telyn] [#1182](https://github.com/danger/danger/pull/1182)
-* Make emojis display better on Bitbucket Cloud [@telyn][@telyn] [#1182](https://github.com/danger/danger/pull/1182)
+* Add inline-comments support to Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
+* Make emojis display better on Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
 
 ## 6.2.0
 
