@@ -19,3 +19,5 @@ gem "rubocop", "~> 0.49.0"
 gem "simplecov", "~> 0.12.0"
 gem "webmock", "~> 2.1"
 gem "yard", "~> 0.9.11"
+
+gem "fuubar", "~> 2.5"
