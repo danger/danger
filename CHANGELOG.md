@@ -11,6 +11,7 @@
 ## master
 
 * Fix RegEx pattern used to match URL.
+* Fix for GitLab Pipelines for Merge Results. [@rymai](https://github.com/rymai) [#1194](https://github.com/danger/danger/pull/1194)
 
 ## 6.2.2
 
