@@ -12,6 +12,7 @@
 
 * Fix RegEx pattern used to match URL.
 * Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
+* Show correct error when GitLab Gem can't be loaded [@glensc], [#1191], [#1192]
 
 ## 6.2.2
 
@@ -1255,5 +1256,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
 
-
 [@glensc]: https://github.com/glensc
+[#1192]: https://github.com/danger/danger/pull/1192
+[#1191]: https://github.com/danger/danger/issues/1191
