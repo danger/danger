@@ -10,9 +10,11 @@
 
 ## master
 
+## 6.3.0
+
+* Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
 * Fix RegEx pattern used to match URL.
 * Fix for GitLab Pipelines for Merge Results. [@rymai](https://github.com/rymai) [#1194](https://github.com/danger/danger/pull/1194)
-* Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
 * Show correct error when GitLab Gem can't be loaded [@glensc], [#1191], [#1192]
 
 ## 6.2.2
