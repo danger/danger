@@ -11,6 +11,7 @@
 ## master
 
 * Fix RegEx pattern used to match URL.
+* Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
 
 ## 6.2.2
 

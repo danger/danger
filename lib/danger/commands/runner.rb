@@ -3,6 +3,7 @@ module Danger
     require "danger/commands/init"
     require "danger/commands/local"
     require "danger/commands/dry_run"
+    require "danger/commands/staging"
     require "danger/commands/systems"
     require "danger/commands/pr"
 
