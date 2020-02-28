@@ -36,9 +36,13 @@ module Danger
         require "gitlab"
 
         @client ||= Gitlab.client(endpoint: endpoint, private_token: token)
-      rescue LoadError
-        puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
-        puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"
+      rescue LoadError => e
+        if e.path == "gitlab"
+          puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
+          puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"
+        else
+          puts "Error: #{e}".red
+        end
         abort
       end
 
