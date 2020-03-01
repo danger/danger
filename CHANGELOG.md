@@ -10,7 +10,6 @@
 
 ## master
 
-* Update RegEx pattern used to match URL even if it contains ".git"
 * Fix RegEx pattern used to match URL.
 
 ## 6.2.2
