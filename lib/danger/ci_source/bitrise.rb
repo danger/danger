@@ -25,8 +25,8 @@ module Danger
   # finding the project and repo slug in the GIT_REPOSITORY_URL variable. This GIT_REPOSITORY_URL variable 
   # comes from the App Settings tab for your Bitrsie App. If you are manually setting a repo URL in the 
   # Git Clone Repo step, you may need to set adjust this propery in the settings tab, maybe even fake it.
-  # The patterns used are `(%r{\.com/(.*)})` and `(%r{\.com:(.*)})` .
-  #
+  # The patterns used are `(%r{\.com/(.*)})` and `(%r{\.com:(.*)})` and .split(".git") to remove ".git" if the URL contains it.
+  # 
   class Bitrise < CI
     def self.validates_as_ci?(env)
       env.key? "BITRISE_IO"
