@@ -10,6 +10,8 @@
 
 ## master
 
+* Remove ".git" at the end of project URL. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
+
 ## 6.3.0
 
 * Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
