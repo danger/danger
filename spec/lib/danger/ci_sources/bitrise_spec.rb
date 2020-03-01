@@ -57,13 +57,23 @@ RSpec.describe Danger::Bitrise do
       expect(source.repo_slug).to eq("artsy/artsy.github.io")
     end
 
-    it "sets the repo_slug from a repo with two slashes in it", host: :github do
-      valid_env["GIT_REPOSITORY_URL"] = "git@github.com:artsy/ios/artsy.github.io"
-      expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
+    it "sets the repo_slug from a repo with two or more slashes in it", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "git@github.com:artsy/mobile/ios/artsy.github.io"
+      expect(source.repo_slug).to eq("artsy/mobile/ios/artsy.github.io")
+    end
+
+    it "sets the repo_slug from a repo with .git in it", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "git@github.com:artsy/mobile/ios/artsy.github.io.git"
+      expect(source.repo_slug).to eq("artsy/mobile/ios/artsy.github.io")
     end
 
     it "sets the repo_slug from a repo https url", host: :github do
       valid_env["GIT_REPOSITORY_URL"] = "https://github.com/artsy/ios/artsy.github.io"
+      expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
+    end
+    
+    it "sets the repo_slug from a repo https url with .git in it", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "https://github.com/artsy/ios/artsy.github.io.git"
       expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
     end
 
