@@ -50,9 +50,9 @@ module Danger
       self.repo_url = env["GIT_REPOSITORY_URL"]
   
       if repo_url.include? ".com/"
-        repo_matches = self.repo_url.match(%r{\.com/(.*)})[1]
+        repo_matches = self.repo_url.match(%r{\.com/(.*)})[1].split(".git")[0]
       elsif repo_url.include? ".com:"
-        repo_matches = self.repo_url.match(%r{\.com:(.*)})[1]
+        repo_matches = self.repo_url.match(%r{\.com:(.*)})[1].split(".git")[0]
       end
       
       self.repo_slug = repo_matches unless repo_matches.nil?
