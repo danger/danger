@@ -10,7 +10,9 @@
 
 ## master
 
-* Remove ".git" at the end of project URL. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
+## 6.3.1
+
+* Remove ".git" at the end of project URL for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
 
 ## 6.3.0
 
