@@ -21,7 +21,7 @@ module Danger
   #
   # ### bitbucket server and bitrsie
   #
-  # Danger will read the environemnt variable GIT_REPOSITORY_URL to construct the Bitbucket Server API URL 
+  # Danger will read the environment variable GIT_REPOSITORY_URL to construct the Bitbucket Server API URL 
   # finding the project and repo slug in the GIT_REPOSITORY_URL variable. This GIT_REPOSITORY_URL variable 
   # comes from the App Settings tab for your Bitrsie App. If you are manually setting a repo URL in the 
   # Git Clone Repo step, you may need to set adjust this propery in the settings tab, maybe even fake it.
