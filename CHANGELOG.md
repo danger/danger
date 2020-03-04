@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix typo from environemnt -> environment
+
 ## 6.3.1
 
 * Remove ".git" at the end of project URL for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
