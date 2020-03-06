@@ -13,6 +13,18 @@
 * Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
 * Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
   inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+* Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
+
+## 6.3.1
+
+* Remove ".git" at the end of project URL for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
+
+## 6.3.0
+
+* Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
+* Fix RegEx pattern used to match URL.
+* Fix for GitLab Pipelines for Merge Results. [@rymai](https://github.com/rymai) [#1194](https://github.com/danger/danger/pull/1194)
+* Show correct error when GitLab Gem can't be loaded [@glensc], [#1191], [#1192]
 
 ## 6.2.2
 
@@ -1256,6 +1268,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
 
-
 [@glensc]: https://github.com/glensc
 [@telyn]: https://github.com/telyn
+[#1192]: https://github.com/danger/danger/pull/1192
+[#1191]: https://github.com/danger/danger/issues/1191

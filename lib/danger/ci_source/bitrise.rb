@@ -21,11 +21,11 @@ module Danger
   #
   # ### bitbucket server and bitrsie
   #
-  # Danger will read the environemnt variable GIT_REPOSITORY_URL to construct the Bitbucket Server API URL 
+  # Danger will read the environment variable GIT_REPOSITORY_URL to construct the Bitbucket Server API URL 
   # finding the project and repo slug in the GIT_REPOSITORY_URL variable. This GIT_REPOSITORY_URL variable 
   # comes from the App Settings tab for your Bitrsie App. If you are manually setting a repo URL in the 
   # Git Clone Repo step, you may need to set adjust this propery in the settings tab, maybe even fake it.
-  # The pattern used is `(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)}`.
+  # The patterns used are `(%r{\.com/(.*)})` and `(%r{\.com:(.*)})` and .split(/\.git$|$/) to remove ".git" if the URL contains it.  
   #
   class Bitrise < CI
     def self.validates_as_ci?(env)
@@ -48,9 +48,15 @@ module Danger
     def initialize(env)
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
-
-      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/){1,2}[^\/]+?)(\.git$|$)})
-      self.repo_slug = repo_matches[2] unless repo_matches.nil?
+  
+      if repo_url.include? ".com/"
+        repo_matches = self.repo_url.match(%r{\.com/(.*)})[1].split(/\.git$|$/)[0]
+      elsif repo_url.include? ".com:"
+        repo_matches = self.repo_url.match(%r{\.com:(.*)})[1].split(/\.git$|$/)[0]
+      end
+      
+      self.repo_slug = repo_matches unless repo_matches.nil?
+      
     end
   end
 end

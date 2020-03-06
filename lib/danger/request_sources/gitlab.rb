@@ -36,9 +36,13 @@ module Danger
         require "gitlab"
 
         @client ||= Gitlab.client(endpoint: endpoint, private_token: token)
-      rescue LoadError
-        puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
-        puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"
+      rescue LoadError => e
+        if e.path == "gitlab"
+          puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
+          puts "\n - See https://github.com/danger/danger/blob/master/CHANGELOG.md#400"
+        else
+          puts "Error: #{e}".red
+        end
         abort
       end
 
@@ -122,11 +126,11 @@ module Danger
       end
 
       def setup_danger_branches
+        # we can use a GitLab specific feature here:
         base_branch = self.mr_json.source_branch
+        base_commit = self.mr_json.diff_refs.base_sha
         head_branch = self.mr_json.target_branch
-        head_commit = self.scm.head_commit
-
-        raise "Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes" if base_commit == head_commit
+        head_commit = self.mr_json.diff_refs.head_sha
 
         # Next, we want to ensure that we have a version of the current branch at a known location
         scm.ensure_commitish_exists_on_branch! base_branch, base_commit
@@ -512,4 +516,3 @@ module Danger
     end
   end
 end
-
