@@ -118,34 +118,22 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.base_commit).to eq("0e4db308b6579f7cc733e5a354e026b272e1c076")
     end
 
-    it "raise error on empty MR" do
-      subject.fetch_details
-
-      expect(subject.scm).to receive(:head_commit).
-        and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
-      expect(subject).to receive(:base_commit).
-        and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
-
-      expect { subject.setup_danger_branches }.to raise_error("Are you running `danger local/pr` against the correct repository? Also this can happen if you run danger on MR without changes")
-    end
-
     it "setups the danger branches" do
       subject.fetch_details
 
-      expect(subject.scm).to receive(:head_commit).
-        and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
-      expect(subject).to receive(:base_commit).
-        and_return("0e4db308b6579f7cc733e5a354e026b272e1c076").thrice
-      expect(subject.scm).to receive(:exec)
-        .with("rev-parse --quiet --verify 345e74fabb2fecea93091e8925b1a7a208b48ba6^{commit}")
-        .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6")
-      expect(subject.scm).to receive(:exec)
-        .with("branch danger_head 345e74fabb2fecea93091e8925b1a7a208b48ba6")
       expect(subject.scm).to receive(:exec)
         .with("rev-parse --quiet --verify 0e4db308b6579f7cc733e5a354e026b272e1c076^{commit}")
         .and_return("0e4db308b6579f7cc733e5a354e026b272e1c076")
+
       expect(subject.scm).to receive(:exec)
         .with("branch danger_base 0e4db308b6579f7cc733e5a354e026b272e1c076")
+
+      expect(subject.scm).to receive(:exec)
+        .with("rev-parse --quiet --verify 04e58de1fa97502d7e28c1394d471bb8fb1fc4a8^{commit}")
+        .and_return("04e58de1fa97502d7e28c1394d471bb8fb1fc4a8")
+
+      expect(subject.scm).to receive(:exec)
+        .with("branch danger_head 04e58de1fa97502d7e28c1394d471bb8fb1fc4a8")
 
       subject.setup_danger_branches
     end
@@ -339,9 +327,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           expect(subject.client).to receive(:create_merge_request_discussion)
           allow(subject.client).to receive(:delete_merge_request_comment)
-  
+
           subject.fetch_details
-  
+
           v = Danger::Violation.new("Sure thing", true, "a", 4)
           subject.update_pull_request!(warnings: [], errors: [], messages: [v])
         end
@@ -446,7 +434,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           subject.fetch_details
           subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
-  
+
       end
     end
 
