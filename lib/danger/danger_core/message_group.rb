@@ -38,5 +38,16 @@ module Danger
     end
 
     attr_reader :file, :line
+
+    # @return a hash of statistics. Currently only :warnings_count and
+    # :errors_count
+    def stats
+      stats = { warnings_count: 0, errors_count: 0 }
+      messages.each do |msg|
+        stats[:warnings_count] += 1 if msg.type == :warning
+        stats[:errors_count] += 1 if msg.type == :error
+      end
+      stats
+    end
   end
 end
