@@ -13,8 +13,7 @@
 * Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
 * Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
   inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
-
-* Fix typo from environemnt -> environment
+* Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
 
 ## 6.3.1
 
