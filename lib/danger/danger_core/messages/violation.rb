@@ -48,7 +48,7 @@ module Danger
       extra << "line: #{line}" if line
       extra << "type: #{type}"
 
-      "Violation #{message} { #{extra.join ', '.freeze} }"
+      "Violation #{message} { #{extra.join ', '} }"
     end
   end
 end

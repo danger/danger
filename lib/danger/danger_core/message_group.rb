@@ -28,7 +28,18 @@ module Danger
     # @param message [Markdown, Violation] the message to add
     def <<(message)
       # TODO: insertion sort
-      messages << message if same_line?(message)
+      return nil unless same_line?(message)
+
+      inserted = false
+      messages.each.with_index do |other, idx|
+        if (message <=> other) == -1
+          inserted = true
+          messages.insert(idx, message)
+          break
+        end
+      end
+      messages << message unless inserted
+      messages
     end
 
     # The list of messages in this group. This list will be sorted in decreasing

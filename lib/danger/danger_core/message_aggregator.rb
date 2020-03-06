@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require "danger/danger_core/message_group"
+require "danger/helpers/message_groups_array_helper"
 
 module Danger
   class MessageAggregator
@@ -20,15 +22,15 @@ module Danger
     def aggregate
       # oookay I took some shortcuts with this one.
       # first, sort messages by file and line
-      @messages.sort_by! { |a, b| a.compare_by_file_and_line(b) }
+      @messages.sort! { |a, b| a.compare_by_file_and_line(b) }
 
       # now create an initial empty message group
-      first_group = MessageGroup.new(file: @messages.first.file,
-                                     line: @messages.first.line)
+      first_group = MessageGroup.new(file: nil,
+                                     line: nil)
       @message_groups = @messages.reduce([first_group]) do |groups, msg|
         # We get to take a shortcut because we sorted the messages earlier - only
         # have to see if we can append msg to the last group in the list
-        if group.last << msg
+        if groups.last << msg
           # we appended it, so return groups unchanged
           groups
         else
@@ -40,9 +42,8 @@ module Danger
           groups << new_group
         end
       end
-      class << @message_groups
-        include MessageGroupsArrayHelper
-      end
+
+      @message_groups.extend(Helpers::MessageGroupsArrayHelper)
     end
   end
 end
