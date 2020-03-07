@@ -60,5 +60,9 @@ module Danger
       end
       stats
     end
+
+    def markdowns
+      messages.select { |x| x.type == :markdown }
+    end
   end
 end
