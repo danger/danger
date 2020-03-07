@@ -15,14 +15,23 @@ module Danger
       }
     }.freeze
 
+    TYPE_TO_EMOJI = {
+      error: "no_entry_sign",
+      warning: "warning",
+      message: "book",
+    }.freeze
+
     def initialize(template)
-      template.sub!('_inline', '')
       @template = DATA.has_key?(template) ? template : "github"
     end
 
     def map(emoji)
-      emoji.delete! ":"
+      emoji&.delete! ":"
       DATA[template][emoji]
+    end
+
+    def from_type(type)
+      map(TYPE_TO_EMOJI[type])
     end
 
     private
