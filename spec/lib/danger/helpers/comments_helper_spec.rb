@@ -466,8 +466,11 @@ COMMENT
         it "spits out a beautiful comment" do
           expect(subject).to eq <<~COMMENT
             :no_entry_sign: Hello!
+
             :warning: World!
+
             :book: HOW R
+
 
             U DOING?
 
