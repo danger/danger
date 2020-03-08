@@ -76,7 +76,7 @@ module Danger
         }
       end
 
-      def apply_template(tables: [], markdowns: [], danger_id: "danger", template: "github")
+      def apply_template(tables: [], markdowns: [], danger_id: "danger", template: "github", request_source: template)
         require "erb"
 
         md_template = File.join(Danger.gem_path, "lib/danger/comment_generators/#{template}.md.erb")
@@ -86,7 +86,7 @@ module Danger
         @tables = tables
         @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
-        @emoji_mapper = EmojiMapper.new(template)
+        @emoji_mapper = EmojiMapper.new(request_source.sub("_inline",""))
 
         return ERB.new(File.read(md_template), 0, "-").result(binding)
       end
@@ -104,7 +104,33 @@ module Danger
         )
       end
 
-      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: [], template: "github")
+      # TODO: test this
+      # resolved is essentially reserved for future use - eventually we might
+      # have some nice generic resolved-thing going :)
+      def generate_message_group_comment(message_group:,
+                                         danger_id: "danger",
+                                         resolved: [],
+                                         template: "github")
+        # cheating a bit - I don't want to alter the apply_template API
+        # so just sneak around behind its back setting some instance variables
+        # to get them to show up in the template
+        @message_group = message_group
+        @resolved = resolved
+        request_source_name = template.sub("_message_group", "")
+
+
+        apply_template(danger_id: danger_id,
+                       markdowns: message_group.markdowns,
+                       template: template,
+                       request_source: request_source_name)
+          .sub(/\A\n*/, "")
+      end
+
+      def generate_inline_comment_body(emoji,
+                                       message,
+                                       danger_id: "danger",
+                                       resolved: [],
+                                       template: "github")
         apply_template(
           tables: [{ content: [message], resolved: resolved, emoji: emoji }],
           danger_id: danger_id,
