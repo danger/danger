@@ -9,10 +9,23 @@
 -->
 
 ## master
+* Add message aggregation in a non-request-source-specific way
+  When the DANGER_MESSAGE_AGGREGATION environment variable is set and the
+  RequestSource plugin implements an `update_pr_by_line!` method, this new
+  message-aggregation method is used. Otherwise, the old way is used.
+  [@telyn] [#1201](https://github.com/danger/danger/pull/1201)
+  * Implement `update_pr_by_line!` on Bitbucket Cloud's RequestSource.
+  * Add MessageGroup class (first in [#1186](https://github.com/danger/danger/1186), fleshed out in #1201)
+  * Add MessageAggregator class to collect warnings, errors, messages and markdowns into MessageGroups
+  * Add `generate_message_group_comment` to CommentsHelper. In order to use it,
+    a new template for the RequestSource must be added which uses @message_groups instead of @tables.
+    See lib/danger/comment_generators/bitbucket_server_message_group.md.erb for an example.
+  * Add a new `from_type` method to EmojiMapper - it takes a message type as a
+    symbol and finds the appropriate emoji for the particular RequestSource in use.
+    See lib/danger/comment_generators/bitbucket_server_message_group.md.erb for an example of its use.
+  * Add specs for much of the above, and for EmojiMapper.
 * Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
 * Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
-* Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
-  inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
 * Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
 
 ## 6.3.1
