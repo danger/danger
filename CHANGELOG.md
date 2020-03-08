@@ -10,6 +10,7 @@
 
 ## master
 
+* Update RegEx pattern used for URL matching for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
 * Fix typo from environemnt -> environment
 
 ## 6.3.1
