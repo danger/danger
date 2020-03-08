@@ -9,8 +9,11 @@
 -->
 
 ## master
-
-* Fix typo from environemnt -> environment
+* Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
+* Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
+* Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
+  inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+* Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
 
 ## 6.3.1
 
@@ -25,14 +28,14 @@
 
 ## 6.2.2
 
-* Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn](https://github.com/telyn) [#1184](https://github.com/danger/danger/pull/1184)
+* Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
 
 ## 6.2.1
 
 * Fix Bitbucket Pipelines documentation
 * Update Ruby-Git to 1.6.0 to fix output encoding
-* Add inline-comments support to Bitbucket Cloud [@telyn](https://github.com/telyn) [#1182](https://github.com/danger/danger/pull/1182)
-* Make emojis display better on Bitbucket Cloud [@telyn](https://github.com/telyn) [#1182](https://github.com/danger/danger/pull/1182)
+* Add inline-comments support to Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
+* Make emojis display better on Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
 
 ## 6.2.0
 
@@ -1266,5 +1269,6 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Fails when you say it's failed in  the  Dangerfile - orta
 
 [@glensc]: https://github.com/glensc
+[@telyn]: https://github.com/telyn
 [#1192]: https://github.com/danger/danger/pull/1192
 [#1191]: https://github.com/danger/danger/issues/1191
