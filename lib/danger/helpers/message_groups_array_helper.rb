@@ -1,7 +1,11 @@
 module Danger
   module Helpers
     module MessageGroupsArrayHelper
-      FakeArray = Struct.new(:count)
+      FakeArray = Struct.new(:count) do
+        def empty?
+          count.zero?
+        end
+      end
 
       def fake_warnings_array
         FakeArray.new(counts[:warnings])
