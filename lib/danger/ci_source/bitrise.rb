@@ -51,12 +51,17 @@ module Danger
   
       if repo_url.include? "https://"
         repo_url["https://"] = ''
+        
+        repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
+        
+        repo_url.insert(0, "https://")
+        
+        self.repo_slug = repo_matches unless repo_matches.nil?
+      else
+        repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
+        
+        self.repo_slug = repo_matches unless repo_matches.nil?
       end
-      
-      repo_matches = self.repo_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
-      
-      self.repo_slug = repo_matches unless repo_matches.nil?
-      
     end
   end
 end
