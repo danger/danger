@@ -2,6 +2,7 @@
 
 require "danger/danger_core/dangerfile_dsl"
 require "danger/danger_core/standard_error"
+require "danger/danger_core/message_aggregator"
 
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
