@@ -251,7 +251,10 @@ module Danger
       }
 
       if env.request_source.respond_to?(:update_pr_by_line!) && ENV["DANGER_MESSAGE_AGGREGATION"]
-        env.request_source.update_pr_by_line!(message_groups: MessageAggregator.aggregate(**report))
+        env.request_source.update_pr_by_line!(message_groups: MessageAggregator.aggregate(**report),
+                                             new_comment: new_comment,
+                                             remove_previous_comments: remove_previous_comments,
+                                             danger_id: report[:danger_id])
       else
         env.request_source.update_pull_request!(
           **report,
