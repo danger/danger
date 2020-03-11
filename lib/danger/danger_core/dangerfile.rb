@@ -60,7 +60,6 @@ module Danger
     # that the core DSLs have, then starts looking at plugins support.
 
     # rubocop:disable Style/MethodMissing
-
     def method_missing(method_sym, *arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
@@ -243,16 +242,23 @@ module Danger
 
     def post_results(danger_id, new_comment, remove_previous_comments)
       violations = violation_report
+      report = {
+          warnings: violations[:warnings].uniq,
+          errors: violations[:errors].uniq,
+          messages: violations[:messages].uniq,
+          markdowns: status_report[:markdowns].uniq,
+          danger_id: danger_id
+      }
 
-      env.request_source.update_pull_request!(
-        warnings: violations[:warnings].uniq,
-        errors: violations[:errors].uniq,
-        messages: violations[:messages].uniq,
-        markdowns: status_report[:markdowns].uniq,
-        danger_id: danger_id,
-        new_comment: new_comment,
-        remove_previous_comments: remove_previous_comments
-      )
+      if env.request_source.respond_to?(:update_pr_by_line!) && ENV["DANGER_MESSAGE_AGGREGATION"]
+        env.request_source.update_pr_by_line!(messages: MessageAggregator.aggregate(**report))
+      else
+        env.request_source.update_pull_request!(
+          **report,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
+        )
+      end
     end
 
     def setup_for_running(base_branch, head_branch)

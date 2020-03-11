@@ -1,7 +1,7 @@
 # Defaults can be found here: https://github.com/bbatsov/rubocop/blob/master/config/default.yml
 
 AllCops:
-  TargetRubyVersion: 2.0
+  TargetRubyVersion: 2.3
   Exclude:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'

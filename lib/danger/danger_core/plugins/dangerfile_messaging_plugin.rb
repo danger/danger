@@ -124,7 +124,7 @@ module Danger
       line = options.fetch(:line, nil)
 
       messages.flatten.each do |message|
-        @messages << Violation.new(message, sticky, file, line) if message
+        @messages << Violation.new(message, sticky, file, line, type: :message) if message
       end
     end
 
@@ -149,7 +149,7 @@ module Danger
 
       warnings.flatten.each do |warning|
         next if should_ignore_violation(warning)
-        @warnings << Violation.new(warning, sticky, file, line) if warning
+        @warnings << Violation.new(warning, sticky, file, line, type: :warning) if warning
       end
     end
 
@@ -174,7 +174,7 @@ module Danger
 
       failures.flatten.each do |failure|
         next if should_ignore_violation(failure)
-        @errors << Violation.new(failure, sticky, file, line) if failure
+        @errors << Violation.new(failure, sticky, file, line, type: :error) if failure
       end
     end
 
