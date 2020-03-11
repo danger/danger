@@ -59,7 +59,7 @@ module Danger
       repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
 
       self.repo_slug = repo_matches unless repo_matches.nil?
-      end
+      
     end
   end
 end
