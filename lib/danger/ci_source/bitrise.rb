@@ -49,6 +49,7 @@ module Danger
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
   
+      #If the URL contains https:// as :// leads to inaccurate matching. So we remove it and proceed to match
       if repo_url.include? "https://"
         repo_url["https://"] = ''
         
