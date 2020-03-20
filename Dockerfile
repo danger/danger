@@ -17,5 +17,7 @@ WORKDIR /myapp
 COPY . /myapp
 
 RUN gem install bundler
+
+ENV BUNDLE_GEMFILE=/myapp/Gemfile
 RUN bundle install
 ENTRYPOINT ["bundle", "exec", "danger"]
