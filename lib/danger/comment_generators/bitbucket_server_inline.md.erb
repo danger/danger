@@ -2,7 +2,7 @@
   <%- table[:content].each do |violation| -%>
 <%= @emoji_mapper.map(table[:emoji]) if table[:emoji] %> <%= violation.message %>
   <%- end -%>
-  <%- table[:resolved].each do |message| -%>
+  <%- table[:resolved] && table[:resolved].each do |message| -%>
 <%= @emoji_mapper.map("white_check_mark") %> <%= message %>
   <%- end -%>
 <%- end -%>
