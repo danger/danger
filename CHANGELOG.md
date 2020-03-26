@@ -10,11 +10,14 @@
 
 ## master
 
+* Fix gitlab & github inline-comments always being struck-through. This
+  was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182).
+  [@telyn] [#1208](https://github.com/danger/danger/pull/1208)
 * Update RegEx pattern used for URL matching for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
-* Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
-* Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
+* Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
+* Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
 * Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
-  inline-comment grouping support [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+  inline-comment grouping support [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
 * Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
 
 ## 6.3.1

@@ -104,7 +104,7 @@ module Danger
         )
       end
 
-      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: [], template: "github")
+      def generate_inline_comment_body(emoji, message, danger_id: "danger", resolved: false, template: "github")
         apply_template(
           tables: [{ content: [message], resolved: resolved, emoji: emoji }],
           danger_id: danger_id,
