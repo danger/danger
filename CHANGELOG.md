@@ -10,6 +10,7 @@
 
 ## master
 
+* Allow github repository redirects to be followed. [@telyn] [#???](https://github.com/danger/danger/pull/???)
 * Update RegEx pattern used for URL matching for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
 * Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
 * Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1184)
