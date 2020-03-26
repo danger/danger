@@ -10,7 +10,7 @@
 
 ## master
 
-## 6.3.3
+## 6.3.2
 
 * Fix gitlab & github inline-comments always being struck-through. This
   was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182).
