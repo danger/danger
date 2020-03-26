@@ -5,7 +5,7 @@
     <%- table[:content].each do |violation| -%>
     <tr>
       <td>:<%= table[:emoji] %>:</td>
-      <td width="100%" data-sticky="<%= violation.sticky %>"><%= "<del>" if table[:resolved] %><%= violation.message %><%= "</del>" if table[:resolved] %></td>
+      <td width="100%" data-sticky="<%= violation.sticky %>"><%= "<del>" if !table[:resolved].empty? %><%= violation.message %><%= "</del>" if !table[:resolved].empty? %></td>
     </tr>
     <%- end -%>
   </tbody>
