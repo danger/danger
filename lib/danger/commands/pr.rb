@@ -83,6 +83,7 @@ module Danger
       end
       Octokit.middleware = Faraday::RackBuilder.new do |builder|
         builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
+        builder.use Octokit::Middleware::FollowRedirects
         builder.use Octokit::Response::RaiseError
         builder.adapter Faraday.default_adapter
       end
