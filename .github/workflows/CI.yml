@@ -22,4 +22,4 @@ jobs:
 
         TOKEN='7469b4e94ce21b43e3ab7a'
         TOKEN+='79960c12a1e067f2ec'
-        DANGER_GITHUB_API_TOKEN=$TOKEN bundle exec danger --verbose
+        DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true bundle exec danger --verbose
