@@ -1,0 +1,22 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+
+    - name: Build and test with Rake
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bundle exec rake spec
+
+        DANGER_GITHUB_API_TOKEN='7469b4e94ce21b43e3ab7a'
+        DANGER_GITHUB_API_TOKEN+='79960c12a1e067f2ec'
+        bundle exec danger
