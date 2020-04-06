@@ -1,3 +1,5 @@
+message(":wave:")
+
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
 has_app_changes = !git.modified_files.grep(/lib/).empty?
