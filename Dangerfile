@@ -55,6 +55,8 @@ elsif core_lint_output.include? "warning"
   markdown "```\n#{core_lint_output}```"
 end
 
-junit.parse "junit-results.xml"
-junit.headers = %i(file name)
-junit.report
+unless ENV["RUNNING_IN_ACTIONS"]
+  junit.parse "junit-results.xml"
+  junit.headers = %i(file name)
+  junit.report
+end
