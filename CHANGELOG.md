@@ -10,6 +10,7 @@
 
 ## master
 
+* Allow danger to run with Faraday 1.0.0.
 * Allow github repository redirects to be followed. [@telyn] [#1209](https://github.com/danger/danger/pull/1209)
 
 ## 6.3.2
