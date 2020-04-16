@@ -10,6 +10,12 @@
 
 ## master
 
+## 7.0.0
+
+**Breaking for BitBucket Cloud users only** - with changes in their API, see below, then Danger has a new env var
+requirement in order to support editing existing comments. You add `DANGER_BITBUCKETCLOUD_UUID` which is the UUID of
+the account which Danger should be using for commenting.
+
 * Added support to git.info_for_file for added and deleted files. [@ethan-riback](https://github.com/ethan-riback) [#1216](https://github.com/danger/danger/pull/1216)
 * Allow danger to run with Faraday 1.0.0.
 * Add message aggregation in a non-request-source-specific way:

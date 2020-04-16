@@ -104,7 +104,6 @@ module Danger
         )
       end
 
-      # TODO: test this
       # resolved is essentially reserved for future use - eventually we might
       # have some nice generic resolved-thing going :)
       def generate_message_group_comment(message_group:,

@@ -1,4 +1,4 @@
 module Danger
-  VERSION = "6.3.2".freeze
+  VERSION = "7.0.0".freeze
   DESCRIPTION = "Like Unit Tests, but for your Team Culture.".freeze
 end
