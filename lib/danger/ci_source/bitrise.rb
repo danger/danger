@@ -48,13 +48,16 @@ module Danger
     def initialize(env)
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
-  
-      if repo_url.include? ".com/"
-        repo_matches = self.repo_url.match(%r{\.com/(.*)})[1].split(/\.git$|$/)[0]
-      elsif repo_url.include? ".com:"
-        repo_matches = self.repo_url.match(%r{\.com:(.*)})[1].split(/\.git$|$/)[0]
-      end
       
+      matcher_url = self.repo_url
+
+      #If the URL contains https:// as :// leads to inaccurate matching. So we remove it and proceed to match.
+      if repo_url.include? "https://"
+        matcher_url["https://"] = ''
+      end
+
+      repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
+
       self.repo_slug = repo_matches unless repo_matches.nil?
       
     end
