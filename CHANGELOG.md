@@ -12,6 +12,11 @@
 
 * Added support to git.info_for_file for added and deleted files. [@ethan-riback](https://github.com/ethan-riback) [#1216](https://github.com/danger/danger/pull/1216)
 * Allow danger to run with Faraday 1.0.0.
+* Add message aggregation in a non-request-source-specific way:
+  When the DANGER_MESSAGE_AGGREGATION environment variable is set (to anything
+  that isn't an empty string) and the PR source supports it, this new
+  message-aggregation method is used. Otherwise, the old way is used.
+  [@telyn] [#1201](https://github.com/danger/danger/pull/1201)
 * Allow github repository redirects to be followed. [@telyn] [#1209](https://github.com/danger/danger/pull/1209)
 * Fix 404 on Bitbucket Cloud fetching `/users/$DANGER_BITBUCKETCLOUD_USERNAME`.
   This fix requires that everyone using Bitbucket Cloud now provides the

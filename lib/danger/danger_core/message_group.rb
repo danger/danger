@@ -28,7 +28,18 @@ module Danger
     # @param message [Markdown, Violation] the message to add
     def <<(message)
       # TODO: insertion sort
-      messages << message if same_line?(message)
+      return nil unless same_line?(message)
+
+      inserted = false
+      messages.each.with_index do |other, idx|
+        if (message <=> other) == -1
+          inserted = true
+          messages.insert(idx, message)
+          break
+        end
+      end
+      messages << message unless inserted
+      messages
     end
 
     # The list of messages in this group. This list will be sorted in decreasing
@@ -38,5 +49,20 @@ module Danger
     end
 
     attr_reader :file, :line
+
+    # @return a hash of statistics. Currently only :warnings_count and
+    # :errors_count
+    def stats
+      stats = { warnings_count: 0, errors_count: 0 }
+      messages.each do |msg|
+        stats[:warnings_count] += 1 if msg.type == :warning
+        stats[:errors_count] += 1 if msg.type == :error
+      end
+      stats
+    end
+
+    def markdowns
+      messages.select { |x| x.type == :markdown }
+    end
   end
 end

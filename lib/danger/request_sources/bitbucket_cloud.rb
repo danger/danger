@@ -2,6 +2,7 @@
 
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_cloud_api"
+require "danger/danger_core/message_group"
 
 module Danger
   module RequestSources
@@ -89,6 +90,50 @@ module Danger
                                     template: "bitbucket_server")
 
         @api.post_comment(comment)
+      end
+
+      def update_pr_by_line!(message_groups:,
+                             danger_id: "danger",
+                             new_comment: false,
+                             remove_previous_comments: false)
+        if !new_comment || remove_previous_comments
+          delete_old_comments(danger_id: danger_id)
+        end
+
+        summary_body = generate_description(warnings: message_groups.fake_warnings_array,
+                                            errors: message_groups.fake_errors_array,
+                                            template: "bitbucket_server")
+        summary_body += "\n\n"
+
+
+        # this isn't the most elegant thing in the world, but we need the group
+        # with file: nil, line: nil so we can combine its info in with the
+        # summary_body
+        summary_group = message_groups.first
+        if summary_group && summary_group.file.nil? && summary_group.line.nil?
+          # remove summary_group from message_groups so it doesn't get a
+          # duplicate comment posted in the message_groups loop below
+          message_groups.shift
+        else
+          summary_group = MessageGroup.new(file: nil, line: nil)
+        end
+
+        summary_body += generate_message_group_comment(
+          message_group: summary_group,
+          danger_id: danger_id,
+          template: "bitbucket_server_message_group"
+        )
+
+        @api.post_comment(summary_body)
+
+        message_groups.each do |message_group|
+          body = generate_message_group_comment(message_group: message_group,
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server_message_group")
+          @api.post_comment(body,
+                            file: message_group.file,
+                            line: message_group.line)
+        end
       end
 
       def update_inline_comments_for_kind!(kind, messages, danger_id: "danger")

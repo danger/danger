@@ -2,6 +2,7 @@
 
 require "danger/danger_core/dangerfile_dsl"
 require "danger/danger_core/standard_error"
+require "danger/danger_core/message_aggregator"
 
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
@@ -251,7 +252,10 @@ module Danger
       }
 
       if env.request_source.respond_to?(:update_pr_by_line!) && ENV["DANGER_MESSAGE_AGGREGATION"]
-        env.request_source.update_pr_by_line!(messages: MessageAggregator.aggregate(**report))
+        env.request_source.update_pr_by_line!(message_groups: MessageAggregator.aggregate(**report),
+                                             new_comment: new_comment,
+                                             remove_previous_comments: remove_previous_comments,
+                                             danger_id: report[:danger_id])
       else
         env.request_source.update_pull_request!(
           **report,

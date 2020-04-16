@@ -135,4 +135,112 @@ RSpec.describe Danger::MessageGroup do
       include_examples "with varying line and file", behaves_like: "adds when same line"
     end
   end
+
+  describe "#stats" do
+    subject { message_group.stats }
+    let(:file) { nil }
+    let(:line) { nil }
+
+    before do
+      warnings.each { |w| message_group << w }
+      errors.each { |e| message_group << e }
+    end
+
+    let(:warnings) { [] }
+    let(:errors) { [] }
+
+    context "when group has no warnings" do
+      context "when group has no errors" do
+        it { is_expected.to eq(warnings_count: 0, errors_count: 0) }
+      end
+
+      context "when group has one error" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] }
+
+        it { is_expected.to eq(warnings_count: 0, errors_count: 1) }
+      end
+
+      context "when group has 10 errors" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] * 10 }
+
+        it { is_expected.to eq(warnings_count: 0, errors_count: 10) }
+      end
+    end
+
+    context "when group has one warning" do
+      let(:warnings) { [Danger::Violation.new("test", false, file, line, type: :warning)] }
+
+      context "when group has no errors" do
+        it { is_expected.to eq(warnings_count: 1, errors_count: 0) }
+      end
+
+      context "when group has one error" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] }
+
+        it { is_expected.to eq(warnings_count: 1, errors_count: 1) }
+      end
+
+      context "when group has 10 errors" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] * 10 }
+
+        it { is_expected.to eq(warnings_count: 1, errors_count: 10) }
+      end
+    end
+
+    context "when group has 10 warnings" do
+      let(:warnings) { [Danger::Violation.new("test", false, file, line, type: :warning)] * 10 }
+
+      context "when group has no errors" do
+        it { is_expected.to eq(warnings_count: 10, errors_count: 0) }
+      end
+
+      context "when group has one error" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] }
+
+        it { is_expected.to eq(warnings_count: 10, errors_count: 1) }
+      end
+
+      context "when group has 10 errors" do
+        let(:errors) { [Danger::Violation.new("test", false, file, line, type: :error)] * 10 }
+
+        it { is_expected.to eq(warnings_count: 10, errors_count: 10) }
+      end
+    end
+  end
+
+  describe "#markdowns" do
+    subject { message_group.markdowns }
+    let(:file) { nil }
+    let(:line) { nil }
+
+    before do
+      messages.each { |m| message_group << m }
+      markdowns.each { |m| message_group << m }
+    end
+
+    let(:markdowns) { [] }
+    let(:messages) { [] }
+
+    context "with no markdowns" do
+      it { is_expected.to eq [] }
+    end
+
+    context "with 2 markdowns" do
+      let(:markdowns) { [Danger::Markdown.new("hello"), Danger::Markdown.new("hi")] }
+
+      context "with no other messages" do
+
+        it "has both markdowns" do
+          expect(Set.new(subject)).to eq Set.new(markdowns)
+        end
+      end
+      context "with other messages" do
+        let(:messages) { [Danger::Violation.new("warning!",type: :warning), Danger::Violation.new("error!", type: :error)] }
+
+        it "still only has both markdowns" do
+          expect(Set.new(subject)).to eq Set.new(markdowns)
+        end
+      end
+    end
+  end
 end
