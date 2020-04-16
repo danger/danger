@@ -10,6 +10,7 @@
 
 ## master
 
+* Added support to git.info_for_file for added and deleted files. [@ethan-riback](https://github.com/ethan-riback) [#1216](https://github.com/danger/danger/pull/1216)
 * Allow danger to run with Faraday 1.0.0.
 * Allow github repository redirects to be followed. [@telyn] [#1209](https://github.com/danger/danger/pull/1209)
 * Fix 404 on Bitbucket Cloud fetching `/users/$DANGER_BITBUCKETCLOUD_USERNAME`.
