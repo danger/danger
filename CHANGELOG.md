@@ -12,6 +12,12 @@
 
 * Allow danger to run with Faraday 1.0.0.
 * Allow github repository redirects to be followed. [@telyn] [#1209](https://github.com/danger/danger/pull/1209)
+* Fix 404 on Bitbucket Cloud fetching `/users/$DANGER_BITBUCKETCLOUD_USERNAME`.
+  This fix requires that everyone using Bitbucket Cloud now provides the
+  `DANGER_BITBUCKETCLOUD_UUID` environment variable containing the UUID of
+   danger's user on bitbucket (with or without the `{}` braces). See
+   [this blog post from Atlassian](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-changes-gdpr/#removal-of-usernames-from-user-referencing-apis)
+   for details on the change Atlassian made which broke Danger. [@telyn] [#1217](https://github.com/danger/danger/pull/1217)
 
 ## 6.3.2
 

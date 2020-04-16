@@ -6,14 +6,27 @@ module Danger
   module RequestSources
     class BitbucketCloudAPI
       attr_accessor :host, :project, :slug, :access_token, :pull_request_id
+      attr_reader :my_uuid
 
       def initialize(repo_slug, pull_request_id, branch_name, environment)
+        initialize_my_uuid(environment["DANGER_BITBUCKETCLOUD_UUID"])
         @username = environment["DANGER_BITBUCKETCLOUD_USERNAME"]
         @password = environment["DANGER_BITBUCKETCLOUD_PASSWORD"]
         self.project, self.slug = repo_slug.split("/")
         self.access_token = fetch_access_token(environment)
         self.pull_request_id = pull_request_id || fetch_pr_from_branch(branch_name)
         self.host = "https://bitbucket.org/"
+      end
+
+      def initialize_my_uuid(uuid)
+        return if uuid.nil?
+        return @my_uuid = uuid if uuid.empty?
+
+        if uuid.start_with?("{") && uuid.end_with?("}")
+          @my_uuid = uuid
+        else
+          @my_uuid = "{#{uuid}}"
+        end
       end
 
       def inspect
@@ -27,12 +40,9 @@ module Danger
       end
 
       def credentials_given?
-        @username && !@username.empty? && @password && !@password.empty?
-      end
-
-      def my_uuid
-        uri = URI("https://api.bitbucket.org/2.0/users/#{@username}")
-        @my_uuid ||= fetch_json(uri)[:uuid]
+        @my_uuid && !@my_uuid.empty? &&
+          @username && !@username.empty? &&
+          @password && !@password.empty?
       end
 
       def pull_request(*)
@@ -157,7 +167,9 @@ module Danger
       end
 
       def credentials_not_available
-        "Credentials not available. Provide DANGER_BITBUCKETCLOUD_USERNAME and DANGER_BITBUCKETCLOUD_PASSWORD as environment variables."
+        "Credentials not available. Provide DANGER_BITBUCKETCLOUD_USERNAME, " \
+        "DANGER_BITBUCKETCLOUD_UUID, and DANGER_BITBUCKETCLOUD_PASSWORD " \
+        "as environment variables."
       end
 
       def error_fetching_json(url, status_code)

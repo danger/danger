@@ -4,6 +4,7 @@ module Danger
       def stub_env
         {
           "DANGER_BITBUCKETCLOUD_USERNAME" => "a.name",
+          "DANGER_BITBUCKETCLOUD_UUID" => "c91be865-efc6-49a6-93c5-24e1267c479b",
           "DANGER_BITBUCKETCLOUD_PASSWORD" => "a_password",
           "JENKINS_URL" => "http://jenkins.example.com/job/ios-check-pullrequest/",
           "GIT_URL" => "ssh://git@stash.example.com:7999/ios/fancyapp.git",

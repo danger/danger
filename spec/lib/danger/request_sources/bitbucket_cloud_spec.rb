@@ -13,8 +13,41 @@ RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
   end
 
   describe "#validates_as_api_source" do
-    it "validates_as_api_source for non empty `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_PASSWORD`" do
-      expect(bs.validates_as_api_source?).to be true
+    subject { bs.validates_as_api_source? }
+
+    context "when DANGER_BITBUKETCLOUD_USERNAME, _UUID, and _PASSWORD are set" do
+      it { is_expected.to be_truthy }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_USERNAME is unset" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_USERNAME" } }
+      it { is_expected.to be_falsey }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_USERNAME is empty" do
+      let(:env) { stub_env.merge("DANGER_BITBUCKETCLOUD_USERNAME" => "") }
+      it { is_expected.to be_falsey }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_UUID is unset" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_UUID" } }
+      it { is_expected.to be_falsey }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_UUID is empty" do
+      let(:env) { stub_env.merge("DANGER_BITBUCKETCLOUD_UUID" => "") }
+      it { is_expected.to be_falsey }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_PASSWORD is unset" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_PASSWORD" } }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when DANGER_BITBUCKETCLOUD_PASSWORD is empty" do
+      let(:env) { stub_env.merge("DANGER_BITBUCKETCLOUD_PASSWORD" => "") }
+      it { is_expected.to be_falsey }
     end
   end
 

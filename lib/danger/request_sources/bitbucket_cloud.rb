@@ -12,6 +12,7 @@ module Danger
       def self.env_vars
         [
           "DANGER_BITBUCKETCLOUD_USERNAME",
+          "DANGER_BITBUCKETCLOUD_UUID",
           "DANGER_BITBUCKETCLOUD_PASSWORD"
         ]
       end
