@@ -10,6 +10,8 @@
 
 ## master
 
+* Improves messaging specific to GitLab
+
 ## 7.0.0
 
 **Breaking for BitBucket Cloud users only** - with changes in their API, see below, then Danger has a new env var
