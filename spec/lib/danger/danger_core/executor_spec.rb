@@ -41,7 +41,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
       end
 
       it "not raises error on GitLab CI" do
-        with_gitlabci_setup_and_is_a_pull_request do |system_env|
+        with_gitlabci_setup_and_is_a_merge_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
@@ -53,13 +53,13 @@ RSpec.describe Danger::Executor, use: :ci_helper do
       end
 
       it "not raises error on Jenkins (GitLab)" do
-        with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+        with_jenkins_setup_gitlab_and_is_a_merge_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
 
       it "not raises error on Jenkins (GitLab v3)" do
-        with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+        with_jenkins_setup_gitlab_v3_and_is_a_merge_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
         end
       end
@@ -97,7 +97,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
       end
 
       it "not raises error on TeamCity (GitLab)" do
-        with_teamcity_setup_gitlab_and_is_a_pull_request do |system_env|
+        with_teamcity_setup_gitlab_and_is_a_merge_request do |system_env|
           expect { described_class.new(system_env) }.not_to raise_error
         end
       end
@@ -130,6 +130,14 @@ RSpec.describe Danger::Executor, use: :ci_helper do
           ui = testing_ui
           expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
           expect(ui.string).to include("Not a Travis Pull Request - skipping `danger` run")
+        end
+      end
+
+      it "raises error on GitLab CI" do
+        with_gitlabci_setup_and_is_not_a_merge_request do |system_env|
+          ui = testing_ui
+          expect { described_class.new(system_env).validate!(ui) }.to raise_error(SystemExit)
+          expect(ui.string).to include("Not a GitLabCI Merge Request - skipping `danger` run")
         end
       end
     end

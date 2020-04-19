@@ -63,7 +63,7 @@ module Danger
       unless EnvironmentManager.pr?(system_env)
         ci_name = EnvironmentManager.local_ci_source(system_env).name.split("::").last
 
-        msg = "Not a #{ci_name} Pull Request - skipping `danger` run. "
+        msg = "Not a #{ci_name} #{commit_request(ci_name)} - skipping `danger` run. "
         # circle won't run danger properly if the commit is pushed and build runs before the PR exists
         # https://danger.systems/guides/troubleshooting.html#circle-ci-doesnt-run-my-build-consistently
         # the best solution is to enable `fail_if_no_pr`, and then re-run the job once the PR is up
@@ -82,6 +82,11 @@ module Danger
 
     def head_branch(user_specified_head_branch)
       user_specified_head_branch || EnvironmentManager.danger_head_branch
+    end
+
+    def commit_request(ci_name)
+      return "Merge Request" if ci_name == 'GitLabCI'
+      return "Pull Request"
     end
   end
 end

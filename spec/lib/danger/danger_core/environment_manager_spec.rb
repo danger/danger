@@ -33,7 +33,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads GitLab CI" do
-      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+      with_gitlabci_setup_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::GitLabCI
       end
     end
@@ -45,13 +45,13 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads Jenkins (Gitlab)" do
-      with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
       end
     end
 
     it "loads Jenkins (Gitlab v3)" do
-      with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_v3_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
       end
     end
@@ -137,7 +137,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads GitLab CI" do
-      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+      with_gitlabci_setup_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
@@ -149,13 +149,13 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads Jenkins (Gitlab)" do
-      with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
 
     it "loads Jenkins (Gitlab v3)" do
-      with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_v3_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
