@@ -11,6 +11,7 @@
 ## master
 
 * Improves messaging specific to GitLab
+* Updates GIT to 1.7 with Ruby 2.7 support without warnings
 
 ## 7.0.0
 
