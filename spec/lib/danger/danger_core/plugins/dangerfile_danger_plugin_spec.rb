@@ -95,7 +95,7 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
         allow_any_instance_of(Danger::GitRepo).to receive(:origins).and_return("https://gitlab.com/author/repo.github.io.git")
 
         download_url = "https://gitlab.com/api/v4/projects/1/repository/files/Dangerfile/raw?private_token=a86e56d46ac78b&ref=master"
-        download_url_custom = "https://gitlab.com/api/v4/projects/1/repository/files/path/to/Dangerfile/raw?private_token=a86e56d46ac78b&ref=custom-branch"
+        download_url_custom = "https://gitlab.com/api/v4/projects/1/repository/files/path%2Fto%2FDangerfile/raw?private_token=a86e56d46ac78b&ref=custom-branch"
         mock_dangerfile = "message('OK')"
 
         stub_request(:get, download_url).to_return(status: 200, body: mock_dangerfile)

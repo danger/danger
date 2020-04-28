@@ -446,12 +446,17 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
       it "returns a valid URL with more parameters" do
         url = subject.file_url(repository: 1, organisation: "artsy", branch: "develop", path: "path/Dangerfile")
-        expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/path/Dangerfile/raw?ref=develop&private_token=a86e56d46ac78b")
+        expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/path%2FDangerfile/raw?ref=develop&private_token=a86e56d46ac78b")
       end
 
       it "returns a valid fallback URL" do
         url = subject.file_url(repository: 1, organisation: "teapot", path: "Dangerfile")
         expect(url).to eq("https://gitlab.com/api/v4/projects/1/repository/files/Dangerfile/raw?ref=master&private_token=a86e56d46ac78b")
+      end
+
+      it "returns a valid URL with slug repository" do
+        url = subject.file_url(repository: "group/secret_project", organisation: "teapot", path: "Dangerfile")
+        expect(url).to eq("https://gitlab.com/api/v4/projects/group%2Fsecret_project/repository/files/Dangerfile/raw?ref=master&private_token=a86e56d46ac78b")
       end
     end
 
