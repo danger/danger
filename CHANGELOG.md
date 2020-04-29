@@ -12,6 +12,7 @@
 
 * Improves messaging specific to GitLab
 * Updates GIT to 1.7 with Ruby 2.7 support without warnings
+* Fixes warnings for Github with Ruby 2.7
 
 ## 7.0.0
 
