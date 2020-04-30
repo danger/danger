@@ -10,10 +10,12 @@
 
 ## master
 
+## 7.0.1
+
+* Fixed import Dangerfile in directory from GitLab
+* Fixes warnings when using GitHub with Ruby 2.7
 * Improves messaging specific to GitLab
 * Updates Git dependency to 1.7 with Ruby 2.7 support without warnings
-* Fixes warnings when using GitHub with Ruby 2.7
-* Fixed import Dangerfile in directory from GitLab
 
 ## 7.0.0
 
