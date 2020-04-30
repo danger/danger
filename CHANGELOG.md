@@ -11,7 +11,8 @@
 ## master
 
 * Improves messaging specific to GitLab
-* Updates GIT to 1.7 with Ruby 2.7 support without warnings
+* Updates Git dependency to 1.7 with Ruby 2.7 support without warnings
+* Fixes warnings when using GitHub with Ruby 2.7
 * Fixed import Dangerfile in directory from GitLab
 
 ## 7.0.0
