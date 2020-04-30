@@ -302,6 +302,9 @@ module Danger
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         branch ||= 'master'
         token = @environment["DANGER_GITLAB_API_TOKEN"]
+        # According to GitLab Repositories API docs path and id(slug) should be encoded.
+        path = URI.encode_www_form_component(path)
+        repository = URI.encode_www_form_component(repository)
         "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{branch}&private_token=#{token}"
       end
 
