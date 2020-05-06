@@ -108,7 +108,7 @@ module Danger
       # have some nice generic resolved-thing going :)
       def generate_message_group_comment(message_group:,
                                          danger_id: "danger",
-                                         resolved: false,
+                                         resolved: [],
                                          template: "github")
         # cheating a bit - I don't want to alter the apply_template API
         # so just sneak around behind its back setting some instance variables
@@ -128,7 +128,7 @@ module Danger
       def generate_inline_comment_body(emoji,
                                        message,
                                        danger_id: "danger",
-                                       resolved: [],
+                                       resolved: false,
                                        template: "github")
         apply_template(
           tables: [{ content: [message], resolved: resolved, emoji: emoji }],
