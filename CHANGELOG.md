@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix github inline-comments always being struck-through. This was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182), fixed in PR [#1208](https://github.com/danger/danger/pull/1208/) for 6.3.2 but didn't make it to 7.0.0 [@Kaspik] [#1225](https://github.com/danger/danger/pull/1225)
+
 ## 7.0.1
 
 * Fixed import Dangerfile in directory from GitLab
