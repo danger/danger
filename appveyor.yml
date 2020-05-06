@@ -1,5 +1,5 @@
 install:
-  - set PATH=C:\Ruby23\bin;%PATH%
+  - set PATH=C:\Ruby24\bin;%PATH%
   - gem uninstall bundler --executables
   - gem install bundler -v '2.0.1'
   - bundle install
