@@ -21,3 +21,7 @@ gem "rubocop", "~> 0.82"
 gem "simplecov", "~> 0.18"
 gem "webmock", "~> 2.1"
 gem "yard", "~> 0.9.11"
+
+if Gem::Version.create(RUBY_VERSION) < Gem::Version.create("2.5.0")
+   gem "gitlab", "< 4.14.1"
+ end
