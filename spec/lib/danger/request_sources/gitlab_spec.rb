@@ -77,8 +77,9 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect { stub_request_source(env).validates_as_ci? }.to raise_error("Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners")
     end
 
-    it "does validate as CI when there is no port number included in host" do
+    it "does validate with GitLabCI.validates_as_ci? when there is no port number included in host" do
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
+      expect(Danger::GitLabCI).to receive(:validates_as_ci?).and_call_original
 
       git_mock = Danger::GitRepo.new
       g = stub_request_source(env)
@@ -86,9 +87,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
       allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@gitlab.example.com:artsy/eigen.git")
 
-      result = g.validates_as_ci?
-
-      expect(result).to be_truthy
+      g.validates_as_ci?
     end
   end
 

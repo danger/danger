@@ -50,7 +50,7 @@ module Danger
         includes_port = self.host.include? ":"
         raise "Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners" if includes_port
 
-        super
+        GitLabCI.validates_as_ci?(environment)
       end
 
       def validates_as_api_source?

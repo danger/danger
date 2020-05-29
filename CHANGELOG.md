@@ -10,7 +10,9 @@
 
 ## master
 
-<!-- Your logs here -->
+* Fixed GitLab CI detection when Git remote host is different than GitLab.com.
+  If you're using GitLab.com with shared runner, you'll need this.
+  [#1231](https://github.com/danger/danger/issues/1231)
 
 ## 8.0.0
 
