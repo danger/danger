@@ -50,7 +50,11 @@ module Danger
         includes_port = self.host.include? ":"
         raise "Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners" if includes_port
 
-        super
+        # We don't call super because in some cases the Git remote doesn't match the GitLab instance host.
+        # In Danger::EnvironmentManager#initialize we still check that the request source is #validates_as_api_source?
+        # so that should be sufficient to validate GitLab as request source.
+        # See https://github.com/danger/danger/issues/1231 and https://gitlab.com/gitlab-com/gl-infra/infrastructure/-/issues/10069.
+        true
       end
 
       def validates_as_api_source?
