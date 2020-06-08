@@ -10,7 +10,9 @@
 
 ## master
 
-<!-- Your logs here -->
+## 8.0.1
+
+* Fix request source detection for GitLab. [@rymai](https://github.com/rymai) [#1234](https://github.com/danger/danger/pull/1234)
 
 ## 8.0.0
 
