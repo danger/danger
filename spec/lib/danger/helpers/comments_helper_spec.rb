@@ -202,6 +202,75 @@ RSpec.describe Danger::Helpers::CommentsHelper do
       expect(table_data[:resolved]).to be_empty
       expect(table_data[:count]).to be(2)
     end
+
+    shared_examples "violation text as heredoc" do
+      it "produces table data" do
+        table_data = dummy.table("1 Error", "no_entry_sign", [violation], {})
+
+        expect(table_data[:name]).to eq("1 Error")
+        expect(table_data[:emoji]).to eq("no_entry_sign")
+        expect(table_data[:content].size).to be(1)
+        expect(table_data[:content][0].message).to eq("#{heredoc_text.strip}")
+        expect(table_data[:content][0].sticky).to eq(false)
+
+        expect(table_data[:resolved]).to be_empty
+        expect(table_data[:count]).to be(1)
+      end
+
+    end
+
+    context "with a heredoc text with a newline at the end" do
+      let(:heredoc_text) { "You have made some app changes, but did not add any tests." }
+      let(:violation) { violation_factory(heredoc) }
+
+      context "with a heredoc text with a newline at the end" do
+        let(:heredoc) do
+          <<~MSG
+          #{heredoc_text}
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with two newlines at the end" do
+        let(:heredoc) do
+          <<~MSG
+          #{heredoc_text}
+
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with a newline at the start and end" do
+        let(:heredoc) do
+          <<~MSG
+
+          #{heredoc_text}
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with a newline at the start and two newlines at the end" do
+        let(:heredoc) do
+          <<~MSG
+
+          #{heredoc_text}
+
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+    end
   end
 
   describe "#table_kind_from_title" do
