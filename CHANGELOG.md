@@ -10,6 +10,8 @@
 
 ## master
 
+## 8.0.2
+
 * Fix Danger::Helpers::CommentsHelper#process_markdown so that it doesn't result in broken HTML. [@rymai](https://github.com/rymai) [#1236](https://github.com/danger/danger/pull/1236)
 
 ## 8.0.1
