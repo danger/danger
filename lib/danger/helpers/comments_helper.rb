@@ -49,8 +49,8 @@ module Danger
         message = "#{markdown_link_to_message(violation, hide_link)}#{message}" if violation.file && violation.line
 
         html = markdown_parser(message).to_html
-        # Remove the outer `<p>`, the -5 represents a newline + `</p>`
-        html = html[3...-5] if html.start_with? "<p>"
+        # Remove the outer `<p>` and `</p>`.
+        html = html.strip.sub(%r{\A<p>(.*)</p>\z}m, '\1')
         Violation.new(html, violation.sticky, violation.file, violation.line)
       end
 
