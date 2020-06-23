@@ -17,8 +17,6 @@ module Danger
   #
   # Add the `DANGER_GITLAB_API_TOKEN` to your pipeline env variables.
   class GitLabCI < CI
-    attr_reader :project_url
-
     def self.validates_as_ci?(env)
       env.key? "GITLAB_CI"
     end
@@ -55,7 +53,6 @@ module Danger
     def initialize(env)
       @env = env
       @repo_slug = env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
-      @project_url = env["CI_MERGE_REQUEST_PROJECT_URL"] || env["CI_PROJECT_URL"]
     end
 
     def supported_request_sources
