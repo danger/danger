@@ -40,6 +40,10 @@ module Danger
         end
       end
 
+      def validates_as_ci?
+        true
+      end
+
       def validates_as_api_source?
         (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
       end

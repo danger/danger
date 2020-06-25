@@ -21,15 +21,6 @@ RSpec.describe Danger::RequestSources::RequestSource, host: :github do
       allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@git.club-mateusa.com:artsy/eigen.git")
       expect(g.validates_as_ci?).to be true
     end
-
-    it 'doesn\'t validate when passed a wrong repository' do
-      git_mock = Danger::GitRepo.new
-      allow(git_mock).to receive(:exec).with("remote show origin -n").and_return("Fetch URL: git@bitbucket.org:artsy/eigen.git")
-
-      g = stub_request_source
-      g.scm = git_mock
-      expect(g.validates_as_ci?).to be false
-    end
   end
 
   describe ".source_name" do
