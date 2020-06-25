@@ -11,7 +11,8 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       it "it is gitlab" do
         expect(
           ci_source.supported_request_sources
-        ).to eq([Danger::RequestSources::GitLab])
+        ).to eq([Danger::RequestSources::GitHub,
+                 Danger::RequestSources::GitLab])
       end
     end
 
@@ -86,6 +87,52 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       describe "#pull_request_id" do
         it "sets the pull_request_id" do
           expect(ci_source.pull_request_id).to eq(env["CI_MERGE_REQUEST_IID"])
+        end
+      end
+    end
+
+    context "given PR made on github hosted repository" do
+      let(:pr_num) { '24' }
+      let(:repo_url) { 'https://github.com/procore/blueprinter' }
+      let(:repo_slug) { 'procore/blueprinter' }
+      let(:env) do
+        stub_env.merge(
+          {
+            "CI_EXTERNAL_PULL_REQUEST_IID" => pr_num,
+            "DANGER_PROJECT_REPO_URL" => repo_url
+          }
+        )
+      end
+
+      describe ".validates_as_ci?" do
+        it "is valid" do
+          expect(described_class.validates_as_ci?(env)).to be(true)
+        end
+      end
+
+      describe ".validates_as_pr?" do
+        it "is valid" do
+          expect(described_class.validates_as_pr?(env)).to be(true)
+        end
+      end
+
+      describe ".determine_pull_or_merge_request_id" do
+        context "when CI_MERGE_REQUEST_IID present in environment" do
+          it "returns CI_MERGE_REQUEST_IID" do
+            expect(described_class.determine_pull_or_merge_request_id(env)).to eq(pr_num)
+          end
+        end
+      end
+
+      describe "#initialize" do
+        it "sets the repo_slug" do
+          expect(ci_source.repo_slug).to eq(repo_slug)
+        end
+      end
+
+      describe "#pull_request_id" do
+        it "sets the pull_request_id" do
+          expect(ci_source.pull_request_id).to eq(pr_num)
         end
       end
     end
