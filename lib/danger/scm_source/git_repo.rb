@@ -135,7 +135,7 @@ module Danger
       git_in_depth_fetch
       possible_merge_base = possible_merge_base(repo, from, to)
 
-      raise "Cannot find a merge base between #{from} and #{to}." unless possible_merge_base
+      raise "Cannot find a merge base between #{from} and #{to}. If you are using shallow clone/fetch, try increasing the --depth" unless possible_merge_base
 
       possible_merge_base
     end
