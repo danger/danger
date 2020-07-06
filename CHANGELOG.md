@@ -9,7 +9,7 @@
 -->
 
 ## master
-* Support external CI/CD for GitlabCI with Github code repository. To utilize this, please ensure `DANGER_GITHUB_API_TOKEN` and `DANGER_PROJECT_REPO_URL` are both set. [@philipqnguyen](https://github.com/philipqnguyen) [#1238](https://github.com/danger/danger/pull/1238)
+* Support external CI/CD for GitLab CI with GitHub code repository. To utilize this, please ensure `DANGER_GITHUB_API_TOKEN` and `DANGER_PROJECT_REPO_URL` are both set. [@philipqnguyen](https://github.com/philipqnguyen) [#1238](https://github.com/danger/danger/pull/1238)
 
 ## 8.0.2
 

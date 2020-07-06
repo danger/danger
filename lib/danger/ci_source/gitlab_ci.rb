@@ -17,8 +17,8 @@ module Danger
   # ### Token Setup
   #
   # Add the `DANGER_GITLAB_API_TOKEN` to your pipeline env variables if you
-  # are hosting your code on Gitlab. If you are using Gitlab as a mirror
-  # for the purpose of CI/CD, while hosting your repo on Github, set the
+  # are hosting your code on GitLab. If you are using GitLab as a mirror
+  # for the purpose of CI/CD, while hosting your repo on GitHub, set the
   # `DANGER_GITHUB_API_TOKEN` as well as the project repo URL to
   # `DANGER_PROJECT_REPO_URL`.
 
