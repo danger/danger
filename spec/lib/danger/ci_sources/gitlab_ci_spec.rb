@@ -77,19 +77,13 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       end
     end
 
-    describe "#project_url" do
-      it "sets the project_url" do
-        expect(ci_source.project_url).to eq(env["CI_MERGE_REQUEST_PROJECT_URL"])
-      end
-    end
-
     describe "#pull_request_id" do
       it "sets the pull_request_id" do
         expect(ci_source.pull_request_id).to eq(env["CI_MERGE_REQUEST_IID"])
       end
     end
   end
-  
+
   context "valid environment on GitLab < 11.6" do
     let(:env) { stub_env_pre_11_6.merge("CI_MERGE_REQUEST_IID" => 28_493) }
 
@@ -102,12 +96,5 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
         expect(ci_source.repo_slug).to eq("k0nserv/danger-test")
       end
     end
-    
-    describe "#project_url" do
-      it "sets the project_url" do
-        expect(ci_source.project_url).to eq(env["CI_PROJECT_URL"])
-      end
-    end
-
   end
 end
