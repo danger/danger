@@ -27,6 +27,8 @@ module Danger
   # branch="%teamcity.build.branch%"
   # export GITHUB_PULL_REQUEST_ID=(${branch//\// })
   # ```
+  # Or if you are using the pull request feature you can set an environment parameter called `GITHUB_PULL_REQUEST_ID`
+  # to the value of: `%teamcity.pullRequest.number`
   #
   # #### GitLab
   #
