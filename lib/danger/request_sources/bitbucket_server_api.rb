@@ -5,7 +5,7 @@ require "danger/helpers/comments_helper"
 module Danger
   module RequestSources
     class BitbucketServerAPI
-      attr_accessor :host, :pr_api_endpoint, :key, :project
+      attr_accessor :host, :ca_file, :pr_api_endpoint, :key, :project
 
       def initialize(project, slug, pull_request_id, environment)
         @username = environment["DANGER_BITBUCKETSERVER_USERNAME"]
@@ -14,6 +14,7 @@ module Danger
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
         end
+        self.ca_file = environment["DANGER_BITBUCKETSERVER_CA_FILE"]
         self.key = slug
         self.project = project
         self.pr_api_endpoint = "#{host}/rest/api/1.0/projects/#{project}/repos/#{slug}/pull-requests/#{pull_request_id}"
@@ -73,7 +74,7 @@ module Danger
       def fetch_json(uri)
         req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl, ca_file: self.ca_file) do |http|
           http.request(req)
         end
         JSON.parse(res.body, symbolize_names: true)
@@ -84,7 +85,7 @@ module Danger
         req.basic_auth @username, @password
         req.body = body
 
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl, ca_file: self.ca_file) do |http|
           http.request(req)
         end
 
@@ -99,7 +100,7 @@ module Danger
       def delete(uri)
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl, ca_file: self.ca_file) do |http|
           http.request(req)
         end
       end

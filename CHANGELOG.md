@@ -10,6 +10,8 @@
 
 ## master
 
+* Add ability to specify ca file path for bitbucket server resource [@ryancurrah] [#1248](https://github.com/danger/danger/pull/1248)
+
 ## 8.0.3 - 8.0.4
 
 - Minor docs update, might also update the dockerfile
