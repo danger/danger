@@ -10,11 +10,11 @@
 
 ## master
 
-## 8.0.3 - 8.0.4
+## 8.0.4
 
 - Minor docs update, might also update the dockerfile
 
-## 8.0.2
+## 8.0.3
 
 * Support external CI/CD for GitLab CI with GitHub code repository. To utilize this, please ensure `DANGER_GITHUB_API_TOKEN` and `DANGER_PROJECT_REPO_URL` are both set. [@philipqnguyen](https://github.com/philipqnguyen) [#1238](https://github.com/danger/danger/pull/1238)
 
