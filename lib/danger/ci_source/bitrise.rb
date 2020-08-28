@@ -54,16 +54,25 @@ module Danger
     end
 
     def repo_slug_from(url)
-      begin
+      if url =~ URI::regexp
         # Try to parse the URL as a valid URI. This should cover the cases of http/https/ssh URLs.
-        uri = URI.parse(url)
-        return uri.path.sub(/^(\/)/,'').sub(/(.git)$/,'')
-      rescue URI::InvalidURIError
-        # In case of invalid URI try the parse as a git URL. git@github.com:organization/repo.git
-        matcher_url = url
-        repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
-        return repo_matches unless repo_matches.nil?
+        begin
+          uri = URI.parse(url)
+          return uri.path.sub(/^(\/)/,'').sub(/(.git)$/,'')
+        rescue URI::InvalidURIError
+          # In case URL could not be parsed fallback to git URL parsing.
+          repo_slug_asgiturl(url)
+        end
+      else
+        # In case URL could not be parsed fallback to git URL parsing. git@github.com:organization/repo.git
+        repo_slug_asgiturl(url)
       end
+    end
+
+    def repo_slug_asgiturl(url)
+      matcher_url = url
+      repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
+      return repo_matches unless repo_matches.nil?
     end
   end
 end
