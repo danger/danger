@@ -10,6 +10,8 @@
 
 ## master
 
+* Fixes warnings when using GitLab with Ruby 2.7 [@chwo](https://github.com/chwo) [#1250](https://github.com/danger/danger/issues/1250)
+
 ## 8.0.4
 
 - Minor docs update, might also update the dockerfile
