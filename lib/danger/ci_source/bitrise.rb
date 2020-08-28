@@ -50,16 +50,20 @@ module Danger
       self.repo_url = env["GIT_REPOSITORY_URL"]
       
       matcher_url = self.repo_url
+      self.repo_slug = repo_slug_from(self.repo_url)
+    end
 
-      #If the URL contains https:// as :// leads to inaccurate matching. So we remove it and proceed to match.
-      if repo_url.include? "https://"
-        matcher_url["https://"] = ''
+    def repo_slug_from(url)
+      begin
+        # Try to pars the URL as a valid URI. This should cover the cases of http/https/ssh URLs.
+        uri = URI.parse(url)
+        return uri.path.delete_prefix("/").delete_suffix(".git")
+      rescue URI::InvalidURIError
+        # In case of invalid URI try the parse as a git URL. git@github.com:organization/repo.git
+        matcher_url = url
+        repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
+        return repo_matches unless repo_matches.nil?
       end
-
-      repo_matches = matcher_url.match(%r{([\/:])(([^\/]+\/)+[^\/]+?)(\.git$|$)})[2]
-
-      self.repo_slug = repo_matches unless repo_matches.nil?
-      
     end
   end
 end

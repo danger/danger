@@ -78,7 +78,17 @@ RSpec.describe Danger::Bitrise do
     end
     
     it "sets the repo_slug from a repo with .io instead of .com", host: :github do
-      valid_env["GIT_REPOSITORY_URL"] = "git@github.company.io/artsy/ios/artsy.github.io.git"
+      valid_env["GIT_REPOSITORY_URL"] = "git@github.company.io:artsy/ios/artsy.github.io.git"
+      expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
+    end
+
+    it "sets the repo_slug from an url that has an ssh scheme", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "ssh://git@github.company.io/artsy/ios/artsy.github.io.git"
+      expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
+    end
+
+    it "sets the repo_slug from an url that has a port in it and has ssh as a scheme", host: :github do
+      valid_env["GIT_REPOSITORY_URL"] = "ssh://git@github.company.io:22/artsy/ios/artsy.github.io.git"
       expect(source.repo_slug).to eq("artsy/ios/artsy.github.io")
     end
 
