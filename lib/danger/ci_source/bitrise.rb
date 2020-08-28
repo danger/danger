@@ -55,9 +55,8 @@ module Danger
 
     def repo_slug_from(url)
       begin
-        # Try to pars the URL as a valid URI. This should cover the cases of http/https/ssh URLs.
+        # Try to parse the URL as a valid URI. This should cover the cases of http/https/ssh URLs.
         uri = URI.parse(url)
-        # return uri.path.delete_prefix("/").delete_suffix(".git")
         return uri.path.sub(/^(\/)/,'').sub(/(.git)$/,'')
       rescue URI::InvalidURIError
         # In case of invalid URI try the parse as a git URL. git@github.com:organization/repo.git
