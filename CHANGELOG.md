@@ -10,6 +10,8 @@
 
 ## master
 
+- Handle ssh URLs with port in Bitrise
+
 ## 8.0.4
 
 - Minor docs update, might also update the dockerfile
