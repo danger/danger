@@ -8,7 +8,7 @@ module Danger
   module RequestSources
     class GitLab < RequestSource
       include Danger::Helpers::CommentsHelper
-      attr_accessor :mr_json, :commits_json
+      attr_accessor :mr_json, :commits_json, :dismiss_out_of_range_messages
 
       FIRST_GITLAB_GEM_WITH_VERSION_CHECK = Gem::Version.new("4.6.0")
       FIRST_VERSION_WITH_INLINE_COMMENTS = Gem::Version.new("10.8.0")
@@ -24,6 +24,7 @@ module Danger
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
+        self.dismiss_out_of_range_messages = false
 
         @token = @environment["DANGER_GITLAB_API_TOKEN"]
       end
@@ -302,6 +303,16 @@ module Danger
         nil # TODO: Implement this
       end
 
+      def dismiss_out_of_range_messages_for(kind)
+        if self.dismiss_out_of_range_messages.kind_of?(Hash) && self.dismiss_out_of_range_messages[kind]
+          self.dismiss_out_of_range_messages[kind]
+        elsif self.dismiss_out_of_range_messages == true
+          self.dismiss_out_of_range_messages
+        else
+          false
+        end
+      end
+
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         branch ||= 'master'
@@ -397,9 +408,8 @@ module Danger
 
         messages.reject do |m|
           next false unless m.file && m.line
-
           # Keep the change it's in a file changed in this diff
-          next if !mr_changed_paths.include?(m.file)
+          next dismiss_out_of_range_messages_for(kind) if !mr_changed_paths.include?(m.file) # change if to if mr_diff.include?(m.line)
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
@@ -473,7 +483,6 @@ module Danger
         range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
 
         change = changes.find { |c| c["new_path"] == message.file }
-
         # If there is no changes or rename only or deleted, return nil.
         return nil if change.nil? || change["diff"].empty? || change["deleted_file"]
 
@@ -520,6 +529,43 @@ module Danger
           line: current_old_line - current_new_line + message.line.to_i
         }
       end
+
+      def is_out_of_range(changes, message)
+        change = changes.find { |c| c["new_path"] == message.file }
+
+        print "message_line"
+        print "#{message.line}\n"
+  
+        # If there is no changes or rename only or deleted, return out of range.
+        return true if change.nil? || change["diff"].empty? || change["deleted_file"]
+        
+        # If new file then return in range
+        return false if change["new_file"]
+
+        diff_ranges = generate_diff_ranges(change["diff"])
+        diff_ranges.each do |range|
+          #in range
+          return false if message.line.to_i.between?(range[0], range[1])
+        end
+
+        return true
+      end
+
+      def generate_diff_ranges(diff) 
+        range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
+        ranges = []
+        diff.each_line do |line| 
+          next unless line.match range_header_regexp
+          
+          line = line.split('+').last
+          line = line.split(' ').first
+          range_string = line.split(',')
+          range = [range_string[0].to_i, range_string[1].to_i]
+          ranges.push(range)
+        end
+        ranges
+      end
+
     end
   end
 end

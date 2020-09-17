@@ -460,6 +460,83 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       end
     end
 
+    describe "#is_out_of_range" do 
+      let(:new_path) do
+        "dummy"
+      end
+
+      let(:old_path) do
+        "dummy"
+      end
+
+      let(:new_file) do
+        false
+      end
+
+      let(:renamed_file) do
+        false
+      end
+
+      let(:deleted_file) do
+        false
+      end
+
+      let(:diff_lines) do
+        ""
+      end
+
+      let(:changes) do
+        [{
+          "new_path" => new_path,
+          "old_path" => old_path,
+          "diff" => diff_lines,
+          "new_file" => new_file,
+          "renamed_file" => renamed_file,
+          "deleted_file" => deleted_file
+        }]
+      end
+
+      context "new file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -0,0 +1,3 @@
++foo
++bar
++baz
+          DIFF
+        end
+
+        let(:new_file) do
+          true
+        end
+
+        it "is in range" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+          expect(is_out_of_range).to eq(false)
+        end
+      end
+      context "slightly modified file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+          DIFF
+        end
+
+        it "is in range" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+          expect(is_out_of_range).to eq(false)
+        end
+        
+        it "is out of range" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+    end
+
     describe "#find_old_position_in_diff" do
       let(:new_path) do
         "dummy"
