@@ -536,9 +536,9 @@ module Danger
 
       def is_out_of_range(changes, message)
         change = changes.find { |c| c["new_path"] == message.file }
-
-        print "message_line"
-        print "#{message.line}\n"
+        print "change #{change}"
+        print "diff #{change["diff"]}"
+        print "message_line #{message.line}\n"
   
         # If there is no changes or rename only or deleted, return out of range.
         return true if change.nil? || change["diff"].empty? || change["deleted_file"]
