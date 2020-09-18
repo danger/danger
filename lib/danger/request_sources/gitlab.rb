@@ -538,6 +538,7 @@ module Danger
         change = changes.find { |c| c["new_path"] == message.file }
         print "change #{change}"
         print "diff #{change["diff"]}"
+        
         print "message_line #{message.line}\n"
   
         # If there is no changes or rename only or deleted, return out of range.
