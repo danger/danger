@@ -236,11 +236,11 @@ module Danger
     # @return   [void]
     def dismiss_out_of_range_messages(dismiss = true)
       if dismiss.kind_of?(Hash)
-        @github.dismiss_out_of_range_messages = dismiss
+        @gitlab.dismiss_out_of_range_messages = dismiss
       elsif dismiss.kind_of?(TrueClass)
-        @github.dismiss_out_of_range_messages = true
+        @gitlab.dismiss_out_of_range_messages = true
       elsif dismiss.kind_of?(FalseClass)
-        @github.dismiss_out_of_range_messages = false
+        @gitlab.dismiss_out_of_range_messages = false
       end
     end
 
