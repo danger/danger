@@ -334,6 +334,23 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           subject.update_pull_request!(warnings: [], errors: [], messages: [v])
         end
 
+        it "ignore new comments inline when out of range" do
+          stub_merge_request_changes(
+            "merge_request_1_changes_response",
+            "k0nserv\%2Fdanger-test",
+            1
+          )
+
+          expect(subject.client).not_to receive(:create_merge_request_discussion)
+          allow(subject.client).to receive(:delete_merge_request_comment)
+
+          subject.fetch_details
+
+          v = Danger::Violation.new("Sure thing", true, "Dangerfile", 14)
+          subject.dismiss_out_of_range_messages = true
+          subject.update_pull_request!(warnings: [], errors: [], messages: [v])
+        end
+
         it "edits existing inline comment instead of creating a new one if file/line matches" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",

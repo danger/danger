@@ -409,7 +409,7 @@ module Danger
         messages.reject do |m|
           next false unless m.file && m.line
           # Keep the change it's in a file changed in this diff
-          next dismiss_out_of_range_messages_for(kind) if !mr_changed_paths.include?(m.file) # change if to if mr_diff.include?(m.line)
+          next dismiss_out_of_range_messages_for(kind) if is_out_of_range(mr_changes.changes, m) #!mr_changed_paths.include?(m.file) # change if to if mr_diff.include?(m.line)
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
