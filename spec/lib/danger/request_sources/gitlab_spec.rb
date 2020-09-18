@@ -515,6 +515,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           expect(is_out_of_range).to eq(false)
         end
       end
+
       context "slightly modified file" do
         let(:diff_lines) do
           <<-DIFF
@@ -532,6 +533,146 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         
         it "is out of range" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+
+      context "heavily modified files" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -2,7 +2,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+@@ -21,7 +22,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+          DIFF
+        end
+
+        it "return in range when line message new" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
+          expect(is_out_of_range).to eq(false)
+        end
+
+        it "return in range when line is in diff" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 3))
+          expect(is_out_of_range).to eq(false)
+        end
+
+        it "returns out of range when the line is before diffs" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+          expect(is_out_of_range).to eq(true)
+        end
+
+        it "returns out of range when the line is between diffs" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 15))
+          expect(is_out_of_range).to eq(true)
+        end
+
+        it "returns out of range when the line is after diffs" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 135))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+
+      context "deleted file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1,3 +0,0 @@
+-foo
+-bar
+-baz
+          DIFF
+        end
+
+        let(:deleted_file) do
+          true
+        end
+
+        it "returns out of range" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+
+      context "renamed only file" do
+
+        let(:renamed_file) do
+          true
+        end
+
+        let(:new_path) do
+          "new_dummy"
+        end
+
+        it "returns out of range" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+
+      context "renamed and modified file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -1 +1,2 @@
+@@ -2,7 +2,8 @@
+ a
+ a
+ a
+-foo
++bar
++baz
+ a
+ a
+ a
+          DIFF
+        end
+
+        let(:renamed_file) do
+          true
+        end
+
+        let(:new_path) do
+          "dummy_new"
+        end
+
+        it "returns in range when message line is new" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
+          expect(is_out_of_range).to eq(false)
+        end
+
+        it "returns out of range when message line isn't new" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 9))
+          expect(is_out_of_range).to eq(true)
+        end
+      end
+
+      context "unchanged file" do
+        let(:diff_lines) do
+          <<-DIFF
+@@ -0,0 +1,3 @@
++foo
++bar
++baz
+          DIFF
+        end
+
+        it "returns out of range when file unchanged" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: "dummy_unchanged", line: 5))
           expect(is_out_of_range).to eq(true)
         end
       end
