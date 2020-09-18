@@ -408,9 +408,9 @@ module Danger
 
         messages.reject do |m|
           next false unless m.file && m.line
-          # Keep the change it's in a file changed in this diff
-          next dismiss_out_of_range_messages_for(kind) if is_out_of_range(mr_changes.changes, m) #!mr_changed_paths.include?(m.file) # change if to if mr_diff.include?(m.line)
-
+          # Reject if it's out of range and in dimsiss mode
+          next true if dismiss_out_of_range_messages_for(kind) && is_out_of_range(mr_changes.changes, m)
+          
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "gitlab")
@@ -451,6 +451,7 @@ module Danger
               }
             }
             begin
+              print "create_merge_request_discussion"
               client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, params)
             rescue Gitlab::Error::Error => e
               message = [e, "body: #{body}", "position: #{params[:position].inspect}"].join("\n")
@@ -465,6 +466,7 @@ module Danger
             # Update the comment to remove the strikethrough if present
             comment = matching_comments.first
             begin
+              print "update_merge_request_discussion_note"
               client.update_merge_request_discussion_note(ci_source.repo_slug, ci_source.pull_request_id, comment["discussion_id"], comment["id"], body: body)
             rescue Gitlab::Error::Error => e
               message = [e, "body: #{body}"].join("\n")
