@@ -538,7 +538,7 @@ module Danger
         change = changes.find { |c| c["new_path"] == message.file }
         print "change #{change}"
         print "diff #{change["diff"]}"
-        
+
         print "message_line #{message.line}\n"
   
         # If there is no changes or rename only or deleted, return out of range.
@@ -547,29 +547,30 @@ module Danger
         # If new file then return in range
         return false if change["new_file"]
 
-        diff_ranges = generate_diff_ranges(change["diff"])
-        diff_ranges.each do |range|
-          print "ranges : #{range[0]} , #{range[1]} \n"
-          #in range
-          return false if message.line.to_i.between?(range[0], range[1])
-        end
+        addition_lines = generate_addition_lines(change["diff"])
+        return false if addition_lines.include?(message.line.to_i)
 
         return true
       end
 
-      def generate_diff_ranges(diff) 
+      def generate_addition_lines(diff) 
         range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
-        ranges = []
-        diff.each_line do |line| 
-          next unless line.match range_header_regexp
-          
-          line = line.split('+').last
-          line = line.split(' ').first
-          range_string = line.split(',')
-          range = [range_string[0].to_i, range_string[1].to_i]
-          ranges.push(range)
+        addition_lines = []
+        line_number = 0
+        diff.each_line do |line|
+          if line.match range_header_regexp
+            line = line.split('+').last
+            line = line.split(' ').first
+            range_string = line.split(',')
+            line_number = range_string[0].to_i - 1
+          elsif line.start_with?('+')
+            addition_lines.push(line_number)
+          elsif line.start_with?('-')
+            line_number=line_number-1
+          end
+          line_number=line_number+1
         end
-        ranges
+        addition_lines
       end
 
     end
