@@ -409,8 +409,6 @@ module Danger
         messages.reject do |m|
           next false unless m.file && m.line
           # Reject if it's out of range and in dimsiss mode
-          print "dismiss_out_of_range_messages_for(kind) #{dismiss_out_of_range_messages_for(kind)}\n"
-          print "is_out_of_range(mr_changes.changes, m) #{is_out_of_range(mr_changes.changes, m)}\n"
           next true if dismiss_out_of_range_messages_for(kind) && is_out_of_range(mr_changes.changes, m)
           
           # Once we know we're gonna submit it, we format it
@@ -535,12 +533,7 @@ module Danger
       end
 
       def is_out_of_range(changes, message)
-        change = changes.find { |c| c["new_path"] == message.file }
-        print "change #{change}"
-        print "diff #{change["diff"]}"
-
-        print "message_line #{message.line}\n"
-  
+        change = changes.find { |c| c["new_path"] == message.file }  
         # If there is no changes or rename only or deleted, return out of range.
         return true if change.nil? || change["diff"].empty? || change["deleted_file"]
         

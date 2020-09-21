@@ -555,7 +555,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           true
         end
 
-        it "is in range" do
+        it "return false for new file" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
           expect(is_out_of_range).to eq(false)
         end
@@ -571,12 +571,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           DIFF
         end
 
-        it "is in range" do
+        it "return false when line is part of addition lines" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
           expect(is_out_of_range).to eq(false)
         end
         
-        it "is out of range" do
+        it "return true when line is not part of addition lines" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
           expect(is_out_of_range).to eq(true)
         end
@@ -608,30 +608,21 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           DIFF
         end
 
-        it "return in range when line message new" do
+        it "return false when line message is part of addition line" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
           expect(is_out_of_range).to eq(false)
         end
 
-        it "return in range when line is in diff" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 3))
+        it "return false when line message is part of addition line #2" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 25))
           expect(is_out_of_range).to eq(false)
         end
 
-        it "returns out of range when the line is before diffs" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
+        it "return true when line is just part of hunk but not part of addition line" do
+          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 3))
           expect(is_out_of_range).to eq(true)
         end
 
-        it "returns out of range when the line is between diffs" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 15))
-          expect(is_out_of_range).to eq(true)
-        end
-
-        it "returns out of range when the line is after diffs" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 135))
-          expect(is_out_of_range).to eq(true)
-        end
       end
 
       context "deleted file" do
@@ -648,7 +639,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           true
         end
 
-        it "returns out of range" do
+        it "returns true for deleted file" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
           expect(is_out_of_range).to eq(true)
         end
@@ -664,63 +655,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           "new_dummy"
         end
 
-        it "returns out of range" do
+        it "returns true for renamed only file" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
           expect(is_out_of_range).to eq(true)
         end
       end
 
-      context "renamed and modified file" do
-        let(:diff_lines) do
-          <<-DIFF
-@@ -1 +1,2 @@
-@@ -2,7 +2,8 @@
- a
- a
- a
--foo
-+bar
-+baz
- a
- a
- a
-          DIFF
-        end
-
-        let(:renamed_file) do
-          true
-        end
-
-        let(:new_path) do
-          "dummy_new"
-        end
-
-        it "returns in range when message line is new" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
-          expect(is_out_of_range).to eq(false)
-        end
-
-        it "returns out of range when message line isn't new" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 9))
-          expect(is_out_of_range).to eq(true)
-        end
-      end
-
-      context "unchanged file" do
-        let(:diff_lines) do
-          <<-DIFF
-@@ -0,0 +1,3 @@
-+foo
-+bar
-+baz
-          DIFF
-        end
-
-        it "returns out of range when file unchanged" do
-          is_out_of_range = subject.is_out_of_range(changes, double(file: "dummy_unchanged", line: 5))
-          expect(is_out_of_range).to eq(true)
-        end
-      end
     end
 
     describe "#find_old_position_in_diff" do
