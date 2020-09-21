@@ -8,7 +8,7 @@ module Danger
   module RequestSources
     class GitLab < RequestSource
       include Danger::Helpers::CommentsHelper
-      attr_accessor :mr_json, :commits_json
+      attr_accessor :mr_json, :commits_json, :dismiss_out_of_range_messages
 
       FIRST_GITLAB_GEM_WITH_VERSION_CHECK = Gem::Version.new("4.6.0")
       FIRST_VERSION_WITH_INLINE_COMMENTS = Gem::Version.new("10.8.0")
@@ -24,6 +24,7 @@ module Danger
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
+        self.dismiss_out_of_range_messages = false
 
         @token = @environment["DANGER_GITLAB_API_TOKEN"]
       end
@@ -302,6 +303,16 @@ module Danger
         nil # TODO: Implement this
       end
 
+      def dismiss_out_of_range_messages_for(kind)
+        if self.dismiss_out_of_range_messages.kind_of?(Hash) && self.dismiss_out_of_range_messages[kind]
+          self.dismiss_out_of_range_messages[kind]
+        elsif self.dismiss_out_of_range_messages == true
+          self.dismiss_out_of_range_messages
+        else
+          false
+        end
+      end
+
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         branch ||= 'master'
@@ -397,10 +408,9 @@ module Danger
 
         messages.reject do |m|
           next false unless m.file && m.line
-
-          # Keep the change it's in a file changed in this diff
-          next if !mr_changed_paths.include?(m.file)
-
+          # Reject if it's out of range and in dismiss mode
+          next true if dismiss_out_of_range_messages_for(kind) && is_out_of_range(mr_changes.changes, m)
+          
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "gitlab")
@@ -473,7 +483,6 @@ module Danger
         range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
 
         change = changes.find { |c| c["new_path"] == message.file }
-
         # If there is no changes or rename only or deleted, return nil.
         return nil if change.nil? || change["diff"].empty? || change["deleted_file"]
 
@@ -520,6 +529,41 @@ module Danger
           line: current_old_line - current_new_line + message.line.to_i
         }
       end
+
+      def is_out_of_range(changes, message)
+        change = changes.find { |c| c["new_path"] == message.file }  
+        # If there is no changes or rename only or deleted, return out of range.
+        return true if change.nil? || change["diff"].empty? || change["deleted_file"]
+        
+        # If new file then return in range
+        return false if change["new_file"]
+
+        addition_lines = generate_addition_lines(change["diff"])
+        return false if addition_lines.include?(message.line.to_i)
+
+        return true
+      end
+
+      def generate_addition_lines(diff) 
+        range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
+        addition_lines = []
+        line_number = 0
+        diff.each_line do |line|
+          if line.match range_header_regexp
+            line = line.split('+').last
+            line = line.split(' ').first
+            range_string = line.split(',')
+            line_number = range_string[0].to_i - 1
+          elsif line.start_with?('+')
+            addition_lines.push(line_number)
+          elsif line.start_with?('-')
+            line_number=line_number-1
+          end
+          line_number=line_number+1
+        end
+        addition_lines
+      end
+
     end
   end
 end

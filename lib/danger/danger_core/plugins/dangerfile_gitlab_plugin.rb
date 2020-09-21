@@ -227,6 +227,23 @@ module Danger
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
+    # @!group Gitlab Misc
+    # Use to ignore inline messages which lay outside a diff's range, thereby not posting the comment.
+    # You can set hash to change behavior per each kinds. (ex. `{warning: true, error: false}`)
+    # @param    [Bool] or [Hash<Symbol, Bool>] dismiss
+    #           Ignore out of range inline messages, defaults to `true`
+    #
+    # @return   [void]
+    def dismiss_out_of_range_messages(dismiss = true)
+      if dismiss.kind_of?(Hash)
+        @gitlab.dismiss_out_of_range_messages = dismiss
+      elsif dismiss.kind_of?(TrueClass)
+        @gitlab.dismiss_out_of_range_messages = true
+      elsif dismiss.kind_of?(FalseClass)
+        @gitlab.dismiss_out_of_range_messages = false
+      end
+    end
+
     %i(title body author labels json diff).each do |suffix|
       alias_method "pr_#{suffix}".to_sym, "mr_#{suffix}".to_sym
     end

@@ -10,6 +10,8 @@
 
 ## master
 
+* Add ability to set dismiss_out_of_range_messages for gitlab. - [@fahmisdk6](https://github.com/fahmisdk6)
+
 ## 8.0.5
 
 * Handle ssh URLs with port in Bitrise
