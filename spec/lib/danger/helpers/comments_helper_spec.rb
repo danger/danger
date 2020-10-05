@@ -185,13 +185,14 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     let(:violation_2) do
       violation_factory("A [link](https://example.com)", sticky: true)
     end
+    let(:violation_3) { violation_factory(%(with "double quote" and 'single quote')) }
 
     it "produces table data" do
-      table_data = dummy.table("2 Errors", "no_entry_sign", [violation_1, violation_2], {})
+      table_data = dummy.table("3 Errors", "no_entry_sign", [violation_1, violation_2, violation_3], {})
 
-      expect(table_data[:name]).to eq("2 Errors")
+      expect(table_data[:name]).to eq("3 Errors")
       expect(table_data[:emoji]).to eq("no_entry_sign")
-      expect(table_data[:content].size).to be(2)
+      expect(table_data[:content].size).to be(3)
       expect(table_data[:content][0].message).to eq("<strong>Violation 1</strong>")
       expect(table_data[:content][0].sticky).to eq(false)
 
@@ -199,8 +200,9 @@ RSpec.describe Danger::Helpers::CommentsHelper do
         "A <a href=\"https://example.com\">link</a>"
       )
       expect(table_data[:content][1].sticky).to eq(true)
+      expect(table_data[:content][2].message).to eq(%(with "double quote" and 'single quote'))
       expect(table_data[:resolved]).to be_empty
-      expect(table_data[:count]).to be(2)
+      expect(table_data[:count]).to be(3)
     end
 
     shared_examples "violation text as heredoc" do

@@ -11,7 +11,7 @@ module Danger
       include Danger::Helpers::CommentsParsingHelper
 
       def markdown_parser(text)
-        Kramdown::Document.new(text, input: "GFM")
+        Kramdown::Document.new(text, input: "GFM", smart_quotes: %w[apos apos quot quot])
       end
 
       # !@group Extension points

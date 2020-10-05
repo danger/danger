@@ -11,6 +11,7 @@
 ## master
 
 * Add ability to set dismiss_out_of_range_messages for gitlab. - [@fahmisdk6](https://github.com/fahmisdk6)
+* Preserve single and double quotes [@caalberts](https://github.com/caalberts)
 
 ## 8.0.5
 
