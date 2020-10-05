@@ -11,6 +11,7 @@
 ## master
 
 * Add ability to set dismiss_out_of_range_messages for gitlab. - [@fahmisdk6](https://github.com/fahmisdk6)
+* Add support for multiple patterns `{a,b}` in FileList#include? - [@l15](https://github.com/l15n) [#1258](https://github.com/danger/danger/pull/1258)
 
 ## 8.0.5
 

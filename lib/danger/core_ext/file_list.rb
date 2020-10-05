@@ -9,7 +9,7 @@ module Danger
     def include?(pattern)
       self.each do |current|
         unless current.nil?
-          return true if File.fnmatch(pattern, current) || pattern == current
+          return true if File.fnmatch(pattern, current, File::FNM_EXTGLOB) || pattern == current
         end
       end
       return false
