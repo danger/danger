@@ -9,6 +9,7 @@
 -->
 
 ## master
+* correct the usage of double splat to fix Ruby 2.7 warning
 
 ## 8.0.6
 

@@ -171,10 +171,10 @@ module Danger
           markdowns: markdowns
         )
 
-        rest_inline_violations = submit_inline_comments!({
+        rest_inline_violations = submit_inline_comments!(**{
           danger_id: danger_id,
           previous_violations: previous_violations
-        }.merge(**inline_violations))
+        }.merge(inline_violations))
 
         main_violations = merge_violations(
           regular_violations, rest_inline_violations
@@ -189,11 +189,11 @@ module Danger
 
         # If there are still violations to show
         if main_violations_sum.any?
-          body = generate_comment({
+          body = generate_comment(**{
             template: "github",
             danger_id: danger_id,
             previous_violations: previous_violations
-          }.merge(**main_violations))
+          }.merge(main_violations))
 
           comment_result =
             if should_create_new_comment
