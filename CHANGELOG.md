@@ -10,6 +10,8 @@
 
 ## master
 
+* Adds support for Code Insights for Bitbucket Server. [@qbeorama](https://github.com/Qbeorama)
+
 ## 8.0.6
 
 * Add ability to set dismiss_out_of_range_messages for gitlab. - [@fahmisdk6](https://github.com/fahmisdk6)
