@@ -2,6 +2,12 @@
 
 module Danger
   module RequestSources
+    #
+    # Provides ability for Danger to interact with Atlassian's Code Insights API in order to provide code quality
+    # reports along with inline comments for specific lines in specific files.
+    #  See https://developer.atlassian.com/server/bitbucket/how-tos/code-insights/ for more details.
+    #
+    # Currently this functionality is implemented only for Bitbucket Server request source.
     class CodeInsightsAPI
       attr_accessor :report_title, :report_description, :report_key, :logo_url, :username, :password, :host
 
