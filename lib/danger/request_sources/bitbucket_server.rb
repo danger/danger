@@ -2,6 +2,8 @@
 
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_server_api"
+require "danger/request_sources/code_insights_api"
+require_relative "request_source"
 
 module Danger
   module RequestSources
@@ -17,12 +19,21 @@ module Danger
         ]
       end
 
+      def self.optional_env_vars
+        ["DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY",
+         "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE",
+         "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION",
+         "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_LOGO_URL"
+        ]
+      end
+
       def initialize(ci_source, environment)
         self.ci_source = ci_source
         self.environment = environment
 
         project, slug = ci_source.repo_slug.split("/")
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
+        @code_insights = CodeInsightsAPI.new(project, slug, environment)
       end
 
       def validates_as_ci?
@@ -73,15 +84,50 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
-        comment = generate_description(warnings: warnings, errors: errors)
-        comment += "\n\n"
-        comment += generate_comment(warnings: warnings,
-                                     errors: errors,
-                                   messages: messages,
-                                  markdowns: markdowns,
-                        previous_violations: {},
-                                  danger_id: danger_id,
-                                   template: "bitbucket_server")
+        inline_violations = inline_violations_group(warnings: warnings, errors: errors, messages: messages)
+        inline_warnings = inline_violations[:warnings] || []
+        inline_errors = inline_violations[:errors] || []
+        inline_messages = inline_violations[:messages] || []
+
+        has_inline_comments = !(inline_warnings + inline_errors + inline_messages).empty?
+         if has_inline_comments
+
+          main_violations = main_violations_group(warnings: warnings, errors: errors, messages: messages)
+          main_warnings = main_violations[:warnings] || []
+          main_errors = main_violations[:errors] || []
+          main_messages = main_violations[:messages] || []
+          main_markdowns = main_violations[:markdowns] || []
+
+          comment = generate_description(warnings: main_warnings, errors: main_errors)
+          comment += "\n\n"
+          comment += generate_comment(warnings: main_warnings,
+                                      errors: main_errors,
+                                      messages: main_messages,
+                                      markdowns: main_markdowns,
+                                      previous_violations: {},
+                                      danger_id: danger_id,
+                                      template: "bitbucket_server")
+
+        else
+
+          comment = generate_description(warnings: warnings, errors: errors)
+          comment += "\n\n"
+          comment += generate_comment(warnings: warnings,
+                                      errors: errors,
+                                      messages: messages,
+                                      markdowns: markdowns,
+                                      previous_violations: {},
+                                      danger_id: danger_id,
+                                      template: "bitbucket_server")
+         end
+
+        if @code_insights.ready?
+          head_commit = self.pr_json[:fromRef][:latestCommit]
+          @code_insights.send_report(head_commit,
+                                     inline_warnings,
+                                     inline_errors,
+                                     inline_messages)
+        end
 
         @api.post_comment(comment)
       end
@@ -91,7 +137,34 @@ module Danger
           @api.delete_comment(c[:id], c[:version]) if c[:text] =~ /generated_by_#{danger_id}/
         end
       end
-        
+
+      def main_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        {
+          warnings: warnings.reject(&:inline?),
+          errors: errors.reject(&:inline?),
+          messages: messages.reject(&:inline?),
+          markdowns: markdowns.reject(&:inline?)
+        }
+      end
+
+      def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        cmp = proc do |a, b|
+          next -1 unless a.file && a.line
+          next 1 unless b.file && b.line
+
+          next a.line <=> b.line if a.file == b.file
+          next a.file <=> b.file
+        end
+
+        # Sort to group inline comments by file
+        {
+          warnings: warnings.select(&:inline?).sort(&cmp),
+          errors: errors.select(&:inline?).sort(&cmp),
+          messages: messages.select(&:inline?).sort(&cmp),
+          markdowns: markdowns.select(&:inline?).sort(&cmp)
+        }
+      end
+
       def update_pr_build_status(status, build_job_link, description)
         changeset = self.pr_json[:fromRef][:latestCommit]
         # Support for older versions of Bitbucket Server
