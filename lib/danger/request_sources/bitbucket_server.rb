@@ -89,8 +89,9 @@ module Danger
         inline_errors = inline_violations[:errors] || []
         inline_messages = inline_violations[:messages] || []
 
+        # Separate main and inline comments only if Code Insights is ready to display the inline comments separately
         has_inline_comments = !(inline_warnings + inline_errors + inline_messages).empty?
-         if has_inline_comments
+        if has_inline_comments && @code_insights.ready?
 
           main_violations = main_violations_group(warnings: warnings, errors: errors, messages: messages)
           main_warnings = main_violations[:warnings] || []
@@ -108,8 +109,14 @@ module Danger
                                       danger_id: danger_id,
                                       template: "bitbucket_server")
 
-        else
+          head_commit = self.pr_json[:fromRef][:latestCommit]
+          @code_insights.send_report(head_commit,
+                                     inline_warnings,
+                                     inline_errors,
+                                     inline_messages)
 
+          # Otherwise, post both main body and inline comments as a single comment.
+        else
           comment = generate_description(warnings: warnings, errors: errors)
           comment += "\n\n"
           comment += generate_comment(warnings: warnings,
@@ -119,14 +126,6 @@ module Danger
                                       previous_violations: {},
                                       danger_id: danger_id,
                                       template: "bitbucket_server")
-         end
-
-        if @code_insights.ready?
-          head_commit = self.pr_json[:fromRef][:latestCommit]
-          @code_insights.send_report(head_commit,
-                                     inline_warnings,
-                                     inline_errors,
-                                     inline_messages)
         end
 
         @api.post_comment(comment)
