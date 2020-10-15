@@ -12,6 +12,21 @@ module Danger
         }
       end
 
+      def stub_env_with_code_insights_fields
+        {
+          "DANGER_BITBUCKETSERVER_HOST" => "stash.example.com",
+          "DANGER_BITBUCKETSERVER_USERNAME" => "a.name",
+          "DANGER_BITBUCKETSERVER_PASSWORD" => "a_password",
+          "JENKINS_URL" => "http://jenkins.example.com/job/ios-check-pullrequest/",
+          "GIT_URL" => "ssh://git@stash.example.com:7999/ios/fancyapp.git",
+          "ghprbPullId" => "2080",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY" => "ReportKey",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE" => "Code Insights Report Title",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION" => "Report description",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_LOGO_URL" => "https://stash.example.com/logo_url.png"
+        }
+      end
+
       def stub_ci
         Danger::Jenkins.new(stub_env)
       end
