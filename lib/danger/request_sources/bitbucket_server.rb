@@ -84,50 +84,42 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
-        inline_violations = inline_violations_group(warnings: warnings, errors: errors, messages: messages)
-        inline_warnings = inline_violations[:warnings] || []
-        inline_errors = inline_violations[:errors] || []
-        inline_messages = inline_violations[:messages] || []
-
-        # Separate main and inline comments only if Code Insights is ready to display the inline comments separately
-        has_inline_comments = !(inline_warnings + inline_errors + inline_messages).empty?
-        if has_inline_comments && @code_insights.ready?
-
-          main_violations = main_violations_group(warnings: warnings, errors: errors, messages: messages)
-          main_warnings = main_violations[:warnings] || []
-          main_errors = main_violations[:errors] || []
-          main_messages = main_violations[:messages] || []
-          main_markdowns = main_violations[:markdowns] || []
-
-          comment = generate_description(warnings: main_warnings, errors: main_errors)
-          comment += "\n\n"
-          comment += generate_comment(warnings: main_warnings,
-                                      errors: main_errors,
-                                      messages: main_messages,
-                                      markdowns: main_markdowns,
-                                      previous_violations: {},
-                                      danger_id: danger_id,
-                                      template: "bitbucket_server")
+        # If configured, send a Code Insights API to provide the PR with a quality report
+        # which includes inline code violations found by Danger as Annotations.
+        # If no inline violations occurred, an empty, successful (green) report will be sent.
+        if @code_insights.ready?
+          inline_violations = inline_violations_group(warnings: warnings, errors: errors, messages: messages)
+          inline_warnings = inline_violations[:warnings] || []
+          inline_errors = inline_violations[:errors] || []
+          inline_messages = inline_violations[:messages] || []
 
           head_commit = self.pr_json[:fromRef][:latestCommit]
           @code_insights.send_report(head_commit,
                                      inline_warnings,
                                      inline_errors,
                                      inline_messages)
-
-          # Otherwise, post both main body and inline comments as a single comment.
-        else
-          comment = generate_description(warnings: warnings, errors: errors)
-          comment += "\n\n"
-          comment += generate_comment(warnings: warnings,
-                                      errors: errors,
-                                      messages: messages,
-                                      markdowns: markdowns,
-                                      previous_violations: {},
-                                      danger_id: danger_id,
-                                      template: "bitbucket_server")
         end
 
+        # If we're sending inline comments separately via Code Insights,
+        # the main body comment should contain only generic, non-file specific messages.
+        if @code_insights.ready?
+          main_violations = main_violations_group(warnings: warnings, errors: errors, messages: messages)
+          warnings = main_violations[:warnings] || []
+          errors = main_violations[:errors] || []
+          messages = main_violations[:messages] || []
+          markdowns = main_violations[:markdowns] || []
+        end
+
+        comment = generate_description(warnings: warnings,
+                                       errors: errors)
+        comment += "\n\n"
+        comment += generate_comment(warnings: warnings,
+                                    errors: errors,
+                                    messages: messages,
+                                    markdowns: markdowns,
+                                    previous_violations: {},
+                                    danger_id: danger_id,
+                                    template: "bitbucket_server")
         @api.post_comment(comment)
       end
 
