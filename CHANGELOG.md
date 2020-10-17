@@ -9,9 +9,15 @@
 -->
 
 ## master
-* correct the usage of double splat to fix Ruby 2.7 warning
+<!-- Your comment below here -->
 
-* Adds support for Code Insights for Bitbucket Server. To use Code Insights, please ensure `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY`, `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE` and `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION` optional environment variabls are set. [@qbeorama](https://github.com/Qbeorama)
+
+
+<!-- Your comment above here -->
+## 8.1.0
+
+* correct the usage of double splat to fix Ruby 2.7 warning
+* Adds support for Code Insights for Bitbucket Server. To use Code Insights, please ensure `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY`, `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE` and `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION` optional environment variables are set. [@qbeorama](https://github.com/Qbeorama)
 
 ## 8.0.6
 
