@@ -11,7 +11,7 @@
 ## master
 <!-- Your comment below here -->
 
-
+* Add support for Concourse-CI [@matthewellis](https://github.com/matthewellis)
 
 <!-- Your comment above here -->
 ## 8.1.0
