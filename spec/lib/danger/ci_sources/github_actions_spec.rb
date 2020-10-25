@@ -44,6 +44,11 @@ RSpec.describe Danger::GitHubActions do
         expect(described_class.validates_as_pr?(valid_env)).to be true
       end
 
+      it "validates if `GITHUB_EVENT_NAME` is 'pull_request_target" do
+        valid_env["GITHUB_EVENT_NAME"] = "pull_request_target"
+        expect(described_class.validates_as_pr?(valid_env)).to be true
+      end
+
       it "doesn't validate if `GITHUB_EVENT_NAME` is 'push'" do
         valid_env["GITHUB_EVENT_NAME"] = "push"
         expect(described_class.validates_as_pr?(valid_env)).to be false
