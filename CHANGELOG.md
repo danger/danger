@@ -12,6 +12,7 @@
 <!-- Your comment below here -->
 
 * Add support for Concourse-CI [@matthewellis](https://github.com/matthewellis)
+* Add support for `pull_request_target` in GitHub actions. - [@chesire](https://github.com/chesire)
 
 <!-- Your comment above here -->
 ## 8.1.0
