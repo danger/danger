@@ -57,7 +57,8 @@ module Danger
       def fetch_comments
         values = []
         # TODO: use a url parts encoder to encode the query
-        uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.username+%7E+%22#{@username}%22"
+        corrected_uuid = @my_uuid[1...-1] if !@my_uuid.nil? # Endpoint doesnt support curly brackets for this, so remove them for this
+        uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.uuid+%7E+%22#{corrected_uuid}%22"
 
         while uri
           json = fetch_json(URI(uri))
