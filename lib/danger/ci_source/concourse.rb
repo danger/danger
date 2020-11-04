@@ -10,7 +10,7 @@ module Danger
   #
   # With Concourse, you run the docker images yourself, so you will want to add `yarn danger ci` within one of your build jobs.
   #
-  #   ``` shell
+  #   ```shell
   #    build:
   #      image: golang
   #        commands:
