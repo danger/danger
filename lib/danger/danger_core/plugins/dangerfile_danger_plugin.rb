@@ -33,6 +33,11 @@ module Danger
   #
   #          danger.import_dangerfile(github: "ruby-grape/danger", branch: "custom", path: "path/to/Dangerfile")
   #
+  # @example Import a plugin available over HTTP
+  #
+  #          custom_url = "https://custom.bitbucket.com/project-name/Dangerfile?raw"
+  #          danger.import_dangerfile(url: custom_url)
+  #
   # @see  danger/danger
   # @tags core, plugins
 
@@ -84,8 +89,10 @@ module Danger
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
           import_dangerfile_from_gem(opts[:gem])
+        elsif opts.key?(:url)
+          import_dangerfile_from_url(opts[:url])
         else
-          raise "`import` requires a Hash with either :github, :gitlab, :gem, or :path"
+          raise "`import` requires a Hash with either :github, :gitlab, :gem, :path or :url"
         end
       else
         raise "`import` requires a Hash"
@@ -177,6 +184,19 @@ module Danger
     def import_dangerfile_from_gitlab(slug_or_project_id, branch = nil, path = nil)
       download_url = env.request_source.file_url(repository: slug_or_project_id, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
+      @dangerfile.parse(Pathname.new(local_path))
+    end
+
+    # @!group Danger
+    # Download and execute a remote Dangerfile.
+    #
+    # @param    [String] url
+    #           A https url where the Dangerfile is.
+    # @return   [void]
+    #
+    def import_dangerfile_from_url(url)
+      raise "`import_dangerfile_from_url` requires a string" unless url.kind_of?(String)
+      local_path = download(url)
       @dangerfile.parse(Pathname.new(local_path))
     end
 
