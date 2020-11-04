@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 
+* Add `danger.import_dangerfile(url:)` to import Dangerfile from custom URL - [@dstranz](https://github.com/dstranz)
 
 <!-- Your comment above here -->
 
