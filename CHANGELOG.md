@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 
+* Fix incorrect command in error message [@revolter](https://github.com/revolter)
 
 <!-- Your comment above here -->
 
