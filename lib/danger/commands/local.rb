@@ -32,7 +32,7 @@ module Danger
       super
 
       if argv.flag?("pry", false)
-        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path)
+        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path, Local.command)
       end
     end
 

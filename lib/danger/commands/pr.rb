@@ -37,7 +37,7 @@ module Danger
       @dangerfile_path = dangerfile if File.exist?(dangerfile)
 
       if argv.flag?("pry", false)
-        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path)
+        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path, PR.command)
       end
     end
 
