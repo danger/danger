@@ -6,7 +6,8 @@ module Danger
   # ### CI Setup
   #
   # Install dependencies and add a danger step to your screwdriver.yaml:
-  # ``` yml
+  #
+  # ```yml
   # jobs:
   #   danger:
   #     requires: [~pr, ~commit]

@@ -6,7 +6,7 @@ module Danger
   # You can use `danger/danger` Action in your `.github/workflows/xxx.yml`.
   # And so, you can use GITHUB_TOKEN secret as `DANGER_GITHUB_API_TOKEN` environment variable.
   #
-  #  ```
+  #  ```yml
   #  ...
   #    steps:
   #      - uses: actions/checkout@v1

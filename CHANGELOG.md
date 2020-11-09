@@ -10,7 +10,9 @@
 
 ## master
 <!-- Your comment below here -->
+
 * Fixes issue with not being able to update comments, and instead always posting new comments regardless of settings for Bitbucket Cloud [@tskulbru](https://github.com/tskulbru)
+* Fix incorrect command in error message [@revolter](https://github.com/revolter)
 
 <!-- Your comment above here -->
 

@@ -277,7 +277,7 @@ module Danger
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
       ui.link "https://github.com/danger/danger/blob/master/Dangerfile"
-      ui.link "https://github.com/artsy/eigen/blob/master/Dangerfile"
+      ui.link "https://github.com/artsy/eigen/blob/master/dangerfile.ts"
       ui.pause 1
     end
 
