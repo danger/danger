@@ -16,8 +16,8 @@ module Danger
         Danger::Jenkins.new(stub_env)
       end
 
-      def stub_request_source
-        Danger::RequestSources::GitLab.new(stub_ci, stub_env)
+      def stub_request_source(env = stub_env)
+        Danger::RequestSources::BitbucketCloud.new(stub_ci, env)
       end
 
       def stub_pull_request
@@ -36,6 +36,12 @@ module Danger
         raw_file = File.new("spec/fixtures/bitbucket_cloud_api/oauth2_response.json")
         url = "https://bitbucket.org/site/oauth2/access_token"
         WebMock.stub_request(:post, url).to_return(raw_file)
+      end
+
+      def stub_pull_request_comment
+        raw_file = File.new("spec/fixtures/bitbucket_cloud_api/pr_comments.json")
+        url = "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/comments?pagelen=100&q=deleted+%7E+false+AND+user.uuid+%7E+%22c91be865-efc6-49a6-93c5-24e1267c479b%22"
+        WebMock.stub_request(:get, url).to_return(raw_file)
       end
     end
   end

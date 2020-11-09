@@ -2,6 +2,7 @@ module Danger
   # ### CI Setup
   #
   # Install dependencies and add a danger step to your `bitbucket-pipelines.yml`.
+  #
   # ```yaml
   #   script:
   #     - bundle exec danger --verbose

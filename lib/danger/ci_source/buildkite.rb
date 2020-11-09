@@ -9,7 +9,7 @@ module Danger
   # With BuildKite you run the server yourself, so you will want to run  it as a part of your build process.
   # It is common to have build steps, so we would recommend adding this to your scrip:
   #
-  #  ``` shell
+  #  ```shell
   #   echo "--- Running Danger"
   #   bundle exec danger
   #  ```

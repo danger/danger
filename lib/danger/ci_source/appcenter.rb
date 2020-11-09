@@ -7,7 +7,7 @@ module Danger
   #
   # Add a script step to your appcenter-post-build.sh:
   #
-  # ``` shell
+  # ```shell
   #   #!/usr/bin/env bash
   #   bundle install
   #   bundle exec danger
