@@ -7,7 +7,7 @@ require "danger/danger_core/messages/violation"
 
 RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
   let(:env) { stub_env }
-  let(:bs) { Danger::RequestSources::BitbucketCloud.new(stub_ci, env) }
+  let(:bs) { stub_request_source(env) }
 
   describe "#new" do
     it "should not raise uninitialized constant error" do
@@ -73,6 +73,30 @@ RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
     describe "#pr_json[:title]" do
       it "has fetched the pull requests title" do
         expect(bs.pr_json[:title]).to eq("This is a danger test for bitbucket cloud")
+      end
+    end
+  end
+
+  describe "#delete_old_comments" do
+    let(:delete_uri) { "https://api.bitbucket.org/2.0/repositories/ios/fancyapp/pullrequests/2080/comments/12345" }
+    before do
+      stub_pull_request_comment
+    end
+
+    context "when credentials in place" do
+      it "matches a comment and deletes it" do
+        stub_request(:delete, delete_uri).to_return(:status => 200, :body => "", :headers => {})
+
+        bs.delete_old_comments()
+        expect(a_request(:delete, delete_uri)).to have_been_made
+      end
+    end
+
+    context "when missing DANGER_BITBUCKETCLOUD_UUID" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_UUID" } }
+
+      it "raises an error when deleting comment" do        
+        expect { bs.delete_old_comments() }.to raise_error(RuntimeError)
       end
     end
   end
