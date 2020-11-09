@@ -11,11 +11,14 @@
 ## master
 <!-- Your comment below here -->
 
+
+<!-- Your comment above here -->
+
+## 8.2.1
+
 * Add `danger.import_dangerfile(url:)` to import Dangerfile from custom URL - [@dstranz](https://github.com/dstranz)
 * Fixes issue with not being able to update comments, and instead always posting new comments regardless of settings for Bitbucket Cloud [@tskulbru](https://github.com/tskulbru)
 * Fix incorrect command in error message [@revolter](https://github.com/revolter)
-
-<!-- Your comment above here -->
 
 ## 8.2.0
 
