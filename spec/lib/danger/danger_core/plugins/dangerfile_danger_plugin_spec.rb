@@ -136,6 +136,13 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       dm.parse(Pathname.new("."), outer_dangerfile)
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
+
+    it "url: 'url'" do
+      outer_dangerfile = "danger.import_dangerfile(url: 'https://raw.githubusercontent.com/example/example/master/Dangerfile')"
+
+      dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(dm.status_report[:messages]).to eq(["OK"])
+    end
   end
 
   describe "#scm_provider" do
