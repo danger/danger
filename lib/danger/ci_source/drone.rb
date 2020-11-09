@@ -8,7 +8,7 @@ module Danger
   # With Drone you run the docker images yourself, so you will want to add `bundle exec danger` at the end of
   # your `.drone.yml`.
   #
-  #  ``` shell
+  #  ```shell
   #   build:
   #     image: golang
   #     commands:
@@ -24,7 +24,7 @@ module Danger
   # Drone secrets: http://readme.drone.io/usage/secret-guide/
   # NOTE: This is a new syntax in DroneCI 0.6+
   #
-  # ```
+  # ```yml
   #   build:
   #     image: golang
   #     secrets:

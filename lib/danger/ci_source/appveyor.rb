@@ -3,6 +3,7 @@ module Danger
   # ### CI Setup
   #
   # Install dependencies and add a danger step to your `appveyor.yml`.
+  #
   # ```yaml
   # install:
   # - cmd: >-
@@ -19,6 +20,7 @@ module Danger
   # For public repositories, add your plain token to environment variables in `appveyor.yml`.
   # Encrypted environment variables will not be decrypted on PR builds.
   # see here: https://www.appveyor.com/docs/build-configuration/#secure-variables
+  #
   # ```yaml
   # environment:
   #   DANGER_GITHUB_API_TOKEN: <YOUR_TOKEN_HERE>
@@ -26,6 +28,7 @@ module Danger
   #
   # For private repositories, enter your token in `Settings>Environment>Environment variables>Add variable` and turn on `variable encryption`.
   # You will see encrypted variable text in `Settings>Export YAML` so just copy to your `appveyor.yml`.
+  #
   # ```yaml
   # environment:
   #   DANGER_GITHUB_API_TOKEN:

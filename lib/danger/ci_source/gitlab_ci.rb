@@ -7,6 +7,7 @@ module Danger
   # ### CI Setup
   #
   # Install dependencies and add a danger step to your .gitlab-ci.yml:
+  #
   # ```yml
   # before_script:
   #  - bundle install
@@ -14,6 +15,7 @@ module Danger
   #   script:
   #    - bundle exec danger
   # ```
+  #
   # ### Token Setup
   #
   # Add the `DANGER_GITLAB_API_TOKEN` to your pipeline env variables if you

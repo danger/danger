@@ -7,7 +7,7 @@ module Danger
   #
   # Add a script step:
   #
-  # ``` shell
+  # ```shell
   #   #!/usr/bin/env bash
   #   bundle install
   #   bundle exec danger
