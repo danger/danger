@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-
+* Silence the ObjectifiedHash warnings when iterating over GitLab notes. - [@dstull](https://github.com/dstull)
 
 <!-- Your comment above here -->
 

@@ -362,7 +362,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
               :headers => {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'Private-Token'=>'a86e56d46ac78b', 'User-Agent'=>'Gitlab Ruby Gem 4.16.1'}).
             to_return(:status => 200, :body => "", :headers => {})
 
-          
+
           expect(subject.client).to receive(:create_merge_request_discussion).once
           allow(subject.client).to receive(:delete_merge_request_comment)
 
@@ -400,7 +400,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
 
           subject.fetch_details
 
-          subject.update_pull_request!(warnings: [v], errors: [], messages: [])
+          expect { subject.update_pull_request!(warnings: [v], errors: [], messages: []) }.not_to output(/Please convert ObjectifiedHash object/).to_stderr
         end
 
         it "deletes non-sticky comments if no violations are present" do
@@ -505,7 +505,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       end
     end
 
-    describe "#is_out_of_range" do 
+    describe "#is_out_of_range" do
       let(:new_path) do
         "dummy"
       end
@@ -575,7 +575,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 1))
           expect(is_out_of_range).to eq(false)
         end
-        
+
         it "return true when line is not part of addition lines" do
           is_out_of_range = subject.is_out_of_range(changes, double(file: new_path, line: 5))
           expect(is_out_of_range).to eq(true)

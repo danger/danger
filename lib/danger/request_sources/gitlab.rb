@@ -85,7 +85,7 @@ module Danger
           if supports_inline_comments
             @raw_comments = mr_discussions
               .auto_paginate
-              .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
+              .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({"discussion_id" => discussion.id}) } }
             @raw_comments
               .map { |comment| Comment.from_gitlab(comment) }
           else
@@ -359,7 +359,7 @@ module Danger
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
         comments = mr_discussions
           .auto_paginate
-          .flat_map { |discussion| discussion.notes.map { |note| note.merge({"discussion_id" => discussion.id}) } }
+          .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({"discussion_id" => discussion.id}) } }
           .select { |comment| Comment.from_gitlab(comment).inline? }
 
         danger_comments = comments.select { |comment| Comment.from_gitlab(comment).generated_by_danger?(danger_id) }
@@ -410,7 +410,7 @@ module Danger
           next false unless m.file && m.line
           # Reject if it's out of range and in dismiss mode
           next true if dismiss_out_of_range_messages_for(kind) && is_out_of_range(mr_changes.changes, m)
-          
+
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "gitlab")
@@ -531,10 +531,10 @@ module Danger
       end
 
       def is_out_of_range(changes, message)
-        change = changes.find { |c| c["new_path"] == message.file }  
+        change = changes.find { |c| c["new_path"] == message.file }
         # If there is no changes or rename only or deleted, return out of range.
         return true if change.nil? || change["diff"].empty? || change["deleted_file"]
-        
+
         # If new file then return in range
         return false if change["new_file"]
 
@@ -544,7 +544,7 @@ module Danger
         return true
       end
 
-      def generate_addition_lines(diff) 
+      def generate_addition_lines(diff)
         range_header_regexp = /@@ -(?<old>[0-9]+)(,([0-9]+))? \+(?<new>[0-9]+)(,([0-9]+))? @@.*/
         addition_lines = []
         line_number = 0
