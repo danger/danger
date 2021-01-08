@@ -32,11 +32,15 @@ module Danger
       self.danger_id = danger_id
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
+        puts klass
         next unless self.ci_source.supports?(klass)
+        puts "ci_source.supports"
 
         request_source = klass.new(self.ci_source, env)
         next unless request_source.validates_as_ci?
+        puts "request_source.validates_as_ci"
         next unless request_source.validates_as_api_source?
+        puts "request_source.validates_as_api_source"
         self.request_source = request_source
       end
 
@@ -90,6 +94,8 @@ module Danger
         RequestSources::GitLab
       elsif repo_url =~ /bitbucket\.(org|com)/i
         RequestSources::BitbucketCloud
+      elsif repo_url =~ /dev\.azure\.com/i
+        RequestSources::VSTS
       end
     end
 
