@@ -32,7 +32,6 @@ module Danger
       self.danger_id = danger_id
 
       RequestSources::RequestSource.available_request_sources.each do |klass|
-        puts klass
         next unless self.ci_source.supports?(klass)
 
         request_source = klass.new(self.ci_source, env)
