@@ -19,7 +19,7 @@ module Danger
   #
   class AzurePipelines < CI
     def self.validates_as_ci?(env)
-      env.key? "AGENT_ID"
+      env.key?("AGENT_ID") && env["BUILD_REPOSITORY_PROVIDER"] != "TfsGit"
     end
 
     def self.validates_as_pr?(env)
@@ -31,8 +31,7 @@ module Danger
         Danger::RequestSources::GitHub,
         Danger::RequestSources::GitLab,
         Danger::RequestSources::BitbucketServer,
-        Danger::RequestSources::BitbucketCloud,
-        Danger::RequestSources::VSTS
+        Danger::RequestSources::BitbucketCloud
       ]
     end
 

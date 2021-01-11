@@ -28,8 +28,7 @@ module Danger
 
         @is_vsts_git = environment["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
 
-        project = environment["SYSTEM_TEAMPROJECT"]
-        slug = environment["BUILD_REPOSITORY_NAME"]
+        project, slug = ci_source.repo_slug.split("/")
         @api = VSTSAPI.new(project, slug, ci_source.pull_request_id, environment)
       end
 
