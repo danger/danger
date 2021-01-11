@@ -4,7 +4,7 @@ lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "danger/version"
 Gem::Specification.new do |spec|
-  spec.name          = "danger-azure"
+  spec.name          = "danger"
   spec.version       = Danger::VERSION
   spec.authors       = ["Orta Therox", "Juanito Fatas"]
   spec.email         = ["orta.therox@gmail.com", "katehuang0320@gmail.com"]
