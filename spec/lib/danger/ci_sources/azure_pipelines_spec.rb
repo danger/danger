@@ -28,7 +28,7 @@ RSpec.describe Danger::AzurePipelines do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
-    it "validates even when `BUILD_REPOSITORY_PROVIDER` is TfsGit" do
+    it "doesn't validate when `BUILD_REPOSITORY_PROVIDER` is TfsGit" do
       valid_env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit"
       expect(described_class.validates_as_ci?(valid_env)).to be false
     end
