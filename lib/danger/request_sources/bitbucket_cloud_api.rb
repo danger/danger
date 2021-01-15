@@ -95,12 +95,13 @@ module Danger
         "#{base_url(2)}/#{pull_request_id}"
       end
 
-      def prs_api_endpoint(branch_name)
-        "#{base_url(2)}?q=source.branch.name=\"#{branch_name}\""
+      def prs_api_url(branch_name)
+        encoded_branch_name = URI.encode_www_form_component(branch_name)
+        "#{base_url(2)}?q=source.branch.name=\"#{encoded_branch_name}\""
       end
 
       def fetch_pr_from_branch(branch_name)
-        uri = URI(URI.escape(prs_api_endpoint(branch_name)))
+        uri = URI(prs_api_url(branch_name))
         fetch_json(uri)[:values][0][:id]
       end
 
