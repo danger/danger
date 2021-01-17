@@ -20,7 +20,11 @@ module Danger
 
     # rubocop:disable Style/MethodMissing
     def method_missing(method_sym, *arguments, **keyword_arguments, &block)
-      @dangerfile.send(method_sym, *arguments, **keyword_arguments, &block)
+      if keyword_arguments.empty?
+        @dangerfile.send(method_sym, *arguments, &block)
+      else
+        @dangerfile.send(method_sym, *arguments, **keyword_arguments, &block)
+      end
     end
 
     def self.all_plugins
