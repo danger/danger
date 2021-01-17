@@ -19,8 +19,8 @@ module Danger
     # We need to redirect the self calls to the Dangerfile
 
     # rubocop:disable Style/MethodMissing
-    def method_missing(method_sym, *arguments, &block)
-      @dangerfile.send(method_sym, *arguments, &block)
+    def method_missing(method_sym, *arguments, **keyword_arguments, &block)
+      @dangerfile.send(method_sym, *arguments, **keyword_arguments, &block)
     end
 
     def self.all_plugins
