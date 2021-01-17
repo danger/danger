@@ -12,6 +12,7 @@
 <!-- Your comment below here -->
 * Silence the ObjectifiedHash warnings when iterating over GitLab notes. - [@dstull](https://github.com/dstull)
 * Replace `URI.escape` which is obsolete in Ruby 3. - [@mataku](https://github.com/mataku)
+* Delegate explicitly keyword arguments for Ruby 3. - [@mataku](https://github.com/mataku)
 
 <!-- Your comment above here -->
 
