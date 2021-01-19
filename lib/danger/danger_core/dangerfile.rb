@@ -49,22 +49,26 @@ module Danger
     # However, as we're using using them in the DSL, they won't
     # get method_missing called correctly without overriding them.
 
-    def warn(*args, &blk)
-      method_missing(:warn, *args, &blk)
+    def warn(*args, **kargs, &blk)
+      method_missing(:warn, *args, **kargs, &blk)
     end
 
-    def fail(*args, &blk)
-      method_missing(:fail, *args, &blk)
+    def fail(*args, **kargs, &blk)
+      method_missing(:fail, *args, **kargs, &blk)
     end
 
     # When an undefined method is called, we check to see if it's something
     # that the core DSLs have, then starts looking at plugins support.
 
     # rubocop:disable Style/MethodMissing
-    def method_missing(method_sym, *arguments, &_block)
+    def method_missing(method_sym, *arguments, **keyword_arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
-          return plugin.send(method_sym, *arguments)
+          if keyword_arguments.empty?
+            return plugin.send(method_sym, *arguments)
+          else
+            return plugin.send(method_sym, *arguments, **keyword_arguments)
+          end
         end
       end
       super

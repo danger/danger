@@ -6,11 +6,19 @@ RSpec.describe Danger::Plugin do
 
   it "should forward unknown method calls to the dangerfile" do
     class DangerTestForwardPlugin < Danger::Plugin; end
-    class DangerFileMock; attr_accessor :pants; end
+    class DangerFileMock
+      attr_accessor :pants
+
+      def check(*args, **kargs); end
+    end
 
     plugin = DangerTestForwardPlugin.new(DangerFileMock.new)
     expect do
       plugin.pants
+    end.to_not raise_error
+
+    expect do
+      plugin.check('a', 'b', verbose: true)
     end.to_not raise_error
   end
 end
