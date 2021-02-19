@@ -11,6 +11,8 @@
 ## master
 <!-- Your comment below here -->
 
+* Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
+
 <!-- Your comment above here -->
 
 ## 8.2.2
