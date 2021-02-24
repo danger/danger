@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-
+* Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
 <!-- Your comment above here -->
 
 ## 8.2.2
