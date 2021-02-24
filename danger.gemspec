@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "kramdown", "~> 2.3"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
   spec.add_runtime_dependency "octokit", "~> 4.7"
-  spec.add_runtime_dependency "terminal-table", "~> 1"
+  spec.add_runtime_dependency "terminal-table", ">= 1", "< 4"
   spec.add_runtime_dependency "cork", "~> 0.1"
   spec.add_runtime_dependency "no_proxy_fix"
 end

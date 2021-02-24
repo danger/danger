@@ -11,6 +11,9 @@
 ## master
 <!-- Your comment below here -->
 * Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
+
+* Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
+
 <!-- Your comment above here -->
 
 ## 8.2.2
