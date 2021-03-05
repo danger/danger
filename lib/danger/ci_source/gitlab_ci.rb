@@ -46,10 +46,16 @@ module Danger
       base_commit = env["CI_COMMIT_SHA"]
       client = RequestSources::GitLab.new(nil, env).client
 
-      if (Gem::Version.new(client.version.version) >= Gem::Version.new("10.7"))
+      client_version = Gem::Version.new(client.version.version)
+      if (client_version >= Gem::Version.new("10.7"))
         #Use the 'list merge requests associated with a commit' API, for speeed
         # (GET /projects/:id/repository/commits/:sha/merge_requests) available for GitLab >= 10.7
         merge_request = client.commit_merge_requests(project_path, base_commit, state: :opened).first
+        if (client_version >= Gem::Version.new("13.8"))
+          # Gitlab 13.8.0 started returning merge requests for merge commits and squashed commits
+          # By checking for merge_request.state, we can ensure danger only comments on MRs which are open
+          return 0 unless merge_request.state == "opened"
+        end
       else
         merge_requests = client.merge_requests(project_path, state: :opened)
         merge_request = merge_requests.auto_paginate.find do |mr|

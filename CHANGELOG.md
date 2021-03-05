@@ -12,6 +12,7 @@
 <!-- Your comment below here -->
 
 * Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
+* Comment on open gitlab MRs only for Gitlab>=13.8.0 - [@asifmohd](https://github.com/asifmohd/)
 
 <!-- Your comment above here -->
 
