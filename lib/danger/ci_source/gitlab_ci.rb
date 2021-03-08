@@ -54,6 +54,7 @@ module Danger
         if (client_version >= Gem::Version.new("13.8"))
           # Gitlab 13.8.0 started returning merge requests for merge commits and squashed commits
           # By checking for merge_request.state, we can ensure danger only comments on MRs which are open
+          return 0 if merge_request.nil?
           return 0 unless merge_request.state == "opened"
         end
       else
