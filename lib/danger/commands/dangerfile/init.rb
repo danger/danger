@@ -4,7 +4,7 @@ require "danger/danger_core/dangerfile_generator"
 
 module Danger
   class DangerfileCommand < Runner
-    self.summary = "Easily create you Dangerfiles."
+    self.summary = "Easily create your Dangerfiles."
     self.command = "dangerfile"
 
     self.abstract_command = true
