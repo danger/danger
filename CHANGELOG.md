@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
 
 * Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
 * Namespace the `Commits` class properly under `Danger`. [@rymai](https://github.com/rymai) [#1294](https://github.com/danger/danger/pull/1294)

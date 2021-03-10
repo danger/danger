@@ -235,7 +235,7 @@ RSpec.describe Danger::MessageGroup do
         end
       end
       context "with other messages" do
-        let(:messages) { [Danger::Violation.new("warning!",type: :warning), Danger::Violation.new("error!", type: :error)] }
+        let(:messages) { [Danger::Violation.new("warning!", false, type: :warning), Danger::Violation.new("error!", false, type: :error)] }
 
         it "still only has both markdowns" do
           expect(Set.new(subject)).to eq Set.new(markdowns)
