@@ -10,13 +10,15 @@
 
 ## master
 <!-- Your comment below here -->
-* Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
 
+<!-- Your comment above here -->
+
+## 8.2.3
+
+* Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
 * Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
 * Comment on open gitlab MRs only for Gitlab>=13.8.0 - [@asifmohd](https://github.com/asifmohd/)
 * Namespace the `Commits` class properly under `Danger`. [@rymai](https://github.com/rymai) [#1294](https://github.com/danger/danger/pull/1294)
-
-<!-- Your comment above here -->
 
 ## 8.2.2
 
