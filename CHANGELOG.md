@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-
+* Update Kramdow because of high severity risk. - [@reshadf](https://github.com/reshadf)
 <!-- Your comment above here -->
 
 ## 8.2.3
