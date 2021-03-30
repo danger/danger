@@ -3,24 +3,17 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
-  # You can use `danger/danger` Action in your .github/main.workflow.
+  # You can use `danger/danger` Action in your `.github/workflows/xxx.yml`.
+  # And so, you can use GITHUB_TOKEN secret as `DANGER_GITHUB_API_TOKEN` environment variable.
   #
+  #  ```yml
+  #  ...
+  #    steps:
+  #      - uses: actions/checkout@v1
+  #      - uses: danger/danger@master
+  #        env:
+  #          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #  ```
-  # action "Danger" {
-  #    uses = "danger/danger"
-  # }
-  #  ```
-  #
-  # ### Token Setup
-  #
-  # Set DANGER_GITHUB_API_TOKEN to secrets, or you can also use GITHUB_TOKEN.
-  #
-  # ```
-  # action "Danger" {
-  #    uses = "danger/danger"
-  #    secrets = ["GITHUB_TOKEN"]
-  # }
-  # ```
   #
   class GitHubActions < CI
     def self.validates_as_ci?(env)
@@ -28,7 +21,8 @@ module Danger
     end
 
     def self.validates_as_pr?(env)
-      env["GITHUB_EVENT_NAME"] == "pull_request"
+      value = env["GITHUB_EVENT_NAME"]
+      value == "pull_request" || value == "pull_request_target"
     end
 
     def supported_request_sources

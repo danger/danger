@@ -51,7 +51,7 @@ Some quick links: [Guides Index](https://danger.systems/guides.html), [DSL Refer
 
 Brilliant. So, let's get you set up.
 
-``` sh
+```sh
 git clone https://github.com/danger/danger.git
 cd danger
 bundle install

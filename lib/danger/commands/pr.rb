@@ -37,7 +37,7 @@ module Danger
       @dangerfile_path = dangerfile if File.exist?(dangerfile)
 
       if argv.flag?("pry", false)
-        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path)
+        @dangerfile_path = PrySetup.new(cork).setup_pry(@dangerfile_path, PR.command)
       end
     end
 
@@ -83,6 +83,7 @@ module Danger
       end
       Octokit.middleware = Faraday::RackBuilder.new do |builder|
         builder.use Faraday::HttpCache, store: cache, serializer: Marshal, shared_cache: false
+        builder.use Octokit::Middleware::FollowRedirects
         builder.use Octokit::Response::RaiseError
         builder.adapter Faraday.default_adapter
       end

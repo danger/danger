@@ -79,13 +79,35 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   describe "#html_link" do
     it "should render a html link to the given file" do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
+
         head_commit = "04e58de1fa97502d7e28c1394d471bb8fb1fc4a8";
         dangerfile.env.request_source.fetch_details
+
+        expect(plugin).to receive(:repository_web_url).
+          and_return("https://gitlab.com/k0nserv/danger-test")
 
         expect(plugin).to receive(:head_commit).
           and_return(head_commit)
 
         expect(plugin.html_link("CHANGELOG.md")).to eq("<a href='https://gitlab.com/k0nserv/danger-test/blob/#{head_commit}/CHANGELOG.md'>CHANGELOG.md</a>")
+      end
+    end
+  end
+
+  describe "repository_web_url" do
+    it "should request the project" do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
+
+        expect(plugin).to receive("mr_json").
+          and_return({:source_project_id => "15"})
+
+        require "gitlab"
+        project = Gitlab::ObjectifiedHash.new({:web_url => "https://gitlab.com/k0nserv/danger-test"})
+
+        expect(plugin.api).to receive("project").
+          and_return(project)
+
+        expect(plugin.repository_web_url).to eq("https://gitlab.com/k0nserv/danger-test")
       end
     end
   end

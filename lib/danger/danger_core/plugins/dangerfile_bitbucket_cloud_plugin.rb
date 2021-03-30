@@ -97,7 +97,7 @@ module Danger
     # @return [String]
     #
     def pr_author
-      @bs.pr_json[:author][:username]
+      @bs.pr_json[:author][:nickname]
     end
 
     # @!group PR Commit Metadata
@@ -121,7 +121,7 @@ module Danger
     # @return [String]
     #
     def branch_for_head
-      @bs.pr_json[:destination][:branch][:name]
+      @bs.pr_json[:source][:branch][:name]
     end
 
     # @!group PR Commit Metadata

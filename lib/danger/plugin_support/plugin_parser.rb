@@ -56,7 +56,7 @@ module Danger
 
       # Add some of our custom tags
       YARD::Tags::Library.define_tag('tags', :tags)
-      YARD::Tags::Library.define_tag('availablity', :availablity)
+      YARD::Tags::Library.define_tag('availability', :availability)
     end
 
     def parse

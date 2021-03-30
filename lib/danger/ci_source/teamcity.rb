@@ -28,6 +28,9 @@ module Danger
   # export GITHUB_PULL_REQUEST_ID=(${branch//\// })
   # ```
   #
+  # Or if you are using the pull request feature you can set an environment parameter called `GITHUB_PULL_REQUEST_ID`
+  # to the value of: `%teamcity.pullRequest.number`
+  #
   # #### GitLab
   #
   # As this is self-hosted, you will need to add the `DANGER_GITLAB_API_TOKEN` to your build user's ENV. The alternative
@@ -57,6 +60,7 @@ module Danger
   #
   # You will also need to set the `BITBUCKET_BRANCH_NAME` environment variable.
   # TeamCity provides `%teamcity.build.branch%`, which you can use at the top of your Simple Command Runner:
+  #
   # ```sh
   # export BITBUCKET_BRANCH_NAME="%teamcity.build.branch%"
   # ```

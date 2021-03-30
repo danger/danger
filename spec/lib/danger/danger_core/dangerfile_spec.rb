@@ -302,7 +302,7 @@ RSpec.describe Danger::Dangerfile, host: :github do
   end
 
   describe "#run" do
-    context "when exception occured" do
+    context "when exception occurred" do
       before { allow(Danger).to receive(:danger_outdated?).and_return(false) }
 
       it "updates PR with an error" do

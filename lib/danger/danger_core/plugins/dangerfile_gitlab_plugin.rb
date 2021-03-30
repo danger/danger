@@ -53,6 +53,19 @@ module Danger
   #
   #         warn "#{gitlab.html_link("Package.json")} was edited." if git.modified_files.include? "Package.json"
   #
+  # @example Select a random group member as assignee if no assignee is selected
+  #
+  #         if gitlab.mr_json["assignee"].nil?
+  #           reviewer = gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).sample
+  #           if gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).length > 1
+  #             while reviewer.to_hash["id"] == gitlab.mr_json["author"]["id"] do
+  #               reviewer = gitlab.api.group_members(gitlab.api.merge_request_approvals(project_id, mr_id).to_hash["approver_groups"].first["group"]["id"]).sample
+  #             end
+  #           end
+  #           message "Reviewer roulete rolled for: #{reviewer.to_hash['name']} (@#{reviewer.to_hash['username']})"
+  #           gitlab.api.update_merge_request(project_id, mr_id, { assignee_id: reviewer.to_hash["id"] })
+  #         end
+  # 
   #
   # @see  danger/danger
   # @tags core, gitlab
@@ -180,6 +193,17 @@ module Danger
     end
 
     # @!group GitLab Misc
+    # Returns the web_url of the source project.
+    # @return [String]
+    #
+    def repository_web_url
+      @repository_web_url ||= begin
+        project = api.project(mr_json["source_project_id"])
+        project.web_url
+      end
+    end
+
+    # @!group GitLab Misc
     # Returns a list of HTML anchors for a file, or files in the head repository. An example would be:
     # `<a href='https://gitlab.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/file.txt'>file.txt</a>`. It returns a string of multiple anchors if passed an array.
     # @param    [String or Array<String>] paths
@@ -196,11 +220,28 @@ module Danger
       paths = paths.map do |path|
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        create_link("#{env.ci_source.project_url}/blob/#{commit}#{url_path}", text)
+        create_link("#{repository_web_url}/blob/#{commit}#{url_path}", text)
       end
 
       return paths.first if paths.count < 2
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
+    end
+
+    # @!group Gitlab Misc
+    # Use to ignore inline messages which lay outside a diff's range, thereby not posting the comment.
+    # You can set hash to change behavior per each kinds. (ex. `{warning: true, error: false}`)
+    # @param    [Bool] or [Hash<Symbol, Bool>] dismiss
+    #           Ignore out of range inline messages, defaults to `true`
+    #
+    # @return   [void]
+    def dismiss_out_of_range_messages(dismiss = true)
+      if dismiss.kind_of?(Hash)
+        @gitlab.dismiss_out_of_range_messages = dismiss
+      elsif dismiss.kind_of?(TrueClass)
+        @gitlab.dismiss_out_of_range_messages = true
+      elsif dismiss.kind_of?(FalseClass)
+        @gitlab.dismiss_out_of_range_messages = false
+      end
     end
 
     %i(title body author labels json diff).each do |suffix|

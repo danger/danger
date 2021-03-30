@@ -9,6 +9,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(markdown.message).to eq("hello")
       expect(markdown.file).to eq("foo.rb")
       expect(markdown.line).to eq(1)
+      expect(markdown.type).to eq(:markdown)
     end
 
     it "adds markdowns as array" do
@@ -18,6 +19,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(markdown.message).to eq("hello")
       expect(markdown.file).to eq("foo.rb")
       expect(markdown.line).to eq(1)
+      expect(markdown.type).to eq(:markdown)
     end
 
     it "adds multiple markdowns" do
@@ -27,10 +29,12 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(markdowns.first.message).to eq("hello")
       expect(markdowns.first.file).to eq("foo.rb")
       expect(markdowns.first.line).to eq(1)
+      expect(markdowns.first.type).to eq(:markdown)
 
       expect(markdowns.last.message).to eq("bye")
       expect(markdowns.last.file).to eq("foo.rb")
       expect(markdowns.last.line).to eq(1)
+      expect(markdowns.last.type).to eq(:markdown)
     end
   end
 
@@ -42,6 +46,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(message.message).to eq("hello")
       expect(message.file).to eq("foo.rb")
       expect(message.line).to eq(1)
+      expect(message.type).to eq(:message)
     end
 
     it "adds messages as array" do
@@ -51,6 +56,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(message.message).to eq("hello")
       expect(message.file).to eq("foo.rb")
       expect(message.line).to eq(1)
+      expect(message.type).to eq(:message)
     end
 
     it "adds multiple messages" do
@@ -60,10 +66,12 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(messages.first.message).to eq("hello")
       expect(messages.first.file).to eq("foo.rb")
       expect(messages.first.line).to eq(1)
+      expect(messages.first.type).to eq(:message)
 
       expect(messages.last.message).to eq("bye")
       expect(messages.last.file).to eq("foo.rb")
       expect(messages.last.line).to eq(1)
+      expect(messages.last.type).to eq(:message)
     end
 
     it "does nothing when given a nil message" do
@@ -82,6 +90,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(warning.message).to eq("hello")
       expect(warning.file).to eq("foo.rb")
       expect(warning.line).to eq(1)
+      expect(warning.type).to eq(:warning)
     end
 
     it "adds warnings as array" do
@@ -91,6 +100,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(warning.message).to eq("hello")
       expect(warning.file).to eq("foo.rb")
       expect(warning.line).to eq(1)
+      expect(warning.type).to eq(:warning)
     end
 
     it "adds multiple warnings" do
@@ -100,10 +110,12 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(warnings.first.message).to eq("hello")
       expect(warnings.first.file).to eq("foo.rb")
       expect(warnings.first.line).to eq(1)
+      expect(warnings.first.type).to eq(:warning)
 
       expect(warnings.last.message).to eq("bye")
       expect(warnings.last.file).to eq("foo.rb")
       expect(warnings.last.line).to eq(1)
+      expect(warnings.last.type).to eq(:warning)
     end
 
     it "does nothing when given a nil warning" do
@@ -122,6 +134,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(failure.message).to eq("hello")
       expect(failure.file).to eq("foo.rb")
       expect(failure.line).to eq(1)
+      expect(failure.type).to eq(:error)
     end
 
     it "adds failures as array" do
@@ -131,6 +144,7 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(error.message).to eq("hello")
       expect(error.file).to eq("foo.rb")
       expect(error.line).to eq(1)
+      expect(error.type).to eq(:error)
     end
 
     it "adds multiple failures" do
@@ -140,10 +154,12 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(failures.first.message).to eq("hello")
       expect(failures.first.file).to eq("foo.rb")
       expect(failures.first.line).to eq(1)
+      expect(failures.first.type).to eq(:error)
 
       expect(failures.last.message).to eq("bye")
       expect(failures.last.file).to eq("foo.rb")
       expect(failures.last.line).to eq(1)
+      expect(failures.last.type).to eq(:error)
     end
 
     it "does nothing when given a nil failure" do

@@ -6,9 +6,15 @@ module Danger
   class GitRepo
     attr_accessor :diff, :log, :folder
 
-    def diff_for_folder(folder, from: "master", to: "HEAD")
+    def diff_for_folder(folder, from: "master", to: "HEAD", lookup_top_level: false)
       self.folder = folder
-      repo = Git.open self.folder
+      git_top_level = folder
+      if lookup_top_level
+        Dir.chdir(folder) do
+          git_top_level = exec("rev-parse --show-toplevel")
+        end
+      end
+      repo = Git.open git_top_level
 
       ensure_commitish_exists!(from)
       ensure_commitish_exists!(to)
@@ -129,7 +135,7 @@ module Danger
       git_in_depth_fetch
       possible_merge_base = possible_merge_base(repo, from, to)
 
-      raise "Cannot find a merge base between #{from} and #{to}." unless possible_merge_base
+      raise "Cannot find a merge base between #{from} and #{to}. If you are using shallow clone/fetch, try increasing the --depth" unless possible_merge_base
 
       possible_merge_base
     end

@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+require "danger/danger_core/messages/base"
+
 module Danger
-  class Markdown
-    attr_accessor :message, :file, :line
+  class Markdown < BaseMessage
 
     def initialize(message, file = nil, line = nil)
-      self.message = message
-      self.file = file
-      self.line = line
+      super(type: :markdown, message: message, file: file, line: line)
     end
 
     def ==(other)
@@ -25,21 +25,18 @@ module Danger
       h
     end
 
-    def eql?(other)
-      return self == other
-    end
-
-    # @return [Boolean] returns true if is a file or line, false otherwise
-    def inline?
-      file || line
-    end
-
     def to_s
       extra = []
       extra << "file: #{file}" unless file
       extra << "line: #{line}" unless line
 
       "Markdown #{message} { #{extra.join ', '.freeze} }"
+    end
+
+    def <=>(other)
+      return 1 if other.type != :markdown
+
+      compare_by_file_and_line(other)
     end
   end
 end

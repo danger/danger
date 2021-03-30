@@ -2,6 +2,7 @@
 
 require "danger/danger_core/dangerfile_dsl"
 require "danger/danger_core/standard_error"
+require "danger/danger_core/message_aggregator"
 
 require "danger/danger_core/plugins/dangerfile_messaging_plugin"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
@@ -48,23 +49,26 @@ module Danger
     # However, as we're using using them in the DSL, they won't
     # get method_missing called correctly without overriding them.
 
-    def warn(*args, &blk)
-      method_missing(:warn, *args, &blk)
+    def warn(*args, **kargs, &blk)
+      method_missing(:warn, *args, **kargs, &blk)
     end
 
-    def fail(*args, &blk)
-      method_missing(:fail, *args, &blk)
+    def fail(*args, **kargs, &blk)
+      method_missing(:fail, *args, **kargs, &blk)
     end
 
     # When an undefined method is called, we check to see if it's something
     # that the core DSLs have, then starts looking at plugins support.
 
     # rubocop:disable Style/MethodMissing
-
-    def method_missing(method_sym, *arguments, &_block)
+    def method_missing(method_sym, *arguments, **keyword_arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
-          return plugin.send(method_sym, *arguments)
+          if keyword_arguments.empty?
+            return plugin.send(method_sym, *arguments)
+          else
+            return plugin.send(method_sym, *arguments, **keyword_arguments)
+          end
         end
       end
       super
@@ -243,21 +247,31 @@ module Danger
 
     def post_results(danger_id, new_comment, remove_previous_comments)
       violations = violation_report
+      report = {
+          warnings: violations[:warnings].uniq,
+          errors: violations[:errors].uniq,
+          messages: violations[:messages].uniq,
+          markdowns: status_report[:markdowns].uniq,
+          danger_id: danger_id
+      }
 
-      env.request_source.update_pull_request!(
-        warnings: violations[:warnings].uniq,
-        errors: violations[:errors].uniq,
-        messages: violations[:messages].uniq,
-        markdowns: status_report[:markdowns].uniq,
-        danger_id: danger_id,
-        new_comment: new_comment,
-        remove_previous_comments: remove_previous_comments
-      )
+      if env.request_source.respond_to?(:update_pr_by_line!) && ENV["DANGER_MESSAGE_AGGREGATION"]
+        env.request_source.update_pr_by_line!(message_groups: MessageAggregator.aggregate(**report),
+                                             new_comment: new_comment,
+                                             remove_previous_comments: remove_previous_comments,
+                                             danger_id: report[:danger_id])
+      else
+        env.request_source.update_pull_request!(
+          **report,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
+        )
+      end
     end
 
     def setup_for_running(base_branch, head_branch)
       env.ensure_danger_branches_are_setup
-      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch)
+      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch, lookup_top_level: true)
     end
 
     def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments)

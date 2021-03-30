@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/danger
     docker:
-      - image: ruby:2.3
+      - image: ruby:2.4
         environment:
         - RAILS_ENV=test
         - RACK_ENV=test

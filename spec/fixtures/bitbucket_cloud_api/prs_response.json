@@ -103,19 +103,19 @@ HTTP/1.1 200 OK
     },
     "comment_count": 2,
     "author": {
-      "username": "AName",
+      "nickname": "AName",
       "display_name": "Name",
       "type": "user",
       "uuid": "{123456-b28d-43ad-be76-2185a0183d3b}",
       "links": {
         "self": {
-          "href": "https://api.bitbucket.org/2.0/users/AName"
+          "href": "https://api.bitbucket.org/2.0/users/%7B123456-b28d-43ad-be76-2185a0183d3b%7D"
         },
         "html": {
-          "href": "https://bitbucket.org/AName/"
+          "href": "https://bitbucket.org/%7B123456-b28d-43ad-be76-2185a0183d3b%7D/"
         },
         "avatar": {
-          "href": "https://bitbucket.org/account/AName/avatar/32/"
+          "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5b10ecdfg5f91155d23f8c63/cd14d81b-e182-44a5-bf64-acd39823e2fa/128"
         }
       }
     },
@@ -123,21 +123,23 @@ HTTP/1.1 200 OK
     "participants": [
       {
         "role": "PARTICIPANT",
+        "participated_on": "2016-09-16T11:11:34.994585+00:00",
         "type": "participant",
         "user": {
-          "username": "AName",
+          "nickname": "AName",
           "display_name": "Name",
           "type": "user",
           "uuid": "{123456-3399-4f12-8609-d1332c891369}",
+          "account_id": "5b10ecdfg5f91122d23f8c63",
           "links": {
             "self": {
-              "href": "https://api.bitbucket.org/2.0/users/"
+              "href": "https://api.bitbucket.org/2.0/users/%7B123456-3399-4f12-8609-d1332c891369%7D"
             },
             "html": {
-              "href": "https://bitbucket.org/AName/"
+              "href": "https://bitbucket.org/%7B123456-3399-4f12-8609-d1332c891369%7D/"
             },
             "avatar": {
-              "href": "https://bitbucket.org/account/AName/avatar/32/"
+              "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5b10ecdfg5f91122d23f8c63/cd14d81b-e182-44a5-bf64-acd39823e2fa/128"
             }
           }
         },
@@ -145,21 +147,23 @@ HTTP/1.1 200 OK
       },
       {
         "role": "PARTICIPANT",
+        "participated_on": "2016-09-16T11:11:35.994585+00:00",
         "type": "participant",
         "user": {
           "username": "AName",
           "display_name": "Name",
           "type": "user",
           "uuid": "{123456-b28d-43ad-be76-2185a0183d3b}",
+          "account_id": "5b10ecdfg5f91155d23f8c63",
           "links": {
             "self": {
-              "href": "https://api.bitbucket.org/2.0/users/AName"
+              "href": "https://api.bitbucket.org/2.0/users/%7B123456-b28d-43ad-be76-2185a0183d3b%7D"
             },
             "html": {
-              "href": "https://bitbucket.org/AName/"
+              "href": "https://bitbucket.org/%7B123456-b28d-43ad-be76-2185a0183d3b%7D/"
             },
             "avatar": {
-              "href": "https://bitbucket.org/account/AName/avatar/32/"
+              "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5b10ecdfg5f91155d23f8c63/cd14d81b-e182-44a5-bf64-acd39823e2fa/128"
             }
           }
         },

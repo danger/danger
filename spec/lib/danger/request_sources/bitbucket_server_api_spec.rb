@@ -31,5 +31,17 @@ RSpec.describe Danger::RequestSources::BitbucketServerAPI, host: :bitbucket_serv
       api = described_class.new("danger", "danger", 1, env)
       expect(api.send(:use_ssl)).to eq(true)
     end
+    
+    it "post build successful" do
+        allow(ENV).to receive(:[]).with("ENVDANGER_BITBUCKETSERVER_PASSWORD") { "supertopsecret" }
+         stub_request(:post, "https://stash.example.com/rest/build-status/1.0/commits/04dede05fb802bf1e6c69782ae98592d29c03b80").
+         with(:body => "{\"state\":\"SUCCESSFUL\",\"key\":\"danger\",\"url\":\"build_job_link\",\"description\":\"description\"}",
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>'Basic YS5uYW1lOmFfcGFzc3dvcmQ=', 'Content-Type'=>'application/json', 'User-Agent'=>'Ruby'}).
+         to_return(:status => 204, :body => "", :headers => {})
+        api = described_class.new("danger", "danger", 1, stub_env)
+        changesetId = '04dede05fb802bf1e6c69782ae98592d29c03b80'
+        response = api.update_pr_build_status("SUCCESSFUL",changesetId,"build_job_link", "description")
+        expect(response).to eq(nil)
+   end 
   end
 end

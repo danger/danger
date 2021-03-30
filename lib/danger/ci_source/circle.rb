@@ -19,7 +19,7 @@ module Danger
   #
   # e.g.
   #
-  #  ``` yaml
+  #  ```yaml
   #  - run: bundle exec danger --verbose
   #  ```
   #

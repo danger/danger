@@ -2,6 +2,7 @@
 
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_cloud_api"
+require "danger/danger_core/message_group"
 
 module Danger
   module RequestSources
@@ -12,6 +13,7 @@ module Danger
       def self.env_vars
         [
           "DANGER_BITBUCKETCLOUD_USERNAME",
+          "DANGER_BITBUCKETCLOUD_UUID",
           "DANGER_BITBUCKETCLOUD_PASSWORD"
         ]
       end
@@ -71,21 +73,96 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
-        comment = generate_description(warnings: warnings, errors: errors)
+        comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
         comment += "\n\n"
+
+        warnings = update_inline_comments_for_kind!(:warnings, warnings, danger_id: danger_id)
+        errors = update_inline_comments_for_kind!(:errors, errors, danger_id: danger_id)
+        messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
+        markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
+
         comment += generate_comment(warnings: warnings,
-                                     errors: errors,
-                                   messages: messages,
-                                  markdowns: markdowns,
-                        previous_violations: {},
-                                  danger_id: danger_id,
-                                   template: "bitbucket_server")
+                                    errors: errors,
+                                    messages: messages,
+                                    markdowns: markdowns,
+                                    previous_violations: {},
+                                    danger_id: danger_id,
+                                    template: "bitbucket_server")
 
         @api.post_comment(comment)
       end
 
+      def update_pr_by_line!(message_groups:,
+                             danger_id: "danger",
+                             new_comment: false,
+                             remove_previous_comments: false)
+        if !new_comment || remove_previous_comments
+          delete_old_comments(danger_id: danger_id)
+        end
+
+        summary_body = generate_description(warnings: message_groups.fake_warnings_array,
+                                            errors: message_groups.fake_errors_array,
+                                            template: "bitbucket_server")
+        summary_body += "\n\n"
+
+
+        # this isn't the most elegant thing in the world, but we need the group
+        # with file: nil, line: nil so we can combine its info in with the
+        # summary_body
+        summary_group = message_groups.first
+        if summary_group && summary_group.file.nil? && summary_group.line.nil?
+          # remove summary_group from message_groups so it doesn't get a
+          # duplicate comment posted in the message_groups loop below
+          message_groups.shift
+        else
+          summary_group = MessageGroup.new(file: nil, line: nil)
+        end
+
+        summary_body += generate_message_group_comment(
+          message_group: summary_group,
+          danger_id: danger_id,
+          template: "bitbucket_server_message_group"
+        )
+
+        @api.post_comment(summary_body)
+
+        message_groups.each do |message_group|
+          body = generate_message_group_comment(message_group: message_group,
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server_message_group")
+          @api.post_comment(body,
+                            file: message_group.file,
+                            line: message_group.line)
+        end
+      end
+
+      def update_inline_comments_for_kind!(kind, messages, danger_id: "danger")
+        emoji = { warnings: "warning", errors: "no_entry_sign", messages: "book" }[kind]
+
+        messages.reject do |message|
+          next false unless message.file && message.line
+
+          body = ""
+
+          if kind == :markdown
+            body = generate_inline_markdown_body(message,
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server")
+          else
+            body = generate_inline_comment_body(emoji, message,
+                                                danger_id: danger_id,
+                                                template: "bitbucket_server")
+          end
+
+          @api.post_comment(body, file: message.file, line: message.line)
+
+          true
+        end
+      end
+
       def delete_old_comments(danger_id: "danger")
-        @api.fetch_last_comments.each do |c|
+        @api.fetch_comments.each do |c|
+          next if c[:user][:uuid] != @api.my_uuid
           @api.delete_comment(c[:id]) if c[:content][:raw] =~ /generated_by_#{danger_id}/
         end
       end

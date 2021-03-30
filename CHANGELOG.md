@@ -9,6 +9,175 @@
 -->
 
 ## master
+<!-- Your comment below here -->
+
+<!-- Your comment above here -->
+
+## 8.2.3
+
+* Fix a test for Ruby 3.0 keyword arguments. - [@mataku](https://github.com/mataku)
+* Allow teriminal-table versions through 3.x - [@benasher44](https://github.com/benasher44)
+* Comment on open gitlab MRs only for Gitlab>=13.8.0 - [@asifmohd](https://github.com/asifmohd/)
+* Namespace the `Commits` class properly under `Danger`. [@rymai](https://github.com/rymai) [#1294](https://github.com/danger/danger/pull/1294)
+
+## 8.2.2
+
+* Silence the ObjectifiedHash warnings when iterating over GitLab notes. - [@dstull](https://github.com/dstull)
+* Replace `URI.escape` which is obsolete in Ruby 3. - [@mataku](https://github.com/mataku)
+* Fix run with Azure Pipelines as CI Source and Azure Repos Git as Request Source - [@damien-danglard](https://github.com/damien-danglard)
+* Delegate explicitly keyword arguments for Ruby 3. - [@mataku](https://github.com/mataku)
+
+## 8.2.1
+
+* Add `danger.import_dangerfile(url:)` to import Dangerfile from custom URL - [@dstranz](https://github.com/dstranz)
+* Fixes issue with not being able to update comments, and instead always posting new comments regardless of settings for Bitbucket Cloud [@tskulbru](https://github.com/tskulbru)
+* Fix incorrect command in error message [@revolter](https://github.com/revolter)
+
+## 8.2.0
+
+* Add support for Concourse-CI [@matthewellis](https://github.com/matthewellis)
+* Add support for `pull_request_target` in GitHub actions. - [@chesire](https://github.com/chesire)
+
+## 8.1.0
+
+* correct the usage of double splat to fix Ruby 2.7 warning
+* Adds support for Code Insights for Bitbucket Server. To use Code Insights, please ensure `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY`, `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE` and `DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION` optional environment variables are set. [@qbeorama](https://github.com/Qbeorama)
+
+## 8.0.6
+
+* Add ability to set dismiss_out_of_range_messages for gitlab. - [@fahmisdk6](https://github.com/fahmisdk6)
+* Preserve single and double quotes [@caalberts](https://github.com/caalberts)
+* Add support for multiple patterns `{a,b}` in FileList#include? - [@l15](https://github.com/l15n) [#1258](https://github.com/danger/danger/pull/1258)
+
+## 8.0.5
+
+* Handle ssh URLs with port in Bitrise
+* Fixes warnings when using GitLab with Ruby 2.7 [@chwo](https://github.com/chwo) [#1250](https://github.com/danger/danger/issues/1250)
+
+## 8.0.4
+
+- Minor docs update, might also update the dockerfile
+
+## 8.0.3
+
+* Support external CI/CD for GitLab CI with GitHub code repository. To utilize this, please ensure `DANGER_GITHUB_API_TOKEN` and `DANGER_PROJECT_REPO_URL` are both set. [@philipqnguyen](https://github.com/philipqnguyen) [#1238](https://github.com/danger/danger/pull/1238)
+
+## 8.0.2
+
+* Fix Danger::Helpers::CommentsHelper#process_markdown so that it doesn't result in broken HTML. [@rymai](https://github.com/rymai) [#1236](https://github.com/danger/danger/pull/1236)
+
+## 8.0.1
+
+* Fix request source detection for GitLab. [@rymai](https://github.com/rymai) [#1234](https://github.com/danger/danger/pull/1234)
+
+## 8.0.0
+
+**Breaking** - Drop support for Ruby 2.3, support Ruby 2.4+ [@Kaspik](https://github.com/Kaspik) [#1225](https://github.com/danger/danger/pull/1225)
+* Fix github inline-comments always being struck-through. This was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182), fixed in PR [#1208](https://github.com/danger/danger/pull/1208/) for 6.3.2 but didn't make it to 7.0.0 [@Kaspik](https://github.com/Kaspik) [#1225](https://github.com/danger/danger/pull/1225)
+
+## 7.0.1
+
+* Fixed import Dangerfile in directory from GitLab
+* Fixes warnings when using GitHub with Ruby 2.7
+* Improves messaging specific to GitLab
+* Updates Git dependency to 1.7 with Ruby 2.7 support without warnings
+
+## 7.0.0
+
+**Breaking for BitBucket Cloud users only** - with changes in their API, see below, then Danger has a new env var
+requirement in order to support editing existing comments. You add `DANGER_BITBUCKETCLOUD_UUID` which is the UUID of
+the account which Danger should be using for commenting.
+
+* Added support to git.info_for_file for added and deleted files. [@ethan-riback](https://github.com/ethan-riback) [#1216](https://github.com/danger/danger/pull/1216)
+* Allow danger to run with Faraday 1.0.0.
+* Add message aggregation in a non-request-source-specific way:
+  When the DANGER_MESSAGE_AGGREGATION environment variable is set (to anything
+  that isn't an empty string) and the PR source supports it, this new
+  message-aggregation method is used. Otherwise, the old way is used.
+  [@telyn] [#1201](https://github.com/danger/danger/pull/1201)
+* Allow github repository redirects to be followed. [@telyn] [#1209](https://github.com/danger/danger/pull/1209)
+* Fix 404 on Bitbucket Cloud fetching `/users/$DANGER_BITBUCKETCLOUD_USERNAME`.
+  This fix requires that everyone using Bitbucket Cloud now provides the
+  `DANGER_BITBUCKETCLOUD_UUID` environment variable containing the UUID of
+   danger's user on bitbucket (with or without the `{}` braces). See
+   [this blog post from Atlassian](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-changes-gdpr/#removal-of-usernames-from-user-referencing-apis)
+   for details on the change Atlassian made which broke Danger. [@telyn] [#1217](https://github.com/danger/danger/pull/1217)
+
+## 6.3.2
+
+* Fix gitlab & github inline-comments always being struck-through. This
+  was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182).
+  [@telyn] [#1208](https://github.com/danger/danger/pull/1208)
+* Update RegEx pattern used for URL matching for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
+* Refactor shared code from Violation and Markdown into a base class [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
+* Add <=> methods to Violation and Markdown [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
+* Add sketch of MessageGroup and a totally unimplemented MessageAggregator, for the coming PR-host-agnostic
+  inline-comment grouping support [@telyn] [#1186](https://github.com/danger/danger/pull/1186)
+* Fix typo from environemnt -> environment [@yohix](https://github.com/yohix) [#1199](https://github.com/danger/danger/pull/1199)
+
+## 6.3.1
+
+* Remove ".git" at the end of project URL for bitrise projects. [@RonaldPrithiv](https://github.com/RonaldPrithiv)
+
+## 6.3.0
+
+* Adds `staging` command to run locally against local master [@olbrichj](https://github.com/olbrichj)
+* Fix RegEx pattern used to match URL.
+* Fix for GitLab Pipelines for Merge Results. [@rymai](https://github.com/rymai) [#1194](https://github.com/danger/danger/pull/1194)
+* Show correct error when GitLab Gem can't be loaded [@glensc], [#1191], [#1192]
+
+## 6.2.2
+
+* Fix incorrect method call in Bitbucket Cloud arising from my own changes in 6.2.1 [@telyn] [#1184](https://github.com/danger/danger/pull/1184)
+
+## 6.2.1
+
+* Fix Bitbucket Pipelines documentation
+* Update Ruby-Git to 1.6.0 to fix output encoding
+* Add inline-comments support to Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
+* Make emojis display better on Bitbucket Cloud [@telyn] [#1182](https://github.com/danger/danger/pull/1182)
+
+## 6.2.0
+
+* Enable Danger to be run from a subfolder of a git repository [@scranen](https://github.com/scranen) [#1177](https://github.com/danger/danger/issues/1177)
+* Add github enterprise support to CodeBuild
+* Fix CodeBuild to allow repo url which not ended `.git`
+* Add an example for gitlab.api on [reference](https://danger.systems/reference.html)
+* Fix `html_links` of `dangerfile_gitlab_plugin` for non `gitlab`/`jenkins` ci [@mfiebig](https://github.com/mfiebig) [#1157](https://github.com/danger/danger/pull/1157)
+* Adds support for Atlassian Bamboo CI #985 [@qbeorama](https://github.com/Qbeorama)
+* Updated Semaphore to also work with Semaphore 2.0. [@gabrielrinaldi](https://github.com/gabrielrinaldi) [#1165](https://github.com/danger/danger/pull/1165)
+* adding documentation in bitrise.rb with respect to [#1164](https://github.com/danger/danger/issues/1164)
+* Fix GitHub Pull Request identifier in Azure Pipelines [@Dahlgren](https://github.com/Dahlgren)
+
+## 6.1.0
+
+* Fixes CircleCI integration for builds without associated Pull Request [@mvandervelden](https://github.com/mvandervelden) #1135
+* Fixes a crash in FileList include [@chemouna](https://github.com/chemouna)
+* Fix typos across danger repository [@kittenking](https://github.com/kittenking) #1144
+* Add support for Azure Pipelines [@jonasbark](https://github.com/jonasbark)
+
+## 6.0.11
+
+* Exposes danger_id publicly via `EnvironmentManager`. Access it in the `Dangerfile` via `danger.env.danger_id` [@rpassis](https://github.com/rpassis/)
+
+## 6.0.10
+
+* Integrated build status Bitbucket Server REST API
+* Bitbucket cloud api, migrating to 2.0 [@susan335](https://github.com/susan335)
+
+## 6.0.9
+
+* Added support for Codefresh CI/CD Platform [@br4in3x](https://github.com/br4in3x)
+* Fixed branch_for_head API of Bitbucket cloud [@susan335](https://github.com/susan335) #1133
+
+## 6.0.8
+
+* Fix regression introduced in 6.0.6 using import_dangerfile() for GitLab [@jk](https://github.com/jk) #1128 #1130
+
+## 6.0.7
+
+* Update `faraday-http-cache` dependency from 1.0 to 2.0
+* Fixed importing Dangerfile from Gitlab (uses Gitlab API now)
 
 ## 6.0.6
 
@@ -1199,5 +1368,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 * Gets Git details from local Git - orta
 * Fails when you say it's failed in  the  Dangerfile - orta
 
-
 [@glensc]: https://github.com/glensc
+[@telyn]: https://github.com/telyn
+[#1192]: https://github.com/danger/danger/pull/1192
+[#1191]: https://github.com/danger/danger/issues/1191

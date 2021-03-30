@@ -4,10 +4,10 @@ cache:
     - bundle
 
 rvm:
+  - 2.7.1
   - 2.6.0
   - 2.5.3
   - 2.4.5
-  - 2.3.8
 
 bundler_args: "--without documentation --path bundle"
 

@@ -40,6 +40,10 @@ module Danger
         end
       end
 
+      def validates_as_ci?
+        true
+      end
+
       def validates_as_api_source?
         (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
       end
@@ -167,7 +171,7 @@ module Danger
           markdowns: markdowns
         )
 
-        rest_inline_violations = submit_inline_comments!({
+        rest_inline_violations = submit_inline_comments!(**{
           danger_id: danger_id,
           previous_violations: previous_violations
         }.merge(inline_violations))
@@ -185,7 +189,7 @@ module Danger
 
         # If there are still violations to show
         if main_violations_sum.any?
-          body = generate_comment({
+          body = generate_comment(**{
             template: "github",
             danger_id: danger_id,
             previous_violations: previous_violations
@@ -276,7 +280,7 @@ module Danger
           else
             # We remove non-sticky violations that have no replies
             # Since there's no direct concept of a reply in GH, we simply consider
-            # the existance of non-danger comments in that line as replies
+            # the existence of non-danger comments in that line as replies
             replies = non_danger_comments.select do |potential|
               potential["path"] == comment["path"] &&
                 potential["position"] == comment["position"] &&

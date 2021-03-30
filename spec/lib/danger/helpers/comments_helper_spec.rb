@@ -2,6 +2,8 @@
 
 require "danger/helpers/comments_helper"
 require "danger/danger_core/messages/violation"
+require "danger/danger_core/messages/markdown"
+require "danger/danger_core/message_group"
 
 SINGLE_TABLE_COMMENT = <<-EOS.freeze
   Other comment content
@@ -183,13 +185,14 @@ RSpec.describe Danger::Helpers::CommentsHelper do
     let(:violation_2) do
       violation_factory("A [link](https://example.com)", sticky: true)
     end
+    let(:violation_3) { violation_factory(%(with "double quote" and 'single quote')) }
 
     it "produces table data" do
-      table_data = dummy.table("2 Errors", "no_entry_sign", [violation_1, violation_2], {})
+      table_data = dummy.table("3 Errors", "no_entry_sign", [violation_1, violation_2, violation_3], {})
 
-      expect(table_data[:name]).to eq("2 Errors")
+      expect(table_data[:name]).to eq("3 Errors")
       expect(table_data[:emoji]).to eq("no_entry_sign")
-      expect(table_data[:content].size).to be(2)
+      expect(table_data[:content].size).to be(3)
       expect(table_data[:content][0].message).to eq("<strong>Violation 1</strong>")
       expect(table_data[:content][0].sticky).to eq(false)
 
@@ -197,8 +200,78 @@ RSpec.describe Danger::Helpers::CommentsHelper do
         "A <a href=\"https://example.com\">link</a>"
       )
       expect(table_data[:content][1].sticky).to eq(true)
+      expect(table_data[:content][2].message).to eq(%(with "double quote" and 'single quote'))
       expect(table_data[:resolved]).to be_empty
-      expect(table_data[:count]).to be(2)
+      expect(table_data[:count]).to be(3)
+    end
+
+    shared_examples "violation text as heredoc" do
+      it "produces table data" do
+        table_data = dummy.table("1 Error", "no_entry_sign", [violation], {})
+
+        expect(table_data[:name]).to eq("1 Error")
+        expect(table_data[:emoji]).to eq("no_entry_sign")
+        expect(table_data[:content].size).to be(1)
+        expect(table_data[:content][0].message).to eq("#{heredoc_text.strip}")
+        expect(table_data[:content][0].sticky).to eq(false)
+
+        expect(table_data[:resolved]).to be_empty
+        expect(table_data[:count]).to be(1)
+      end
+
+    end
+
+    context "with a heredoc text with a newline at the end" do
+      let(:heredoc_text) { "You have made some app changes, but did not add any tests." }
+      let(:violation) { violation_factory(heredoc) }
+
+      context "with a heredoc text with a newline at the end" do
+        let(:heredoc) do
+          <<~MSG
+          #{heredoc_text}
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with two newlines at the end" do
+        let(:heredoc) do
+          <<~MSG
+          #{heredoc_text}
+
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with a newline at the start and end" do
+        let(:heredoc) do
+          <<~MSG
+
+          #{heredoc_text}
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
+
+      context "with a heredoc text with a newline at the start and two newlines at the end" do
+        let(:heredoc) do
+          <<~MSG
+
+          #{heredoc_text}
+
+
+          MSG
+        end
+
+        it_behaves_like "violation text as heredoc"
+      end
     end
   end
 
@@ -433,6 +506,74 @@ COMMENT
       result = dummy.generate_comment(warnings: violations_factory(warnings), errors: violations_factory([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
       expect(result).to include("has been truncated")
+    end
+  end
+
+  describe "#generate_message_group_comment" do
+    subject do
+      dummy.generate_message_group_comment(message_group: message_group,
+                                           danger_id: danger_id,
+                                           resolved: resolved,
+                                           template: template)
+    end
+
+    let(:message_group) { Danger::MessageGroup.new(file: file, line: line) }
+    let(:file) { nil }
+    let(:line) { nil }
+    let(:resolved) { [] }
+    let(:danger_id) { Base64.encode64(Random.new.bytes(10)).chomp }
+
+    context "when template is bitbucket_server_message_group" do
+      let(:template) { "bitbucket_server_message_group" }
+
+      context "with one of each type of message" do
+        before do
+          message_group << Danger::Violation.new("Hello!", false, file, line, type: :error)
+          message_group << Danger::Violation.new("World!", false, file, line, type: :warning)
+          message_group << Danger::Violation.new("HOW R", false, file, line, type: :message)
+          message_group << Danger::Markdown.new("U DOING?", file, line)
+        end
+
+        it "spits out a beautiful comment" do
+          expect(subject).to eq <<~COMMENT
+            :no_entry_sign: Hello!
+
+            :warning: World!
+
+            :book: HOW R
+
+
+            U DOING?
+
+            Generated by :no_entry_sign: [Danger](https://danger.systems/ "generated_by_#{danger_id}")
+          COMMENT
+        end
+      end
+
+      context "with two markdowns" do
+        before do
+          message_group << Danger::Markdown.new("markdown one", file, line)
+          message_group << Danger::Markdown.new("markdown two", file, line)
+        end
+
+        it "spits out a beautiful comment" do
+          expect(subject).to eq <<~COMMENT
+            markdown one
+
+            markdown two
+
+            Generated by :no_entry_sign: [Danger](https://danger.systems/ "generated_by_#{danger_id}")
+          COMMENT
+        end
+      end
+
+      context "without any messages" do
+        it "outputs just the Generated line" do
+          expect(subject).to eq <<~COMMENT
+            Generated by :no_entry_sign: [Danger](https://danger.systems/ "generated_by_#{danger_id}")
+          COMMENT
+        end
+      end
     end
   end
 

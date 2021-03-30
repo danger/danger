@@ -2,7 +2,7 @@ require "danger/plugin_support/plugin"
 
 module Danger
   # A way to interact with Danger herself. Offering APIs to import plugins,
-  # and Dangerfiles from muliple sources.
+  # and Dangerfiles from multiple sources.
   #
   # @example Import a plugin available over HTTP
   #
@@ -27,11 +27,16 @@ module Danger
   #
   # @example Run a Dangerfile from inside a repo
   #
-  #          danger.import_dangerfile(gitlab: "ruby-grape/danger")
+  #          danger.import_dangerfile(gitlab_project_id: 1345)
   #
   # @example Run a Dangerfile from inside a repo branch and path
   #
   #          danger.import_dangerfile(github: "ruby-grape/danger", branch: "custom", path: "path/to/Dangerfile")
+  #
+  # @example Import a plugin available over HTTP
+  #
+  #          custom_url = "https://custom.bitbucket.com/project-name/Dangerfile?raw"
+  #          danger.import_dangerfile(url: custom_url)
   #
   # @see  danger/danger
   # @tags core, plugins
@@ -76,17 +81,21 @@ module Danger
         warn "Use `import_dangerfile(github: '#{opts}')` instead of `import_dangerfile '#{opts}'`."
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
-        if opts.key?(:github) || opts.key?(:gitlab)
-          import_dangerfile_from_github(opts[:github] || opts[:gitlab], opts[:branch], opts[:path])
+        if opts.key?(:github)
+          import_dangerfile_from_github(opts[:github], opts[:branch], opts[:path])
+        elsif opts.key?(:gitlab)
+          import_dangerfile_from_gitlab(opts[:gitlab], opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
           import_dangerfile_from_gem(opts[:gem])
+        elsif opts.key?(:url)
+          import_dangerfile_from_url(opts[:url])
         else
-          raise "`import` requires a Hash with either :github or :gem"
+          raise "`import` requires a Hash with either :github, :gitlab, :gem, :path or :url"
         end
       else
-        raise "`import` requires a Hash" unless opts.kind_of?(Hash)
+        raise "`import` requires a Hash"
       end
     end
 
@@ -158,6 +167,36 @@ module Danger
       org, repo = slug.split("/")
       download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
+      @dangerfile.parse(Pathname.new(local_path))
+    end
+
+    # @!group Danger
+    # Download and execute a remote Dangerfile.
+    #
+    # @param    [Int] slug_or_project_id
+    #           The slug or id of the repo where the Dangerfile is.
+    # @param    [String] branch
+    #           A branch from repo where the Dangerfile is.
+    # @param    [String] path
+    #           The path at the repo where Dangerfile is.
+    # @return   [void]
+    #
+    def import_dangerfile_from_gitlab(slug_or_project_id, branch = nil, path = nil)
+      download_url = env.request_source.file_url(repository: slug_or_project_id, branch: branch, path: path || "Dangerfile")
+      local_path = download(download_url)
+      @dangerfile.parse(Pathname.new(local_path))
+    end
+
+    # @!group Danger
+    # Download and execute a remote Dangerfile.
+    #
+    # @param    [String] url
+    #           A https url where the Dangerfile is.
+    # @return   [void]
+    #
+    def import_dangerfile_from_url(url)
+      raise "`import_dangerfile_from_url` requires a string" unless url.kind_of?(String)
+      local_path = download(url)
       @dangerfile.parse(Pathname.new(local_path))
     end
 

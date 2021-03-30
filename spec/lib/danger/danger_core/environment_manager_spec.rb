@@ -2,6 +2,12 @@ require "danger/danger_core/environment_manager"
 
 RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
   describe ".local_ci_source" do
+    it "loads Bamboo" do
+      with_bamboo_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Bamboo
+      end
+    end
+
     it "loads Bitrise" do
       with_bitrise_setup_and_is_a_pull_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Bitrise
@@ -27,7 +33,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads GitLab CI" do
-      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+      with_gitlabci_setup_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::GitLabCI
       end
     end
@@ -39,13 +45,13 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads Jenkins (Gitlab)" do
-      with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
       end
     end
 
     it "loads Jenkins (Gitlab v3)" do
-      with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_v3_and_is_a_merge_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Jenkins
       end
     end
@@ -100,6 +106,12 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
   end
 
   describe ".pr?" do
+    it "loads Bamboo" do
+      with_bamboo_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
     it "loads Bitrise" do
       with_bitrise_setup_and_is_a_pull_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
@@ -125,7 +137,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads GitLab CI" do
-      with_gitlabci_setup_and_is_a_pull_request do |system_env|
+      with_gitlabci_setup_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
@@ -137,13 +149,13 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
     end
 
     it "loads Jenkins (Gitlab)" do
-      with_jenkins_setup_gitlab_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
 
     it "loads Jenkins (Gitlab v3)" do
-      with_jenkins_setup_gitlab_v3_and_is_a_pull_request do |system_env|
+      with_jenkins_setup_gitlab_v3_and_is_a_merge_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end
@@ -214,6 +226,22 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
       with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
         env_manager = Danger::EnvironmentManager.new(env, testing_ui)
         expect(env_manager.pr?).to eq true
+      end
+    end
+  end
+
+  describe "#danger_id" do
+    it "returns the default identifier when none is provided" do
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui)
+        expect(env_manager.danger_id).to eq("danger")
+      end
+    end
+
+    it "returns the identifier user by danger" do
+      with_travis_setup_and_is_a_pull_request(request_source: :github) do |env|
+        env_manager = Danger::EnvironmentManager.new(env, testing_ui, "test_identifier")
+        expect(env_manager.danger_id).to eq("test_identifier")
       end
     end
   end
@@ -364,7 +392,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
         danger_em.raise_error_for_no_request_source(req_src_env, ui)
       end.to raise_error(SystemExit)
 
-      expect(ui.string).to include("For your BitbucketCloud repo, you need to expose: DANGER_BITBUCKETCLOUD_USERNAME, DANGER_BITBUCKETCLOUD_PASSWORD")
+      expect(ui.string).to include("For your BitbucketCloud repo, you need to expose: DANGER_BITBUCKETCLOUD_USERNAME, DANGER_BITBUCKETCLOUD_UUID, DANGER_BITBUCKETCLOUD_PASSWORD")
     end
 
     it "handles throwing out all kinds of info when the repo url isnt recognised" do
@@ -382,7 +410,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
         " - GitHub: DANGER_GITHUB_API_TOKEN",
         " - GitLab: DANGER_GITLAB_API_TOKEN",
         " - BitbucketServer: DANGER_BITBUCKETSERVER_USERNAME, DANGER_BITBUCKETSERVER_PASSWORD, DANGER_BITBUCKETSERVER_HOST",
-        " - BitbucketCloud: DANGER_BITBUCKETCLOUD_USERNAME, DANGER_BITBUCKETCLOUD_PASSWORD"
+        " - BitbucketCloud: DANGER_BITBUCKETCLOUD_USERNAME, DANGER_BITBUCKETCLOUD_UUID, DANGER_BITBUCKETCLOUD_PASSWORD"
       ]
       messages.each do |m|
         expect(ui.string).to include(m)

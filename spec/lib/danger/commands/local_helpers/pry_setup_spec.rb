@@ -12,7 +12,7 @@ RSpec.describe Danger::PrySetup do
 
         dangerfile_copy = described_class
           .new(testing_ui)
-          .setup_pry(dangerfile_path)
+          .setup_pry(dangerfile_path, "pr")
 
         expect(File).to exist(dangerfile_copy)
         expect(File.read(dangerfile_copy)).to include("binding.pry; File.delete(\"_Dangerfile.tmp\")")
@@ -20,7 +20,7 @@ RSpec.describe Danger::PrySetup do
     end
 
     it "doesn't copy a nonexistant Dangerfile" do
-      described_class.new(testing_ui).setup_pry("")
+      described_class.new(testing_ui).setup_pry("", "pr")
 
       expect(File).not_to exist("_Dangerfile.tmp")
     end
@@ -30,7 +30,7 @@ RSpec.describe Danger::PrySetup do
       expect(Kernel).to receive(:require).with("pry").and_raise(LoadError)
 
       expect do
-        described_class.new(ui).setup_pry("Dangerfile")
+        described_class.new(ui).setup_pry("Dangerfile", "pr")
       end.to raise_error(SystemExit)
       expect(ui.err_string).to include("Pry was not found")
     end
