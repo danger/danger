@@ -1,0 +1,266 @@
+---
+title: Getting Set Up
+subtitle: Getting Set Up
+order: 1
+---
+
+ruby:
+  require 'json'
+  ci_sources = JSON.parse(File.read('json_data/ci_docs.json'))
+
+
+.clearfix
+section.guide
+  article
+    markdown:
+      There are 5 steps involved in getting Danger running:
+
+      * [Include Danger](#including-danger).
+      * [Creating a Dangerfile](#creating-a-dangerfile) and adding a few simple rules.
+      * [Creating an account for Danger to use](#creating-a-bot-account-for-danger-to-use).
+      * Setting up [an access token for Danger](#setting-up-an-access-token) with that account.
+      * Setting up [Danger to run on your CI](#setting-up-danger-to-run-on-your-ci).
+
+      ### Including Danger
+
+      We recommend you install Danger via [Bundler][bundler] + a Gemfile. This means that your version of Danger and your plugins are all versioned correctly. You are in control of how and when your dependencies are updated. If you'd like to learn more about Bundler, check out [this guide][cp_bundler].
+
+      ##### Installation
+
+      If you have an existing Gemfile, add `gem 'danger'` or `gem 'danger-gitlab'` to it.  If you don't, run `bundle init` in your project root, and edit the freshly-minted Gemfile. 
+
+      ##### Bundler 101
+
+      Bundler is a dependency manager for Ruby which uses a Gemfile to define all of the Ruby projects you want to use. To get started type in `bundler init` in your project folder.
+      This creates your `Gemfile`. Open this up in your editor, then replace the ` #gem 'rails'` with the gem above. Then run `bundle install` inside your project folder.
+
+      ### Easy Mode
+
+      *Easy mode* - run: `bundle exec danger init` - this will guide you through the next four steps, offering useful advice specific to your setup. If you would like to understand how all of the pieces come together, read on:
+
+      ### Creating a Dangerfile
+
+      Create an empty file named `Dangerfile`. The file is written in Ruby, but your text editor might not recognize it as such, so you may need to set the syntax highlighting manually (unless you're [using VS Code][vs_code]). To get started, we would recommend a simple "Hello World."
+
+      ```
+      message("Hello, this worked")
+      ```
+
+      ### Creating a bot account for Danger to use
+
+      This is optional. Pragmatically, you want to do this though.
+
+      [bundler]: http://bundler.io
+      [cp_bundler]: https://guides.cocoapods.org/using/a-gemfile.html
+      [without_bundler]: #installation-without-bundler
+      [vs_code]: https://marketplace.visualstudio.com/items?itemName=Orta.vscode-danger
+
+    div.request_sources.selectors
+      ul
+        li.github.highlighted GitHub
+        li.gitlab GitLab
+        li.bitbucket Bitbucket Server
+        li.bitbucket_cloud Bitbucket Cloud
+
+      div.github
+        markdown:
+
+          In order to get the most out of Danger, we recommend giving her the ability to post comments in your Pull Requests. This is a regular GitHub account, but depending on whether you are working on a private or public project, you will want to give different levels of access to this bot. You are allowed to have [one bot per GitHub account][github_bots].
+
+          To get started, open [https://github.com](https://github.com) in a private browser session.
+
+          ##### OSS Projects
+
+          Do not add the bot to your repo or to your organization.
+
+          ##### Closed Source Projects
+
+          Add the bot to your repo or to your organization. The bot requires permission level "Write" to be able to set a PR's status. Note that you _should not_ re-use this bot for OSS projects.
+
+          ### Setting up an Access Token
+
+          [Here's the link][github_token], you should open this in the private session where you just created the new GitHub account. Again, the rights that you give to the token depend on the openness of your projects. You'll want to save for later, when you add a `DANGER_GITHUB_API_TOKEN` to your CI.
+
+          ##### Tokens for OSS Projects
+
+          We recommend giving the token the smallest scope possible. This means just `public_repo`, this scope is [still ideally too much][token] but this account shouldn't have any access to other repos or organizations - so malicious use of the token is scoped to making new repos on it, or writing comments on other OSS projects. Because the token can be quite easily be extracted from the CI environment, this minimizes the chance for bad actors to cause chaos with it.
+
+          ##### Tokens for Closed Source Projects
+
+          We recommend giving access to the whole `repo` scope, and its children.
+
+          ### Enterprise GitHub
+
+          You can work with GitHub Enterprise by setting 2 environment variables:
+
+          `DANGER_GITHUB_HOST` to the host that GitHub is running on.
+
+          `DANGER_GITHUB_API_BASE_URL` to the host that the GitHub Enterprise API is reachable on.
+
+          For example:
+
+          ```
+          DANGER_GITHUB_HOST=git.corp.evilcorp.com
+          DANGER_GITHUB_API_BASE_URL=https://git.corp.evilcorp.com/api/v3
+          ```
+
+          [github_bots]: https://twitter.com/sebastiangrail/status/750844399563608065
+          [github_token]: https://github.com/settings/tokens/new
+          [token]: https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/
+
+      div.gitlab
+        markdown:
+
+          To get the most out of Danger, we recommend giving her the ability to post comments in your Merge Requests. This is a regular GitLab account, but depending on whether you are working on a private or public project, you will want to give different levels of access to this bot.
+
+          To get started, open [https://gitlab.com](https://gitlab.com) (or your GitLab instance) in a private browser session.
+
+          ##### OSS Projects
+
+          Do not add the bot to your project or to your group.
+
+          ##### Closed Source Projects
+
+          Add the bot to your private project or to your private group with the "Reporter" permission level. Note that you _should not_ re-use this bot for OSS projects. As the access token you use could be extracted and would give access to your closed source projects.
+
+          ### Setting up an Access Token
+
+          [Here's the link][gitlab_token], you should open this in the private session where you have just created the new GitLab account. You'll want to copy the token for later, when you add a `DANGER_GITLAB_API_TOKEN` to your CI.
+
+          If you are self hosting GitLab, you'll need to generate an access token for the bot user. You can find the section under "Access Tokens" in the bot user's profile.
+
+          ### Self-hosted GitLab
+
+          To let Danger know the API details around your custom setup, you need to
+          set two env variables:
+
+          `DANGER_GITLAB_HOST` to the host that GitLab is running on.
+
+          `DANGER_GITLAB_API_BASE_URL` to the host that the GitLab API is reachable on.
+
+          For example:
+
+          ```
+          DANGER_GITLAB_HOST=git.corp.evilcorp.com
+          DANGER_GITLAB_API_BASE_URL=https://git.corp.evilcorp.com/api/v4
+          ```
+
+          [gitlab_token]: https://gitlab.com/profile/personal_access_tokens
+
+      div.bitbucket_cloud
+        markdown:
+
+          To get the most out of Danger, we recommend giving her the ability to post comments in your Pull Requests. This is a regular Bitbucket Cloud account, that exists just for Danger.
+
+          ### Setting up the Environment Variables
+
+          To get set up, you will need to provide `DANGER_BITBUCKETCLOUD_USERNAME`, `DANGER_BITBUCKETCLOUD_PASSWORD` and your `DANGER_BITBUCKETCLOUD_UUID` into the CI environment.
+
+      div.bitbucket
+        markdown:
+
+          To get the most out of Danger, we recommend giving her the ability to post comments in your Pull Requests. This is a regular Bitbucket account, that exists just for Danger.
+
+          ### Setting up the Environment Variables
+
+          To get set up, you will need to provide `DANGER_BITBUCKETSERVER_USERNAME`, `DANGER_BITBUCKETSERVER_PASSWORD` and your `DANGER_BITBUCKETSERVER_HOST` into the environment.
+
+          You will also want to ensure that `ghprbPullId` is added into the environment with the Pull Request
+          id so that Danger can use your Bitbucket Server's API. As of right now, only Jenkins is supported for Bitbucket Server, we're open to improvements there, for sure.
+
+          With your ENV vars set up, you can edit your job to add `bundle exec danger` at the build action.
+
+
+    markdown:
+
+      ### Continuous Integration
+
+      Continuous Integration is the process of regularly running tests and generating metrics for a project. It is where you can ensure that the code you are submitting for review is passing on all of the tests. You commonly see this as green or red dots next to commits.
+
+      Danger is built to run as a part of this process, so you will need to have this set up as a pre-requisite.
+
+      ### Setting up Danger to run on your CI
+
+    / These docs all come from
+    / https://github.com/danger/danger/tree/master/lib/danger/ci_source
+    / inline documentation, rather than from inside this page.
+
+    .ci_sources.selectors
+      ul
+        - for source in ci_sources
+          - source_id = source["name"].downcase.gsub(" ", "_")
+          li class=source_id == source["name"]
+
+      - for source in ci_sources
+        - source_id = source["name"].downcase.gsub(" ", "_")
+        div class=source_id style="display:none;"
+          == markdown_h(source["docs"])
+
+section
+  article
+    markdown:
+      ##### Installation Without Bundler
+
+      If Danger is your only ruby dependency, you may not want to use [Bundler][bundler], and that's fine. You can use the `~>` operator in the `gem install` step work with SemVer. For example here is a one-liner used in the CI for [artsy/force][force]:
+
+      ```sh
+      rbenv global 2.3.1 && gem install danger --version '~> 5.0' && danger
+      ```
+
+      This sets the Ruby version, installs Danger via `gem install danger` but only a version `4.x` build, then runs Danger. This methods makes Danger globally available in the system, you can include plugins at the same time by running `gem install danger danger-prose [gem] [gem]`.
+
+      You can run `danger --version` to check your version. Any time you see a command that recommends you use `bundle exec` - you can skip the `bundle exec` part.
+
+      ##### macOS sudo-less Installation
+
+      Create or edit a `.profile` file in your home directory and add or amend it to include these lines:
+
+      ```sh
+      export GEM_HOME=$HOME/.gem
+      export PATH=$GEM_HOME/bin:$PATH
+      ```
+
+      [bundler]: http://bundler.io
+      [force]: https://github.com/artsy/force
+
+
+section
+  article
+    hr
+    p == "help improve this document by <a href= 'https://gitlab.com/danger-systems/danger.systems/edit/master/static/source/#{current_resource.path}.slim'>sending MRs</a>."
+
+javascript:
+  $(function() {
+    /// Generic Example Highlight Code
+    $("div.selectors ul li").click(function(event) {
+      var $this = $(this)
+
+      $this.parents("ul").children().removeClass("highlighted")
+      var key = $this.attr("class")
+      $this.addClass("highlighted")
+
+      var content = $this.parents("div")
+      content.children("div").css("display", "none")
+      content.children("div." + key).css("display", "block")
+    })
+
+    // Replace the API token's name in all the CI sources
+    $("div.request_sources ul li").click(function(event) {
+      var github = $(this).hasClass("github")
+      var gh_token = "DANGER_GITHUB_API_TOKEN"
+      var gl_token = "DANGER_GITLAB_API_TOKEN"
+
+      $("div.ci_sources p code").each(function() {
+        var text = $(this).text();
+        if (github) {
+          text = text.replace(gl_token, gh_token);
+        } else {
+          text = text.replace(gh_token, gl_token);
+        }
+        $(this).text(text);
+      })
+    });
+
+    $(".selectors ul li.travis").click()
+    $(".selectors ul li.github").click()
+  });
