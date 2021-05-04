@@ -26,6 +26,12 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
       end
     end
 
+    it "loads Codemagic" do
+      with_codemagic_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Codemagic
+      end
+    end
+
     it "loads Drone" do
       with_drone_setup_and_is_a_pull_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Drone
@@ -126,6 +132,12 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
 
     it "loads Circle" do
       with_circle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
+    it "loads Codemagic" do
+      with_codemagic_setup_and_is_a_pull_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
       end
     end

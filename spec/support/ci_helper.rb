@@ -61,6 +61,15 @@ module Danger
         yield(system_env)
       end
 
+      def with_codemagic_setup_and_is_a_pull_request
+        system_env = {
+          "FCI_PROJECT_ID" => "23",
+          "FCI_PULL_REQUEST_NUMBER" => "42"
+        }
+
+        yield(system_env)
+      end
+
       def with_drone_setup_and_is_a_pull_request
         system_env = {
           "DRONE_REPO_NAME" => "danger",

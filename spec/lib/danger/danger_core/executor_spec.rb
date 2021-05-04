@@ -34,6 +34,12 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         end
       end
 
+      it "not raises error on Codemagic" do
+        with_codemagic_setup_and_is_a_pull_request do |system_env|
+          expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
+        end
+      end
+
       it "not raises error on Drone" do
         with_drone_setup_and_is_a_pull_request do |system_env|
           expect { described_class.new(system_env).validate!(testing_ui) }.not_to raise_error
