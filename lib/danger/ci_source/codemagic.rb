@@ -5,7 +5,7 @@ module Danger
   #
   # Add a script step to your workflow:
   #
-  # ```yml
+  # ```
   # - name: Running Danger
   #   script: |
   #     bundle install
