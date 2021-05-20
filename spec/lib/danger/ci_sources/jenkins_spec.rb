@@ -206,6 +206,11 @@ RSpec.describe Danger::Jenkins do
         expect(described_class.repo_url(valid_env)).to eq("https://gitlab.com/danger/danger")
       end
 
+      it "gets the GitLab url containing /-/ scope" do
+        valid_env["CHANGE_URL"] = "https://gitlab.com/danger/danger/-/merge_requests/1234"
+        expect(described_class.repo_url(valid_env)).to eq("https://gitlab.com/danger/danger")
+      end
+
       it "gets the BitBucket url" do
         valid_env["CHANGE_URL"] = "https://bitbucket.org/danger/danger/pull-requests/1"
         expect(described_class.repo_url(valid_env)).to eq("https://bitbucket.org/danger/danger")

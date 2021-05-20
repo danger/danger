@@ -133,7 +133,7 @@ module Danger
           matches = change_url.match(%r{(.+)\/pull\/[0-9]+})
           matches[1] unless matches.nil?
         when %r{\/merge_requests\/} # GitLab
-          matches = change_url.match(%r{(.+)\/merge_requests\/[0-9]+})
+          matches = change_url.match(%r{(.+?)(\/-)?\/merge_requests\/[0-9]+})
           matches[1] unless matches.nil?
         when %r{\/pull-requests\/} # Bitbucket
           matches = change_url.match(%r{(.+)\/pull-requests\/[0-9]+})

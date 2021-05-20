@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Handle GitLab URL containing /-/ scope on Jenkins - [@adamprice](https://github.com/adamprice)
 <!-- Your comment above here -->
 
 ## 8.3.0
