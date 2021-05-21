@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 * Handle GitLab URL containing /-/ scope on Jenkins - [@adamprice](https://github.com/adamprice)
+* Add `pr_draft?` method to GitHub DSL. - [@connorshea](https://github.com/connorshea)
 <!-- Your comment above here -->
 
 ## 8.3.0
