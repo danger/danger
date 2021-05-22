@@ -143,6 +143,14 @@ module Danger
       @github.issue_json["labels"].map { |l| l[:name] }
     end
 
+    # @!group PR Metadata
+    # Whether the PR is a Draft.
+    # @return [Boolean]
+    #
+    def pr_draft?
+      pr_json["mergeable_state"] == "draft"
+    end
+
     # @!group PR Commit Metadata
     # The branch to which the PR is going to be merged into.
     # @return [String]
