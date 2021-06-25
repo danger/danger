@@ -14,7 +14,7 @@ To pull that off, Danger needs to be able to run inside your continuous integrat
 1. After being sure about the environment, she checks if this is a code review build. For single commit / merge builds, Danger does not run.
 1. With the environment set up, she generates diff information, and pulls down status information for the code review.
 1. Danger then runs your local `Dangerfile`.
-1. After parsing the local `Dangerfile`, she then checks for an [organization][multi_repos] `Dangerfile` and runs that if it exists.
+1. After parsing the local `Dangerfile`, she then checks for an [organisation][multi_repos] `Dangerfile` and runs that if it exists.
 1. Danger then posts a comment into your code review page showing the results of the `Dangerfile`s.
 1. Finally Danger either fails the build, or exits with a successful exit code.
 
