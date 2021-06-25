@@ -53,7 +53,7 @@ To check all your warnings, errors, markdowns and messages - `cd` into the `mess
 
 If you're interested in understand pry more, I strongly recommend digging into [their docs][pry].
 
-### Circle CI doesnt run my build consistently
+### Circle CI doesn't run my build consistently
 
 Yeah... We're struggling with that one. It's something we keep taking stabs at improving, so [keep an eye on the issues][circle_issues]. Ideally this issue will get resolved and we'll get it [fixed for free][circle_pr].
 
