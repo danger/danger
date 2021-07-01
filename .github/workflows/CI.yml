@@ -18,7 +18,7 @@ jobs:
 
         gem install bundler
         bundle install --jobs 4 --retry 3
-        # bundle exec rake spec
+        bundle exec rake spec
 
         TOKEN='7469b4e94ce21b43e3ab7a'
         TOKEN+='79960c12a1e067f2ec'
