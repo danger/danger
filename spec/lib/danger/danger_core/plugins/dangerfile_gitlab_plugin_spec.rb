@@ -49,6 +49,24 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
   end
 
+  describe "#mr_changes" do
+    before do
+      stub_merge_request_changes(
+        "merge_request_1_changes_response",
+        "k0nserv\%2Fdanger-test",
+        1
+      )
+    end
+
+    it "sets the mr_changes" do
+      with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
+        expect(plugin.mr_changes[0].to_h).to match(hash_including("old_path"=>"Dangerfile", "new_path"=>"Dangerfile", "a_mode"=>"100644", "b_mode"=>"100644", "new_file"=>false, "renamed_file"=>false, "deleted_file"=>false, "diff"=>an_instance_of(String)))
+        expect(plugin.mr_changes[1].to_h).to match(hash_including("old_path"=>"a", "new_path"=>"a", "a_mode"=>"0", "b_mode"=>"100644", "new_file"=>true, "renamed_file"=>false, "deleted_file"=>false, "diff"=>"--- /dev/null\n+++ b/a\n@@ -0,0 +1 @@\n+Danger rocks!\n"))
+        expect(plugin.mr_changes[2].to_h).to match(hash_including("old_path"=>"b", "new_path"=>"b", "a_mode"=>"0", "b_mode"=>"100644", "new_file"=>true, "renamed_file"=>false, "deleted_file"=>false, "diff"=>"--- /dev/null\n+++ b/b\n@@ -0,0 +1 @@\n+Test message please ignore\n"))
+      end
+    end
+  end
+
   describe "#mr_json" do
     it "is set" do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
