@@ -131,6 +131,14 @@ module Danger
       @gitlab.mr_diff
     end
 
+    # @!group MR Changes
+    # The array of changes
+    # @return [Array<Gitlab::ObjectifiedHash>]
+    #
+    def mr_changes
+      @gitlab.mr_changes.changes
+    end
+
     # @!group MR Commit Metadata
     # The branch to which the MR is going to be merged into
     # @deprecated Please use {#branch_for_base} instead
