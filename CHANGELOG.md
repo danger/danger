@@ -10,10 +10,13 @@
 
 ## master
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 8.3.1
+
 * Handle GitLab URL containing /-/ scope on Jenkins - [@adamprice](https://github.com/adamprice)
 * Add `pr_draft?` method to GitHub DSL. - [@connorshea](https://github.com/connorshea)
 * Expose `DangerfileGitLabPlugin#mr_changes`. - [@rymai](https://github.com/rymai) [#1309](https://github.com/danger/danger/pull/1309)
-<!-- Your comment above here -->
 
 ## 8.3.0
 
