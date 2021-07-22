@@ -5,11 +5,16 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: [2.7, 3.0]
 
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby 2.6
+    - name: Set up Ruby
       uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
 
     - name: Build and test with Rake
       run: |
