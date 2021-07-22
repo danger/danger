@@ -15,13 +15,13 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
 
     - name: Build and test with Rake
       run: |
         git config --global user.email "orta+dangersystems@artsy.net"
         git config --global user.name "Danger.Systems"
 
-        gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec rake spec
 
