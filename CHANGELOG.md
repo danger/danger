@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 * Test with Ruby 2.7 and 3.0 on CI. - [@mataku](https://github.com/mataku)
+* Fix AppCenter CI source broken due to conflict with AzurePipelines - [@lucasecf](https://github.com/lucasecf)
 <!-- Your comment above here -->
 
 ## 8.3.1
