@@ -130,6 +130,12 @@ module Danger
         end
       end
 
+      def mr_closes_issues
+        @mr_closes_issues ||= begin
+          client.merge_request_closes_issues(ci_source.repo_slug, ci_source.pull_request_id)
+        end
+      end
+
       def setup_danger_branches
         # we can use a GitLab specific feature here:
         base_branch = self.mr_json.source_branch
