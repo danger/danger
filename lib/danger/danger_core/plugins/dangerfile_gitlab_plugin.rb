@@ -139,6 +139,14 @@ module Danger
       @gitlab.mr_changes.changes
     end
 
+    # @!group MR Closes issues
+    # The array of issues that this MR closes
+    # @return [Array<Gitlab::ObjectifiedHash>]
+    #
+    def mr_closes_issues
+      @gitlab.mr_closes_issues
+    end
+
     # @!group MR Commit Metadata
     # The branch to which the MR is going to be merged into
     # @deprecated Please use {#branch_for_base} instead
