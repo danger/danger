@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 * Test with Ruby 2.7 and 3.0 on CI. - [@mataku](https://github.com/mataku)
+* Adds Xcode Cloud CI source support - [@rpassis]((https://github.com/rpassis)
 <!-- Your comment above here -->
 
 ## 8.3.1
