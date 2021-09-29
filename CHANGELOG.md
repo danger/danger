@@ -12,6 +12,7 @@
 <!-- Your comment below here -->
 * Expose `DangerfileGitLabPlugin#mr_closes_issues`. - [@revolter](https://github.com/revolter) [#1321](https://github.com/danger/danger/pull/1321)
 * Test with Ruby 2.7 and 3.0 on CI. - [@mataku](https://github.com/mataku)
+* Fix AppCenter CI source broken due to conflict with AzurePipelines - [@lucasecf](https://github.com/lucasecf)
 * Adds Xcode Cloud CI source support - [@rpassis]((https://github.com/rpassis)
 <!-- Your comment above here -->
 
