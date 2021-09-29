@@ -5,9 +5,8 @@ RSpec.describe Danger::CI do
     it "returns list of CI subclasses" do
       expect(described_class.available_ci_sources.map(&:to_s)).to match_array(
         [
-          "Danger::LocalGitRepo",
-          "Danger::LocalOnlyGitRepo",
           "Danger::Appcenter",
+          "Danger::AppVeyor",
           "Danger::AzurePipelines",
           "Danger::Bamboo",
           "Danger::BitbucketPipelines",
@@ -15,6 +14,7 @@ RSpec.describe Danger::CI do
           "Danger::Buddybuild",
           "Danger::Buildkite",
           "Danger::CircleCI",
+          "Danger::Cirrus",
           "Danger::CodeBuild",
           "Danger::Codefresh",
           "Danger::Codemagic",
@@ -22,18 +22,19 @@ RSpec.describe Danger::CI do
           "Danger::Concourse",
           "Danger::DotCi",
           "Danger::Drone",
+          "Danger::GitHubActions",
           "Danger::GitLabCI",
           "Danger::Jenkins",
+          "Danger::LocalGitRepo",
+          "Danger::LocalOnlyGitRepo",
           "Danger::Screwdriver",
           "Danger::Semaphore",
           "Danger::Surf",
           "Danger::TeamCity",
           "Danger::Travis",
           "Danger::VSTS",
-          "Danger::XcodeServer",
-          "Danger::AppVeyor",
-          "Danger::GitHubActions",
-          "Danger::Cirrus"
+          "Danger::XcodeCloud",
+          "Danger::XcodeServer"
         ]
       )
     end
