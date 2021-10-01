@@ -31,7 +31,7 @@ RSpec.describe Danger::RequestSources::BitbucketServerAPI, host: :bitbucket_serv
       api = described_class.new("danger", "danger", 1, env)
       expect(api.send(:use_ssl)).to eq(true)
     end
-    
+
     it "post build successful" do
         allow(ENV).to receive(:[]).with("ENVDANGER_BITBUCKETSERVER_PASSWORD") { "supertopsecret" }
          stub_request(:post, "https://stash.example.com/rest/build-status/1.0/commits/04dede05fb802bf1e6c69782ae98592d29c03b80").
@@ -42,6 +42,36 @@ RSpec.describe Danger::RequestSources::BitbucketServerAPI, host: :bitbucket_serv
         changesetId = '04dede05fb802bf1e6c69782ae98592d29c03b80'
         response = api.update_pr_build_status("SUCCESSFUL",changesetId,"build_job_link", "description")
         expect(response).to eq(nil)
-   end 
+   end
+  end
+
+  describe "ssl verification" do
+    it "sets ssl verification environment variable to false" do
+      stub_env = { "DANGER_BITBUCKETSERVER_HOST" => "https://my_url", "DANGER_BITBUCKETSERVER_VERIFY_SSL" => "false" }
+
+      api = described_class.new("danger", "danger", 1, stub_env)
+      expect(api.verify_ssl).to be_falsey
+    end
+
+    it "sets ssl verification environment variable to true" do
+      stub_env = { "DANGER_BITBUCKETSERVER_HOST" => "https://my_url", "DANGER_BITBUCKETSERVERVERIFY_SSL" => "true" }
+
+      api = described_class.new("danger", "danger", 1, stub_env)
+      expect(api.verify_ssl).to be_truthy
+    end
+
+    it "sets ssl verification environment variable to wrong input" do
+      stub_env = { "DANGER_BITBUCKETSERVER_HOST" => "https://my_url", "DANGER_BITBUCKETSERVER_VERIFY_SSL" => "wronginput" }
+
+      api = described_class.new("danger", "danger", 1, stub_env)
+      expect(api.verify_ssl).to be_truthy
+    end
+
+    it "unsets ssl verification environment variable" do
+      stub_env = { "DANGER_BITBUCKETSERVER_HOST" => "https://my_url" }
+
+      api = described_class.new("danger", "danger", 1, stub_env)
+      expect(api.verify_ssl).to be_truthy
+    end
   end
 end
