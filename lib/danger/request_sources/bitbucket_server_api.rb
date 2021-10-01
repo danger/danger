@@ -1,16 +1,18 @@
 # coding: utf-8
 
+require "openssl"
 require "danger/helpers/comments_helper"
 
 module Danger
   module RequestSources
     class BitbucketServerAPI
-      attr_accessor :host, :pr_api_endpoint, :key, :project
+      attr_accessor :host, :verify_ssl, :pr_api_endpoint, :key, :project
 
       def initialize(project, slug, pull_request_id, environment)
         @username = environment["DANGER_BITBUCKETSERVER_USERNAME"]
         @password = environment["DANGER_BITBUCKETSERVER_PASSWORD"]
         self.host = environment["DANGER_BITBUCKETSERVER_HOST"]
+        self.verify_ssl = environment["DANGER_BITBUCKETSERVER_VERIFY_SSL"] == "false" ? false : true
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
         end
@@ -57,7 +59,7 @@ module Danger
         body = { text: text }.to_json
         post(uri, body)
       end
-        
+
       def update_pr_build_status(status, changeset, build_job_link, description)
          uri = URI("#{self.host}/rest/build-status/1.0/commits/#{changeset}")
          body = build_status_body(status, build_job_link, description)
@@ -73,7 +75,7 @@ module Danger
       def fetch_json(uri)
         req = Net::HTTP::Get.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        res = http(uri).start do |http|
           http.request(req)
         end
         JSON.parse(res.body, symbolize_names: true)
@@ -84,7 +86,7 @@ module Danger
         req.basic_auth @username, @password
         req.body = body
 
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        res = http(uri).start do |http|
           http.request(req)
         end
 
@@ -99,11 +101,18 @@ module Danger
       def delete(uri)
         req = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth @username, @password
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
+        http(uri).start do |http|
           http.request(req)
         end
       end
-        
+
+      def http(uri)
+        http = Net::HTTP.new(uri.hostname, uri.port)
+        http.use_ssl = use_ssl
+        http.verify_mode = verify_ssl ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+        http
+      end
+
       def build_status_body(status, build_job_link, description)
           body = Hash.new
           body["state"] = status

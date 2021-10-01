@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-
+* Add support to pass in `DANGER_BITBUCKETSERVER_VERIFY_SSL` to toggle SSL Verification for Bitbucket Server
 <!-- Your comment above here -->
 
 ## 8.4.0
