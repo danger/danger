@@ -540,7 +540,7 @@ COMMENT
 
             :warning: World!
 
-            :book: HOW R
+            :blue_book: HOW R
 
 
             U DOING?

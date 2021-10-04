@@ -85,7 +85,7 @@ RSpec.describe Danger::EmojiMapper do
       context "when emoji is book" do
         let(:emoji) { "book" }
 
-        it { is_expected.to eq ":book:" }
+        it { is_expected.to eq ":blue_book:" }
       end
 
       context "when emoji is white_check_mark" do
@@ -113,7 +113,7 @@ RSpec.describe Danger::EmojiMapper do
       context "when type is message" do
         let(:type) { :message }
 
-        it { is_expected.to eq ":book:" }
+        it { is_expected.to eq ":blue_book:" }
       end
     end
   end
