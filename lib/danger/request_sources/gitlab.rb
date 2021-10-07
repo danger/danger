@@ -304,6 +304,10 @@ module Danger
         end
       end
 
+      def markdown_link_to_message(message, _)
+        "#{message.file}#L#{message.line}: "
+      end
+      
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
         nil # TODO: Implement this
