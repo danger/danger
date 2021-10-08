@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Add a "`: `" separation between file_name + line_number and message for gitlab inline comments 
 * Add support to pass in `DANGER_BITBUCKETSERVER_VERIFY_SSL` to toggle SSL Verification for Bitbucket Server
 <!-- Your comment above here -->
 
