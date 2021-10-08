@@ -10,7 +10,7 @@ module Danger
       "bitbucket_server" => {
         "no_entry_sign"    => ":no_entry_sign:",
         "warning"          => ":warning:",
-        "book"             => ":book:",
+        "book"             => ":blue_book:",
         "white_check_mark" => ":white_check_mark:"
       }
     }.freeze
