@@ -45,7 +45,7 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab]
+      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::GitLab, Danger::RequestSources::BitbucketServer]
     end
   end
 end
