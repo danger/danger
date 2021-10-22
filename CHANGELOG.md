@@ -10,11 +10,14 @@
 
 ## master
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 8.4.1
+
 * Add a "`: `" separation between file_name + line_number and message for gitlab inline comments 
 * Add support to pass in `DANGER_BITBUCKETSERVER_VERIFY_SSL` to toggle SSL Verification for Bitbucket Server
 * Add Bitbucket Server support for Buildkite CI. [@pahnev](https://github.com/pahnev)
 * Fixes issue where a comment is posted to Bitbucket Server even when everything is green. [@pahnev](https://github.com/pahnev)
-<!-- Your comment above here -->
 
 ## 8.4.0
 
