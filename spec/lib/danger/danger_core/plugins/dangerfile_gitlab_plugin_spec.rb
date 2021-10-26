@@ -67,6 +67,23 @@ RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
     end
   end
 
+  describe "#mr_commits" do
+    before do
+      stub_merge_request_commits(
+        "merge_request_1_commits_response",
+        "k0nserv\%2Fdanger-test",
+        1
+      )
+    end
+
+    it "sets the mr_commits" do
+      expect(plugin.mr_commits[0].to_h).to match(hash_including(
+        "author_email"=>"john@example.com", "author_name"=>"John Doe", "authored_date" => "2021-10-25T19:44:54.000Z", "committed_date" => "2021-10-26T08:57:40.000Z", "committer_email" => "jane@example.com", "committer_name" => "Jane Doe",
+        "created_at" => "2021-10-26T08:57:40.000Z", "id" => "4ec55c9f8b89ca514fcbaf1abe2d76ca928c61e7", "message" => "Update engineering productivity handbook references\n", "parent_ids" => [], "short_id" => "4ec55c9f",
+        "title" => "Update engineering productivity handbook references", "trailers" => {}, "web_url" => "https://gitlab.com/k0nserv/danger-test/-/commit/4ec55c9f8b89ca514fcbaf1abe2d76ca928c61e7",))
+    end
+  end
+
   describe "#mr_json" do
     it "is set" do
       with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do

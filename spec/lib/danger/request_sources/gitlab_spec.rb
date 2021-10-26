@@ -105,6 +105,11 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         "k0nserv%2Fdanger-test",
         1
       )
+      stub_merge_request_commits(
+        "merge_request_1_commits_response",
+        "k0nserv%2Fdanger-test",
+        1
+      )
       @comments_stub = stub_merge_request_comments(
         "merge_request_1_comments_response",
         "k0nserv%2Fdanger-test",
@@ -142,6 +147,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       subject.fetch_details
 
       expect(subject.mr_json).to be_truthy
+    end
+
+    it "set its mr_commits" do
+      subject.fetch_details
+
+      expect(subject.mr_commits).to be_truthy
     end
 
     it "sets its ignored_violations_from_pr" do

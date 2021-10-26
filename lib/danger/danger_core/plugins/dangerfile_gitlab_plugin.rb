@@ -139,6 +139,14 @@ module Danger
       @gitlab.mr_changes.changes
     end
 
+    # @!group MR Commits
+    # The array of commits
+    # @return [Array<Gitlab::ObjectifiedHash>]
+    #
+    def mr_commits
+      @gitlab.mr_commits
+    end
+
     # @!group MR Closes issues
     # The array of issues that this MR closes
     # @return [Array<Gitlab::ObjectifiedHash>]
