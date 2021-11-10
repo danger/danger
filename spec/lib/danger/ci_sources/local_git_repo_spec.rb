@@ -249,6 +249,7 @@ RSpec.describe Danger::LocalGitRepo do
             object_class: OpenStruct
           )
         end
+        ENV['DANGER_GITHUB_API_TOKEN'] = 'hi'
 
         run_in_repo do
           fork_pr_env = { "LOCAL_GIT_PR_URL" => "https://github.com/orta/danger/pull/42" }

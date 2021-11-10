@@ -155,7 +155,7 @@ module Danger
         bearer_token = ENV["DANGER_GITHUB_BEARER_TOKEN"]
         if bearer_token && !bearer_token.empty?
           Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
-        elsif access_token && !access_token&.empty?
+        elsif access_token && !access_token.empty?
           Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
         else
           raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
