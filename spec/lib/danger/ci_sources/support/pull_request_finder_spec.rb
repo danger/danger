@@ -90,6 +90,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "with open Pull Request" do
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
       it "returns the opened Pull Request info" do
         client = double("Octokit::Client")
         allow(Octokit::Client).to receive(:new) { client }
@@ -106,6 +107,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "specify api endpoint of octokit client" do
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
       it "By DANGER_GITHUB_API_HOST" do
         ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
 
