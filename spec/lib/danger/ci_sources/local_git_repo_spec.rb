@@ -239,6 +239,7 @@ RSpec.describe Danger::LocalGitRepo do
     end
 
     context "forked PR" do
+      before { ENV['DANGER_GITHUB_API_TOKEN'] = 'hi' }
       it "works" do
         spec_root = Dir.pwd
         client = double("Octokit::Client")
@@ -249,7 +250,6 @@ RSpec.describe Danger::LocalGitRepo do
             object_class: OpenStruct
           )
         end
-        ENV['DANGER_GITHUB_API_TOKEN'] = 'hi'
 
         run_in_repo do
           fork_pr_env = { "LOCAL_GIT_PR_URL" => "https://github.com/orta/danger/pull/42" }
@@ -263,6 +263,7 @@ RSpec.describe Danger::LocalGitRepo do
           )
         end
       end
+      after { ENV['DANGER_GITHUB_API_TOKEN'] = nil }
     end
   end
 end
