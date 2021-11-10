@@ -107,11 +107,9 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "specify api endpoint of octokit client" do
-      before do
-        ENV["DANGER_GITHUB_API_TOKEN"] = 'hi'
-        ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
-      end
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
       it "By DANGER_GITHUB_API_HOST" do
+        ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
         allow(Octokit::Client).to receive(:new).with(
           access_token: ENV["DANGER_GITHUB_API_TOKEN"],
           api_endpoint: "https://enterprise.artsy.net"
@@ -146,6 +144,7 @@ RSpec.describe Danger::PullRequestFinder do
 
     after do
       ENV['DANGER_GITHUB_API_TOKEN'] = nil
+      ENV['DANGER_GITHUB_BEARER_TOKEN'] = nil
       ENV['DANGER_GITHUB_API_HOST'] = nil
       ENV["DANGER_GITHUB_API_BASE_URL"] = nil
     end
