@@ -90,6 +90,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "with open Pull Request" do
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
       it "returns the opened Pull Request info" do
         client = double("Octokit::Client")
         allow(Octokit::Client).to receive(:new) { client }
@@ -106,9 +107,9 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "specify api endpoint of octokit client" do
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
       it "By DANGER_GITHUB_API_HOST" do
         ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
-
         allow(Octokit::Client).to receive(:new).with(
           access_token: ENV["DANGER_GITHUB_API_TOKEN"],
           api_endpoint: "https://enterprise.artsy.net"
@@ -127,6 +128,25 @@ RSpec.describe Danger::PullRequestFinder do
 
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
+    end
+
+    context "with bearer_token" do
+      before { ENV["DANGER_GITHUB_BEARER_TOKEN"] = 'hi' }
+      it "creates clients with bearer_token" do
+        allow(Octokit::Client).to receive(:new).with(
+          bearer_token: ENV["DANGER_GITHUB_BEARER_TOKEN"],
+          api_endpoint: be_a(String)
+        ) { spy("Octokit::Client") }
+
+        finder(pull_request_id: "42", remote: true, logs: "not important").call
+      end
+    end
+
+    after do
+      ENV['DANGER_GITHUB_API_TOKEN'] = nil
+      ENV['DANGER_GITHUB_BEARER_TOKEN'] = nil
+      ENV['DANGER_GITHUB_API_HOST'] = nil
+      ENV["DANGER_GITHUB_API_BASE_URL"] = nil
     end
   end
 

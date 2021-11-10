@@ -17,7 +17,7 @@ module Danger
       attr_accessor :pr_json, :issue_json, :support_tokenless_auth, :dismiss_out_of_range_messages
 
       def self.env_vars
-        ["DANGER_GITHUB_API_TOKEN"]
+        ["DANGER_GITHUB_API_TOKEN", "DANGER_GITHUB_BEARER_TOKEN"]
       end
 
       def self.optional_env_vars
@@ -30,7 +30,8 @@ module Danger
         self.support_tokenless_auth = false
         self.dismiss_out_of_range_messages = false
 
-        @token = @environment["DANGER_GITHUB_API_TOKEN"]
+        @access_token = @environment["DANGER_GITHUB_API_TOKEN"]
+        @bearer_token = @environment["DANGER_GITHUB_BEARER_TOKEN"]
       end
 
       def get_pr_from_branch(repo_name, branch_name, owner)
@@ -45,7 +46,7 @@ module Danger
       end
 
       def validates_as_api_source?
-        (@token && !@token.empty?) || self.environment["DANGER_USE_LOCAL_GIT"]
+        valid_bearer_token? || valid_access_token? || self.environment["DANGER_USE_LOCAL_GIT"]
       end
 
       def scm
@@ -72,12 +73,16 @@ module Danger
       end
 
       def client
-        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN`" if !@token && !support_tokenless_auth
+        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`" if !valid_access_token? && !valid_bearer_token? && !support_tokenless_auth
         @client ||= begin
           Octokit.configure do |config|
             config.connection_options[:ssl] = { verify: verify_ssl }
           end
-          Octokit::Client.new(access_token: @token, auto_paginate: true, api_endpoint: api_url)
+          if valid_bearer_token?
+            Octokit::Client.new(bearer_token: @bearer_token, auto_paginate: true, api_endpoint: api_url)
+          elsif valid_access_token?
+            Octokit::Client.new(access_token: @access_token, auto_paginate: true, api_endpoint: api_url)
+          end
         end
       end
 
@@ -492,6 +497,14 @@ module Danger
       end
 
       private
+
+      def valid_access_token?
+        @access_token && !@access_token.empty?
+      end
+
+      def valid_bearer_token?
+        @bearer_token && !@bearer_token.empty?
+      end
 
       def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
         {

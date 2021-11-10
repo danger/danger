@@ -43,6 +43,19 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
     end
   end
 
+  describe "bearer token" do
+    context "with DANGER_GITHUB_BEARER_TOKEN" do
+      let(:client) { double('client') }
+      it 'creates Octokit client with bearer token' do
+        allow(Octokit::Client).to receive(:new).and_return(client)
+        gh_env = { "DANGER_GITHUB_BEARER_TOKEN" => "hi" }
+
+        expect(Octokit::Client).to receive(:new).with(hash_including(:bearer_token))
+        Danger::RequestSources::GitHub.new(stub_ci, gh_env).client
+      end
+    end
+  end
+
   describe "ssl verification" do
     it "sets ssl verification environment variable to false" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com", "DANGER_OCTOKIT_VERIFY_SSL" => "false" }

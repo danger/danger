@@ -137,7 +137,7 @@ module Danger
 
     def client
       scm_provider = find_scm_provider(remote_url)
-    
+
       case scm_provider
       when :bitbucket_cloud
         require "danger/request_sources/bitbucket_cloud_api"
@@ -151,8 +151,15 @@ module Danger
 
       when :github
         require "octokit"
-        Octokit::Client.new(access_token: ENV["DANGER_GITHUB_API_TOKEN"], api_endpoint: api_url)
-
+        access_token = ENV["DANGER_GITHUB_API_TOKEN"]
+        bearer_token = ENV["DANGER_GITHUB_BEARER_TOKEN"]
+        if bearer_token && !bearer_token.empty?
+          Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
+        elsif access_token && !access_token.empty?
+          Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
+        else
+          raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
+        end
       else
         raise "SCM provider not supported: #{scm_provider}"
       end
