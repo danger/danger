@@ -12,6 +12,10 @@
 <!-- Your comment below here -->
 <!-- Your comment above here -->
 
+## 8.4.2
+
+Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
+
 ## 8.4.1
 
 * Add a "`: `" separation between file_name + line_number and message for gitlab inline comments 
