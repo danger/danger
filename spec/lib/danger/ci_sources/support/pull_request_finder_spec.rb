@@ -130,6 +130,20 @@ RSpec.describe Danger::PullRequestFinder do
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
     end
+
+    context "with bearer_token" do
+      before { ENV["DANGER_GITHUB_BEARER_TOKEN"] = 'hi' }
+      it "creates clients with bearer_token" do
+        ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
+
+        allow(Octokit::Client).to receive(:new).with(
+          bearer_token: ENV["DANGER_GITHUB_BEARER_TOKEN"],
+          api_endpoint: "https://enterprise.artsy.net"
+        ) { spy("Octokit::Client") }
+
+        finder(pull_request_id: "42", remote: true, logs: "not important").call
+      end
+    end
   end
 
   describe "#find_scm_provider" do
