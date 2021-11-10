@@ -104,13 +104,15 @@ RSpec.describe Danger::PullRequestFinder do
         expect(result.head).to eq "pr 518 head commit sha1"
         expect(result.base).to eq "pr 518 base commit sha1"
       end
+      after { ENV['DANGER_GITHUB_API_TOKEN'] = nil }
     end
 
     context "specify api endpoint of octokit client" do
-      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
-      it "By DANGER_GITHUB_API_HOST" do
+      before do
+        ENV["DANGER_GITHUB_API_TOKEN"] = 'hi'
         ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
-
+      end
+      it "By DANGER_GITHUB_API_HOST" do
         allow(Octokit::Client).to receive(:new).with(
           access_token: ENV["DANGER_GITHUB_API_TOKEN"],
           api_endpoint: "https://enterprise.artsy.net"
@@ -129,20 +131,24 @@ RSpec.describe Danger::PullRequestFinder do
 
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
+      after do
+        ENV['DANGER_GITHUB_API_TOKEN'] = nil
+        ENV['DANGER_GITHUB_API_HOST'] = nil
+        ENV["DANGER_GITHUB_API_BASE_URL"] = nil
+      end
     end
 
     context "with bearer_token" do
       before { ENV["DANGER_GITHUB_BEARER_TOKEN"] = 'hi' }
       it "creates clients with bearer_token" do
-        ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
-
         allow(Octokit::Client).to receive(:new).with(
           bearer_token: ENV["DANGER_GITHUB_BEARER_TOKEN"],
-          api_endpoint: "https://enterprise.artsy.net"
+          api_endpoint: be_a(String)
         ) { spy("Octokit::Client") }
 
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
+      after { ENV['DANGER_GITHUB_BEARER_TOKEN'] = nil }
     end
   end
 
