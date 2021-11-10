@@ -104,7 +104,6 @@ RSpec.describe Danger::PullRequestFinder do
         expect(result.head).to eq "pr 518 head commit sha1"
         expect(result.base).to eq "pr 518 base commit sha1"
       end
-      after { ENV['DANGER_GITHUB_API_TOKEN'] = nil }
     end
 
     context "specify api endpoint of octokit client" do
@@ -131,11 +130,6 @@ RSpec.describe Danger::PullRequestFinder do
 
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
-      after do
-        ENV['DANGER_GITHUB_API_TOKEN'] = nil
-        ENV['DANGER_GITHUB_API_HOST'] = nil
-        ENV["DANGER_GITHUB_API_BASE_URL"] = nil
-      end
     end
 
     context "with bearer_token" do
@@ -148,7 +142,12 @@ RSpec.describe Danger::PullRequestFinder do
 
         finder(pull_request_id: "42", remote: true, logs: "not important").call
       end
-      after { ENV['DANGER_GITHUB_BEARER_TOKEN'] = nil }
+    end
+
+    after do
+      ENV['DANGER_GITHUB_API_TOKEN'] = nil
+      ENV['DANGER_GITHUB_API_HOST'] = nil
+      ENV["DANGER_GITHUB_API_BASE_URL"] = nil
     end
   end
 
