@@ -58,6 +58,10 @@ module Danger
         self.pr_json = @api.fetch_pr_json
       end
 
+      def pr_diff
+        @pr_diff ||= @api.fetch_pr_diff
+      end
+
       def setup_danger_branches
         base_branch = self.pr_json[:toRef][:id].sub("refs/heads/", "")
         base_commit = self.pr_json[:toRef][:latestCommit]
