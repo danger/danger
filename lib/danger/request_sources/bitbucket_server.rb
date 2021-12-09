@@ -138,11 +138,13 @@ module Danger
       end
 
       def main_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        in_diff = proc { |a| find_position_in_diff?(a.file, a.line) }
+
         {
-          warnings: warnings.reject(&:inline?),
-          errors: errors.reject(&:inline?),
-          messages: messages.reject(&:inline?),
-          markdowns: markdowns.reject(&:inline?)
+          warnings: warnings.reject(&in_diff),
+          errors: errors.reject(&in_diff),
+          messages: messages.reject(&in_diff),
+          markdowns: markdowns.reject(&in_diff)
         }
       end
 
@@ -172,6 +174,29 @@ module Danger
         puts self.pr_json.to_json
         @api.update_pr_build_status(status, changeset, build_job_link, description)
       end
+
+      def find_position_in_diff?(file, line)
+        return nil if file.nil? || line.nil?
+        added_lines(file).include?(line)
+      end
+
+      def file_diff(file)
+        self.pr_diff[:diffs].find{|diff| diff[:destination] && diff[:destination][:toString] == file } || {:hunks => []}
+      end
+
+      def added_lines(file)
+        @added_lines ||= {}
+        @added_lines[file] ||= begin
+          file_diff(file)[:hunks].map do |hunk|
+            hunk[:segments].select{|segment| segment[:type] == 'ADDED' }.map do |segment|
+              segment[:lines].map do |line|
+                line[:destination]
+              end
+            end
+          end.flatten
+        end
+      end
+
     end
   end
 end
