@@ -76,7 +76,7 @@ I'd strongly recommend using `bundle exec guard` to run your tests as you work. 
 
 #### Debugging
 
-Ruby is super dynamic. One of the best ways to debug Ruby code is by using [pry](http://pryrepl.org/). We include pry for developers: when you have a problem, copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](https://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
+Ruby is super dynamic. One of the best ways to debug Ruby code is by using [pry](https://pry.github.io/). We include pry for developers: when you have a problem, copy these two lines just before your problem and follow the instructions from "[I Want To Be A Danger Wizard](https://danger.systems/guides/troubleshooting.html#i-want-to-be-a-danger-wizard)."
 
 ```ruby
 require 'pry'
