@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Fix issue in GitHub `pr_draft?` method which was returning false for draft Pull Requests - [@rogerluan](https://github.com/rogerluan)
 <!-- Your comment above here -->
 
 ## 8.4.2

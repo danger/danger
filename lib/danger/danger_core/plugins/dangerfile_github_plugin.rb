@@ -148,7 +148,7 @@ module Danger
     # @return [Boolean]
     #
     def pr_draft?
-      pr_json["mergeable_state"] == "draft"
+      pr_json["draft"] == true
     end
 
     # @!group PR Commit Metadata
