@@ -19,8 +19,8 @@ module Danger
         respond_to_method(name, *args, &block)
       end
 
-      def respond_to_missing?(name)
-        __array__.respond_to?(name) || super
+      def respond_to_missing?(name, include_all)
+        __array__.respond_to?(name, include_all) || super
       end
 
       def to_a
