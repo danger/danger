@@ -45,4 +45,20 @@ RSpec.describe Danger::Helpers::ArraySubclass do
       expect(first_list).not_to eq(third_list)
     end
   end
+
+  describe "#respond_to_missing?" do
+    context "with missing method" do
+      it "returns false" do
+        list = List.new([])
+        expect(list.respond_to?(:missing_method)).to be(false)
+      end
+    end
+
+    context "with existing method" do
+      it "returns true" do
+        list = List.new([])
+        expect(list.respond_to?(:to_a)).to be(true)
+      end
+    end
+  end
 end
