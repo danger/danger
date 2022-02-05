@@ -22,6 +22,6 @@ e.g. 💥
 * What is your Dangerfile?
 
   ```ruby
-  # please paste here, with 2-space identation, thank you!
+  # please paste here, with 2-space indentation, thank you!
 
   ```
