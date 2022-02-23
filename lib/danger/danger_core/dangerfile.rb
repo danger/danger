@@ -289,7 +289,7 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
-        post_results(danger_id, new_comment, remove_previous_comments) unless danger_id.nil?
+        post_results(danger_id, new_comment, remove_previous_comments)
 
         # Print results in the terminal
         print_results
@@ -335,6 +335,9 @@ module Danger
     end
 
     def post_exception(ex, danger_id, new_comment)
+      return if ENV["DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR"]
+      return if danger_id.nil?
+
       env.request_source.update_pull_request!(
         danger_id: danger_id,
         new_comment: new_comment,
