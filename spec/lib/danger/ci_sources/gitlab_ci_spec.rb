@@ -2,7 +2,7 @@ require "danger/ci_source/gitlab_ci"
 
 RSpec.describe Danger::GitLabCI, host: :gitlab do
   context "valid environment" do
-    let(:env) { stub_env }
+    let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 28_493) }
     let(:ci_source) do
       described_class.new(env)
     end
@@ -17,8 +17,6 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
     end
 
     context "given PR made on gitlab hosted repository" do
-      let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 28_493) }
-
       describe ".validates_as_ci?" do
         it "is valid" do
           expect(described_class.validates_as_ci?(env)).to be(true)
@@ -79,13 +77,8 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       end
 
       describe "#initialize" do
-        it "sets the repo_slug" do
+        it "sets the repo_slug and pull_request_id" do
           expect(ci_source.repo_slug).to eq("k0nserv/danger-test")
-        end
-      end
-
-      describe "#pull_request_id" do
-        it "sets the pull_request_id" do
           expect(ci_source.pull_request_id).to eq(env["CI_MERGE_REQUEST_IID"])
         end
       end
@@ -125,13 +118,8 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
       end
 
       describe "#initialize" do
-        it "sets the repo_slug" do
+        it "sets the repo_slug and pull_request_id" do
           expect(ci_source.repo_slug).to eq(repo_slug)
-        end
-      end
-
-      describe "#pull_request_id" do
-        it "sets the pull_request_id" do
           expect(ci_source.pull_request_id).to eq(pr_num)
         end
       end

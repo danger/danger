@@ -2,7 +2,8 @@ require "danger/danger_core/environment_manager"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
 
 RSpec.describe Danger::Dangerfile::DSL, host: :github do
-  let(:dm) { testing_dangerfile }
+  let(:env) { stub_env }
+  let(:dm) { testing_dangerfile(env) }
 
   describe "#import" do
     describe "#import_local" do
@@ -91,6 +92,8 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
     end
 
     context "Gitlab", host: :gitlab do
+      let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 42) }
+
       before do
         allow_any_instance_of(Danger::GitRepo).to receive(:origins).and_return("https://gitlab.com/author/repo.github.io.git")
 
@@ -155,6 +158,8 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
     end
 
     context "GitLab", host: :gitlab do
+      let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 42) }
+
       it "is `:gitlab`" do
         with_git_repo(origin: "git@gitlab.com:k0nserv/danger-test.git") do
           expect(dm.danger.scm_provider).to eq(:gitlab)

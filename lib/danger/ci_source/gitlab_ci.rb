@@ -66,9 +66,17 @@ module Danger
       merge_request.nil? ? 0 : merge_request.iid
     end
 
+    def self.slug_from(env)
+      if env["DANGER_PROJECT_REPO_URL"]
+        env["DANGER_PROJECT_REPO_URL"].split('/').last(2).join('/')
+      else
+        env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
+      end
+    end
+
     def initialize(env)
-      @env = env
-      @repo_slug = slug_from(env)
+      self.repo_slug = self.class.slug_from(env)
+      self.pull_request_id = self.class.determine_pull_or_merge_request_id(env)
     end
 
     def supported_request_sources
@@ -76,20 +84,6 @@ module Danger
         Danger::RequestSources::GitHub,
         Danger::RequestSources::GitLab
       ]
-    end
-
-    def pull_request_id
-      @pull_request_id ||= self.class.determine_pull_or_merge_request_id(@env)
-    end
-
-    private
-
-    def slug_from(env)
-      if env["DANGER_PROJECT_REPO_URL"]
-        env["DANGER_PROJECT_REPO_URL"].split('/').last(2).join('/')
-      else
-        env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
-      end
     end
   end
 end
