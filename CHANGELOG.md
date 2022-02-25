@@ -12,6 +12,7 @@
 <!-- Your comment below here -->
 * Fix issue in GitHub `pr_draft?` method which was returning false for draft Pull Requests - [@rogerluan](https://github.com/rogerluan)
 * Fix arguments length of `ArraySubclass#respond_to_missing?` - [@manicmaniac](https://github.com/manicmaniac)
+* Don't save environment as an instance variable in `GitLabCI` - [@rymai](https://github.com/rymai) [#1353](https://github.com/danger/danger/pull/1353)
 <!-- Your comment above here -->
 
 ## 8.4.2
