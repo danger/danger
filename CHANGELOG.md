@@ -10,10 +10,15 @@
 
 ## master
 <!-- Your comment below here -->
+
+<!-- Your comment above here -->
+
+
+## 8.4.3
+
 * Fix issue in GitHub `pr_draft?` method which was returning false for draft Pull Requests - [@rogerluan](https://github.com/rogerluan)
 * Fix arguments length of `ArraySubclass#respond_to_missing?` - [@manicmaniac](https://github.com/manicmaniac)
 * Don't save environment as an instance variable in `GitLabCI` - [@rymai](https://github.com/rymai) [#1353](https://github.com/danger/danger/pull/1353)
-<!-- Your comment above here -->
 
 ## 8.4.2
 
@@ -21,7 +26,7 @@ Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
 
 ## 8.4.1
 
-* Add a "`: `" separation between file_name + line_number and message for gitlab inline comments 
+* Add a "`: `" separation between file_name + line_number and message for gitlab inline comments
 * Add support to pass in `DANGER_BITBUCKETSERVER_VERIFY_SSL` to toggle SSL Verification for Bitbucket Server
 * Add Bitbucket Server support for Buildkite CI. [@pahnev](https://github.com/pahnev)
 * Fixes issue where a comment is posted to Bitbucket Server even when everything is green. [@pahnev](https://github.com/pahnev)
