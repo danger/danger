@@ -303,56 +303,63 @@ RSpec.describe Danger::Dangerfile, host: :github do
 
   describe "#run" do
     context "when exception occurred" do
-      before { allow(Danger).to receive(:danger_outdated?).and_return(false) }
-
-      it "updates PR with an error" do
-        path = Pathname.new(File.join("spec", "fixtures", "dangerfile_with_error"))
-        env_manager = double("Danger::EnvironmentManager", {
+      let(:dangerfile_fixture_filename) { "dangerfile_with_error" }
+      let(:dangerfile_path) { Pathname.new(File.join("spec", "fixtures", dangerfile_fixture_filename)) }
+      let(:env_manager) do
+        double("Danger::EnvironmentManager", {
           pr?: false,
           clean_up: true,
           fill_environment_vars: true,
           ensure_danger_branches_are_setup: false
         })
-        scm = double("Danger::GitRepo", {
+      end
+      let(:scm) do
+        double("Danger::GitRepo", {
           class: Danger::GitRepo,
           diff_for_folder: true
         })
-        request_source = double("Danger::RequestSources::GitHub")
-        dm = Danger::Dangerfile.new(env_manager, testing_ui)
+      end
+      let(:request_source) { double("Danger::RequestSources::GitHub") }
+      let(:dm) { Danger::Dangerfile.new(env_manager, testing_ui) }
 
+      before do
+        allow(Danger).to receive(:danger_outdated?).and_return(false)
         allow(env_manager).to receive(:scm) { scm }
         allow(env_manager).to receive(:request_source) { request_source }
+      end
 
+      it "does not updates PR with an error" do
         expect(request_source).to receive(:update_pull_request!)
 
         expect do
-          dm.run("custom_danger_base", "custom_danger_head", path, 1, false, false)
+          dm.run("custom_danger_base", "custom_danger_head", dangerfile_path, 1, false, false)
         end.to raise_error(Danger::DSLError)
       end
 
-      it "doesn't crash if path is reassigned" do
-        path = Pathname.new(File.join("spec", "fixtures", "dangerfile_with_error_and_path_reassignment"))
-        env_manager = double("Danger::EnvironmentManager", {
-          pr?: false,
-          clean_up: true,
-          fill_environment_vars: true,
-          ensure_danger_branches_are_setup: false
-        })
-        scm = double("Danger::GitRepo", {
-          class: Danger::GitRepo,
-          diff_for_folder: true
-        })
-        request_source = double("Danger::RequestSources::GitHub")
-        dm = Danger::Dangerfile.new(env_manager, testing_ui)
+      context "when path is reassigned" do
+        let(:dangerfile_fixture_filename) { "dangerfile_with_error_and_path_reassignment" }
 
-        allow(env_manager).to receive(:scm) { scm }
-        allow(env_manager).to receive(:request_source) { request_source }
+        it "doesn't crash" do
+          expect(request_source).to receive(:update_pull_request!)
 
-        expect(request_source).to receive(:update_pull_request!)
+          expect do
+            dm.run("custom_danger_base", "custom_danger_head", dangerfile_path, 1, false, false)
+          end.to raise_error(Danger::DSLError)
+        end
+      end
 
-        expect do
-          dm.run("custom_danger_base", "custom_danger_head", path, 1, false, false)
-        end.to raise_error(Danger::DSLError)
+      context "when ENV['DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR'] is set" do
+        before do
+          allow(ENV).to receive(:[]).with("DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR") { "" }
+        end
+
+        it "does not updates PR with an error" do
+          expect(request_source).not_to receive(:update_pull_request!)
+
+          expect do
+            dm.run("custom_danger_base", "custom_danger_head", dangerfile_path, 1, false, false)
+          end.to raise_error(Danger::DSLError)
+        end
       end
 
       after { allow(Danger).to receive(:danger_outdated?).and_call_original }

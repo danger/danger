@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-
+* Don't post Dangefile errors as comment on PR when the `DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR` env var is set - [@rymai](https://github.com/rymai) [#1354](https://github.com/danger/danger/pull/1354)
 <!-- Your comment above here -->
 
 
