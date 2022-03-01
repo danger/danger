@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.7, 3.0]
+        ruby-version: [2.7, '3.0', 3.1]
 
     steps:
     - uses: actions/checkout@v1
@@ -17,14 +17,14 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
 
-    - name: Build and test with Rake
+    - name: Configure Git email/username
       run: |
         git config --global user.email "orta+dangersystems@artsy.net"
         git config --global user.name "Danger.Systems"
-
-        bundle install --jobs 4 --retry 3
-        bundle exec rake spec
-
+    - name: Running Tests
+      run: bundle exec rake spec
+    - name: Running the Dangerfile for this repo
+      run: |
         TOKEN='7469b4e94ce21b43e3ab7a'
         TOKEN+='79960c12a1e067f2ec'
         DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true echo 'bundle exec danger --verbose'
