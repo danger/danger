@@ -10,8 +10,11 @@
 
 ## master
 <!-- Your comment below here -->
-* Never save environment as instance variables - [@rymai](https://github.com/rymai) [#1355](https://github.com/danger/danger/pull/1355)
 <!-- Your comment above here -->
+
+## 8.4.5
+
+* Never save environment as instance variables - [@rymai](https://github.com/rymai) [#1355](https://github.com/danger/danger/pull/1355)
 
 ## 8.4.4
 
