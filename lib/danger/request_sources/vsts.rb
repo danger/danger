@@ -24,7 +24,6 @@ module Danger
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.environment = environment
 
         @is_vsts_git = environment["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
 

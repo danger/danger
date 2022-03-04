@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # coding: utf-8
 
 require "base64"
@@ -35,9 +36,7 @@ module Danger
       def inspect
         inspected = super
 
-        if @token
-          inspected = inspected.sub! @token, "********".freeze
-        end
+        inspected.gsub!(@token, "********") if @token
 
         inspected
       end

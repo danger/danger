@@ -8,6 +8,12 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
   let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 1) }
   let(:subject) { stub_request_source(env) }
 
+  describe "#inspect" do
+    it "masks token on inspect" do
+      expect(subject.inspect).to include(%(@token="********"))
+    end
+  end
+
   describe "the GitLab host" do
     it "sets the default GitLab host" do
       expect(subject.host).to eq("gitlab.com")

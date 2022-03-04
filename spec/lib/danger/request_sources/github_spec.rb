@@ -6,6 +6,17 @@ require "danger/ci_source/travis"
 require "danger/danger_core/messages/violation"
 
 RSpec.describe Danger::RequestSources::GitHub, host: :github do
+  describe "#inspect" do
+    it "masks access_token and bearer_token on inspect" do
+      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_BEARER_TOKEN" => "ho" }
+
+      inspected = Danger::RequestSources::GitHub.new(stub_ci, gh_env).inspect
+
+      expect(inspected).to include(%(@access_token="********"))
+      expect(inspected).to include(%(@bearer_token="********"))
+    end
+  end
+
   describe "the github host" do
     it "sets a default GitHub host" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }

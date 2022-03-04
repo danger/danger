@@ -31,23 +31,17 @@ module Danger
       @supported_request_sources ||= [Danger::RequestSources::GitHub]
     end
 
-    def repo_slug
-      return "" if @env["CF_REPO_OWNER"].to_s.empty?
-      return "" if @env["CF_REPO_NAME"].to_s.empty?
-      "#{@env['CF_REPO_OWNER']}/#{@env['CF_REPO_NAME']}".downcase!
-    end
+    def self.slug_from(env)
+      return "" if env["CF_REPO_OWNER"].to_s.empty?
+      return "" if env["CF_REPO_NAME"].to_s.empty?
 
-    def repo_url
-      return "" if @env["CF_COMMIT_URL"].to_s.empty?
-      @env["CF_COMMIT_URL"].gsub(/\/commit.+$/, "")
-    end
-
-    def pull_request_id
-      @env["CF_PULL_REQUEST_NUMBER"]
+      "#{env['CF_REPO_OWNER']}/#{env['CF_REPO_NAME']}".downcase!
     end
 
     def initialize(env)
-      @env = env
+      self.repo_url = env["CF_COMMIT_URL"].to_s.gsub(/\/commit.+$/, "")
+      self.repo_slug = self.class.slug_from(env)
+      self.pull_request_id = env["CF_PULL_REQUEST_NUMBER"]
     end
   end
 end

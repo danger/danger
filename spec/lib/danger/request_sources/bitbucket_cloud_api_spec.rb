@@ -14,6 +14,22 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
 
       expect(inspected).to include(%(@password="********"))
     end
+
+    context "with access token" do
+      let(:env) do
+        stub_env.merge(
+          "DANGER_BITBUCKETCLOUD_OAUTH_KEY" => "XXX",
+          "DANGER_BITBUCKETCLOUD_OAUTH_SECRET" => "YYY"
+        )
+      end
+      before { stub_access_token }
+
+      it "masks access_token on inspect" do
+        inspected = api.inspect
+
+        expect(inspected).to include(%(@access_token="********"))
+      end
+    end
   end
 
   describe "#project" do

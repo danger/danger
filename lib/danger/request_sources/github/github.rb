@@ -14,7 +14,7 @@ module Danger
     class GitHub < RequestSource
       include Danger::Helpers::CommentsHelper
 
-      attr_accessor :pr_json, :issue_json, :support_tokenless_auth, :dismiss_out_of_range_messages
+      attr_accessor :pr_json, :issue_json, :use_local_git, :support_tokenless_auth, :dismiss_out_of_range_messages, :host, :api_url, :verify_ssl
 
       def self.env_vars
         ["DANGER_GITHUB_API_TOKEN", "DANGER_GITHUB_BEARER_TOKEN"]
@@ -26,12 +26,22 @@ module Danger
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.environment = environment
+        self.use_local_git = environment["DANGER_USE_LOCAL_GIT"]
         self.support_tokenless_auth = false
         self.dismiss_out_of_range_messages = false
+        self.host = environment.fetch("DANGER_GITHUB_HOST", "github.com")
+        # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
+        # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
+        # correctly named variable.
+        self.api_url = environment.fetch("DANGER_GITHUB_API_HOST") do
+          environment.fetch("DANGER_GITHUB_API_BASE_URL") do
+            "https://api.github.com/".freeze
+          end
+        end
+        self.verify_ssl = environment["DANGER_OCTOKIT_VERIFY_SSL"] != "false"
 
-        @access_token = @environment["DANGER_GITHUB_API_TOKEN"]
-        @bearer_token = @environment["DANGER_GITHUB_BEARER_TOKEN"]
+        @access_token = environment["DANGER_GITHUB_API_TOKEN"]
+        @bearer_token = environment["DANGER_GITHUB_BEARER_TOKEN"]
       end
 
       def get_pr_from_branch(repo_name, branch_name, owner)
@@ -46,30 +56,11 @@ module Danger
       end
 
       def validates_as_api_source?
-        valid_bearer_token? || valid_access_token? || self.environment["DANGER_USE_LOCAL_GIT"]
+        valid_bearer_token? || valid_access_token? || use_local_git
       end
 
       def scm
         @scm ||= GitRepo.new
-      end
-
-      def host
-        @host = @environment["DANGER_GITHUB_HOST"] || "github.com"
-      end
-
-      def verify_ssl
-        @environment["DANGER_OCTOKIT_VERIFY_SSL"] == "false" ? false : true
-      end
-
-      # `DANGER_GITHUB_API_HOST` is the old name kept for legacy reasons and
-      # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
-      # correctly named variable.
-      def api_url
-        @environment.fetch("DANGER_GITHUB_API_HOST") do
-          @environment.fetch("DANGER_GITHUB_API_BASE_URL") do
-            "https://api.github.com/".freeze
-          end
-        end
       end
 
       def client

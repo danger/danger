@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # coding: utf-8
 
 require "openssl"
@@ -12,7 +13,7 @@ module Danger
         @username = environment["DANGER_BITBUCKETSERVER_USERNAME"]
         @password = environment["DANGER_BITBUCKETSERVER_PASSWORD"]
         self.host = environment["DANGER_BITBUCKETSERVER_HOST"]
-        self.verify_ssl = environment["DANGER_BITBUCKETSERVER_VERIFY_SSL"] == "false" ? false : true
+        self.verify_ssl = environment["DANGER_BITBUCKETSERVER_VERIFY_SSL"] != "false"
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
           self.host = "https://" + self.host
         end
@@ -24,9 +25,7 @@ module Danger
       def inspect
         inspected = super
 
-        if @password
-          inspected = inspected.sub! @password, "********".freeze
-        end
+        inspected.gsub!(@password, "********") if @password
 
         inspected
       end

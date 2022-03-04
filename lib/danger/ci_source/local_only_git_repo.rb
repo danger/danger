@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "git"
 require "danger/request_sources/local_only"
 
@@ -9,8 +11,8 @@ module Danger
   #
   class LocalOnlyGitRepo < CI
     attr_accessor :base_commit, :head_commit
-    HEAD_VAR = "DANGER_LOCAL_HEAD".freeze
-    BASE_VAR = "DANGER_LOCAL_BASE".freeze
+    HEAD_VAR = "DANGER_LOCAL_HEAD"
+    BASE_VAR = "DANGER_LOCAL_BASE"
 
     def self.validates_as_ci?(env)
       env.key? "DANGER_USE_LOCAL_ONLY_GIT"
@@ -33,15 +35,9 @@ module Danger
     end
 
     def initialize(env = {})
-      @env = env
-
       # expects --base/--head specified OR origin/master to be base and HEAD head
       self.base_commit = env[BASE_VAR] || run_git("rev-parse --abbrev-ref origin/master")
       self.head_commit = env[HEAD_VAR] || run_git("rev-parse --abbrev-ref HEAD")
     end
-
-    private
-
-    attr_reader :env
   end
 end

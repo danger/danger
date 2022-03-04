@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Danger
   module RequestSources
     class RequestSource
-      DANGER_REPO_NAME = "danger".freeze
+      DANGER_REPO_NAME = "danger"
 
-      attr_accessor :ci_source, :environment, :scm, :host, :ignored_violations
+      attr_accessor :ci_source, :scm, :host, :ignored_violations
 
       def self.env_vars
         raise "Subclass and overwrite self.env_vars"
@@ -23,17 +25,27 @@ module Danger
       end
 
       def self.source_name
-        to_s.sub("Danger::RequestSources::".freeze, "".freeze)
+        to_s.sub("Danger::RequestSources::", "")
       end
 
       def self.available_source_names_and_envs
         available_request_sources.map do |klass|
-          " - #{klass.source_name}: #{klass.env_vars.join(', '.freeze).yellow}"
+          " - #{klass.source_name}: #{klass.env_vars.join(', ').yellow}"
         end
       end
 
       def initialize(_ci_source, _environment)
         raise "Subclass and overwrite initialize"
+      end
+
+      def inspect
+        inspected = super
+
+        inspected.gsub!(@token, "********") if @token
+        inspected.gsub!(@access_token, "********") if @access_token
+        inspected.gsub!(@bearer_token, "********") if @bearer_token
+
+        inspected
       end
 
       # @return [Boolean] whether scm.origins is a valid git repository or not

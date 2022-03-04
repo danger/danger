@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # For more info see: https://github.com/schacon/ruby-git
 
 require "git"
@@ -37,8 +38,8 @@ module Danger
     end
 
     def initialize(env = {})
-      @env = env
-
+      @remote_info = find_remote_info(env)
+      @found_pull_request = find_pull_request(env)
       self.repo_slug = remote_info.slug
       raise_error_for_missing_remote if remote_info.kind_of?(NoRepoInfo)
 
@@ -55,7 +56,7 @@ module Danger
 
     private
 
-    attr_reader :env
+    attr_reader :remote_info, :found_pull_request
 
     def raise_error_for_missing_remote
       raise missing_remote_error_message
@@ -66,45 +67,36 @@ module Danger
       "And the repository must host on GitHub.com or GitHub Enterprise."
     end
 
-    def remote_info
-      @_remote_info ||= begin
-        remote_info = begin
-          if given_pull_request_url?
-            FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
-          else
-            FindRepoInfoFromLogs.new(
-              env["DANGER_GITHUB_HOST"] || "github.com".freeze,
-              run_git("remote show origin -n".freeze)
-            ).call
-          end
-        end
+    def find_remote_info(env)
+      if given_pull_request_url?(env)
+        FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
+      else
+        FindRepoInfoFromLogs.new(
+          env["DANGER_GITHUB_HOST"] || "github.com",
+          run_git("remote show origin -n")
+        ).call
+      end || NoRepoInfo.new
+    end
 
-        remote_info || NoRepoInfo.new
+    def find_pull_request(env)
+      if given_pull_request_url?(env)
+        PullRequestFinder.new(
+          remote_info.id,
+          remote_info.slug,
+          remote: true,
+          remote_url: env["LOCAL_GIT_PR_URL"]
+        ).call(env: env)
+      else
+        PullRequestFinder.new(
+          env.fetch("LOCAL_GIT_PR_ID") { "" },
+          remote_info.slug,
+          remote: false,
+          git_logs: run_git("log --oneline -1000000")
+        ).call(env: env)
       end
     end
 
-    def found_pull_request
-      @_found_pull_request ||= begin
-        if given_pull_request_url?
-          PullRequestFinder.new(
-            remote_info.id,
-            remote_info.slug,
-            remote: true,
-            remote_url: env["LOCAL_GIT_PR_URL"],
-            env: env
-          ).call
-        else
-          PullRequestFinder.new(
-            env.fetch("LOCAL_GIT_PR_ID") { "".freeze },
-            remote_info.slug,
-            remote: false,
-            git_logs: run_git("log --oneline -1000000".freeze)
-          ).call
-        end
-      end
-    end
-
-    def given_pull_request_url?
+    def given_pull_request_url?(env)
       env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?
     end
 
