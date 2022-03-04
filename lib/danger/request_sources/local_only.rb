@@ -13,9 +13,8 @@ module Danger
         ["DANGER_LOCAL_ONLY"]
       end
 
-      def initialize(ci_source, environment)
+      def initialize(ci_source, _environment)
         self.ci_source = ci_source
-        self.environment = environment
       end
 
       def validates_as_ci?

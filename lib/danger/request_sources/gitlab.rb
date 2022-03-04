@@ -8,7 +8,7 @@ module Danger
   module RequestSources
     class GitLab < RequestSource
       include Danger::Helpers::CommentsHelper
-      attr_accessor :mr_json, :commits_json, :dismiss_out_of_range_messages
+      attr_accessor :mr_json, :commits_json, :dismiss_out_of_range_messages, :endpoint, :host
 
       FIRST_GITLAB_GEM_WITH_VERSION_CHECK = Gem::Version.new("4.6.0")
       FIRST_VERSION_WITH_INLINE_COMMENTS = Gem::Version.new("10.8.0")
@@ -23,20 +23,19 @@ module Danger
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.environment = environment
         self.dismiss_out_of_range_messages = false
-
-        @token = @environment["DANGER_GITLAB_API_TOKEN"]
+        @endpoint = environment["DANGER_GITLAB_API_BASE_URL"] || environment.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
+        @host = environment.fetch("DANGER_GITLAB_HOST", URI.parse(endpoint).host) || "gitlab.com"
+        @token = environment["DANGER_GITLAB_API_TOKEN"]
       end
 
       def client
-        token = @environment["DANGER_GITLAB_API_TOKEN"]
-        raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`" unless token
+        raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`" unless @token
 
         # The require happens inline so that it won't cause exceptions when just using the `danger` gem.
         require "gitlab"
 
-        @client ||= Gitlab.client(endpoint: endpoint, private_token: token)
+        @client ||= Gitlab.client(endpoint: endpoint, private_token: @token)
       rescue LoadError => e
         if e.path == "gitlab"
           puts "The GitLab gem was not installed, you will need to change your Gem from `danger` to `danger-gitlab`.".red
@@ -48,7 +47,7 @@ module Danger
       end
 
       def validates_as_ci?
-        includes_port = self.host.include? ":"
+        includes_port = host.include? ":"
         raise "Port number included in `DANGER_GITLAB_HOST`, this will fail with GitLab CI Runners" if includes_port
 
         # We don't call super because in some cases the Git remote doesn't match the GitLab instance host.
@@ -64,14 +63,6 @@ module Danger
 
       def scm
         @scm ||= GitRepo.new
-      end
-
-      def endpoint
-        @endpoint ||= @environment["DANGER_GITLAB_API_BASE_URL"] || @environment["CI_API_V4_URL"] || "https://gitlab.com/api/v4"
-      end
-
-      def host
-        @host ||= @environment["DANGER_GITLAB_HOST"] || URI.parse(endpoint).host || "gitlab.com"
       end
 
       def base_commit
@@ -326,11 +317,10 @@ module Danger
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
         branch ||= 'master'
-        token = @environment["DANGER_GITLAB_API_TOKEN"]
         # According to GitLab Repositories API docs path and id(slug) should be encoded.
         path = URI.encode_www_form_component(path)
         repository = URI.encode_www_form_component(repository)
-        "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{branch}&private_token=#{token}"
+        "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{branch}&private_token=#{@token}"
       end
 
       def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])

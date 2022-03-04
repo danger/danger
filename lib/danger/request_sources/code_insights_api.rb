@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # coding: utf-8
 
 module Danger
@@ -26,9 +27,7 @@ module Danger
       def inspect
         inspected = super
 
-        if @password
-          inspected = inspected.sub! @password, "********".freeze
-        end
+        inspected.gsub!(@password, "********") if @password
 
         inspected
       end

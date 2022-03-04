@@ -31,7 +31,6 @@ module Danger
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.environment = environment
 
         project, slug = ci_source.repo_slug.split("/")
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
