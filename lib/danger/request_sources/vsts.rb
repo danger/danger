@@ -76,6 +76,30 @@ module Danger
           return
         end
 
+        regular_violations = regular_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
+
+        inline_violations = inline_violations_group(
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        )
+
+        rest_inline_violations = submit_inline_comments!(**{
+          danger_id: danger_id,
+          previous_violations: {}
+        }.merge(inline_violations))
+
+        # TODO: Continue analyse below this point
+        main_violations = merge_violations(
+          regular_violations, rest_inline_violations
+        )
+
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"
         comment += generate_comment(warnings: warnings,
@@ -112,6 +136,154 @@ module Danger
         # If no comment was updated, post a new one
         post_new_comment(new_comment) unless comment_updated
       end
+
+      def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
+        # Avoid doing any fetchs if there's no inline comments
+        return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
+
+        pr_threads = @api.fetch_last_comments
+        danger_threads = pr_threads.select do |thread|
+          comment = thread[:comments].first
+          comment_content = comment[:content].nil? ? "" : comment[:content]
+
+          next comment_content.include?("generated_by_#{danger_id}")
+        end
+        non_danger_threads = pr_threads - danger_threads
+
+        warnings = submit_inline_comments_for_kind!(:warning, warnings, danger_threads, previous_violations["warning"], danger_id: danger_id)
+        errors = submit_inline_comments_for_kind!(:error, errors, danger_threads, previous_violations["error"], danger_id: danger_id)
+        messages = submit_inline_comments_for_kind!(:message, messages, danger_threads, previous_violations["message"], danger_id: danger_id)
+        markdowns = submit_inline_comments_for_kind!(:markdown, markdowns, danger_threads, [], danger_id: danger_id)
+
+        # TODO: Continue analyse below this point
+        # submit removes from the array all comments that are still in force
+        # so we strike out all remaining ones
+        danger_threads.each do |comment|
+          violation = violations_from_table(comment["body"]).first
+          if !violation.nil? && violation.sticky
+            body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "github")
+            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
+          else
+            # We remove non-sticky violations that have no replies
+            # Since there's no direct concept of a reply in GH, we simply consider
+            # the existence of non-danger comments in that line as replies
+            replies = non_danger_threads.select do |potential|
+              potential["path"] == comment["path"] &&
+                potential["position"] == comment["position"] &&
+                potential["commit_id"] == comment["commit_id"]
+            end
+
+            client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
+          end
+        end
+
+        {
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        }
+      end
+
+      def messages_are_equivalent(m1, m2)
+        blob_regexp = %r{blob/[0-9a-z]+/} # TODO: Check what it is
+        m1.file == m2.file && m1.line == m2.line &&
+          m1.message.sub(blob_regexp, "") == m2.message.sub(blob_regexp, "")
+      end
+
+      def submit_inline_comments_for_kind!(kind, messages, danger_threads, previous_violations, danger_id: "danger")
+        head_ref = head_commit # TODO: Replace head_ref by head_commit in this func body
+        previous_violations ||= []
+        is_markdown_content = kind == :markdown
+        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
+
+        messages.reject do |m|
+          next false unless m.file && m.line
+
+          # Once we know we're gonna submit it, we format it
+          if is_markdown_content
+            body = generate_inline_markdown_body(m, danger_id: danger_id, template: "vsts")
+          else
+            # Hide the inline link behind a span
+            m = process_markdown(m, true)
+            body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "vsts")
+            # A comment might be in previous_violations because only now it's part of the unified diff
+            # We remove from the array since it won't have a place in the table anymore
+            previous_violations.reject! { |v| messages_are_equivalent(v, m) }
+          end
+
+          matching_comments = danger_threads.select do |comment_data|
+            if comment_data[:threadContext][:filePath] == m.file &&
+              comment_data[:threadContext][:rightFileStart][:line] == m.line
+              # Parse it to avoid problems with strikethrough
+              violation = violations_from_table(comment_data[:comments].first[:content]).first
+              if violation
+                messages_are_equivalent(violation, m)
+              else
+                blob_regexp = %r{blob/[0-9a-z]+/}
+                comment_data["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
+              end
+            else
+              false
+            end
+          end
+
+          # TODO: Continue analyse below this point
+          if matching_comments.empty?
+            begin
+              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
+                                                 body, head_ref, m.file, position) # TODO: position was removed
+            rescue Octokit::UnprocessableEntity => e
+              # Show more detail for UnprocessableEntity error
+              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n") # TODO: position was removed
+              puts message
+
+              # Not reject because this comment has not completed
+              next false
+            end
+          else
+            # Remove the surviving comment so we don't strike it out
+            danger_threads.reject! { |c| matching_comments.include? c }
+
+            # Update the comment to remove the strikethrough if present
+            comment = matching_comments.first
+            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
+          end
+
+          # Remove this element from the array
+          next true
+        end
+      end
+
+      private
+
+      def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        {
+          warnings: warnings.reject(&:inline?),
+          errors: errors.reject(&:inline?),
+          messages: messages.reject(&:inline?),
+          markdowns: markdowns.reject(&:inline?)
+        }
+      end
+
+      def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
+        cmp = proc do |a, b|
+          next -1 unless a.file && a.line
+          next 1 unless b.file && b.line
+
+          next a.line <=> b.line if a.file == b.file
+          next a.file <=> b.file
+        end
+
+        # Sort to group inline comments by file
+        {
+          warnings: warnings.select(&:inline?).sort(&cmp),
+          errors: errors.select(&:inline?).sort(&cmp),
+          messages: messages.select(&:inline?).sort(&cmp),
+          markdowns: markdowns.select(&:inline?).sort(&cmp)
+        }
+      end
+
     end
   end
 end

@@ -76,6 +76,52 @@ module Danger
         post(uri, body)
       end
 
+      def post_inline_comment(text)
+        uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
+        body = {
+          "id" => -1,
+          "comments" => [
+            {
+              #"parentCommentId" => 0,
+              "content" => text,
+              "commentType" => 1
+            }
+          ],
+          #"lastUpdatedDate" => "2022-03-11T13:39:02.423Z",
+          #"publishedDate" => "2022-03-11T13:39:02.423Z",
+          "status" => 1,
+          "properties" => {
+            "Microsoft.TeamFoundation.Discussion.SupportsMarkdown" => {
+              "type" => "System.Int32",
+              "value" => 1
+            },
+            "Microsoft.TeamFoundation.Discussion.UniqueID" => { # TODO: Check what it is
+              "type" => "System.String",
+              "value" => "933f7514-486d-4217-8d3e-a5a60b52bb7f" # TODO: Check what it is
+            }
+          },
+          "threadContext" => {
+            "filePath" => "/ExpenseReports/Sources/Actions/ExpenditureActionManager.swift", # TODO: use parameter
+            "rightFileEnd" => {
+              "line" => 33, # TODO: Use line parameter + 1
+              "offset" => 1
+            },
+            "rightFileStart" => {
+              "line" => 33, # TODO: Use line parameter
+              "offset" => 1
+            }
+          },
+          "pullRequestThreadContext" => { # TODO: Check what it is
+            "changeTrackingId" => 1,
+            "iterationContext" => {
+              "firstComparingIteration" => 12,
+              "secondComparingIteration" => 12
+            }
+          }
+        }.to_json
+        post(uri, body)
+      end
+
       def update_comment(thread, id, new_comment)
         uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
         body = {
