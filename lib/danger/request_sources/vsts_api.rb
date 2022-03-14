@@ -76,7 +76,7 @@ module Danger
         post(uri, body)
       end
 
-      def post_inline_comment(text)
+      def post_inline_comment(text, file, line)
         uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
         body = {
           "id" => -1,
@@ -101,13 +101,13 @@ module Danger
             }
           },
           "threadContext" => {
-            "filePath" => "/ExpenseReports/Sources/Actions/ExpenditureActionManager.swift", # TODO: use parameter
+            "filePath" => file,
             "rightFileEnd" => {
-              "line" => 33, # TODO: Use line parameter + 1
+              "line" => line + 1,
               "offset" => 1
             },
             "rightFileStart" => {
-              "line" => 33, # TODO: Use line parameter
+              "line" => line,
               "offset" => 1
             }
           },

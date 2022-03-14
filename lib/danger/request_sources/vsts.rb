@@ -95,20 +95,17 @@ module Danger
           previous_violations: {}
         }.merge(inline_violations))
 
-        # TODO: Continue analyse below this point
         main_violations = merge_violations(
           regular_violations, rest_inline_violations
         )
 
         comment = generate_description(warnings: warnings, errors: errors)
         comment += "\n\n"
-        comment += generate_comment(warnings: warnings,
-                                     errors: errors,
-                                   messages: messages,
-                                  markdowns: markdowns,
-                        previous_violations: {},
-                                  danger_id: danger_id,
-                                   template: "vsts")
+        comment += generate_comment(**{
+          previous_violations: {},
+          danger_id: danger_id,
+          template: "vsts"
+        }.merge(main_violations))
         if new_comment || remove_previous_comments
           post_new_comment(comment)
         else
@@ -155,25 +152,13 @@ module Danger
         messages = submit_inline_comments_for_kind!(:message, messages, danger_threads, previous_violations["message"], danger_id: danger_id)
         markdowns = submit_inline_comments_for_kind!(:markdown, markdowns, danger_threads, [], danger_id: danger_id)
 
-        # TODO: Continue analyse below this point
         # submit removes from the array all comments that are still in force
         # so we strike out all remaining ones
-        danger_threads.each do |comment|
-          violation = violations_from_table(comment["body"]).first
+        danger_threads.each do |thread|
+          violation = violations_from_table(thread[:comments].first[:content]).first
           if !violation.nil? && violation.sticky
             body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "github")
-            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
-          else
-            # We remove non-sticky violations that have no replies
-            # Since there's no direct concept of a reply in GH, we simply consider
-            # the existence of non-danger comments in that line as replies
-            replies = non_danger_threads.select do |potential|
-              potential["path"] == comment["path"] &&
-                potential["position"] == comment["position"] &&
-                potential["commit_id"] == comment["commit_id"]
-            end
-
-            client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
+            @api.update_comment(thread[:id], thread[:comments].first[:id], body)
           end
         end
 
@@ -212,7 +197,7 @@ module Danger
             previous_violations.reject! { |v| messages_are_equivalent(v, m) }
           end
 
-          matching_comments = danger_threads.select do |comment_data|
+          matching_threads = danger_threads.select do |comment_data|
             if comment_data[:threadContext][:filePath] == m.file &&
               comment_data[:threadContext][:rightFileStart][:line] == m.line
               # Parse it to avoid problems with strikethrough
@@ -228,26 +213,18 @@ module Danger
             end
           end
 
-          # TODO: Continue analyse below this point
-          if matching_comments.empty?
-            begin
-              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                                 body, head_ref, m.file, position) # TODO: position was removed
-            rescue Octokit::UnprocessableEntity => e
-              # Show more detail for UnprocessableEntity error
-              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n") # TODO: position was removed
-              puts message
+          if matching_threads.empty?
+            @api.post_inline_comment(body, m.file, m.line)
 
-              # Not reject because this comment has not completed
-              next false
-            end
+            # Not reject because this comment has not completed
+            next false
           else
             # Remove the surviving comment so we don't strike it out
-            danger_threads.reject! { |c| matching_comments.include? c }
+            danger_threads.reject! { |c| matching_threads.include? c }
 
             # Update the comment to remove the strikethrough if present
-            comment = matching_comments.first
-            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
+            thread = matching_threads.first
+            @api.update_comment(thread[:id], thread[:comments].first[:id], body)
           end
 
           # Remove this element from the array
@@ -282,6 +259,12 @@ module Danger
           messages: messages.select(&:inline?).sort(&cmp),
           markdowns: markdowns.select(&:inline?).sort(&cmp)
         }
+      end
+
+      def merge_violations(*violation_groups)
+        violation_groups.inject({}) do |accumulator, group|
+          accumulator.merge(group) { |_, old, fresh| old + fresh }
+        end
       end
 
     end
