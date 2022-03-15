@@ -24,7 +24,8 @@ module Danger
       # @param [Bool] Should hide any generated link created
       #
       # @return [String] The Markdown compatible link
-      def markdown_link_to_message(message, _)
+      def markdown_link_to_message(message, hide_link)
+        return "" if hide_link
         "#{message.file}#L#{message.line}"
       end
 
@@ -147,7 +148,7 @@ module Danger
 
       def generate_description(warnings: nil, errors: nil, template: "github")
         emoji_mapper = EmojiMapper.new(template)
-        if errors.empty? && warnings.empty?
+        if (errors.nil? || errors.empty?) && (warnings.nil? || warnings.empty?)
           return ENV['DANGER_SUCCESS_MESSAGE'] || "All green. #{random_compliment}"
         else
           message = "#{emoji_mapper.map('warning')} "

@@ -99,7 +99,7 @@ module Danger
           regular_violations, rest_inline_violations
         )
 
-        comment = generate_description(warnings: warnings, errors: errors)
+        comment = generate_description(warnings: main_violations[:warnings], errors: main_violations[:errors])
         comment += "\n\n"
         comment += generate_comment(**{
           previous_violations: {},
@@ -126,6 +126,8 @@ module Danger
           comment_content = comment[:content].nil? ? "" : comment[:content]
           # Skip the comment if it wasn't posted by danger
           next unless comment_content.include?("generated_by_#{danger_id}")
+          # Skip the comment if it's an inline comment
+          next unless c[:threadContext].nil?
           # Updated the danger posted comment
           @api.update_comment(thread_id, comment_id, new_comment)
           comment_updated = true
@@ -177,7 +179,6 @@ module Danger
       end
 
       def submit_inline_comments_for_kind!(kind, messages, danger_threads, previous_violations, danger_id: "danger")
-        head_ref = head_commit # TODO: Replace head_ref by head_commit in this func body
         previous_violations ||= []
         is_markdown_content = kind == :markdown
         emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
@@ -190,6 +191,7 @@ module Danger
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "vsts")
           else
             # Hide the inline link behind a span
+            m.message.gsub!("\n", "<br />")
             m = process_markdown(m, true)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "vsts")
             # A comment might be in previous_violations because only now it's part of the unified diff
@@ -198,7 +200,9 @@ module Danger
           end
 
           matching_threads = danger_threads.select do |comment_data|
-            if comment_data[:threadContext][:filePath] == m.file &&
+            if comment_data.key?(:threadContext) && !comment_data[:threadContext].nil? &&
+              comment_data[:threadContext][:filePath] == m.file &&
+              comment_data[:threadContext].key?(:rightFileStart) &&
               comment_data[:threadContext][:rightFileStart][:line] == m.line
               # Parse it to avoid problems with strikethrough
               violation = violations_from_table(comment_data[:comments].first[:content]).first
@@ -206,7 +210,7 @@ module Danger
                 messages_are_equivalent(violation, m)
               else
                 blob_regexp = %r{blob/[0-9a-z]+/}
-                comment_data["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
+                comment_data[:comments].first[:content].sub(blob_regexp, "") == body.sub(blob_regexp, "")
               end
             else
               false
