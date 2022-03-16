@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* New feature on VSTS/Azure DevOps: inline comment - [@damien-danglard](https://github.com/damien-danglard) [#1356](https://github.com/danger/danger/pull/1356)
 <!-- Your comment above here -->
 
 ## 8.4.5

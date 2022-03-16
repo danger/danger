@@ -76,6 +76,38 @@ module Danger
         post(uri, body)
       end
 
+      def post_inline_comment(text, file, line)
+        uri = URI("#{pr_api_endpoint}/threads?api-version=#{@api_version}")
+        body = {
+          "comments" => [
+            {
+              "parentCommentId" => 0,
+              "content" => text,
+              "commentType" => 1
+            }
+          ],
+          "properties" => {
+            "Microsoft.TeamFoundation.Discussion.SupportsMarkdown" => {
+              "type" => "System.Int32",
+              "value" => 1
+            }
+          },
+          "status" => 1,
+          "threadContext" => {
+            "filePath" => file,
+            "rightFileEnd" => {
+              "line" => line + 1,
+              "offset" => 1
+            },
+            "rightFileStart" => {
+              "line" => line,
+              "offset" => 1
+            }
+          }
+        }.to_json
+        post(uri, body)
+      end
+
       def update_comment(thread, id, new_comment)
         uri = URI("#{pr_api_endpoint}/threads/#{thread}/comments/#{id}?api-version=#{@api_version}")
         body = {
