@@ -43,6 +43,10 @@ module Danger
         @scm ||= GitRepo.new
       end
 
+      def client
+        @api
+      end
+
       def host
         @host ||= @api.host
       end
