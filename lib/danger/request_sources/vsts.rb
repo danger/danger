@@ -173,7 +173,7 @@ module Danger
       end
 
       def messages_are_equivalent(m1, m2)
-        blob_regexp = %r{blob/[0-9a-z]+/} # TODO: Check what it is
+        blob_regexp = %r{blob/[0-9a-z]+/}
         m1.file == m2.file && m1.line == m2.line &&
           m1.message.sub(blob_regexp, "") == m2.message.sub(blob_regexp, "")
       end
