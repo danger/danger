@@ -12,6 +12,8 @@
 <!-- Your comment below here -->
 <!-- Your comment above here -->
 
+* Fix `diff_for_file` for deleted files - [@alexevanczuk](https://github.com/alexevanczuk) [#1357](https://github.com/danger/danger/pull/1357)
+
 ## 8.5.0
 
 * New feature on VSTS/Azure DevOps: inline comment - [@damien-danglard](https://github.com/damien-danglard) [#1356](https://github.com/danger/danger/pull/1356)
