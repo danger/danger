@@ -26,13 +26,13 @@ module Danger
           "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION",
           "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_LOGO_URL",
           "DANGER_BITBUCKETSERVER_VERIFY_SSL",
-          "DANGER_INCLUDE_OUT_OF_RANGE_MESSAGES"
+          "DANGER_BITBUCKETSERVER_INCLUDE_OUT_OF_RANGE_MESSAGES"
         ]
       end
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.include_out_of_range_messages = environment["DANGER_INCLUDE_OUT_OF_RANGE_MESSAGES"] == 'true'
+        self.include_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_INCLUDE_OUT_OF_RANGE_MESSAGES"] == 'true'
 
         project, slug = ci_source.repo_slug.split("/")
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)

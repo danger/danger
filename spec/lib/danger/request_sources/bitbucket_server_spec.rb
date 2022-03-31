@@ -75,7 +75,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
 
     it "includes messages outside the PR diff when env variable is set" do
       new_env = stub_env
-      new_env.merge!({ "DANGER_INCLUDE_OUT_OF_RANGE_MESSAGES" => "true" })
+      new_env.merge!({ "DANGER_BITBUCKETSERVER_INCLUDE_OUT_OF_RANGE_MESSAGES" => "true" })
       inspected = Danger::RequestSources::BitbucketServer.new(stub_ci, new_env)
       
       warning_in_diff = Danger::Violation.new("foo", false, "Gemfile", 3, type: :warning)
