@@ -9,7 +9,7 @@ module Danger
   module RequestSources
     class BitbucketServer < RequestSource
       include Danger::Helpers::CommentsHelper
-      attr_accessor :pr_json, :include_out_of_range_messages
+      attr_accessor :pr_json, :dismiss_out_of_range_messages
 
       def self.env_vars
         [
@@ -26,13 +26,13 @@ module Danger
           "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION",
           "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_LOGO_URL",
           "DANGER_BITBUCKETSERVER_VERIFY_SSL",
-          "DANGER_BITBUCKETSERVER_INCLUDE_OUT_OF_RANGE_MESSAGES"
+          "DANGER_BITBUCKETSERVER_DISMISS_OUT_OF_RANGE_MESSAGES"
         ]
       end
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.include_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_INCLUDE_OUT_OF_RANGE_MESSAGES"] == 'true'
+        self.dismiss_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_DISMISS_OUT_OF_RANGE_MESSAGES"] == 'true'
 
         project, slug = ci_source.repo_slug.split("/")
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
@@ -140,20 +140,20 @@ module Danger
       end
 
       def main_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
-        if include_out_of_range_messages
+        if dismiss_out_of_range_messages
+          {
+            warnings: warnings.reject(&:inline?),
+            errors: errors.reject(&:inline?),
+            messages: messages.reject(&:inline?),
+            markdowns: markdowns.reject(&:inline?)
+          }
+        else
           in_diff = proc { |a| find_position_in_diff?(a.file, a.line) }
           {
             warnings: warnings.reject(&in_diff),
             errors: errors.reject(&in_diff),
             messages: messages.reject(&in_diff),
             markdowns: markdowns.reject(&in_diff)
-          }
-         else 
-          {
-            warnings: warnings.reject(&:inline?),
-            errors: errors.reject(&:inline?),
-            messages: messages.reject(&:inline?),
-            markdowns: markdowns.reject(&:inline?)
           }
         end
       end
