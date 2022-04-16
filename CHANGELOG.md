@@ -12,6 +12,10 @@
 <!-- Your comment below here -->
 <!-- Your comment above here -->
 
+## 8.6.0
+
+* Fix for branch names being able to trigger git commands - [@kyoshidajp](https://github.com/kyoshidajp ) [#1357](https://github.com/danger/danger/pull/1360)
+
 * Fix `diff_for_file` for deleted files - [@alexevanczuk](https://github.com/alexevanczuk) [#1357](https://github.com/danger/danger/pull/1357)
 
 ## 8.5.0
