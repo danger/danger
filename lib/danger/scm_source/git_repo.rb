@@ -55,7 +55,8 @@ module Danger
     def exec(string)
       require "open3"
       Dir.chdir(self.folder || ".") do
-        Open3.popen2(default_env, "git #{string}") do |_stdin, stdout, _wait_thr|
+        git_command = string.split(" ").dup.unshift("git")
+        Open3.popen2(default_env, *git_command) do |_stdin, stdout, _wait_thr|
           stdout.read.rstrip
         end
       end
