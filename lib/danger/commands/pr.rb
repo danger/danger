@@ -8,7 +8,8 @@ require "no_proxy_fix"
 
 module Danger
   class PR < Runner
-    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR. Usage: danger pr <URL>".freeze
+    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). " \
+                   "Does not post to the PR unless --post-results flag is passed. Usage: danger pr <URL>".freeze
     self.command = "pr".freeze
 
     def self.options
@@ -16,7 +17,8 @@ module Danger
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."],
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
-        ["--verify-ssl", "Verify SSL in Octokit"]
+        ["--verify-ssl", "Verify SSL in Octokit"],
+        ["--post-results", "Report the result back to the provider via API (usually not desirable)."]
       ]
     end
 
@@ -27,6 +29,7 @@ module Danger
       @clear_http_cache = argv.flag?("clear-http-cache", false)
       dangerfile = argv.option("dangerfile", "Dangerfile")
       @verify_ssl = argv.flag?("verify-ssl", true)
+      @post_results = argv.flag?("post-results", false)
 
       # Currently CLAide doesn't support short option like -h https://github.com/CocoaPods/CLAide/pull/60
       # when user pass in -h, mimic the behavior of passing in --help.
@@ -67,7 +70,8 @@ module Danger
           @dangerfile_path,
           nil,
           nil,
-          nil
+          nil,
+          @post_results
         )
       end
     end

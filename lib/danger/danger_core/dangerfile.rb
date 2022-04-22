@@ -274,7 +274,7 @@ module Danger
       env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch, lookup_top_level: true)
     end
 
-    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments)
+    def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments, report_results = true)
       # Setup internal state
       init_plugins
       env.fill_environment_vars
@@ -289,7 +289,7 @@ module Danger
         # Push results to the API
         # Pass along the details of the run to the request source
         # to send back to the code review site.
-        post_results(danger_id, new_comment, remove_previous_comments)
+        post_results(danger_id, new_comment, remove_previous_comments) if report_results
 
         # Print results in the terminal
         print_results
