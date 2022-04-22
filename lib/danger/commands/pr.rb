@@ -67,7 +67,8 @@ module Danger
           @dangerfile_path,
           nil,
           nil,
-          nil
+          nil,
+          false
         )
       end
     end

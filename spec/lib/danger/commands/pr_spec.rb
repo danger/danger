@@ -69,4 +69,20 @@ RSpec.describe Danger::PR do
       )
     end
   end
+
+  context "#run" do
+    let(:env_double) { instance_double('Danger::EnvironmentManager') }
+    let(:request_source_double) { instance_double('Danger::RequestSources::RequestSource') }
+
+    it "does not post to the pr" do
+      allow(Danger::EnvironmentManager).to receive(:new).and_return(env_double)
+      allow(env_double).to receive(:request_source).and_return(request_source_double)
+      allow(request_source_double).to receive(:update_pull_request!)
+
+      argv = CLAide::ARGV.new(["https://github.com/danger/danger/pull/1366"])
+
+      result = described_class.new(argv)
+      expect(request_source_double).not_to have_received(:update_pull_request!)
+    end
+  end
 end
