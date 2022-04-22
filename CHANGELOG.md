@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Fix for `danger pr` posting results to provider. - [@bobbymcwho](https://github.com/bobbymcwho) [#1365](https://github.com/danger/danger/pull/1365)
 <!-- Your comment above here -->
 
 ## 8.6.0
