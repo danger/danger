@@ -9,6 +9,7 @@
 -->
 
 ## master
+* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
 <!-- Your comment below here -->
 <!-- Your comment above here -->
 

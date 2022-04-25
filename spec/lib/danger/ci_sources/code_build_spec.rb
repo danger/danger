@@ -1,11 +1,11 @@
 require "danger/ci_source/github_actions"
 
 RSpec.describe Danger::CodeBuild do
-  # CODEBUILD_SOURCE_VERSION=pr/2512 CODEBUILD_SOURCE_REPO_URL=https://github.o-in.dwango.co.jp/zane/zane-Soroban-web CODEBUILD_BUILD_ID=zane-soroban:cf613895-4a78-4456-8568-a53784fa75c5
+  # CODEBUILD_WEBHOOK_TRIGGER=pr/2512 CODEBUILD_SOURCE_REPO_URL=https://github.o-in.dwango.co.jp/zane/zane-Soroban-web CODEBUILD_BUILD_ID=zane-soroban:cf613895-4a78-4456-8568-a53784fa75c5
   let(:valid_env) do
     {
       "CODEBUILD_BUILD_ID" => "codebuild:cf613895-4a78-4456-8568-a53784fa75c5",
-      "CODEBUILD_SOURCE_VERSION" => "pr/1234",
+      "CODEBUILD_WEBHOOK_TRIGGER" => "pr/1234",
       "CODEBUILD_SOURCE_REPO_URL" => source_repo_url
     }
   end
@@ -39,24 +39,24 @@ RSpec.describe Danger::CodeBuild do
       subject { described_class.validates_as_pr?(env) }
       let(:env) { valid_env }
 
-      context "when `CODEBUILD_SOURCE_VERSION` like a 'pr/1234" do
-        let(:env) { valid_env.merge({ "CODEBUILD_SOURCE_VERSION" => "pr/1234" }) }
+      context "when `CODEBUILD_WEBHOOK_TRIGGER` like a 'pr/1234" do
+        let(:env) { valid_env.merge({ "CODEBUILD_WEBHOOK_TRIGGER" => "pr/1234" }) }
 
         it "validates" do
           is_expected.to be true
         end
       end
 
-      context "when `CODEBUILD_SOURCE_VERSION` is commit hash" do
-        let(:env) { valid_env.merge({ "CODEBUILD_SOURCE_VERSION" => "6548dbc49fe57e1fe7507a7a4b815639a62e9f90" }) }
+      context "when `CODEBUILD_WEBHOOK_TRIGGER` is commit hash" do
+        let(:env) { valid_env.merge({ "CODEBUILD_WEBHOOK_TRIGGER" => "6548dbc49fe57e1fe7507a7a4b815639a62e9f90" }) }
 
         it "doesn't validates" do
           is_expected.to be false
         end
       end
 
-      context "when `CODEBUILD_SOURCE_VERSION` is missing" do
-        let(:env) { valid_env.tap { |e| e.delete("CODEBUILD_SOURCE_VERSION") } }
+      context "when `CODEBUILD_WEBHOOK_TRIGGER` is missing" do
+        let(:env) { valid_env.tap { |e| e.delete("CODEBUILD_WEBHOOK_TRIGGER") } }
 
         it "doesn't validates" do
           is_expected.to be false
