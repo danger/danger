@@ -48,7 +48,8 @@ module Danger
       return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
       return nil unless env["CODEBUILD_WEBHOOK_TRIGGER"].split("/").length == 2
 
-      _source_origin, pr_number = env["CODEBUILD_WEBHOOK_TRIGGER"].split("/")
+      event_type, pr_number = env["CODEBUILD_WEBHOOK_TRIGGER"].split("/")
+      return nil unless event_type == "pr"
       github_repo_url = env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
 
       "#{github_repo_url}/pull/#{pr_number}"

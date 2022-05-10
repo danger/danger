@@ -47,8 +47,16 @@ RSpec.describe Danger::CodeBuild do
         end
       end
 
-      context "when `CODEBUILD_WEBHOOK_TRIGGER` is commit hash" do
-        let(:env) { valid_env.merge({ "CODEBUILD_WEBHOOK_TRIGGER" => "6548dbc49fe57e1fe7507a7a4b815639a62e9f90" }) }
+      context "when `CODEBUILD_WEBHOOK_TRIGGER` like a 'branch/branch_name'" do
+        let(:env) { valid_env.merge({ "CODEBUILD_WEBHOOK_TRIGGER" => "branch/branch_name" }) }
+
+        it "doesn't validates" do
+          is_expected.to be false
+        end
+      end
+
+      context "when `CODEBUILD_WEBHOOK_TRIGGER` like a 'tag/v1.0.0'" do
+        let(:env) { valid_env.merge({ "CODEBUILD_WEBHOOK_TRIGGER" => "tag/v1.0.0" }) }
 
         it "doesn't validates" do
           is_expected.to be false
