@@ -1,7 +1,6 @@
 require "danger/ci_source/github_actions"
 
 RSpec.describe Danger::CodeBuild do
-  # CODEBUILD_WEBHOOK_TRIGGER=pr/2512 CODEBUILD_SOURCE_REPO_URL=https://github.o-in.dwango.co.jp/zane/zane-Soroban-web CODEBUILD_BUILD_ID=zane-soroban:cf613895-4a78-4456-8568-a53784fa75c5
   let(:valid_env) do
     {
       "CODEBUILD_BUILD_ID" => "codebuild:cf613895-4a78-4456-8568-a53784fa75c5",
