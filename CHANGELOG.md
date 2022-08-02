@@ -11,6 +11,7 @@
 ## master
 <!-- Your comment below here -->
 <!-- Your comment above here -->
+* VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
 
 ## 8.6.1
 
