@@ -10,7 +10,7 @@ bundler_args: "--without documentation --path bundle"
 
 before_install:
   - git fetch --depth=1000000
-  - gem install bundler -v '2.0.1'
+  - gem install bundler -v '2.3.20'
 
 after_install:
   - rake install

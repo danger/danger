@@ -1,7 +1,7 @@
 install:
   - set PATH=C:\Ruby27\bin;%PATH%
   - gem uninstall bundler --executables
-  - gem install bundler -v '2.0.1'
+  - gem install bundler -v '2.3.20'
   - bundle install
 
 build: off
