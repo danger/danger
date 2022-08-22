@@ -5,9 +5,6 @@ cache:
 
 rvm:
   - 2.7.1
-  - 2.6.0
-  - 2.5.3
-  - 2.4.5
 
 bundler_args: "--without documentation --path bundle"
 
