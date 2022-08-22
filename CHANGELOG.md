@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Update Octokit dependency to version 5.0. - [@mathroule](https://github.com/mathroule) [#1377](https://github.com/danger/danger/pull/1377)
 <!-- Your comment above here -->
 
 ## 8.6.1
