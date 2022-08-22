@@ -10,7 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
-**Breaking** - Drop support for Ruby 2.6, support Ruby 2.7+ [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
+**Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
 <!-- Your comment above here -->
 
 ## 8.6.1
