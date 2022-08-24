@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Added support for [Appcircle](https://appcircle.io/) - [@tosbaha](https://github.com/tosbaha)
 <!-- Your comment above here -->
 
 ## 8.6.1

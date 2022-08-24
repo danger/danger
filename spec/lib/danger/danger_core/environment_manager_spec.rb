@@ -2,6 +2,12 @@ require "danger/danger_core/environment_manager"
 
 RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
   describe ".local_ci_source" do
+    it "loads Appcircle" do
+      with_appcircle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.local_ci_source(system_env)).to eq Danger::Appcircle
+      end
+    end
+
     it "loads Bamboo" do
       with_bamboo_setup_and_is_a_pull_request do |system_env|
         expect(described_class.local_ci_source(system_env)).to eq Danger::Bamboo
@@ -112,6 +118,12 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
   end
 
   describe ".pr?" do
+    it "loads Appcircle" do
+      with_appcircle_setup_and_is_a_pull_request do |system_env|
+        expect(described_class.pr?(system_env)).to eq(true)
+      end
+    end
+
     it "loads Bamboo" do
       with_bamboo_setup_and_is_a_pull_request do |system_env|
         expect(described_class.pr?(system_env)).to eq(true)
