@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        ruby-version: [2.7, '3.0', 3.1]
+        ruby-version: [2.7, 3.0, 3.1]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
@@ -24,6 +24,7 @@ jobs:
       - name: Running Tests
         run: bundle exec rake spec
       - name: Running the Dangerfile for this repo
+        if: runner.os != 'Windows'
         run: |
           TOKEN='7469b4e94ce21b43e3ab7a'
           TOKEN+='79960c12a1e067f2ec'
