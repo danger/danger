@@ -4,11 +4,11 @@ on: [pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
         ruby-version: [2.7, '3.0', 3.1]
-
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Set up Ruby
