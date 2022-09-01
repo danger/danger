@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
 <!-- Your comment above here -->
 
 ## 8.6.1
