@@ -132,7 +132,7 @@ module Danger
     #
     def import_dangerfile_from_path(path)
       raise "`import_dangerfile_from_path` requires a string" unless path.kind_of?(String)
-      local_path = File.join(path, "Dangerfile")
+      local_path = File.file?(path) ? path : File.join(path, "Dangerfile")
       @dangerfile.parse(Pathname.new(local_path))
     end
 

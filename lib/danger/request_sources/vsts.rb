@@ -195,7 +195,7 @@ module Danger
             body = generate_inline_markdown_body(m, danger_id: danger_id, template: "vsts")
           else
             # Hide the inline link behind a span
-            m.message.gsub!("\n", "<br />")
+            m.message = m.message.gsub("\n", "<br />")
             m = process_markdown(m, true)
             body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "vsts")
             # A comment might be in previous_violations because only now it's part of the unified diff
