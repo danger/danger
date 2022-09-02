@@ -11,8 +11,9 @@
 ## master
 <!-- Your comment below here -->
 
-* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
 * Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
+* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
+* Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
 * Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
 
