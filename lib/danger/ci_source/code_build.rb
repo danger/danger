@@ -5,6 +5,7 @@ module Danger
   # ### CI Setup
   #
   # In CodeBuild, make sure to correctly forward CODEBUILD_BUILD_ID, CODEBUILD_SOURCE_VERSION, CODEBUILD_SOURCE_REPO_URL and DANGER_GITHUB_API_TOKEN.
+  # In CodeBuild with batch builds, make sure to correctly forward CODEBUILD_BUILD_ID, CODEBUILD_WEBHOOK_TRIGGER, CODEBUILD_SOURCE_REPO_URL, CODEBUILD_BATCH_BUILD_IDENTIFIER and DANGER_GITHUB_API_TOKEN.
   #
   # ### Token Setup
   #
@@ -25,7 +26,11 @@ module Danger
 
     def initialize(env)
       self.repo_slug = self.class.extract_repo_slug(env)
-      self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1].to_i
+      if env["CODEBUILD_BATCH_BUILD_IDENTIFIER"]
+        self.pull_request_id = env["CODEBUILD_WEBHOOK_TRIGGER"].split("/")[1].to_i
+      else
+        self.pull_request_id = env["CODEBUILD_SOURCE_VERSION"].split("/")[1].to_i
+      end
       self.repo_url = self.class.extract_repo_url(env)
     end
 
@@ -44,11 +49,20 @@ module Danger
     end
 
     def self.extract_pr_url(env)
-      return nil unless env.key? "CODEBUILD_SOURCE_VERSION"
-      return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
-      return nil unless env["CODEBUILD_SOURCE_VERSION"].split("/").length == 2
+      if env["CODEBUILD_BATCH_BUILD_IDENTIFIER"]
+        return nil unless env.key? "CODEBUILD_WEBHOOK_TRIGGER"
+        return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
+        return nil unless env["CODEBUILD_WEBHOOK_TRIGGER"].split("/").length == 2
 
-      _source_origin, pr_number = env["CODEBUILD_SOURCE_VERSION"].split("/")
+        event_type, pr_number = env["CODEBUILD_WEBHOOK_TRIGGER"].split("/")
+        return nil unless event_type == "pr"
+      else
+        return nil unless env.key? "CODEBUILD_SOURCE_VERSION"
+        return nil unless env.key? "CODEBUILD_SOURCE_REPO_URL"
+        return nil unless env["CODEBUILD_SOURCE_VERSION"].split("/").length == 2
+
+        _source_origin, pr_number = env["CODEBUILD_SOURCE_VERSION"].split("/")
+      end
       github_repo_url = env["CODEBUILD_SOURCE_REPO_URL"].gsub(/\.git$/, "")
 
       "#{github_repo_url}/pull/#{pr_number}"
