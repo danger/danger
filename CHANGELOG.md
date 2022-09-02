@@ -9,11 +9,14 @@
 -->
 
 ## master
-* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
+
 <!-- Your comment below here -->
+* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
+* Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
 * Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
-<!-- Your comment above here -->
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
+<!-- Your comment above here -->
+
 
 ## 8.6.1
 
