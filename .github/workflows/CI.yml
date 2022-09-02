@@ -1,30 +1,41 @@
 name: CI
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [2.7, '3.0', 3.1]
-
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        ruby-version: [2.7, 3.0, 3.1]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true
+      - uses: actions/checkout@v1
 
-    - name: Configure Git email/username
-      run: |
-        git config --global user.email "orta+dangersystems@artsy.net"
-        git config --global user.name "Danger.Systems"
-    - name: Running Tests
-      run: bundle exec rake spec
-    - name: Running the Dangerfile for this repo
-      run: |
-        TOKEN='7469b4e94ce21b43e3ab7a'
-        TOKEN+='79960c12a1e067f2ec'
-        DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true echo 'bundle exec danger --verbose'
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Configure Git email/username
+        run: |
+          git config --global user.email "orta+dangersystems@artsy.net"
+          git config --global user.name "Danger.Systems"
+
+      - name: Running Tests
+        run: bundle exec rake spec
+
+      - name: Running the Dangerfile for this repo
+        if: runner.os != 'Windows'
+        run: |
+          TOKEN='7469b4e94ce21b43e3ab7a'
+          TOKEN+='79960c12a1e067f2ec'
+          DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true echo 'bundle exec danger --verbose'
