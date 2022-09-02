@@ -9,14 +9,15 @@
 -->
 
 ## master
-
 <!-- Your comment below here -->
+
+* Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
 * Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
 * Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
 * Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
-<!-- Your comment above here -->
 
+<!-- Your comment above here -->
 
 ## 8.6.1
 
@@ -38,7 +39,7 @@
 
 ## 8.4.4
 
-* Don't post Dangefile errors as comment on PR when the `DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR` env var is set - [@rymai](https://github.com/rymai) [#1354](https://github.com/danger/danger/pull/1354)
+* Don't post Dangerfile errors as comment on PR when the `DANGER_DO_NOT_POST_INVALID_DANGERFILE_ERROR` env var is set - [@rymai](https://github.com/rymai) [#1354](https://github.com/danger/danger/pull/1354)
 
 ## 8.4.3
 
