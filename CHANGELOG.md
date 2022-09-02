@@ -10,6 +10,7 @@
 
 ## master
 <!-- Your comment below here -->
+* Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
 <!-- Your comment above here -->
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
 
