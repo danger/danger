@@ -3,14 +3,14 @@ jobs:
   build:
     working_directory: ~/danger
     docker:
-      - image: ruby:2.4
+      - image: ruby:2.7
         environment:
         - RAILS_ENV=test
         - RACK_ENV=test
     steps:
       - checkout
       - run: gem update --system 2.5.0
-      - run: gem install bundler -v '2.0.1'
+      - run: gem install bundler -v '2.3.20'
       - restore_cache:
           key: gem-cache-{{ .Branch }}-{{ checksum "Gemfile" }}
       - run: bundle install --path vendor/bundle

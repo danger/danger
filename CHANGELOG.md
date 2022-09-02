@@ -9,8 +9,10 @@
 -->
 
 ## master
+
 <!-- Your comment below here -->
 
+**Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378) 
 * Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
 * Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
 * Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
