@@ -128,7 +128,7 @@ module Danger
     # @return [Git::Diff::DiffFile] from the gem `git`
     #
     def diff_for_file(file)
-      (added_files + modified_files).include?(file) ? @git.diff[file] : nil
+      (added_files + modified_files + deleted_files).include?(file) ? @git.diff[file] : nil
     end
 
     # @!group Git Metadata

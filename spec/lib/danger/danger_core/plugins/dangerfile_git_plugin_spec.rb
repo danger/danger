@@ -107,6 +107,26 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
           expect(@dsl.diff_for_file("file2")).to_not be_nil
         end
       end
+
+      it "returns a diff when it is deleted" do
+        run_in_repo_with_diff do |git|
+          diff = git.diff("master")
+          allow(@repo).to receive(:diff).and_return(diff)
+          diff_for_file = @dsl.diff_for_file("file1")
+          expect(diff_for_file).to_not be_nil
+          expected_patch = <<~PATCH
+            diff --git a/file1 b/file1
+            deleted file mode 100644
+            index 2cec6e8..0000000
+            --- a/file1
+            +++ /dev/null
+            @@ -1 +0,0 @@
+            -More buritto please.
+            \\ No newline at end of file
+          PATCH
+          expect(diff_for_file.patch).to eq expected_patch.chomp
+        end
+      end
     end
 
     describe "getting info for a specific file" do

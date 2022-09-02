@@ -9,9 +9,24 @@
 -->
 
 ## master
+
 <!-- Your comment below here -->
+* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
 * Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
+* Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
+* VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
 <!-- Your comment above here -->
+
+
+## 8.6.1
+
+* Fix for `danger pr` posting results to provider. - [@bobbymcwho](https://github.com/bobbymcwho) [#1365](https://github.com/danger/danger/pull/1365)
+
+## 8.6.0
+
+* Fix for branch names being able to trigger git commands - [@kyoshidajp](https://github.com/kyoshidajp ) [#1357](https://github.com/danger/danger/pull/1360)
+
+* Fix `diff_for_file` for deleted files - [@alexevanczuk](https://github.com/alexevanczuk) [#1357](https://github.com/danger/danger/pull/1357)
 
 ## 8.5.0
 
