@@ -10,7 +10,7 @@
 
 ## master
 
-<!-- Your comment below here -->
+* Fixed Docker image outdated ruby version by updating it to 2.7. [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
 
 <!-- Your comment above here -->
 
