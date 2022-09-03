@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  run-tests:
+  build:
     strategy:
       matrix:
         os:
@@ -44,18 +44,8 @@ jobs:
       - name: Running tests
         run: bundle exec rake spec
 
-  run-danger:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-          bundler-cache: true
-
       - name: Running the Dangerfile for this repo
+        if: runner.os != 'Windows'
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUNNING_IN_ACTIONS: true
