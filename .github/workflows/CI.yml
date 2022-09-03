@@ -58,4 +58,5 @@ jobs:
       - name: Running the Dangerfile for this repo
         env:
           DANGER_GITHUB_API_TOKEN: 7469b4e94ce21b43e3ab7a79960c12a1e067f2ec # FIXME Store it in GitHub Actions secrets
+          RUNNING_IN_ACTIONS: true
         run: bundle exec danger --verbose
