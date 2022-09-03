@@ -13,6 +13,7 @@
 <!-- Your comment below here -->
 * Release to GitHub Container Registry - [@unlobito](https://github.com/unlobito) [#1445](https://github.com/danger/danger/pull/1445)
 * Update README badges - [@manicmaniac](https://github.com/manicmaniac) [#1442](https://github.com/danger/danger/pull/1442)
+* Run Danger on pull request to danger/danger GitHub repo. - [@mathroule](https://github.com/mathroule) [#1382](https://github.com/danger/danger/pull/1382)
 
 <!-- Your comment above here -->
 
