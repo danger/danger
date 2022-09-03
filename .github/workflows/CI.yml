@@ -41,11 +41,10 @@ jobs:
       - name: Linting
         run: bundle exec rubocop
 
-      - name: Running tests
+      - name: Running Tests
         run: bundle exec rake spec
 
       - name: Running the Dangerfile for this repo
-        if: runner.os != 'Windows'
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUNNING_IN_ACTIONS: true
