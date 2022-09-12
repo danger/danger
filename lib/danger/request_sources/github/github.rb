@@ -73,6 +73,8 @@ module Danger
             Octokit::Client.new(bearer_token: @bearer_token, auto_paginate: true, api_endpoint: api_url)
           elsif valid_access_token?
             Octokit::Client.new(access_token: @access_token, auto_paginate: true, api_endpoint: api_url)
+          elsif support_tokenless_auth
+            Octokit::Client.new(auto_paginate: true, api_endpoint: api_url)
           end
         end
       end
