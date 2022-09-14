@@ -43,6 +43,11 @@ module Danger
         fetch_json(uri)
       end
 
+      def fetch_pr_diff
+        uri = URI("#{pr_api_endpoint}/diff?withComments=false")
+        fetch_json(uri)
+      end
+
       def fetch_last_comments
         uri = URI("#{pr_api_endpoint}/activities?limit=1000")
         fetch_json(uri)[:values].select { |v| v[:action] == "COMMENTED" }.map { |v| v[:comment] }

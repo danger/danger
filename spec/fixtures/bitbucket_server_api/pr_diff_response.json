@@ -1,0 +1,490 @@
+HTTP/1.1 200 OK
+
+{
+    "fromHash": "e210151df4388c0bde443707930885ada86493df",
+    "toHash": "3fc9bef368821124816aa41df3f328a3b62ff6a4",
+    "contextLines": 10,
+    "whitespace": "SHOW",
+    "diffs": [
+        {
+            "source": {
+                "components": [
+                    "Gemfile"
+                ],
+                "parent": "",
+                "name": "Gemfile",
+                "toString": "Gemfile"
+            },
+            "destination": {
+                "components": [
+                    "Gemfile"
+                ],
+                "parent": "",
+                "name": "Gemfile",
+                "toString": "Gemfile"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 4,
+                    "destinationLine": 1,
+                    "destinationSpan": 5,
+                    "segments": [
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 1,
+                                    "destination": 1,
+                                    "line": "source 'https://rubygems.org'",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 2,
+                                    "destination": 2,
+                                    "line": "",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "source": 3,
+                                    "destination": 3,
+                                    "line": "",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 3,
+                                    "destination": 4,
+                                    "line": "# Specify your gem's dependencies in batman-rails.gemspec",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 4,
+                                    "destination": 5,
+                                    "line": "gemspec",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "truncated": false
+        },
+        {
+            "source": {
+                "components": [
+                    "lib",
+                    "batman-rails",
+                    "version.rb"
+                ],
+                "parent": "lib/batman-rails",
+                "name": "version.rb",
+                "extension": "rb",
+                "toString": "lib/batman-rails/version.rb"
+            },
+            "destination": {
+                "components": [
+                    "lib",
+                    "batman-rails",
+                    "version.rb"
+                ],
+                "parent": "lib/batman-rails",
+                "name": "version.rb",
+                "extension": "rb",
+                "toString": "lib/batman-rails/version.rb"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 6,
+                    "destinationLine": 1,
+                    "destinationSpan": 7,
+                    "segments": [
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 1,
+                                    "destination": 1,
+                                    "line": "module Batman",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 2,
+                                    "destination": 2,
+                                    "line": "  module Rails",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 3,
+                                    "destination": 3,
+                                    "line": "    VERSION = \"0.16.1\"",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 4,
+                                    "destination": 4,
+                                    "line": "    BATMAN_VERSION = \"0.16.0\"",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "source": 5,
+                                    "destination": 5,
+                                    "line": "    FOO = \"bar\"",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 5,
+                                    "destination": 6,
+                                    "line": "  end",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 6,
+                                    "destination": 7,
+                                    "line": "end",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "truncated": false
+        },
+        {
+            "source": {
+                "components": [
+                    "lib",
+                    "templates",
+                    "batman",
+                    "html",
+                    "index.html"
+                ],
+                "parent": "lib/templates/batman/html",
+                "name": "index.html",
+                "extension": "html",
+                "toString": "lib/templates/batman/html/index.html"
+            },
+            "destination": {
+                "components": [
+                    "lib",
+                    "templates",
+                    "batman",
+                    "html",
+                    "index.html"
+                ],
+                "parent": "lib/templates/batman/html",
+                "name": "index.html",
+                "extension": "html",
+                "toString": "lib/templates/batman/html/index.html"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 2,
+                    "destinationLine": 1,
+                    "destinationSpan": 3,
+                    "segments": [
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 1,
+                                    "destination": 1,
+                                    "line": "<h1><%= plural_name.camelize %>Controller#index</h1>",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "source": 2,
+                                    "destination": 2,
+                                    "line": "",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 2,
+                                    "destination": 3,
+                                    "line": "<p>Find me in html/<%= plural_name.underscore %>/index.html</p>",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "truncated": false
+        },
+        {
+            "source": {
+                "components": [
+                    "lib",
+                    "templates",
+                    "batman",
+                    "main_controller.coffee"
+                ],
+                "parent": "lib/templates/batman",
+                "name": "main_controller.coffee",
+                "extension": "coffee",
+                "toString": "lib/templates/batman/main_controller.coffee"
+            },
+            "destination": {
+                "components": [
+                    "lib",
+                    "templates",
+                    "batman",
+                    "main_controller.coffee"
+                ],
+                "parent": "lib/templates/batman",
+                "name": "main_controller.coffee",
+                "extension": "coffee",
+                "toString": "lib/templates/batman/main_controller.coffee"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 9,
+                    "destinationLine": 1,
+                    "destinationSpan": 10,
+                    "segments": [
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 1,
+                                    "destination": 1,
+                                    "line": "class <%= js_application_name %>.MainController extends <%= js_application_name %>.ApplicationController",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 2,
+                                    "destination": 2,
+                                    "line": "  routingKey: 'main'",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 3,
+                                    "destination": 3,
+                                    "line": "",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 4,
+                                    "destination": 4,
+                                    "line": "  index: (params) ->",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 5,
+                                    "destination": 5,
+                                    "line": "    @set 'firstName', 'Bruce'",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 6,
+                                    "destination": 6,
+                                    "line": "    @set 'lastName', 'Wayne'",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "source": 7,
+                                    "destination": 7,
+                                    "line": "    @set 'nickname', 'Batman'",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 7,
+                                    "destination": 8,
+                                    "line": "",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 8,
+                                    "destination": 9,
+                                    "line": "  @accessor 'fullName', ->",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 9,
+                                    "destination": 10,
+                                    "line": "    \"#{@get('firstName')} #{@get('lastName')}\"",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "truncated": false
+        },
+        {
+            "source": {
+                "components": [
+                    "test",
+                    "fixtures",
+                    "application.js.coffee"
+                ],
+                "parent": "test/fixtures",
+                "name": "application.js.coffee",
+                "extension": "coffee",
+                "toString": "test/fixtures/application.js.coffee"
+            },
+            "destination": {
+                "components": [
+                    "test",
+                    "fixtures",
+                    "application.js.coffee"
+                ],
+                "parent": "test/fixtures",
+                "name": "application.js.coffee",
+                "extension": "coffee",
+                "toString": "test/fixtures/application.js.coffee"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 9,
+                    "destinationLine": 1,
+                    "destinationSpan": 10,
+                    "segments": [
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 1,
+                                    "destination": 1,
+                                    "line": "# This is a manifest file that'll be compiled into including all the files listed below.",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 2,
+                                    "destination": 2,
+                                    "line": "# Add new JavaScript/Coffee code in separate files in this directory and they'll automatically",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 3,
+                                    "destination": 3,
+                                    "line": "# be included in the compiled file accessible from http://example.com/assets/application.js",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 4,
+                                    "destination": 4,
+                                    "line": "# It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 5,
+                                    "destination": 5,
+                                    "line": "# the compiled file.",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 6,
+                                    "destination": 6,
+                                    "line": "#",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "source": 7,
+                                    "destination": 7,
+                                    "line": "#",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "CONTEXT",
+                            "lines": [
+                                {
+                                    "source": 7,
+                                    "destination": 8,
+                                    "line": "#= require jquery",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 8,
+                                    "destination": 9,
+                                    "line": "#= require jquery_ujs",
+                                    "truncated": false
+                                },
+                                {
+                                    "source": 9,
+                                    "destination": 10,
+                                    "line": "#= require_tree .",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "truncated": false
+        }
+    ]
+}

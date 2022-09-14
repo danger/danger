@@ -25,6 +25,12 @@ module Danger
         url = "https://stash.example.com/rest/api/1.0/projects/ios/repos/fancyapp/pull-requests/2080"
         WebMock.stub_request(:get, url).to_return(raw_file)
       end
+
+      def stub_pull_request_diff
+        raw_file = File.new("spec/fixtures/bitbucket_server_api/pr_diff_response.json")
+        url = "https://stash.example.com/rest/api/1.0/projects/ios/repos/fancyapp/pull-requests/2080/diff?withComments=false"
+        WebMock.stub_request(:get, url).to_return(raw_file)
+      end
     end
   end
 end

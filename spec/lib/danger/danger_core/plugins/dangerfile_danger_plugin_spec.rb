@@ -129,6 +129,17 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
 
+    it "path: 'full_path'" do
+      outer_dangerfile = "danger.import_dangerfile(path: 'foo/bar/baz.rb')"
+      inner_dangerfile = "message('OK')"
+
+      expected_path = "foo/bar/baz.rb"
+      expect(File).to receive(:file?).with(expected_path).and_return(true)
+      expect(File).to receive(:open).with(Pathname.new(expected_path), "r:utf-8").and_return(inner_dangerfile)
+      dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(dm.status_report[:messages]).to eq(["OK"])
+    end
+
     it "gem: 'name'" do
       outer_dangerfile = "danger.import_dangerfile(gem: 'example')"
       inner_dangerfile = "message('OK')"
