@@ -15,7 +15,7 @@
 <!-- Your comment above here -->
 
 
-## 9.0.0
+## 9.0.0 (2022-09-02)
 
 **Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
 * Update Octokit dependency to version 5.0. - [@mathroule](https://github.com/mathroule) [#1377](https://github.com/danger/danger/pull/1377)
@@ -26,17 +26,17 @@
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
 
 
-## 8.6.1
+## 8.6.1 (2022-04-22)
 
 * Fix for `danger pr` posting results to provider. - [@bobbymcwho](https://github.com/bobbymcwho) [#1365](https://github.com/danger/danger/pull/1365)
 
-## 8.6.0
+## 8.6.0 (2022-04-16)
 
 * Fix for branch names being able to trigger git commands - [@kyoshidajp](https://github.com/kyoshidajp ) [#1357](https://github.com/danger/danger/pull/1360)
 
 * Fix `diff_for_file` for deleted files - [@alexevanczuk](https://github.com/alexevanczuk) [#1357](https://github.com/danger/danger/pull/1357)
 
-## 8.5.0
+## 8.5.0 (2022-03-17)
 
 * New feature on VSTS/Azure DevOps: inline comment - [@damien-danglard](https://github.com/damien-danglard) [#1356](https://github.com/danger/danger/pull/1356)
 
