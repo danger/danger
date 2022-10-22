@@ -19,7 +19,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.host).to eq("gitlab.com")
     end
 
-    it "allows the GitLab host to be overidden" do
+    it "allows the GitLab host to be overridden" do
       env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
 
       expect(subject.host).to eq("gitlab.example.com")
@@ -31,7 +31,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
       expect(subject.endpoint).to eq("https://gitlab.com/api/v4")
     end
 
-    it "allows the GitLab API endpoint to be overidden with `DANGER_GITLAB_API_BASE_URL`" do
+    it "allows the GitLab API endpoint to be overridden with `DANGER_GITLAB_API_BASE_URL`" do
       env["DANGER_GITLAB_API_BASE_URL"] = "https://gitlab.example.com/api/v3"
 
       expect(subject.endpoint).to eq("https://gitlab.example.com/api/v3")
@@ -167,7 +167,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         skip "gitlab gem older than 4.6.0" if Gem.loaded_specs["gitlab"].version < Gem::Version.new("4.6.0")
       end
 
-      it "is false on verions before 10.8" do
+      it "is false on version before 10.8" do
         stub_version("10.6.4")
 
         expect(subject.supports_inline_comments).to be_falsey

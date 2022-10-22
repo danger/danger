@@ -28,9 +28,9 @@ module Danger
 
       def supports_comments?
         major_version = @api_version.split(".").first.to_i
-        minimun_version_for_comments = self.min_api_version_for_comments.split(".").first.to_i
+        minimum_version_for_comments = self.min_api_version_for_comments.split(".").first.to_i
 
-        major_version >= minimun_version_for_comments
+        major_version >= minimum_version_for_comments
       end
 
       def inspect

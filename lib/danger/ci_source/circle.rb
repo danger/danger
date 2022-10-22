@@ -31,7 +31,7 @@ module Danger
   # to retrieve PR metadata, which will require an API token.
   #
   # 1. Go to your project > Settings > API Permissions. Create a token with scope "view-builds" and a label like "DANGER_CIRCLE_CI_API_TOKEN".
-  # 2. Settings > Environement Variables. Add the token as a CircleCI environment variable, which exposes it to the Danger process.
+  # 2. Settings > Environment Variables. Add the token as a CircleCI environment variable, which exposes it to the Danger process.
   #
   # There is no difference here for OSS vs Closed, both scenarios will need this environment variable.
   #
