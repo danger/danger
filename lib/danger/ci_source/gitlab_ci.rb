@@ -48,7 +48,7 @@ module Danger
 
       client_version = Gem::Version.new(client.version.version)
       if (client_version >= Gem::Version.new("10.7"))
-        #Use the 'list merge requests associated with a commit' API, for speeed
+        #Use the 'list merge requests associated with a commit' API, for speed
         # (GET /projects/:id/repository/commits/:sha/merge_requests) available for GitLab >= 10.7
         merge_request = client.commit_merge_requests(project_path, base_commit, state: :opened).first
         if (client_version >= Gem::Version.new("13.8"))

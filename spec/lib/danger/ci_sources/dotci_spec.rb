@@ -23,7 +23,7 @@ RSpec.describe Danger::DotCi do
     end
 
     describe ".validates_as_ci?" do
-      it "validates when requierd env variables are set" do
+      it "validates when required env variables are set" do
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 

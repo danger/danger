@@ -31,7 +31,7 @@ module Danger
   #
   # #### General
   #
-  # People occasionally see issues with Danger not classing your CI runs as a PR, to give you visibilty
+  # People occasionally see issues with Danger not classing your CI runs as a PR, to give you visibility
   # the Jenkins side of Danger expects to see one of these env vars:
   # - ghprbPullId
   # - CHANGE_ID

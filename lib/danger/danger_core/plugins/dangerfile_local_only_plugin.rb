@@ -3,7 +3,7 @@ require "danger/plugin_support/plugin"
 # Danger
 module Danger
   # Handles interacting with local only plugin inside a Dangerfile.
-  # It is support pluggin for dry_run command and does not expose any methods.
+  # It is support plugin for dry_run command and does not expose any methods.
   # But you can still use other plugins like git
   #
   # @example Check that added lines contains agreed form of words 

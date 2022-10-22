@@ -1933,7 +1933,7 @@ index 0000000..e070082
 +      expect(g.host).to eql("gitlab.com")
 +    end
 +
-+    it "allows the GitLab host to be overidden" do
++    it "allows the GitLab host to be overridden" do
 +      env["DANGER_GITLAB_HOST"] = "gitlab.example.com"
 +      expect(g.host).to eql("gitlab.example.com")
 +    end
@@ -1944,7 +1944,7 @@ index 0000000..e070082
 +      expect(g.endpoint).to eql("https://gitlab.com/api/v3")
 +    end
 +
-+    it "allows the GitLab API endpoint to be overidden with `DANGER_GITLAB_API_BASE_URL`" do
++    it "allows the GitLab API endpoint to be overridden with `DANGER_GITLAB_API_BASE_URL`" do
 +      env["DANGER_GITLAB_API_BASE_URL"] = "https://gitlab.example.com/api/v3"
 +      expect(g.endpoint).to eql("https://gitlab.example.com/api/v3")
 +    end
