@@ -308,7 +308,7 @@ module Danger
     private
 
     def eval_file(contents, path)
-      eval(contents, nil, path.to_s) # rubocop:disable Eval
+      eval(contents, nil, path.to_s) # rubocop:disable Security/Eval
     end
 
     def print_list(title, rows)
