@@ -11,6 +11,7 @@
 ## master
 
 * Fixed Docker image outdated ruby version by updating it to 2.7. [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
+* Use an Octokit client without tokens when support_tokenless_auth is true [@makimoto](https://github.com/makimoto) [#1385](https://github.com/danger/danger/pull/1385)
 
 <!-- Your comment above here -->
 
