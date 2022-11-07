@@ -10,11 +10,12 @@
 
 ## master
 
-* Fixed Docker image outdated ruby version by updating it to 2.7. [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
-* Added support for [Appcircle](https://appcircle.io/) - [@tosbaha](https://github.com/tosbaha)
-
 <!-- Your comment above here -->
 
+## 9.1.0
+
+* Fixed Docker image outdated ruby version by updating it to 2.7. [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
+* Added support for [Appcircle](https://appcircle.io/) - [@tosbaha](https://github.com/tosbaha)
 
 ## 9.0.0
 
