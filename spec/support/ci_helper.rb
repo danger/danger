@@ -7,6 +7,16 @@ module Danger
         { "DANGER_GITHUB_API_TOKEN" => "1234567890" * 4 }
       end
 
+      def with_appcircle_setup_and_is_a_pull_request
+        system_env = {
+          "AC_APPCIRCLE" => "true",
+          "AC_PULL_NUMBER" => "42",
+          "AC_GIT_URL" => "git@github.com:danger/danger"
+        }
+
+        yield(system_env)
+      end
+
       def with_bamboo_setup_and_is_a_pull_request
         system_env = {
           "bamboo_buildKey" => "1",

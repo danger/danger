@@ -6,6 +6,7 @@ RSpec.describe Danger::CI do
       expect(described_class.available_ci_sources.map(&:to_s)).to match_array(
         [
           "Danger::Appcenter",
+          "Danger::Appcircle",
           "Danger::AppVeyor",
           "Danger::AzurePipelines",
           "Danger::Bamboo",
