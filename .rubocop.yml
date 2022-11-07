@@ -73,7 +73,7 @@ Metrics/CyclomaticComplexity:
   Max: 17
 
 # Configuration parameters: AllowURI, URISchemes.
-Metrics/LineLength:
+Layout/LineLength:
   Max: 370
 
 # Configuration parameters: CountKeywordArgs.
@@ -121,13 +121,13 @@ Metrics/BlockLength:
   Exclude:
     - "**/*_spec.rb"
 
-Style/FileName:
+Naming/FileName:
   Enabled: false
 
 Style/SpecialGlobalVars:
   Enabled: false
 
-PercentLiteralDelimiters:
+Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     "%":  ()
     "%i": ()

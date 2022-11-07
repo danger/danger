@@ -402,40 +402,40 @@ COMMENT
 
     it "some warnings, no errors" do
       result = dummy.generate_comment(warnings: violations_factory(["my warning", "second warning"]), errors: [], messages: [])
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="https://danger.systems/">Danger</a></p>'
       )
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
     end
 
     it "some warnings with markdown, no errors" do
       warnings = violations_factory(["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"])
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="https://danger.systems/">Danger</a></p>'
       )
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
     end
 
     it "a multiline warning with markdown, no errors" do
       warnings = violations_factory(["a markdown [link to danger](https://github.com/danger/danger)\n\n```\nsomething\n```\n\nHello"])
       result = dummy.generate_comment(warnings: warnings, errors: [], messages: [])
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></p><pre><code>something</code></pre><p>Hello</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="https://danger.systems/">Danger</a></p>'
       )
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
     end
 
     it "some warnings, some errors" do
       result = dummy.generate_comment(warnings: violations_factory(["my warning"]), errors: violations_factory(["some error"]), messages: [])
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="https://danger.systems/">Danger</a></p>'
       )
-      # rubocop:enable Metrics/LineLength
+      # rubocop:enable Layout/LineLength
     end
 
     it "deduplicates previous violations" do
