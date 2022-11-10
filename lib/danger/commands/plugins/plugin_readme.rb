@@ -17,8 +17,6 @@ module Danger
       super
     end
 
-    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
-
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a format usable in a README.
       This is useful for Danger itself, but also for any plugins wanting to showcase their API.
