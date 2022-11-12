@@ -74,6 +74,8 @@ module Danger
     # @option opts [String] :github GitHub repo
     # @option opts [String] :gitlab GitLab repo
     # @option opts [String] :gem Gem name
+    # @option opts [String] :ref The name of branch, tag or commit
+    # @option opts [String] :branch Alias of :ref
     # @option opts [String] :path Path to Dangerfile
     # @return   [void]
     def import_dangerfile(opts)
