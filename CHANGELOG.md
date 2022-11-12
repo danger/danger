@@ -10,6 +10,7 @@
 
 ## master
 
+* Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
 <!-- Your comment above here -->
 
 ## 9.1.0
