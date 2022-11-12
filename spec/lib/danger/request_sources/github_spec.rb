@@ -168,6 +168,11 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
       end
 
+      it "returns a valid URL with using ref parameter" do
+        url = @g.file_url(repository: "danger", organisation: "artsy", ref: "master", path: "path/Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
+      end
+
       it "returns a valid fallback URL" do
         url = @g.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
         expect(url).to eq("https://raw.githubusercontent.com/teapot/danger/master/Dangerfile")

@@ -85,10 +85,10 @@ module Danger
         raise "Subclass and overwrite organisation"
       end
 
-      def file_url(_organisation: nil, _repository: nil, _branch: "master", _path: nil)
+      def file_url(_organisation: nil, _repository: nil, _ref: nil, _branch: nil, _path: nil)
         raise "Subclass and overwrite file_url"
       end
-      
+
       def update_build_status(status)
           raise "Subclass and overwrite update_build_status"
       end
