@@ -253,9 +253,6 @@ module Danger
       end
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        # Avoid doing any fetchs if there's no inline comments
-        return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
-
         diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }

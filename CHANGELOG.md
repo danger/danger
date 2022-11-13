@@ -10,6 +10,8 @@
 
 ## master
 
+* Fix GitHub inline commens cleanup logic - [@kemchenj](https://kemchen.github.io/)
+
 <!-- Your comment above here -->
 
 ## 9.1.0
