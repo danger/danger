@@ -22,7 +22,7 @@ module Danger
   #
   # @example Warn when there are merge commits in the diff
   #
-  #          if git.commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
+  #          if git.commits.any? { |c| c.parents.count > 1 }
   #            warn 'Please rebase to get rid of the merge commits in this PR'
   #          end
   #
