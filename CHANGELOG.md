@@ -10,6 +10,8 @@
 
 ## master
 
+* Use `in_reply_to_id` to lookup GitHub replies - [@kemchenj](https:/kemchenj.github.io/)
+
 <!-- Your comment above here -->
 
 ## 9.1.0

@@ -275,12 +275,8 @@ module Danger
             client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
           else
             # We remove non-sticky violations that have no replies
-            # Since there's no direct concept of a reply in GH, we simply consider
-            # the existence of non-danger comments in that line as replies
             replies = non_danger_comments.select do |potential|
-              potential["path"] == comment["path"] &&
-                potential["position"] == comment["position"] &&
-                potential["commit_id"] == comment["commit_id"]
+              potential['in_reply_to_id'] == comment['id']
             end
 
             client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
