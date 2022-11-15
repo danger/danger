@@ -9,7 +9,7 @@ module Danger
   #  ```yml
   #  ...
   #    steps:
-  #      - uses: actions/checkout@v1
+  #      - uses: actions/checkout@v3
   #      - uses: danger/danger@master
   #        env:
   #          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
