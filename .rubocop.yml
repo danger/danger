@@ -9,6 +9,7 @@ AllCops:
   Exclude:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'
+  NewCops: disable
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
