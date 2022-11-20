@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 inherit_mode:
   merge:
     - Exclude
