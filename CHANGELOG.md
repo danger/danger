@@ -9,6 +9,7 @@
 -->
 
 ## master
+* Fix offenses for RuboCop that can be fixed automatically. [@ydah](https://github.com/ydah)
 
 * Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
 * Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
