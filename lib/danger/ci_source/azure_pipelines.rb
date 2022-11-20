@@ -21,9 +21,9 @@ module Danger
     def self.validates_as_ci?(env)
       # AGENT_ID is being used by AppCenter as well, so checking here to make sure AppCenter CI doesn't get a false positive for AzurePipelines
       # Anyone working with AzurePipelines could provide a better/truly unique env key to avoid checking for AppCenter
-      !Danger::Appcenter::validates_as_ci?(env) &&
-      env.key?("AGENT_ID") &&
-      env["BUILD_REPOSITORY_PROVIDER"] != "TfsGit"
+      !Danger::Appcenter.validates_as_ci?(env) &&
+        env.key?("AGENT_ID") &&
+        env["BUILD_REPOSITORY_PROVIDER"] != "TfsGit"
     end
 
     def self.validates_as_pr?(env)

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# coding: utf-8
 
 require "openssl"
 require "danger/helpers/comments_helper"
@@ -65,9 +64,9 @@ module Danger
       end
 
       def update_pr_build_status(status, changeset, build_job_link, description)
-         uri = URI("#{self.host}/rest/build-status/1.0/commits/#{changeset}")
-         body = build_status_body(status, build_job_link, description)
-         post(uri, body)
+        uri = URI("#{self.host}/rest/build-status/1.0/commits/#{changeset}")
+        body = build_status_body(status, build_job_link, description)
+        post(uri, body)
       end
 
       private
@@ -118,12 +117,12 @@ module Danger
       end
 
       def build_status_body(status, build_job_link, description)
-          body = Hash.new
-          body["state"] = status
-          body["key"] = self.key
-          body["url"] = build_job_link
-          body["description"] = description if description
-          return body.to_json
+        body = {}
+        body["state"] = status
+        body["key"] = self.key
+        body["url"] = build_job_link
+        body["description"] = description if description
+        return body.to_json
       end
     end
   end

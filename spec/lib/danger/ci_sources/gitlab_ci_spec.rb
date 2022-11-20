@@ -61,7 +61,7 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
           end
           context "version 10.7 or later" do
             it "uses gitlab api to find merge request id" do
-              #Arbitrary version, as tested manually, including text components to exercise the version comparison
+              # Arbitrary version, as tested manually, including text components to exercise the version comparison
               stub_version("11.10.0-rc6-ee")
               commit_sha = "3333333333333333333333333333333333333333"
               stub_commit_merge_requests("commit_merge_requests", "k0nserv%2Fdanger-test", commit_sha)
@@ -85,9 +85,9 @@ RSpec.describe Danger::GitLabCI, host: :gitlab do
     end
 
     context "given PR made on github hosted repository" do
-      let(:pr_num) { '24' }
-      let(:repo_url) { 'https://github.com/procore/blueprinter' }
-      let(:repo_slug) { 'procore/blueprinter' }
+      let(:pr_num) { "24" }
+      let(:repo_url) { "https://github.com/procore/blueprinter" }
+      let(:repo_slug) { "procore/blueprinter" }
       let(:env) do
         stub_env.merge(
           {

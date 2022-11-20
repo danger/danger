@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_server_api"
 require "danger/request_sources/code_insights_api"
@@ -32,7 +30,7 @@ module Danger
 
       def initialize(ci_source, environment)
         self.ci_source = ci_source
-        self.dismiss_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_DISMISS_OUT_OF_RANGE_MESSAGES"] == 'true'
+        self.dismiss_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_DISMISS_OUT_OF_RANGE_MESSAGES"] == "true"
 
         project, slug = ci_source.repo_slug.split("/")
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
@@ -164,6 +162,7 @@ module Danger
           next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
+
           next a.file <=> b.file
         end
 
@@ -188,26 +187,24 @@ module Danger
       def find_position_in_diff?(file, line)
         return nil if file.nil? || line.nil?
         return nil if file.empty?
+
         added_lines(file).include?(line)
       end
 
       def file_diff(file)
-        self.pr_diff[:diffs].find{|diff| diff[:destination] && diff[:destination][:toString] == file } || {:hunks => []}
+        self.pr_diff[:diffs].find { |diff| diff[:destination] && diff[:destination][:toString] == file } || { hunks: [] }
       end
 
       def added_lines(file)
         @added_lines ||= {}
-        @added_lines[file] ||= begin
-          file_diff(file)[:hunks].map do |hunk|
-            hunk[:segments].select{|segment| segment[:type] == 'ADDED' }.map do |segment|
-              segment[:lines].map do |line|
-                line[:destination]
-              end
+        @added_lines[file] ||= file_diff(file)[:hunks].map do |hunk|
+          hunk[:segments].select { |segment| segment[:type] == "ADDED" }.map do |segment|
+            segment[:lines].map do |line|
+              line[:destination]
             end
-          end.flatten
-        end
+          end
+        end.flatten
       end
-
     end
   end
 end

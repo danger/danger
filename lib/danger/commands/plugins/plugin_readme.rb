@@ -8,7 +8,7 @@ module Danger
     self.summary = "Generates a README from a set of plugins"
     self.command = "readme"
 
-    attr_accessor :cork, :json
+    attr_accessor :cork, :json, :markdown
 
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
@@ -26,7 +26,6 @@ module Danger
       CLAide::Argument.new("Paths, Gems or Nothing", false, true)
     ]
 
-    attr_accessor :json, :markdown
     def run
       file_resolver = PluginFileResolver.new(@refs)
       data = file_resolver.resolve
@@ -37,7 +36,7 @@ module Danger
       self.json = JSON.parse(parser.to_json_string)
 
       template = File.join(Danger.gem_path, "lib/danger/plugin_support/templates/readme_table.html.erb")
-      cork.puts ERB.new(File.read(template), 0, "-").result(binding)
+      cork.puts ERB.new(File.read(template), trim_mode: "-").result(binding)
     end
   end
 end

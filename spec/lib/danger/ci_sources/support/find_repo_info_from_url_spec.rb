@@ -87,7 +87,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
           slug: "some-org/awesomerepo",
           id: "1324"
         )
-      end  
+      end
     end
 
     context "bitbucket.com" do

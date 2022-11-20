@@ -8,8 +8,8 @@ module Danger
     # e.g. "**/something.*" for any file called something with any extension
     def include?(pattern)
       self.each do |current|
-        unless current.nil?
-          return true if File.fnmatch(pattern, current, File::FNM_EXTGLOB) || pattern == current
+        if !current.nil? && (File.fnmatch(pattern, current, File::FNM_EXTGLOB) || pattern == current)
+          return true
         end
       end
       return false

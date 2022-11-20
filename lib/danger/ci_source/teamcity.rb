@@ -155,7 +155,7 @@ module Danger
       repo_slug   = env["BITBUCKET_REPO_SLUG"]
       begin
         Danger::RequestSources::BitbucketCloudAPI.new(repo_slug, nil, branch_name, env).pull_request_id
-      rescue
+      rescue StandardError
         raise "Failed to find a pull request for branch \"#{branch_name}\" on Bitbucket."
       end
     end

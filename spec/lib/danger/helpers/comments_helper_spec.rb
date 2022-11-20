@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/helpers/comments_helper"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"
@@ -212,13 +210,12 @@ RSpec.describe Danger::Helpers::CommentsHelper do
         expect(table_data[:name]).to eq("1 Error")
         expect(table_data[:emoji]).to eq("no_entry_sign")
         expect(table_data[:content].size).to be(1)
-        expect(table_data[:content][0].message).to eq("#{heredoc_text.strip}")
+        expect(table_data[:content][0].message).to eq(heredoc_text.strip.to_s)
         expect(table_data[:content][0].sticky).to eq(false)
 
         expect(table_data[:resolved]).to be_empty
         expect(table_data[:count]).to be(1)
       end
-
     end
 
     context "with a heredoc text with a newline at the end" do
@@ -402,11 +399,9 @@ COMMENT
 
     it "some warnings, no errors" do
       result = dummy.generate_comment(warnings: violations_factory(["my warning", "second warning"]), errors: [], messages: [])
-      # rubocop:disable Layout/LineLength
       expect(result.gsub(/\s+/, "")).to end_with(
         '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-danger-table="true"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="https://danger.systems/">Danger</a></p>'
       )
-      # rubocop:enable Layout/LineLength
     end
 
     it "some warnings with markdown, no errors" do
@@ -474,7 +469,7 @@ COMMENT
     it "counts only unresolved violations on the title" do
       previous_violations = { error: violations_factory(["an error"]) }
       result = dummy.generate_comment(warnings: [], errors: violations_factory(["another error"]),
-                                   messages: [], previous_violations: previous_violations)
+                                      messages: [], previous_violations: previous_violations)
       expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-danger-table="true"data-kind="Error">1Error</th>')
     end
 
@@ -485,7 +480,7 @@ COMMENT
 
     it "handles a custom danger_id" do
       result = dummy.generate_comment(warnings: violations_factory(["my warning"]), errors: violations_factory(["some error"]),
-                                   messages: [], danger_id: "another_danger")
+                                      messages: [], danger_id: "another_danger")
       expect(result.gsub(/\s+/, "")).to include("generated_by_another_danger")
     end
 
@@ -502,7 +497,7 @@ COMMENT
     end
 
     it "truncates comments which would exceed githubs maximum comment length" do
-      warnings = (1..900).map { |i| "single long warning" * (rand(10) + 1) + i.to_s }
+      warnings = (1..900).map { |i| "single long warning" * rand(1..10) + i.to_s }
       result = dummy.generate_comment(warnings: violations_factory(warnings), errors: violations_factory([]), messages: [])
       expect(result.length).to be <= GITHUB_MAX_COMMENT_LENGTH
       expect(result).to include("has been truncated")

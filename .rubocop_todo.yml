@@ -6,231 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: TreatCommentsAsGroupSeparators, ConsiderPunctuation, Include.
-# Include: **/*.gemspec
-Gemspec/OrderedDependencies:
-  Exclude:
-    - 'danger.gemspec'
-
-# Offense count: 11
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: with_first_argument, with_fixed_indentation
-Layout/ArgumentAlignment:
-  Exclude:
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith.
-# SupportedStylesAlignWith: either, start_of_block, start_of_line
-Layout/BlockAlignment:
-  Exclude:
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-Layout/BlockEndNewline:
-  Exclude:
-    - 'spec/lib/danger/danger_core/message_group_spec.rb'
-    - 'spec/lib/danger/request_sources/code_insights_api_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/ClosingParenthesisIndentation:
-  Exclude:
-    - 'lib/danger/commands/staging.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowForAlignment.
-Layout/CommentIndentation:
-  Exclude:
-    - 'lib/danger/ci_source/concourse.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: start_of_line, def
-Layout/DefEndAlignment:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-
-# Offense count: 43
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'lib/danger.rb'
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/appveyor.rb'
-    - 'lib/danger/ci_source/circle_api.rb'
-    - 'lib/danger/commands/local_helpers/http_cache.rb'
-    - 'lib/danger/commands/local_helpers/pry_setup.rb'
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/danger_core/environment_manager.rb'
-    - 'lib/danger/danger_core/executor.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_cloud_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_server_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_danger_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_git_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_github_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_gitlab_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_local_only_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_messaging_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_vsts_plugin.rb'
-    - 'lib/danger/danger_core/standard_error.rb'
-    - 'lib/danger/helpers/comments_helper.rb'
-    - 'lib/danger/helpers/comments_parsing_helper.rb'
-    - 'lib/danger/plugin_support/plugin_linter.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-    - 'lib/danger/request_sources/github/github_review.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/vsts.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - 'lib/danger/ci_source/local_git_repo.rb'
-    - 'lib/danger/danger_core/message_aggregator.rb'
-    - 'lib/danger/danger_core/messages/markdown.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'lib/danger/danger_core/messages/base.rb'
-    - 'spec/lib/danger/plugin_support/plugin_spec.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLines:
-  Exclude:
-    - 'lib/danger/helpers/comments_helper.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowAliasSyntax, AllowedMethods.
-# AllowedMethods: alias_method, public, protected, private
-Layout/EmptyLinesAroundAttributeAccessor:
-  Exclude:
-    - 'lib/danger/ci_source/jenkins.rb'
-    - 'lib/danger/ci_source/local_only_git_repo.rb'
-    - 'lib/danger/commands/local_helpers/http_cache.rb'
-    - 'lib/danger/commands/plugins/plugin_readme.rb'
-
-# Offense count: 22
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'spec/lib/danger/ci_sources/codemagic_spec.rb'
-    - 'spec/lib/danger/ci_sources/support/pull_request_finder_spec.rb'
-    - 'spec/lib/danger/danger_core/message_group_spec.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_gitlab_plugin_spec.rb'
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-    - 'spec/lib/danger/plugins/dangerfile_bitbucket_cloud_plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_cloud_api_spec.rb'
-    - 'spec/lib/danger/request_sources/code_insights_api_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'lib/danger/ci_source/bitbucket_pipelines.rb'
-    - 'lib/danger/ci_source/concourse.rb'
-    - 'lib/danger/danger_core/messages/markdown.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_cloud_plugin.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/code_insights_api.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/vsts.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'lib/danger/request_sources/code_insights_api.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleAlignWith, Severity.
-# SupportedStylesAlignWith: keyword, variable, start_of_line
-Layout/EndAlignment:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/danger/ci_source/appcircle.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: consistent, consistent_relative_to_receiver, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
-Layout/FirstArgumentIndentation:
-  Exclude:
-    - 'lib/danger/commands/staging.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/FirstArrayElementIndentation:
-  Exclude:
-    - 'lib/danger/commands/staging.rb'
-
-# Offense count: 11
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, indented_internal_methods
-Layout/IndentationConsistency:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'spec/lib/danger/ci_sources/support/pull_request_finder_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-
-# Offense count: 13
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Width, AllowedPatterns, IgnoredPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_server_plugin.rb'
-    - 'lib/danger/request_sources/bitbucket_server_api.rb'
-    - 'lib/danger/request_sources/request_source.rb'
-    - 'spec/lib/danger/ci_sources/support/pull_request_finder_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'lib/danger/ci_source/gitlab_ci.rb'
-    - 'lib/danger/commands/local.rb'
-    - 'spec/lib/danger/ci_sources/gitlab_ci_spec.rb'
-    - 'spec/lib/danger/danger_core/message_aggregator_spec.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Max, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, IgnoredPatterns.
@@ -238,137 +13,6 @@ Layout/LeadingCommentSpace:
 Layout/LineLength:
   Exclude:
     - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-Layout/MultilineBlockLayout:
-  Exclude:
-    - 'spec/lib/danger/danger_core/message_group_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: symmetrical, new_line, same_line
-Layout/MultilineHashBraceLayout:
-  Exclude:
-    - 'lib/danger/request_sources/code_insights_api.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented, indented_relative_to_receiver
-Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - 'lib/danger/ci_source/azure_pipelines.rb'
-    - 'lib/danger/request_sources/vsts.rb'
-
-# Offense count: 7
-# This cop supports safe autocorrection (--autocorrect).
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/helpers/comments_helper.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Layout/SpaceAroundMethodCallOperator:
-  Exclude:
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'spec/lib/danger/request_sources/local_only.rb'
-
-# Offense count: 39
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_gitlab_plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceBeforeBlockBraces:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-
-# Offense count: 30
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideHashLiteralBraces:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/code_insights_api.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'spec/lib/danger/ci_sources/github_actions_spec.rb'
-    - 'spec/lib/danger/ci_sources/teamcity_spec.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_gitlab_plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-    - 'spec/support/github_helper.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, compact, no_space
-Layout/SpaceInsideParens:
-  Exclude:
-    - 'spec/lib/danger/ci_sources/github_actions_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingEmptyLines:
-  Exclude:
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-
-# Offense count: 33
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/support/find_repo_info_from_url.rb'
-    - 'lib/danger/ci_source/xcode_cloud.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_server_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_gitlab_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_local_only_plugin.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/request_source.rb'
-    - 'spec/lib/danger/ci_sources/appcircle_spec.rb'
-    - 'spec/lib/danger/ci_sources/bitrise_spec.rb'
-    - 'spec/lib/danger/ci_sources/support/find_repo_info_from_url_spec.rb'
-    - 'spec/lib/danger/ci_sources/xcode_cloud_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_cloud_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-    - 'spec/support/gitlab_helper.rb'
 
 # Offense count: 3
 # Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
@@ -388,27 +32,17 @@ Lint/ConstantDefinitionInBlock:
     - 'spec/lib/danger/helpers/array_subclass_spec.rb'
     - 'spec/lib/danger/plugin_support/plugin_spec.rb'
 
-# Offense count: 8
+# Offense count: 7
 Lint/DuplicateMethods:
   Exclude:
     - 'lib/danger/ci_source/ci_source.rb'
-    - 'lib/danger/commands/plugins/plugin_readme.rb'
     - 'lib/danger/request_sources/github/github_review.rb'
     - 'lib/danger/request_sources/request_source.rb'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Lint/ErbNewArguments:
-  Exclude:
-    - 'lib/danger/commands/plugins/plugin_readme.rb'
-    - 'lib/danger/helpers/comments_helper.rb'
-
-# Offense count: 4
+# Offense count: 2
 # Configuration parameters: MaximumRangeSize.
 Lint/MissingCopEnableDirective:
   Exclude:
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/plugin_support/plugin.rb'
     - 'lib/danger/request_sources/github/github.rb'
     - 'spec/support/ci_helper.rb'
 
@@ -469,29 +103,6 @@ Lint/NonDeterministicRequireOrder:
     - 'lib/danger.rb'
     - 'spec/spec_helper.rb'
 
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Lint/OrderedMagicComments:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-    - 'lib/danger/request_sources/bitbucket_server_api.rb'
-    - 'lib/danger/request_sources/code_insights_api.rb'
-    - 'lib/danger/request_sources/vsts_api.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Lint/RedundantCopDisableDirective:
-  Exclude:
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/plugin_support/plugin.rb'
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Lint/RedundantCopEnableDirective:
-  Exclude:
-    - 'danger.gemspec'
-
 # Offense count: 1
 Lint/SelfAssignment:
   Exclude:
@@ -514,21 +125,12 @@ Lint/UnderscorePrefixedVariableName:
   Exclude:
     - 'spec/lib/danger/danger_core/messages/violation_spec.rb'
 
-# Offense count: 4
+# Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
 Lint/UnusedMethodArgument:
   Exclude:
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
     - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/request_source.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Lint/UriRegexp:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
 
 # Offense count: 3
 Lint/UselessAssignment:
@@ -613,13 +215,6 @@ Naming/PredicateName:
   Exclude:
     - 'lib/danger/request_sources/gitlab.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - 'lib/danger/danger_core/dangerfile.rb'
-
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, AllowedIdentifiers, AllowedPatterns.
 # SupportedStyles: snake_case, camelCase
@@ -637,34 +232,6 @@ Naming/VariableNumber:
     - 'spec/lib/danger/request_sources/github_spec.rb'
     - 'spec/support/gitlab_helper.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: separated, grouped
-Style/AccessorGrouping:
-  Exclude:
-    - 'lib/danger/commands/plugins/plugin_readme.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Exclude:
-    - 'lib/danger/danger_core/plugins/dangerfile_messaging_plugin.rb'
-
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, IgnoredMethods, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining, always_braces
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# AllowedMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Exclude:
-    - 'spec/lib/danger/danger_core/message_group_spec.rb'
-    - 'spec/lib/danger/request_sources/code_insights_api_spec.rb'
-
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/CaseLikeIf:
@@ -672,80 +239,6 @@ Style/CaseLikeIf:
     - 'lib/danger/ci_source/support/pull_request_finder.rb'
     - 'lib/danger/danger_core/environment_manager.rb'
     - 'lib/danger/helpers/comments_parsing_helper.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: is_a?, kind_of?
-Style/ClassCheck:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
-# AllowedMethods: ==, equal?, eql?
-Style/ClassEqualityComparison:
-  Exclude:
-    - 'lib/danger/commands/runner.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_git_plugin.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Style/ColonMethodCall:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/azure_pipelines.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/EmptyLiteral:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_server_api.rb'
-
-# Offense count: 28
-# This cop supports safe autocorrection (--autocorrect).
-Style/Encoding:
-  Exclude:
-    - 'danger.gemspec'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_cloud_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_server_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_vsts_plugin.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/bitbucket_server_api.rb'
-    - 'lib/danger/request_sources/code_insights_api.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-    - 'lib/danger/request_sources/github/github_review.rb'
-    - 'lib/danger/request_sources/github/github_review_resolver.rb'
-    - 'lib/danger/request_sources/github/github_review_unsupported.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/local_only.rb'
-    - 'lib/danger/request_sources/vsts.rb'
-    - 'lib/danger/request_sources/vsts_api.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_vsts_plugin_spec.rb'
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-    - 'spec/lib/danger/plugins/dangerfile_bitbucket_cloud_plugin_spec.rb'
-    - 'spec/lib/danger/plugins/dangerfile_bitbucket_server_plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_cloud_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_spec.rb'
-    - 'spec/lib/danger/request_sources/code_insights_api_spec.rb'
-    - 'spec/lib/danger/request_sources/github_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-    - 'spec/lib/danger/request_sources/local_only.rb'
-    - 'spec/lib/danger/request_sources/vsts_spec.rb'
-
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-Style/ExpandPathArguments:
-  Exclude:
-    - 'Rakefile'
-    - 'bin/danger'
-    - 'danger.gemspec'
-    - 'spec/lib/danger/ci_sources/github_actions_spec.rb'
-    - 'spec/spec_helper.rb'
 
 # Offense count: 206
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -968,19 +461,6 @@ Style/GlobalStdStream:
     - 'spec/lib/danger/commands/plugins/plugin_lint_spec.rb'
     - 'spec/lib/danger/commands/plugins/plugin_readme_spec.rb'
 
-# Offense count: 19
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-# SupportedShorthandSyntax: always, never, either, consistent
-Style/HashSyntax:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_gitlab_plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_cloud_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/IdenticalConditionalBranches:
@@ -988,49 +468,10 @@ Style/IdenticalConditionalBranches:
     - 'lib/danger/request_sources/gitlab.rb'
 
 # Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns, IgnoredMethods.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'spec/lib/danger/request_sources/bitbucket_cloud_spec.rb'
-
-# Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:
     - 'lib/danger/danger_core/dangerfile.rb'
     - 'lib/danger/plugin_support/plugin.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowMethodComparison.
-Style/MultipleComparison:
-  Exclude:
-    - 'lib/danger/ci_source/github_actions.rb'
-
-# Offense count: 5
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/danger/ci_source/support/find_repo_info_from_url.rb'
-    - 'lib/danger/helpers/comments_parsing_helper.rb'
-    - 'lib/danger/request_sources/support/get_ignored_violation.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinDigits, Strict, AllowedNumbers, AllowedPatterns.
-Style/NumericLiterals:
-  Exclude:
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
 
 # Offense count: 25
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -1067,26 +508,6 @@ Style/OptionalBooleanParameter:
     - 'lib/danger/request_sources/github/github_review.rb'
     - 'lib/danger/request_sources/github/github_review_unsupported.rb'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Style/OrAssignment:
-  Exclude:
-    - 'lib/danger/ci_source/jenkins.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowSafeAssignment, AllowInMultilineConditions.
-Style/ParenthesesAroundCondition:
-  Exclude:
-    - 'lib/danger/ci_source/gitlab_ci.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Exclude:
-    - 'lib/danger/helpers/comments_helper.rb'
-
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
@@ -1095,35 +516,6 @@ Style/PreferredHashMethods:
   Exclude:
     - 'lib/danger/helpers/emoji_mapper.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/RandomWithOffset:
-  Exclude:
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantAssignment:
-  Exclude:
-    - 'lib/danger/ci_source/circle_api.rb'
-    - 'lib/danger/danger_core/messages/markdown.rb'
-    - 'lib/danger/danger_core/messages/violation.rb'
-
-# Offense count: 15
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantBegin:
-  Exclude:
-    - 'lib/danger/ci_source/dotci.rb'
-    - 'lib/danger/ci_source/jenkins.rb'
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
-    - 'lib/danger/commands/systems.rb'
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/danger_core/executor.rb'
-    - 'lib/danger/danger_core/standard_error.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: SafeForConstants.
@@ -1131,56 +523,6 @@ Style/RedundantFetchBlock:
   Exclude:
     - 'lib/danger/ci_source/local_git_repo.rb'
     - 'lib/danger/ci_source/support/pull_request_finder.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantFreeze:
-  Exclude:
-    - 'lib/danger/danger_core/messages/markdown.rb'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/RedundantInterpolation:
-  Exclude:
-    - 'spec/lib/danger/helpers/comments_helper_spec.rb'
-
-# Offense count: 64
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantRegexpEscape:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/bamboo.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/ci_source/buildkite.rb'
-    - 'lib/danger/ci_source/code_build.rb'
-    - 'lib/danger/ci_source/dotci.rb'
-    - 'lib/danger/ci_source/jenkins.rb'
-    - 'lib/danger/ci_source/support/find_repo_info_from_url.rb'
-    - 'lib/danger/ci_source/vsts.rb'
-    - 'lib/danger/commands/init.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_vsts_plugin.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/ci_source/codefresh.rb'
-    - 'lib/danger/ci_source/jenkins.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - 'lib/danger/ci_source/teamcity.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
 
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -1191,27 +533,6 @@ Style/SafeNavigation:
     - 'lib/danger/ci_source/circle_api.rb'
     - 'lib/danger/plugin_support/plugin_file_resolver.rb'
     - 'lib/danger/plugin_support/plugin_linter.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/SelfAssignment:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_gitlab_plugin_spec.rb'
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowModifier.
-Style/SoleNestedConditional:
-  Exclude:
-    - 'Dangerfile'
-    - 'lib/danger/core_ext/file_list.rb'
 
 # Offense count: 69
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -1242,61 +563,3 @@ Style/StringConcatenation:
     - 'spec/lib/danger/danger_core/plugins/dangerfile_git_plugin_spec.rb'
     - 'spec/lib/danger/scm_source/git_repo_spec.rb'
     - 'spec/spec_helper.rb'
-
-# Offense count: 67
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'lib/danger/ci_source/appcircle.rb'
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/ci_source/github_actions.rb'
-    - 'lib/danger/ci_source/gitlab_ci.rb'
-    - 'lib/danger/danger_core/executor.rb'
-    - 'lib/danger/helpers/comments_helper.rb'
-    - 'lib/danger/request_sources/bitbucket_cloud_api.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'spec/lib/danger/ci_sources/gitlab_ci_spec.rb'
-    - 'spec/lib/danger/ci_sources/local_git_repo_spec.rb'
-    - 'spec/lib/danger/ci_sources/support/pull_request_finder_spec.rb'
-    - 'spec/lib/danger/commands/pr_spec.rb'
-    - 'spec/lib/danger/plugin_support/plugin_spec.rb'
-    - 'spec/lib/danger/request_sources/bitbucket_server_api_spec.rb'
-    - 'spec/lib/danger/request_sources/github_spec.rb'
-    - 'spec/lib/danger/request_sources/gitlab_spec.rb'
-    - 'spec/lib/danger/scm_source/git_repo_spec.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiteralsInInterpolation:
-  Exclude:
-    - 'lib/danger/ci_source/bitbucket_pipelines.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowSafeAssignment.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_parentheses_when_complex
-Style/TernaryParentheses:
-  Exclude:
-    - 'lib/danger/request_sources/code_insights_api.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'spec/lib/danger/request_sources/github_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/danger/helpers/emoji_mapper.rb'

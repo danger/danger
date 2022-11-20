@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/request_sources/bitbucket_cloud"
 require "danger/helpers/message_groups_array_helper"
 require "danger/danger_core/message_group"
@@ -85,9 +83,9 @@ RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
 
     context "when credentials in place" do
       it "matches a comment and deletes it" do
-        stub_request(:delete, delete_uri).to_return(:status => 200, :body => "", :headers => {})
+        stub_request(:delete, delete_uri).to_return(status: 200, body: "", headers: {})
 
-        bs.delete_old_comments()
+        bs.delete_old_comments
         expect(a_request(:delete, delete_uri)).to have_been_made
       end
     end
@@ -95,8 +93,8 @@ RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
     context "when missing DANGER_BITBUCKETCLOUD_UUID" do
       let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_UUID" } }
 
-      it "raises an error when deleting comment" do        
-        expect { bs.delete_old_comments() }.to raise_error(RuntimeError)
+      it "raises an error when deleting comment" do
+        expect { bs.delete_old_comments }.to raise_error(RuntimeError)
       end
     end
   end
@@ -118,7 +116,7 @@ RSpec.describe Danger::RequestSources::BitbucketCloud, host: :bitbucket_cloud do
 
     before do
       stub_request(:post, uri)
-        .to_return(:status => 200, :body => "", :headers => {})
+        .to_return(status: 200, body: "", headers: {})
     end
 
     context "with no message groups" do

@@ -16,7 +16,6 @@ module Danger
   # You can find them in Settings > Pipelines > Repository Variables
 
   class BitbucketPipelines < CI
-
     def self.validates_as_ci?(env)
       env.key? "BITBUCKET_BUILD_NUMBER"
     end
@@ -31,7 +30,7 @@ module Danger
 
     def initialize(env)
       self.repo_url = env["BITBUCKET_GIT_HTTP_ORIGIN"]
-      self.repo_slug = "#{env["BITBUCKET_REPO_OWNER"]}/#{env["BITBUCKET_REPO_SLUG"]}"
+      self.repo_slug = "#{env['BITBUCKET_REPO_OWNER']}/#{env['BITBUCKET_REPO_SLUG']}"
       self.pull_request_id = env["BITBUCKET_PR_ID"]
     end
   end

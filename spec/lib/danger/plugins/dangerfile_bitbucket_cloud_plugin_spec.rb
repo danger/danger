@@ -1,5 +1,3 @@
-# coding: utf-8
-
 RSpec.describe Danger::DangerfileBitbucketCloudPlugin, host: :bitbucket_cloud do
   let(:dangerfile) { testing_dangerfile }
   let(:plugin) { described_class.new(dangerfile) }
@@ -60,6 +58,5 @@ RSpec.describe Danger::DangerfileBitbucketCloudPlugin, host: :bitbucket_cloud do
         expect(plugin.head_commit).to eq("b6f5656b6ac9")
       end
     end
-
   end
 end

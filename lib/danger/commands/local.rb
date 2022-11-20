@@ -66,7 +66,7 @@ module Danger
 
     private
 
-    # this method is a duplicate of Commands::PR#configure_octokit
+    #  this method is a duplicate of Commands::PR#configure_octokit
     # - worth a refactor sometime?
     def configure_octokit(cache_dir)
       # setup caching for Github calls to hitting the API rate limit too quickly

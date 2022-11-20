@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/request_sources/github/github"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
@@ -56,8 +54,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
   describe "bearer token" do
     context "with DANGER_GITHUB_BEARER_TOKEN" do
-      let(:client) { double('client') }
-      it 'creates Octokit client with bearer token' do
+      let(:client) { double("client") }
+      it "creates Octokit client with bearer token" do
         allow(Octokit::Client).to receive(:new).and_return(client)
         gh_env = { "DANGER_GITHUB_BEARER_TOKEN" => "hi" }
 
@@ -637,7 +635,7 @@ index 0000000..0000001 100644
     let(:message) do
       double(
         file: file_path,
-        line: 1,
+        line: 1
       )
     end
 

@@ -12,11 +12,9 @@ end
 message(":tada:") if is_version_bump && github.pr_author != "orta"
 
 # Make a note about contributors not in the organization
-unless github.api.organization_member?("danger", github.pr_author)
-  # Pay extra attention if they modify the gemspec
-  if git.modified_files.include?("*.gemspec")
-    warn "External contributor has edited the Gemspec"
-  end
+# Pay extra attention if they modify the gemspec
+if !github.api.organization_member?("danger", github.pr_author) && git.modified_files.include?("*.gemspec")
+  warn "External contributor has edited the Gemspec"
 end
 
 # Mainly to encourage writing up some reasoning about the PR, rather than

@@ -48,6 +48,7 @@ module Danger
   #
   class Jenkins < CI
     attr_accessor :project_url
+
     class EnvNotFound < StandardError
       def initialize
         super("ENV not found, please check your Jenkins. Related: https://stackoverflow.com/search?q=jenkins+env+null")
@@ -60,18 +61,16 @@ module Danger
 
     def self.validates_as_pr?(env)
       id = pull_request_id(env)
-      !id.nil? && !id.empty? && !!id.match(%r{^\d+$})
+      !id.nil? && !id.empty? && !!id.match(/^\d+$/)
     end
 
     def supported_request_sources
-      @supported_request_sources ||= begin
-        [
-          Danger::RequestSources::GitHub,
-          Danger::RequestSources::GitLab,
-          Danger::RequestSources::BitbucketServer,
-          Danger::RequestSources::BitbucketCloud
-        ]
-      end
+      @supported_request_sources ||= [
+        Danger::RequestSources::GitHub,
+        Danger::RequestSources::GitLab,
+        Danger::RequestSources::BitbucketServer,
+        Danger::RequestSources::BitbucketCloud
+      ]
     end
 
     def initialize(env)
@@ -85,29 +84,29 @@ module Danger
 
     def self.repo_slug(repo_url)
       slug = self.slug_ssh(repo_url)
-      slug = self.slug_http(repo_url) unless slug
-      slug = self.slug_bitbucket(repo_url) unless slug
-      slug = self.slug_fallback(repo_url) unless slug
+      slug ||= self.slug_http(repo_url)
+      slug ||= self.slug_bitbucket(repo_url)
+      slug ||= self.slug_fallback(repo_url)
       return slug.gsub(/\.git$/, "") unless slug.nil?
     end
 
     def self.slug_bitbucket(repo_url)
-      repo_matches = repo_url.match(%r{(?:[\/:])projects\/([^\/.]+)\/repos\/([^\/.]+)})
+      repo_matches = repo_url.match(%r{(?:[/:])projects/([^/.]+)/repos/([^/.]+)})
       return "#{repo_matches[1]}/#{repo_matches[2]}" if repo_matches
     end
 
     def self.slug_ssh(repo_url)
-      repo_matches = repo_url.match(%r{^git@.+:(.+)})
+      repo_matches = repo_url.match(/^git@.+:(.+)/)
       return repo_matches[1] if repo_matches
     end
 
     def self.slug_http(repo_url)
-      repo_matches = repo_url.match(%r{^https?.+(?>\.\w*\d*\/)(.+.git$)})
+      repo_matches = repo_url.match(%r{^https?.+(?>\.\w*\d*/)(.+.git$)})
       return repo_matches[1] if repo_matches
     end
 
     def self.slug_fallback(repo_url)
-      repo_matches = repo_url.match(%r{([\/:])([^\/]+\/[^\/]+)$})
+      repo_matches = repo_url.match(%r{([/:])([^/]+/[^/]+)$})
       return repo_matches[2]
     end
 
@@ -129,14 +128,14 @@ module Danger
       elsif env["CHANGE_URL"]
         change_url = env["CHANGE_URL"]
         case change_url
-        when %r{\/pull\/} # GitHub
-          matches = change_url.match(%r{(.+)\/pull\/[0-9]+})
+        when %r{/pull/} # GitHub
+          matches = change_url.match(%r{(.+)/pull/[0-9]+})
           matches[1] unless matches.nil?
-        when %r{\/merge_requests\/} # GitLab
-          matches = change_url.match(%r{(.+?)(\/-)?\/merge_requests\/[0-9]+})
+        when %r{/merge_requests/} # GitLab
+          matches = change_url.match(%r{(.+?)(/-)?/merge_requests/[0-9]+})
           matches[1] unless matches.nil?
-        when %r{\/pull-requests\/} # Bitbucket
-          matches = change_url.match(%r{(.+)\/pull-requests\/[0-9]+})
+        when %r{/pull-requests/} # Bitbucket
+          matches = change_url.match(%r{(.+)/pull-requests/[0-9]+})
           matches[1] unless matches.nil?
         else
           change_url

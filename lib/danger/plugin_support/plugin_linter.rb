@@ -146,6 +146,7 @@ module Danger
     def apply_rules(json, type, rules)
       rules.each do |rule|
         next unless rule.function.call(json)
+
         rule.metadata = json
         rule.type = type
 

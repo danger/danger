@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_cloud_api"
 require "danger/danger_core/message_group"
@@ -104,7 +102,6 @@ module Danger
                                             template: "bitbucket_server")
         summary_body += "\n\n"
 
-
         # this isn't the most elegant thing in the world, but we need the group
         # with file: nil, line: nil so we can combine its info in with the
         # summary_body
@@ -145,8 +142,8 @@ module Danger
 
           if kind == :markdown
             body = generate_inline_markdown_body(message,
-                                                danger_id: danger_id,
-                                                template: "bitbucket_server")
+                                                 danger_id: danger_id,
+                                                 template: "bitbucket_server")
           else
             body = generate_inline_comment_body(emoji, message,
                                                 danger_id: danger_id,
@@ -162,6 +159,7 @@ module Danger
       def delete_old_comments(danger_id: "danger")
         @api.fetch_comments.each do |c|
           next if c[:user][:uuid] != @api.my_uuid
+
           @api.delete_comment(c[:id]) if c[:content][:raw] =~ /generated_by_#{danger_id}/
         end
       end

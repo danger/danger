@@ -6,6 +6,7 @@ module Danger
 
     def setup_pry(dangerfile_path, command)
       return dangerfile_path if dangerfile_path.empty?
+
       validate_pry_available(command)
       FileUtils.cp dangerfile_path, DANGERFILE_COPY
       File.open(DANGERFILE_COPY, "a") do |f|

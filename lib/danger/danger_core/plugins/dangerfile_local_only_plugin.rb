@@ -6,12 +6,12 @@ module Danger
   # It is support plugin for dry_run command and does not expose any methods.
   # But you can still use other plugins like git
   #
-  # @example Check that added lines contains agreed form of words 
+  # @example Check that added lines contains agreed form of words
   #
   #       git.diff.each do |chunk|
   #         chunk.patch.lines.grep(/^\+/).each do |added_line|
   #           if added_line.gsub!(/(?<cancel>cancel)(?<rest>[^l[[:space:]][[:punct:]]]+)/i, '>>\k<cancel>-l-\k<rest><<')
-  #             fail "Single 'L' for cancellation-alike words in '#{added_line}'" 
+  #             fail "Single 'L' for cancellation-alike words in '#{added_line}'"
   #           end
   #         end
   #       end
@@ -23,6 +23,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::LocalOnly
+
       super
     end
 

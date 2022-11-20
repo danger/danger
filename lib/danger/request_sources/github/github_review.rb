@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "octokit"
 require "danger/ci_source/ci_source"
 require "danger/request_sources/github/github_review_resolver"
@@ -35,16 +33,19 @@ module Danger
 
         def id
           return nil unless self.review_json
+
           self.review_json["id"]
         end
 
         def body
           return "" unless self.review_json
+
           self.review_json["body"]
         end
 
         def status
           return STATUS_PENDING if self.review_json.nil?
+
           return self.review_json["state"]
         end
 

@@ -22,7 +22,7 @@ module Danger
 
     def self.validates_as_pr?(env)
       value = env["GITHUB_EVENT_NAME"]
-      value == "pull_request" || value == "pull_request_target"
+      ["pull_request", "pull_request_target"].include?(value)
     end
 
     def supported_request_sources
@@ -32,12 +32,12 @@ module Danger
     def initialize(env)
       self.repo_slug = env["GITHUB_REPOSITORY"]
       pull_request_event = JSON.parse(File.read(env["GITHUB_EVENT_PATH"]))
-      self.pull_request_id = pull_request_event['number']
-      self.repo_url = pull_request_event['repository']['clone_url']
+      self.pull_request_id = pull_request_event["number"]
+      self.repo_url = pull_request_event["repository"]["clone_url"]
 
       # if environment variable DANGER_GITHUB_API_TOKEN is not set, use env GITHUB_TOKEN
-      if (env.key? "GITHUB_ACTION") && (!env.key? 'DANGER_GITHUB_API_TOKEN')
-        env['DANGER_GITHUB_API_TOKEN'] = env['GITHUB_TOKEN']
+      if (env.key? "GITHUB_ACTION") && (!env.key? "DANGER_GITHUB_API_TOKEN")
+        env["DANGER_GITHUB_API_TOKEN"] = env["GITHUB_TOKEN"]
       end
     end
   end

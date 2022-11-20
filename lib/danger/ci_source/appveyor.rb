@@ -42,6 +42,7 @@ module Danger
 
     def self.validates_as_pr?(env)
       return false unless env.key? "APPVEYOR_PULL_REQUEST_NUMBER"
+
       env["APPVEYOR_PULL_REQUEST_NUMBER"].to_i > 0
     end
 

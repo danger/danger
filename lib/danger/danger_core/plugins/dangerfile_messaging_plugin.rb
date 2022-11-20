@@ -149,6 +149,7 @@ module Danger
 
       warnings.flatten.each do |warning|
         next if should_ignore_violation(warning)
+
         @warnings << Violation.new(warning, sticky, file, line, type: :warning) if warning
       end
     end
@@ -174,11 +175,12 @@ module Danger
 
       failures.flatten.each do |failure|
         next if should_ignore_violation(failure)
+
         @errors << Violation.new(failure, sticky, file, line, type: :error) if failure
       end
     end
 
-    alias_method :failure, :fail
+    alias failure fail
 
     # @!group Reporting
     # A list of all messages passed to Danger, including

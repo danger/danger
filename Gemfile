@@ -23,5 +23,5 @@ gem "webmock", "~> 2.1"
 gem "yard", "~> 0.9.11"
 
 if Gem::Version.create(RUBY_VERSION) < Gem::Version.create("2.5.0")
-   gem "gitlab", "< 4.14.1"
- end
+  gem "gitlab", "< 4.14.1"
+end
