@@ -46,7 +46,7 @@ module Danger
 
     def initialize(dangerfile)
       super(dangerfile)
-      raise unless dangerfile.env.scm.instance_of?(Danger::GitRepo)
+      raise unless dangerfile.env.scm.class == Danger::GitRepo # rubocop:disable Style/ClassEqualityComparison
 
       @git = dangerfile.env.scm
     end
