@@ -1,3 +1,7 @@
+inherit_mode:
+  merge:
+    - Exclude
+
 # Defaults can be found here: https://github.com/bbatsov/rubocop/blob/master/config/default.yml
 
 AllCops:
