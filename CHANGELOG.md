@@ -10,6 +10,7 @@
 
 ## master
 
+* Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
 <!-- Your comment above here -->
 
 ## 9.1.0

@@ -17,8 +17,6 @@ module Danger
       super
     end
 
-    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
-
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a JSON format.
       Note: Before 1.0, it will also parse the represented JSON to validate whether https://danger.systems would
