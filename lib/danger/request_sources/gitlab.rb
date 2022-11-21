@@ -298,7 +298,7 @@ module Danger
       def markdown_link_to_message(message, _)
         "#{message.file}#L#{message.line}: "
       end
-      
+
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
         nil # TODO: Implement this
@@ -315,12 +315,12 @@ module Danger
       end
 
       # @return [String] A URL to the specific file, ready to be downloaded
-      def file_url(organisation: nil, repository: nil, branch: nil, path: nil)
-        branch ||= 'master'
+      def file_url(organisation: nil, repository: nil, ref: nil, branch: nil, path: nil)
+        ref ||= (branch || 'master')
         # According to GitLab Repositories API docs path and id(slug) should be encoded.
         path = URI.encode_www_form_component(path)
         repository = URI.encode_www_form_component(repository)
-        "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{branch}&private_token=#{@token}"
+        "#{endpoint}/projects/#{repository}/repository/files/#{path}/raw?ref=#{ref}&private_token=#{@token}"
       end
 
       def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])

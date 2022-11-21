@@ -91,6 +91,13 @@ RSpec.describe Danger::Dangerfile::DSL, host: :github do
       expect(dm.status_report[:messages]).to eq(["OK"])
     end
 
+    it "github: 'repo/name', ref: 'custom-branch', path: 'path/to/Dangerfile'" do
+      outer_dangerfile = "danger.import_dangerfile(github: 'example/example', ref: 'custom-branch', path: 'path/to/Dangerfile')"
+
+      dm.parse(Pathname.new("."), outer_dangerfile)
+      expect(dm.status_report[:messages]).to eq(["OK"])
+    end
+
     context "Gitlab", host: :gitlab do
       let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 42) }
 

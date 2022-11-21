@@ -74,6 +74,8 @@ module Danger
     # @option opts [String] :github GitHub repo
     # @option opts [String] :gitlab GitLab repo
     # @option opts [String] :gem Gem name
+    # @option opts [String] :ref The name of branch, tag or commit
+    # @option opts [String] :branch Alias of :ref
     # @option opts [String] :path Path to Dangerfile
     # @return   [void]
     def import_dangerfile(opts)
@@ -82,9 +84,9 @@ module Danger
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
         if opts.key?(:github)
-          import_dangerfile_from_github(opts[:github], opts[:branch], opts[:path])
+          import_dangerfile_from_github(opts[:github], opts[:ref] || opts[:branch], opts[:path])
         elsif opts.key?(:gitlab)
-          import_dangerfile_from_gitlab(opts[:gitlab], opts[:branch], opts[:path])
+          import_dangerfile_from_gitlab(opts[:gitlab], opts[:ref] || opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
