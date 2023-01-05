@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# coding: utf-8
 
 require "base64"
 require "danger/helpers/comments_helper"

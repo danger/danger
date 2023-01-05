@@ -21,6 +21,7 @@ module Danger
 
       line <=> other.line
     end
+
     # compares a and b based entirely on whether one or the other is nil
     # arguments are in the same order as `a <=> b`
     # nil is sorted earlier - so cmp_nils(nil, 1) => -1

@@ -65,7 +65,7 @@ module Danger
         self.repo_slug = self.class.vsts_slug(env)
       end
 
-      repo_matches = env["BUILD_SOURCEBRANCH"].match(%r{refs\/pull\/([0-9]+)\/merge})
+      repo_matches = env["BUILD_SOURCEBRANCH"].match(%r{refs/pull/([0-9]+)/merge})
       self.pull_request_id = repo_matches[1] unless repo_matches.nil?
       self.repo_url = env["BUILD_REPOSITORY_URI"]
     end

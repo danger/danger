@@ -76,6 +76,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::GitHub
+
       super
     end
 
@@ -229,6 +230,7 @@ module Danger
       end
 
       return paths.first if paths.count < 2
+
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 

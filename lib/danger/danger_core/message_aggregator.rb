@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "danger/danger_core/message_group"
 require "danger/helpers/message_groups_array_helper"
 

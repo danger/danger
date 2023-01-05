@@ -63,24 +63,30 @@ RSpec.describe Danger::MessageGroup do
     end
 
     context "when other is a Violation" do
-      let(:other) { Danger::Violation.new("test message",
-                                          false,
-                                          other_file,
-                                          other_line) }
+      let(:other) do
+        Danger::Violation.new("test message",
+                              false,
+                              other_file,
+                              other_line)
+      end
       include_examples "with varying line and file", behaves_like: "true when same line"
     end
 
     context "when other is a Markdown" do
-      let(:other) { Danger::Markdown.new("test message",
-                                         other_file,
-                                         other_line) }
+      let(:other) do
+        Danger::Markdown.new("test message",
+                             other_file,
+                             other_line)
+      end
 
       include_examples "with varying line and file", behaves_like: "true when same line"
     end
 
     context "when other is a MessageGroup" do
-      let(:other) { described_class.new(file: other_file,
-                                        line: other_line) }
+      let(:other) do
+        described_class.new(file: other_file,
+                            line: other_line)
+      end
 
       include_examples "with varying line and file", behaves_like: "true when same line"
     end
@@ -120,17 +126,21 @@ RSpec.describe Danger::MessageGroup do
     end
 
     context "when message is a Violation" do
-      let(:message) { Danger::Violation.new("test message",
-                                            false,
-                                            other_file,
-                                            other_line) }
+      let(:message) do
+        Danger::Violation.new("test message",
+                              false,
+                              other_file,
+                              other_line)
+      end
       include_examples "with varying line and file", behaves_like: "adds when same line"
     end
 
     context "when message is a Markdown" do
-      let(:message) { Danger::Markdown.new("test message",
-                                           other_file,
-                                           other_line) }
+      let(:message) do
+        Danger::Markdown.new("test message",
+                             other_file,
+                             other_line)
+      end
 
       include_examples "with varying line and file", behaves_like: "adds when same line"
     end
@@ -229,7 +239,6 @@ RSpec.describe Danger::MessageGroup do
       let(:markdowns) { [Danger::Markdown.new("hello"), Danger::Markdown.new("hi")] }
 
       context "with no other messages" do
-
         it "has both markdowns" do
           expect(Set.new(subject)).to eq Set.new(markdowns)
         end

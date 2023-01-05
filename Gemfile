@@ -17,11 +17,11 @@ gem "pry-byebug"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.9"
 gem "rspec_junit_formatter", "~> 0.4"
-gem "rubocop", "~> 0.82"
+gem "rubocop"
 gem "simplecov", "~> 0.18"
 gem "webmock", "~> 2.1"
 gem "yard", "~> 0.9.11"
 
 if Gem::Version.create(RUBY_VERSION) < Gem::Version.create("2.5.0")
-   gem "gitlab", "< 4.14.1"
- end
+  gem "gitlab", "< 4.14.1"
+end

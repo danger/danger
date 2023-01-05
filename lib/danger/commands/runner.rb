@@ -51,7 +51,7 @@ module Danger
 
     def validate!
       super
-      if self.class == Runner && !@dangerfile_path
+      if self.instance_of?(Runner) && !@dangerfile_path
         help!("Could not find a Dangerfile.")
       end
     end

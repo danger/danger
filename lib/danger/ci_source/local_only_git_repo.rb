@@ -11,6 +11,7 @@ module Danger
   #
   class LocalOnlyGitRepo < CI
     attr_accessor :base_commit, :head_commit
+
     HEAD_VAR = "DANGER_LOCAL_HEAD"
     BASE_VAR = "DANGER_LOCAL_BASE"
 

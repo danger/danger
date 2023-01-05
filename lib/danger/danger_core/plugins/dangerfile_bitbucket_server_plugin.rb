@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -52,6 +50,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::BitbucketServer
+
       super
     end
 
@@ -169,7 +168,7 @@ module Danger
     def markdown_link(paths, full_path: true)
       create_link(paths, full_path) { |href, text| create_markdown_link(href, text) }
     end
-    
+
     # @!group Bitbucket Server Misc
     # Updates the PR with build status and build server job link.
     # @param    [String] status
@@ -181,7 +180,7 @@ module Danger
     # @return   [String]
     #
     def update_pr_build_status(status, build_job_link, description)
-        @bs.update_pr_build_status(status, build_job_link, description)
+      @bs.update_pr_build_status(status, build_job_link, description)
     end
 
     private
@@ -201,6 +200,7 @@ module Danger
       end
 
       return paths.first if paths.count < 2
+
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 

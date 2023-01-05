@@ -49,7 +49,6 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
   end
 
   describe "#pull_request_id" do
-
     it "gets set from pull_request_id" do
       expect(api.pull_request_id).to eq(1)
     end

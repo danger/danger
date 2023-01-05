@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# coding: utf-8
 
 module Danger
   module RequestSources
@@ -38,7 +37,7 @@ module Danger
 
       def delete_report(commit)
         uri = URI(report_endpoint_at_commit(commit))
-        request = Net::HTTP::Delete.new(uri.request_uri, {"Content-Type" => "application/json"})
+        request = Net::HTTP::Delete.new(uri.request_uri, { "Content-Type" => "application/json" })
         request.basic_auth @username, @password
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(request)
@@ -50,7 +49,6 @@ module Danger
           # HTTP 4xx - 5xx
           abort "\nError deleting report from Code Insights API: #{response.code} (#{response.message}) - #{response.body}\n\n"
         end
-
       end
 
       def send_report(commit, inline_warnings, inline_errors, inline_messages)
@@ -64,15 +62,14 @@ module Danger
 
       def put_report(commit, inline_errors_count)
         uri = URI(report_endpoint_at_commit(commit))
-        request = Net::HTTP::Put.new(uri.request_uri, {"Content-Type" => "application/json"})
+        request = Net::HTTP::Put.new(uri.request_uri, { "Content-Type" => "application/json" })
         request.basic_auth @username, @password
-        request.body = {"title": @report_title,
+        request.body = { "title": @report_title,
                         "details": @report_description,
-                        "result": (inline_errors_count > 0) ? "FAIL" : "PASS",
+                        "result": inline_errors_count > 0 ? "FAIL" : "PASS",
                         "reporter": @username,
                         "link": "https://github.com/danger/danger",
-                        "logoURL": @logo_url
-        }.to_json
+                        "logoURL": @logo_url }.to_json
 
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl) do |http|
           http.request(request)
@@ -103,8 +100,8 @@ module Danger
           annotations << violation_hash_with_severity(violation, "HIGH")
         end
 
-        body = {annotations: annotations}.to_json
-        request = Net::HTTP::Post.new(uri.request_uri, {"Content-Type" => "application/json"})
+        body = { annotations: annotations }.to_json
+        request = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         request.basic_auth @username, @password
         request.body = body
 
@@ -140,7 +137,6 @@ module Danger
       def use_ssl
         @host.include? "https://"
       end
-
     end
   end
 end

@@ -60,7 +60,6 @@ module Danger
     # When an undefined method is called, we check to see if it's something
     # that the core DSLs have, then starts looking at plugins support.
 
-    # rubocop:disable Style/MethodMissing
     def method_missing(method_sym, *arguments, **keyword_arguments, &_block)
       @core_plugins.each do |plugin|
         if plugin.public_methods(false).include?(method_sym)
@@ -97,6 +96,7 @@ module Danger
       plugins = Plugin.all_plugins
       plugins.each do |klass|
         next if klass.respond_to?(:singleton_class?) && klass.singleton_class?
+
         plugin = klass.new(self)
         next if plugin.nil? || @plugins[klass]
 
@@ -115,7 +115,7 @@ module Danger
     end
 
     def external_dsl_attributes
-      plugins.values.reject { |plugin| @core_plugins.include? plugin } .map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
+      plugins.values.reject { |plugin| @core_plugins.include? plugin }.map { |plugin| { plugin: plugin, methods: plugin.public_methods(false) } }
     end
 
     def method_values_for_plugin_hashes(plugin_hashes)
@@ -200,12 +200,12 @@ module Danger
       self.defined_in_file = path
       instance_eval do
         # rubocop:disable Lint/RescueException
-        begin
-          eval_file(contents, path)
-        rescue Exception => e
-          message = "Invalid `#{path.basename}` file: #{e.message}"
-          raise DSLError.new(message, path, e.backtrace, contents)
-        end
+
+        eval_file(contents, path)
+      rescue Exception => e
+        message = "Invalid `#{path.basename}` file: #{e.message}"
+        raise DSLError.new(message, path, e.backtrace, contents)
+
         # rubocop:enable Lint/RescueException
       end
     end
@@ -257,9 +257,9 @@ module Danger
 
       if env.request_source.respond_to?(:update_pr_by_line!) && ENV["DANGER_MESSAGE_AGGREGATION"]
         env.request_source.update_pr_by_line!(message_groups: MessageAggregator.aggregate(**report),
-                                             new_comment: new_comment,
-                                             remove_previous_comments: remove_previous_comments,
-                                             danger_id: report[:danger_id])
+                                              new_comment: new_comment,
+                                              remove_previous_comments: remove_previous_comments,
+                                              danger_id: report[:danger_id])
       else
         env.request_source.update_pull_request!(
           **report,
@@ -293,9 +293,9 @@ module Danger
 
         # Print results in the terminal
         print_results
-      rescue DSLError => ex
+      rescue DSLError => e
         # Push exception to the API and re-raise
-        post_exception(ex, danger_id, new_comment) unless danger_id.nil?
+        post_exception(e, danger_id, new_comment) unless danger_id.nil?
         raise
       ensure
         # Makes sure that Danger specific git branches are cleaned

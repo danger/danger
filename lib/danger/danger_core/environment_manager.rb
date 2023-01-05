@@ -37,6 +37,7 @@ module Danger
         request_source = klass.new(self.ci_source, env)
         next unless request_source.validates_as_ci?
         next unless request_source.validates_as_api_source?
+
         self.request_source = request_source
       end
 

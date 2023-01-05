@@ -3,6 +3,7 @@ require "pstore"
 module Danger
   class HTTPCache
     attr_reader :expires_in
+
     def initialize(cache_file = nil, options = {})
       File.delete(cache_file) if options[:clear_cache]
       @store = PStore.new(cache_file)
@@ -14,6 +15,7 @@ module Danger
         entry = @store[key]
         return nil unless entry
         return entry[:value] unless entry_has_expired(entry, @expires_in)
+
         @store.delete key
         return nil
       end

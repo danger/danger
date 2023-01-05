@@ -11,7 +11,7 @@ module Danger
       include Danger::Helpers::CommentsParsingHelper
 
       def markdown_parser(text)
-        Kramdown::Document.new(text, input: "GFM", smart_quotes: %w[apos apos quot quot])
+        Kramdown::Document.new(text, input: "GFM", smart_quotes: %w(apos apos quot quot))
       end
 
       # !@group Extension points
@@ -26,6 +26,7 @@ module Danger
       # @return [String] The Markdown compatible link
       def markdown_link_to_message(message, hide_link)
         return "" if hide_link
+
         "#{message.file}#L#{message.line}"
       end
 
@@ -87,9 +88,9 @@ module Danger
         @tables = tables
         @markdowns = markdowns.map(&:message)
         @danger_id = danger_id
-        @emoji_mapper = EmojiMapper.new(request_source.sub("_inline",""))
+        @emoji_mapper = EmojiMapper.new(request_source.sub("_inline", ""))
 
-        return ERB.new(File.read(md_template), 0, "-").result(binding)
+        return ERB.new(File.read(md_template), trim_mode: "-").result(binding)
       end
 
       def generate_comment(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: {}, danger_id: "danger", template: "github")
@@ -117,7 +118,6 @@ module Danger
         @message_group = message_group
         @resolved = resolved
         request_source_name = template.sub("_message_group", "")
-
 
         apply_template(danger_id: danger_id,
                        markdowns: message_group.markdowns,
@@ -149,7 +149,7 @@ module Danger
       def generate_description(warnings: nil, errors: nil, template: "github")
         emoji_mapper = EmojiMapper.new(template)
         if (errors.nil? || errors.empty?) && (warnings.nil? || warnings.empty?)
-          return ENV['DANGER_SUCCESS_MESSAGE'] || "All green. #{random_compliment}"
+          return ENV["DANGER_SUCCESS_MESSAGE"] || "All green. #{random_compliment}"
         else
           message = "#{emoji_mapper.map('warning')} "
           message += "#{'Error'.danger_pluralize(errors.count)}. " unless errors.empty?

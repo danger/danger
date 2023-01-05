@@ -1,5 +1,3 @@
-# coding: utf-8
-
 # rubocop:disable Metrics/ClassLength
 
 require "octokit"
@@ -65,6 +63,7 @@ module Danger
 
       def client
         raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`" if !valid_access_token? && !valid_bearer_token? && !support_tokenless_auth
+
         @client ||= begin
           Octokit.configure do |config|
             config.connection_options[:ssl] = { verify: verify_ssl }
@@ -83,6 +82,7 @@ module Danger
 
       def review
         return @review unless @review.nil?
+
         begin
           @review = client.pull_request_reviews(ci_source.repo_slug, ci_source.pull_request_id)
             .map { |review_json| Danger::RequestSources::GitHubSource::Review.new(client, ci_source, review_json) }
@@ -133,10 +133,8 @@ module Danger
       end
 
       def issue_comments
-        @comments ||= begin
-          client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
-            .map { |comment| Comment.from_github(comment) }
-        end
+        @comments ||= client.issue_comments(ci_source.repo_slug, ci_source.pull_request_id)
+          .map { |comment| Comment.from_github(comment) }
       end
 
       # Sending data to GitHub
@@ -224,7 +222,7 @@ module Danger
             context: "danger/#{danger_id}",
             target_url: details_url
           })
-        rescue
+        rescue StandardError
           # This usually means the user has no commit access to this repo
           # That's always the case for open source projects where you can only
           # use a read-only GitHub account
@@ -248,6 +246,7 @@ module Danger
         issue_comments.each do |comment|
           next unless comment.generated_by_danger?(danger_id)
           next if comment.id == except
+
           client.delete_comment(ci_source.repo_slug, comment.id)
         end
       end
@@ -456,9 +455,9 @@ module Danger
 
       # @return [String] The organisation name, is nil if it can't be detected
       def organisation
-        matched = self.issue_json["repository_url"].match(%r{repos\/(.*)\/})
+        matched = self.issue_json["repository_url"].match(%r{repos/(.*)/})
         return matched[1] if matched && matched[1]
-      rescue
+      rescue StandardError
         nil
       end
 
@@ -513,6 +512,7 @@ module Danger
           next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
+
           next a.file <=> b.file
         end
 

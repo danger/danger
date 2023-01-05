@@ -65,7 +65,7 @@ module Danger
   #           message "Reviewer roulete rolled for: #{reviewer.to_hash['name']} (@#{reviewer.to_hash['username']})"
   #           gitlab.api.update_merge_request(project_id, mr_id, { assignee_id: reviewer.to_hash["id"] })
   #         end
-  # 
+  #
   #
   # @see  danger/danger
   # @tags core, gitlab
@@ -74,6 +74,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::GitLab
+
       super
     end
 
@@ -240,6 +241,7 @@ module Danger
       end
 
       return paths.first if paths.count < 2
+
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 

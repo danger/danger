@@ -25,16 +25,14 @@ module Danger
       env ||= EnvironmentManager.new(system_env, cork, danger_id)
       dm ||= Dangerfile.new(env, cork)
 
-      ran_status = begin
-        dm.run(
-          base_branch(base),
-          head_branch(head),
-          dangerfile_path,
-          danger_id,
-          new_comment,
-          remove_previous_comments
-        )
-      end
+      ran_status = dm.run(
+        base_branch(base),
+        head_branch(head),
+        dangerfile_path,
+        danger_id,
+        new_comment,
+        remove_previous_comments
+      )
 
       # By default Danger will use the status API to fail a build,
       # allowing execution to continue, this behavior isn't always
@@ -85,7 +83,8 @@ module Danger
     end
 
     def commit_request(ci_name)
-      return "Merge Request" if ci_name == 'GitLabCI'
+      return "Merge Request" if ci_name == "GitLabCI"
+
       return "Pull Request"
     end
   end

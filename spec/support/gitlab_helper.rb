@@ -19,7 +19,7 @@ module Danger
           "DANGER_GITLAB_API_TOKEN" => "a86e56d46ac78b"
         }
       end
-      
+
       def stub_env_pre_11_6
         {
           "GITLAB_CI" => "1",

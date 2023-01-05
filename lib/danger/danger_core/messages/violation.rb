@@ -29,8 +29,7 @@ module Danger
       h = h * 31 + message.hash
       h = h * 13 + sticky.hash
       h = h * 17 + file.hash
-      h = h * 17 + line.hash
-      h
+      h * 17 + line.hash
     end
 
     def <=>(other)

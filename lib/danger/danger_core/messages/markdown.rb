@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 require "danger/danger_core/messages/base"
 
 module Danger
   class Markdown < BaseMessage
-
     def initialize(message, file = nil, line = nil)
       super(type: :markdown, message: message, file: file, line: line)
     end
@@ -21,8 +21,7 @@ module Danger
       h = 1
       h = h * 31 + message.hash
       h = h * 17 + file.hash
-      h = h * 17 + line.hash
-      h
+      h * 17 + line.hash
     end
 
     def to_s
@@ -30,7 +29,7 @@ module Danger
       extra << "file: #{file}" unless file
       extra << "line: #{line}" unless line
 
-      "Markdown #{message} { #{extra.join ', '.freeze} }"
+      "Markdown #{message} { #{extra.join ', '} }"
     end
 
     def <=>(other)

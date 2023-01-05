@@ -6,13 +6,12 @@ RSpec.describe Danger::GitHubActions do
       "GITHUB_ACTION" => "name_of_action",
       "GITHUB_EVENT_NAME" => "pull_request",
       "GITHUB_REPOSITORY" => "danger/danger",
-      "GITHUB_EVENT_PATH" => File.expand_path("../../../../fixtures/ci_source/pull_request_event.json", __FILE__ )
+      "GITHUB_EVENT_PATH" => File.expand_path("../../../fixtures/ci_source/pull_request_event.json", __dir__)
     }
   end
 
   let(:invalid_env) do
-    {
-    }
+    {}
   end
 
   let(:source) { described_class.new(valid_env) }

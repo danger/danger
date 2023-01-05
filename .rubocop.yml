@@ -1,3 +1,9 @@
+inherit_from: .rubocop_todo.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+
 # Defaults can be found here: https://github.com/bbatsov/rubocop/blob/master/config/default.yml
 
 AllCops:
@@ -5,6 +11,7 @@ AllCops:
   Exclude:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'
+  NewCops: disable
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

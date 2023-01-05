@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/request_sources/bitbucket_server"
 
 RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server do
@@ -47,7 +45,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
     end
   end
 
-  describe "#pr_diff" do    
+  describe "#pr_diff" do
     it "has a non empty pr_diff after fetch" do
       stub_pull_request_diff
       bs.pr_diff
@@ -59,11 +57,11 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
     before do
       stub_pull_request_diff
     end
-    
+
     it "includes file specific messages outside the PR diff by default" do
       warning_in_diff = Danger::Violation.new("foo", false, "Gemfile", 3, type: :warning)
       warning_outside_of_diff = Danger::Violation.new("bar", false, "file.rb", 1, type: :warning)
-      
+
       warnings = [
         warning_in_diff,
         warning_outside_of_diff
@@ -74,7 +72,7 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
         messages: [],
         markdowns: []
         })
-      end
+    end
 
     it "dismisses messages outside the PR diff when env variable is set" do
       new_env = stub_env
@@ -91,20 +89,20 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
         messages: [],
         markdowns: []
         })
-      end 
+    end
+  end
+
+  describe "#find_position_in_diff" do
+    before do
+      stub_pull_request_diff
     end
 
-    describe "#find_position_in_diff" do
-      before do
-        stub_pull_request_diff
-      end
-      
-      it "returns false when changes are not in the `pr_diff`" do
-        expect(bs.find_position_in_diff?("file.rb", 1)).to be_falsy
-      end
-      
-      it "returns true when changes are in included in the `pr_diff`" do
-        expect(bs.find_position_in_diff?("Gemfile", 3)).to be_truthy
-      end
+    it "returns false when changes are not in the `pr_diff`" do
+      expect(bs.find_position_in_diff?("file.rb", 1)).to be_falsy
     end
+
+    it "returns true when changes are in included in the `pr_diff`" do
+      expect(bs.find_position_in_diff?("Gemfile", 3)).to be_truthy
+    end
+  end
 end

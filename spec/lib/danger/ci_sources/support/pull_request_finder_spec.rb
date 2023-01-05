@@ -90,7 +90,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "with open Pull Request" do
-      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = "hi" }
       it "returns the opened Pull Request info" do
         client = double("Octokit::Client")
         allow(Octokit::Client).to receive(:new) { client }
@@ -107,7 +107,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "specify api endpoint of octokit client" do
-      before { ENV["DANGER_GITHUB_API_TOKEN"] = 'hi' }
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = "hi" }
       it "By DANGER_GITHUB_API_HOST" do
         ENV["DANGER_GITHUB_API_HOST"] = "https://enterprise.artsy.net"
         allow(Octokit::Client).to receive(:new).with(
@@ -131,7 +131,7 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     context "with bearer_token" do
-      before { ENV["DANGER_GITHUB_BEARER_TOKEN"] = 'hi' }
+      before { ENV["DANGER_GITHUB_BEARER_TOKEN"] = "hi" }
       it "creates clients with bearer_token" do
         allow(Octokit::Client).to receive(:new).with(
           bearer_token: ENV["DANGER_GITHUB_BEARER_TOKEN"],
@@ -143,18 +143,17 @@ RSpec.describe Danger::PullRequestFinder do
     end
 
     after do
-      ENV['DANGER_GITHUB_API_TOKEN'] = nil
-      ENV['DANGER_GITHUB_BEARER_TOKEN'] = nil
-      ENV['DANGER_GITHUB_API_HOST'] = nil
+      ENV["DANGER_GITHUB_API_TOKEN"] = nil
+      ENV["DANGER_GITHUB_BEARER_TOKEN"] = nil
+      ENV["DANGER_GITHUB_API_HOST"] = nil
       ENV["DANGER_GITHUB_API_BASE_URL"] = nil
     end
   end
 
   describe "#find_scm_provider" do
-
-  def find_scm_provider(url)
-    finder(remote: "true").send(:find_scm_provider, url)
-  end
+    def find_scm_provider(url)
+      finder(remote: "true").send(:find_scm_provider, url)
+    end
 
     it "detects url for bitbucket cloud" do
       url = "https://bitbucket.org/ged/ruby-pg/pull-requests/42"
@@ -175,7 +174,5 @@ RSpec.describe Danger::PullRequestFinder do
       url = "http://www.default-url.com/"
       expect(find_scm_provider(url)).to eq :github
     end
-
   end
-
 end

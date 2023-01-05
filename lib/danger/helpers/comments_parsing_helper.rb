@@ -29,6 +29,7 @@ module Danger
         tables.each do |table|
           match = danger_table?(table)
           next unless match
+
           title = match[1]
           kind = table_kind_from_title(title)
           next unless kind
@@ -51,8 +52,8 @@ module Danger
 
       private
 
-      GITHUB_OLD_REGEX = %r{<th width="100%"(.*?)</th>}im
-      NEW_REGEX = %r{<th.*data-danger-table="true"(.*?)</th>}im
+      GITHUB_OLD_REGEX = %r{<th width="100%"(.*?)</th>}im.freeze
+      NEW_REGEX = %r{<th.*data-danger-table="true"(.*?)</th>}im.freeze
 
       def danger_table?(table)
         # The old GitHub specific method relied on

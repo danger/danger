@@ -39,7 +39,7 @@ module Danger
     end
 
     def initialize(env)
-      self.repo_url = env["CF_COMMIT_URL"].to_s.gsub(/\/commit.+$/, "")
+      self.repo_url = env["CF_COMMIT_URL"].to_s.gsub(%r{/commit.+$}, "")
       self.repo_slug = self.class.slug_from(env)
       self.pull_request_id = env["CF_PULL_REQUEST_NUMBER"]
     end

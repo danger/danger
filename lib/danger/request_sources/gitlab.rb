@@ -1,4 +1,3 @@
-# coding: utf-8
 require "uri"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
@@ -72,20 +71,18 @@ module Danger
       def mr_comments
         # @raw_comments contains what we got back from the server.
         # @comments contains Comment objects (that have less information)
-        @comments ||= begin
-          if supports_inline_comments
-            @raw_comments = mr_discussions
-              .auto_paginate
-              .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({"discussion_id" => discussion.id}) } }
-            @raw_comments
-              .map { |comment| Comment.from_gitlab(comment) }
-          else
-            @raw_comments = client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
-              .auto_paginate
-            @raw_comments
-              .map { |comment| Comment.from_gitlab(comment) }
-          end
-        end
+        @comments ||= if supports_inline_comments
+                        @raw_comments = mr_discussions
+                          .auto_paginate
+                          .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({ "discussion_id" => discussion.id }) } }
+                        @raw_comments
+                          .map { |comment| Comment.from_gitlab(comment) }
+                      else
+                        @raw_comments = client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
+                          .auto_paginate
+                        @raw_comments
+                          .map { |comment| Comment.from_gitlab(comment) }
+                      end
       end
 
       def mr_discussions
@@ -96,10 +93,10 @@ module Danger
         @mr_diff ||= begin
           diffs = mr_changes.changes.map do |change|
             diff = change["diff"]
-            if diff.start_with?('--- a/')
+            if diff.start_with?("--- a/")
               diff
             else
-              "--- a/#{change["old_path"]}\n+++ b/#{change["new_path"]}\n#{diff}"
+              "--- a/#{change['old_path']}\n+++ b/#{change['new_path']}\n#{diff}"
             end
           end
           diffs.join("\n")
@@ -107,24 +104,18 @@ module Danger
       end
 
       def mr_changed_paths
-        @mr_changed_paths ||= begin
-          mr_changes
-            .changes.map { |change| change["new_path"] }
-        end
+        @mr_changed_paths ||= mr_changes
+          .changes.map { |change| change["new_path"] }
 
         @mr_changed_paths
       end
 
       def mr_changes
-        @mr_changes ||= begin
-          client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
-        end
+        @mr_changes ||= client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
       end
 
       def mr_closes_issues
-        @mr_closes_issues ||= begin
-          client.merge_request_closes_issues(ci_source.repo_slug, ci_source.pull_request_id)
-        end
+        @mr_closes_issues ||= client.merge_request_closes_issues(ci_source.repo_slug, ci_source.pull_request_id)
       end
 
       def setup_danger_branches
@@ -154,16 +145,14 @@ module Danger
       end
 
       def supports_inline_comments
-        @supports_inline_comments ||= begin
-          # If we can't check GitLab's version, we assume we don't support inline comments
-          if Gem.loaded_specs["gitlab"].version < FIRST_GITLAB_GEM_WITH_VERSION_CHECK
-            false
-          else
-            current_version = Gem::Version.new(client.version.version)
+        # If we can't check GitLab's version, we assume we don't support inline comments
+        @supports_inline_comments ||= if Gem.loaded_specs["gitlab"].version < FIRST_GITLAB_GEM_WITH_VERSION_CHECK
+                                        false
+                                      else
+                                        current_version = Gem::Version.new(client.version.version)
 
-            current_version >= FIRST_VERSION_WITH_INLINE_COMMENTS
-          end
-        end
+                                        current_version >= FIRST_VERSION_WITH_INLINE_COMMENTS
+                                      end
       end
 
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
@@ -253,11 +242,11 @@ module Danger
           delete_old_comments!(danger_id: danger_id)
         else
           body = generate_comment(warnings: warnings,
-                                    errors: errors,
+                                  errors: errors,
                                   messages: messages,
-                                 markdowns: markdowns,
-                       previous_violations: previous_violations,
-                                 danger_id: danger_id,
+                                  markdowns: markdowns,
+                                  previous_violations: previous_violations,
+                                  danger_id: danger_id,
                                   template: "gitlab")
 
           if editable_comments.empty? or should_create_new_comment
@@ -278,11 +267,10 @@ module Danger
 
       def delete_old_comments!(except: nil, danger_id: "danger")
         @raw_comments.each do |raw_comment|
-
           comment = Comment.from_gitlab(raw_comment)
           next unless comment.generated_by_danger?(danger_id)
           next if comment.id == except
-          next unless raw_comment.is_a?(Hash) && raw_comment["position"].nil?
+          next unless raw_comment.kind_of?(Hash) && raw_comment["position"].nil?
 
           begin
             client.delete_merge_request_comment(
@@ -290,7 +278,7 @@ module Danger
               ci_source.pull_request_id,
               comment.id
             )
-          rescue
+          rescue StandardError
           end
         end
       end
@@ -316,7 +304,7 @@ module Danger
 
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, ref: nil, branch: nil, path: nil)
-        ref ||= (branch || 'master')
+        ref ||= (branch || "master")
         # According to GitLab Repositories API docs path and id(slug) should be encoded.
         path = URI.encode_www_form_component(path)
         repository = URI.encode_www_form_component(repository)
@@ -338,6 +326,7 @@ module Danger
           next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
+
           next a.file <=> b.file
         end
 
@@ -359,7 +348,7 @@ module Danger
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
         comments = mr_discussions
           .auto_paginate
-          .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({"discussion_id" => discussion.id}) } }
+          .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({ "discussion_id" => discussion.id }) } }
           .select { |comment| Comment.from_gitlab(comment).inline? }
 
         danger_comments = comments.select { |comment| Comment.from_gitlab(comment).generated_by_danger?(danger_id) }
@@ -401,7 +390,7 @@ module Danger
         }
       end
 
-      def submit_inline_comments_for_kind!(kind, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
+      def submit_inline_comments_for_kind!(kind, messages, _diff_lines, danger_comments, previous_violations, danger_id: "danger")
         previous_violations ||= []
         is_markdown_content = kind == :markdown
         emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
@@ -440,7 +429,7 @@ module Danger
             params = {
               body: body,
               position: {
-                position_type: 'text',
+                position_type: "text",
                 new_path: m.file,
                 new_line: m.line,
                 old_path: old_position[:path],
@@ -550,20 +539,19 @@ module Danger
         line_number = 0
         diff.each_line do |line|
           if line.match range_header_regexp
-            line = line.split('+').last
-            line = line.split(' ').first
-            range_string = line.split(',')
+            line = line.split("+").last
+            line = line.split(" ").first
+            range_string = line.split(",")
             line_number = range_string[0].to_i - 1
-          elsif line.start_with?('+')
+          elsif line.start_with?("+")
             addition_lines.push(line_number)
-          elsif line.start_with?('-')
-            line_number=line_number-1
+          elsif line.start_with?("-")
+            line_number -= 1
           end
-          line_number=line_number+1
+          line_number += 1
         end
         addition_lines
       end
-
     end
   end
 end

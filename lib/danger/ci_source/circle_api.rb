@@ -36,6 +36,7 @@ module Danger
       build_json = fetch_build(repo_slug, build_number, token)
       pull_requests = build_json[:pull_requests]
       return nil unless pull_requests && pull_requests.first
+
       pull_requests.first[:url]
     end
 
@@ -44,8 +45,7 @@ module Danger
       url = "project/#{repo_slug}/#{build_number}"
       params = { "circle-token" => token }
       response = client.get url, params, accept: "application/json"
-      json = JSON.parse(response.body, symbolize_names: true)
-      json
+      JSON.parse(response.body, symbolize_names: true)
     end
   end
 end

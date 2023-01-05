@@ -55,7 +55,6 @@ RSpec.describe Danger::Codemagic do
     it "sets the pull_request_id" do
       expect(source.pull_request_id).to eq("4")
     end
-
   end
 
   describe "supported_request_sources" do

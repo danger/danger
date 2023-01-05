@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "erb"
 
 require "danger/request_sources/local_only"
@@ -33,7 +31,7 @@ RSpec.describe Danger::RequestSources::LocalOnly, host: :local do
       before { expect(subject.scm).to receive(:exec).and_return("") }
 
       it "raises an error" do
-        expect { subject.setup_danger_branches } .to raise_error("Specified commit 'origin/master' not found")
+        expect { subject.setup_danger_branches }.to raise_error("Specified commit 'origin/master' not found")
       end
     end
 

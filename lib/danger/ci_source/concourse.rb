@@ -2,10 +2,10 @@ require "git"
 require "danger/request_sources/local_only"
 
 module Danger
-# Concourse CI Integration
-#
-# https://concourse-ci.org/
-#
+  # Concourse CI Integration
+  #
+  # https://concourse-ci.org/
+  #
   # ### CI Setup
   #
   # With Concourse, you run the docker images yourself, so you will want to add `yarn danger ci` within one of your build jobs.
@@ -56,6 +56,5 @@ module Danger
       end
       self.repo_url = GitRepo.new.origins
     end
-
   end
 end

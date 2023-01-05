@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -52,6 +50,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::BitbucketCloud
+
       super
     end
 
@@ -139,6 +138,5 @@ module Danger
     def head_commit
       @bs.pr_json[:source][:commit][:hash]
     end
-
   end
 end

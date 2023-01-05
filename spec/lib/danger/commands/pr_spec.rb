@@ -71,8 +71,8 @@ RSpec.describe Danger::PR do
   end
 
   context "#run" do
-    let(:env_double) { instance_double('Danger::EnvironmentManager') }
-    let(:request_source_double) { instance_double('Danger::RequestSources::RequestSource') }
+    let(:env_double) { instance_double("Danger::EnvironmentManager") }
+    let(:request_source_double) { instance_double("Danger::RequestSources::RequestSource") }
 
     it "does not post to the pr" do
       allow(Danger::EnvironmentManager).to receive(:new).and_return(env_double)
