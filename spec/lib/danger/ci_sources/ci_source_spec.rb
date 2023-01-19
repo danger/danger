@@ -33,7 +33,6 @@ RSpec.describe Danger::CI do
           "Danger::Surf",
           "Danger::TeamCity",
           "Danger::Travis",
-          "Danger::VSTS",
           "Danger::XcodeCloud",
           "Danger::XcodeServer"
         ]

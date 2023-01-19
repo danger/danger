@@ -1,4 +1,4 @@
-require "danger/ci_source/vsts"
+require "danger/ci_source/azure_pipelines"
 
 RSpec.describe Danger::AzurePipelines do
   let(:valid_env) do
@@ -28,9 +28,9 @@ RSpec.describe Danger::AzurePipelines do
       expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
-    it "doesn't validate when `BUILD_REPOSITORY_PROVIDER` is TfsGit" do
+    it "validates when `BUILD_REPOSITORY_PROVIDER` is TfsGit" do
       valid_env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit"
-      expect(described_class.validates_as_ci?(valid_env)).to be false
+      expect(described_class.validates_as_ci?(valid_env)).to be true
     end
 
     it "doesn't validate when require env variables are not set" do
@@ -75,8 +75,8 @@ RSpec.describe Danger::AzurePipelines do
   end
 
   describe "#supported_request_sources" do
-    it "doesn't supports VSTS" do
-      expect(source.supported_request_sources).not_to include(Danger::RequestSources::VSTS)
+    it "supports VSTS" do
+      expect(source.supported_request_sources).to include(Danger::RequestSources::VSTS)
     end
 
     it "supports GitHub" do
