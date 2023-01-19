@@ -1,6 +1,7 @@
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables
 require "uri"
 require "danger/request_sources/github/github"
+require "danger/request_sources/vsts"
 
 module Danger
   # ### CI Setup
