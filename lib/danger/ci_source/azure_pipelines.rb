@@ -34,7 +34,7 @@ module Danger
         project_name = env["SYSTEM_TEAMPROJECT"]
         repo_name = env["BUILD_REPOSITORY_NAME"]
 
-        "#{project_name}/#{repo_name}"
+        "#{project_name}/_git/#{repo_name}"
       end
     end
 
