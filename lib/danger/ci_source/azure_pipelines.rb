@@ -29,14 +29,7 @@ module Danger
   # which will automatically get your vsts domain and your project name needed for the vsts api.
   #
   class AzurePipelines < CI
-    class << self
-      def tfsgit_slug(env)
-        project_name = env["SYSTEM_TEAMPROJECT"]
-        repo_name = env["BUILD_REPOSITORY_NAME"]
 
-        "#{project_name}/_git/#{repo_name}"
-      end
-    end
 
     def self.validates_as_ci?(env)
       has_all_variables = ["AGENT_ID", "BUILD_SOURCEBRANCH", "BUILD_REPOSITORY_URI", "BUILD_REASON", "BUILD_REPOSITORY_NAME"].all? { |x| env[x] && !env[x].empty? }
@@ -64,12 +57,7 @@ module Danger
     def initialize(env)
       self.pull_request_id = env["SYSTEM_PULLREQUEST_PULLREQUESTNUMBER"] || env["SYSTEM_PULLREQUEST_PULLREQUESTID"]
       self.repo_url = env["BUILD_REPOSITORY_URI"]
-
-      if env["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
-        self.repo_slug = self.class.tfsgit_slug(env)
-      else
-        self.repo_slug = env["BUILD_REPOSITORY_NAME"]
-      end
+      self.repo_slug = env["BUILD_REPOSITORY_NAME"]
     end
   end
 end

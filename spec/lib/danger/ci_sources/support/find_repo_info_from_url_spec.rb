@@ -126,7 +126,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
       result = described_class.new("https://example.visualstudio.com/Test/_git/test/pullrequest/1946").call
 
       expect(result).to have_attributes(
-        slug: "Test/_git/test",
+        slug: "test",
         id: "1946"
       )
     end
@@ -134,7 +134,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
       result = described_class.new("https://dev.azure.com/example/Test/_git/test/pullrequest/1946").call
 
       expect(result).to have_attributes(
-        slug: "Test/_git/test",
+        slug: "test",
         id: "1946"
       )
     end
@@ -142,7 +142,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
       result = described_class.new("http://example.visualstudio.com/Test/_git/test/pullrequest/1946/").call
 
       expect(result).to have_attributes(
-        slug: "Test/_git/test",
+        slug: "test",
         id: "1946"
       )
     end
@@ -150,7 +150,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
       result = described_class.new("http://dev.azure.com/example/Test/_git/test/pullrequest/1946/").call
 
       expect(result).to have_attributes(
-        slug: "Test/_git/test",
+        slug: "test",
         id: "1946"
       )
     end

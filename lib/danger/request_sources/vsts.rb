@@ -23,14 +23,13 @@ module Danger
       def initialize(ci_source, environment)
         self.ci_source = ci_source
 
-        @is_vsts_git = environment["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
+        @is_vsts_ci = environment.key? "DANGER_VSTS_HOST"
 
-        project, _git, slug = ci_source.repo_slug.split("/")
-        @api = VSTSAPI.new(project, slug, ci_source.pull_request_id, environment)
+        @api = VSTSAPI.new(ci_source.repo_slug, ci_source.pull_request_id, environment)
       end
 
       def validates_as_ci?
-        @is_vsts_git
+        @is_vsts_ci
       end
 
       def validates_as_api_source?

@@ -149,8 +149,7 @@ module Danger
       
       when :vsts
         require "danger/request_sources/vsts_api"
-        project, _git, slug = repo_slug.split("/")
-        RequestSources::VSTSAPI.new(project, slug, specific_pull_request_id, env)
+        RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
 
       when :github
         require "octokit"
