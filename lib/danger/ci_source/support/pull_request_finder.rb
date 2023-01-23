@@ -181,7 +181,7 @@ module Danger
         :bitbucket_cloud
       elsif remote_url =~ %r{/pull-requests/}
         :bitbucket_server
-      elsif remote_url =~ /visualstudio\.com/i || remote_url =~ /dev\.azure\.com/
+      elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
         :vsts 
       else
         :github
