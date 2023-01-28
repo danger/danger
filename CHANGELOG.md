@@ -10,6 +10,11 @@
 
 ## master
 
+
+<!-- Your comment above here -->
+
+## 9.2.0
+
 * Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution [@sphanley][https://github.com/sphanley]
 
 * Allow up to v3 of Faraday [@vilmantas][https://github.com/vilmantas]
@@ -17,7 +22,6 @@
 * Fix offenses for RuboCop that can be fixed automatically. [@ydah](https://github.com/ydah)
 * Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
 * Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
-<!-- Your comment above here -->
 
 ## 9.1.0
 
