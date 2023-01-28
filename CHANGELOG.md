@@ -10,7 +10,7 @@
 
 ## master
 
-
+* Update ruby-git gem [@manicmaniac](https://github.com/manicmaniac) [#1419](https://github.com/danger/danger/pull/1419)
 <!-- Your comment above here -->
 
 ## 9.2.0
