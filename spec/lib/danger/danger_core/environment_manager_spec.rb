@@ -273,7 +273,7 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
   def git_repo_with_danger_branches_setup
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
-        `git init`
+        `git init -b master`
         `git remote add origin git@github.com:devdanger/devdanger.git`
         `touch README.md`
         `git add .`

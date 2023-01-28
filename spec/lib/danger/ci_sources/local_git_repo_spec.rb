@@ -6,7 +6,7 @@ RSpec.describe Danger::LocalGitRepo do
   def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
-        `git init`
+        `git init -b master`
         `git remote add origin https://github.com/danger/danger.git`
         File.open(dir + "/file1", "w") {}
         `git add .`

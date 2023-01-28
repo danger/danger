@@ -185,7 +185,7 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         `echo "# SwiftWeekly" >> README.md`
         `mkdir _drafts _posts`
         FileUtils.cp "#{project_root}/spec/fixtures/github/Dangerfile", dir
-        `git init`
+        `git init -b master`
         `git add .`
         `git commit -m "first commit"`
         `git remote add origin git@github.com:SwiftWeekly/swiftweekly.github.io.git`
