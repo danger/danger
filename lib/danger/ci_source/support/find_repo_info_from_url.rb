@@ -4,8 +4,9 @@ module Danger
   class FindRepoInfoFromURL
     REGEXP = %r{
       ://[^/]+/
-      (?<slug>[^/]+(/[^/]+){1,2})
-      (/(pull|merge_requests|pull-requests)/)
+      (([^/]+/){1,2}_git/)?
+      (?<slug>[^/]+(/[^/]+){0,2})
+      (/(pull|pullrequest|merge_requests|pull-requests)/)
       (?<id>\d+)
     }x.freeze
 

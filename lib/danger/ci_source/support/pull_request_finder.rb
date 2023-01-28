@@ -81,6 +81,12 @@ module Danger
           remote_pull_request.head.sha,
           remote_pull_request.base.sha
         )
+      when :vsts
+        RemotePullRequest.new(
+          remote_pull_request[:pullRequestId].to_s,
+          remote_pull_request[:lastMergeSourceCommit][:commitId],
+          remote_pull_request[:lastMergeTargetCommit][:commitId]
+        )
       else
         raise "SCM provider not supported: #{scm_provider}"
       end
@@ -140,6 +146,10 @@ module Danger
         require "danger/request_sources/bitbucket_server_api"
         project, slug = repo_slug.split("/")
         RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
+      
+      when :vsts
+        require "danger/request_sources/vsts_api"
+        RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
 
       when :github
         require "octokit"
@@ -170,6 +180,8 @@ module Danger
         :bitbucket_cloud
       elsif remote_url =~ %r{/pull-requests/}
         :bitbucket_server
+      elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
+        :vsts 
       else
         :github
       end

@@ -3,6 +3,7 @@ module Danger
     module VSTSHelper
       def stub_env
         {
+          "AGENT_ID" => "4a4d3fa1-bae7-4e5f-a14a-a50b184c74aa",
           "DANGER_VSTS_HOST" => "https://example.visualstudio.com/example",
           "DANGER_VSTS_API_TOKEN" => "a_token",
           "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" => "https://example.visualstudio.com",
@@ -11,12 +12,13 @@ module Danger
           "BUILD_REASON" => "PullRequest",
           "BUILD_REPOSITORY_NAME" => "example",
           "SYSTEM_TEAMPROJECT" => "example",
+          "SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" => 1,
           "BUILD_REPOSITORY_PROVIDER" => "TfsGit"
         }
       end
 
       def stub_ci
-        Danger::VSTS.new(stub_env)
+        Danger::AzurePipelines.new(stub_env)
       end
 
       def stub_request_source
