@@ -10,7 +10,7 @@
 
 ## master
 
-
+* Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 <!-- Your comment above here -->
 
 ## 9.2.0
