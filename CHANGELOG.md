@@ -18,9 +18,7 @@
 ## 9.2.0
 
 * Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution [@sphanley](https://github.com/sphanley)
-
 * Allow up to v3 of Faraday [@vilmantas](https://github.com/vilmantas)
-
 * Fix offenses for RuboCop that can be fixed automatically. [@ydah](https://github.com/ydah)
 * Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
 * Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
@@ -39,7 +37,6 @@
 * Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
 * Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
 * VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
-
 
 ## 8.6.1
 
