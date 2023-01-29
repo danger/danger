@@ -11,15 +11,15 @@
 ## master
 
 * Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
-* Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
+* Add missing error types to raise_error matcher [@manicmaniac](https://github.com/manicmaniac) [#1421](https://github.com/danger/danger/pull/1421)
 
 <!-- Your comment above here -->
 
 ## 9.2.0
 
-* Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution [@sphanley][https://github.com/sphanley]
+* Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution [@sphanley](https://github.com/sphanley)
 
-* Allow up to v3 of Faraday [@vilmantas][https://github.com/vilmantas]
+* Allow up to v3 of Faraday [@vilmantas](https://github.com/vilmantas)
 
 * Fix offenses for RuboCop that can be fixed automatically. [@ydah](https://github.com/ydah)
 * Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
