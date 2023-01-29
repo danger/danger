@@ -10,38 +10,37 @@
 
 ## master
 
+* Make specs independent from default branch setting in git config - [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
+* Add missing error types to raise_error matcher - [@manicmaniac](https://github.com/manicmaniac) [#1421](https://github.com/danger/danger/pull/1421)
+* Cannot specify danger_id testing locally - [@manicmaniac](https://github.com/manicmaniac) [#1362](https://github.com/danger/danger/issues/1362)
 * Update ruby-git gem [@manicmaniac](https://github.com/manicmaniac) - [#1419](https://github.com/danger/danger/pull/1419)
 * Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 * Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
 
-* Cannot specify danger_id testing locally [@manicmaniac](https://github.com/manicmaniac) [#1362](https://github.com/danger/danger/issues/1362)
 <!-- Your comment above here -->
 
 ## 9.2.0
 
-* Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution [@sphanley][https://github.com/sphanley]
-
-* Allow up to v3 of Faraday [@vilmantas][https://github.com/vilmantas]
-
-* Fix offenses for RuboCop that can be fixed automatically. [@ydah](https://github.com/ydah)
-* Add `ref` option to `import_dangerfile` method as an alias of `branch` option. [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
-* Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
+* Merge AzurePipelines and VSTS CI sources, and add support for VSTS as request source for local PR execution - [@sphanley](https://github.com/sphanley) [#1416](https://github.com/danger/danger/pull/1416)
+* Allow up to v3 of Faraday - [@vilmantas](https://github.com/vilmantas) [#1415](https://github.com/danger/danger/pull/1415)
+* Fix offenses for RuboCop that can be fixed automatically. - [@ydah](https://github.com/ydah) [#1406](https://github.com/danger/danger/pull/1406)
+* Add `ref` option to `import_dangerfile` method as an alias of `branch` option. - [@manicmaniac](https://github.com/manicmaniac) [#1394](https://github.com/danger/danger/issues/1394)
+* Fixed incorrect help messages for `danger plugins lint` and `danger plugins readme`. - [@manicmaniac](https://github.com/manicmaniac) [#1397](https://github.com/danger/danger/issues/1397)
 
 ## 9.1.0
 
-* Fixed Docker image outdated ruby version by updating it to 2.7. [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
-* Added support for [Appcircle](https://appcircle.io/) - [@tosbaha](https://github.com/tosbaha)
+* Fixed Docker image outdated ruby version by updating it to 2.7. - [@axl89](https://github.com/axl89) [#1383](https://github.com/danger/danger/issues/1383)
+* Added support for [Appcircle](https://appcircle.io/) - [@tosbaha](https://github.com/tosbaha) [#1386](https://github.com/danger/danger/pull/1386)
 
 ## 9.0.0
 
-**Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
+**Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ - [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
 * Update Octokit dependency to version 5.0. - [@mathroule](https://github.com/mathroule) [#1377](https://github.com/danger/danger/pull/1377)
 * Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
-* Support batch builds in AWS CodeBuild [@ihatov08](https://github.com/ihatov08)
-* Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. [@pahnev](https://github.com/pahnev)
+* Support batch builds in AWS CodeBuild - [@ihatov08](https://github.com/ihatov08) [#1369](https://github.com/danger/danger/pull/1369)
+* Add option to post file specific comments outside of the PR diff to Bitbucket Server, when using Code Insights API. - [@pahnev](https://github.com/pahnev)
 * Allow `import_dangerfile(path: '...')` to accept full path. - [@jkmathew](https://github.com/jkmathew) [#1380](https://github.com/danger/danger/pull/1380)
-* VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks)
-
+* VSTS / Azure DevOps: Fix submission of inline comments with recent Ruby versions. - [@yanniks](https://github.com/yanniks) [#1376](https://github.com/danger/danger/pull/1376)
 
 ## 8.6.1
 
