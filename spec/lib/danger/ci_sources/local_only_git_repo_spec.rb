@@ -5,7 +5,7 @@ RSpec.describe Danger::LocalOnlyGitRepo do
   def run_in_repo
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
-        `git init`
+        `git init -b master`
         `git remote add origin .`
         File.open(dir + "/file1", "w") {}
         `git add .`

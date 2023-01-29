@@ -11,6 +11,9 @@
 ## master
 
 * Update ruby-git gem [@manicmaniac](https://github.com/manicmaniac) [#1419](https://github.com/danger/danger/pull/1419)
+* Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
+* Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
+
 <!-- Your comment above here -->
 
 ## 9.2.0

@@ -111,7 +111,7 @@ end
 def with_git_repo(origin: "git@github.com:artsy/eigen")
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
-      `git init`
+      `git init -b master`
       File.open(dir + "/file1", "w") {}
       `git add .`
       `git commit -m "ok"`

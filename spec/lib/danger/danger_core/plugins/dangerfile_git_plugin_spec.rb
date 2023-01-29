@@ -3,7 +3,7 @@ require "ostruct"
 def run_in_repo_with_diff
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
-      `git init`
+      `git init -b master`
       File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
       File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
