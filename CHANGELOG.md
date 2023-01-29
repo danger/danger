@@ -10,7 +10,7 @@
 
 ## master
 
-
+* Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
 <!-- Your comment above here -->
 
 ## 9.2.0
