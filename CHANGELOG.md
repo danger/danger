@@ -12,8 +12,8 @@
 
 * Make specs independent from default branch setting in git config - [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 * Add missing error types to raise_error matcher - [@manicmaniac](https://github.com/manicmaniac) [#1421](https://github.com/danger/danger/pull/1421)
+* Cannot specify danger_id testing locally - [@manicmaniac](https://github.com/manicmaniac) [#1362](https://github.com/danger/danger/issues/1362)
 
-* Cannot specify danger_id testing locally [@manicmaniac](https://github.com/manicmaniac) [#1362](https://github.com/danger/danger/issues/1362)
 <!-- Your comment above here -->
 
 ## 9.2.0
