@@ -34,4 +34,26 @@ RSpec.describe Danger::Local do
       expect(result.instance_variable_get(:"@clear_http_cache")).to eq false
     end
   end
+
+  describe "#run" do
+    before do
+      allow(Danger::EnvironmentManager).to receive(:new)
+
+      @dm = instance_double(Danger::Dangerfile, run: nil)
+      allow(Danger::Dangerfile).to receive(:new).and_return @dm
+
+      local_setup = instance_double(Danger::LocalSetup)
+      allow(local_setup).to receive(:setup).and_yield
+      allow(Danger::LocalSetup).to receive(:new).and_return local_setup
+    end
+
+    it "passes danger_id to Dangerfile and its env" do
+      argv = CLAide::ARGV.new(["--danger_id=DANGER_ID"])
+      described_class.new(argv).run
+      expect(Danger::EnvironmentManager).to have_received(:new)
+        .with(ENV, a_kind_of(Cork::Board), "DANGER_ID")
+      expect(@dm).to have_received(:run)
+        .with(anything, anything, anything, "DANGER_ID", nil, nil)
+    end
+  end
 end
