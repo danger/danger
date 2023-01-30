@@ -28,7 +28,18 @@ RSpec.describe Danger::LocalSetup do
       expect(ui.string).not_to include("evaluated")
     end
 
-    it "turns on verbose if arguments wasn't passed" do
+    it "turns on verbose if arguments was passed" do
+      github = double(:host => "", :support_tokenless_auth= => nil, :fetch_details => nil)
+      env = FakeEnv.new(ci_source, github)
+      dangerfile = FakeDangerfile.new(env, false)
+      ui = testing_ui
+      subject = described_class.new(dangerfile, ui)
+
+      subject.setup(verbose: true) {}
+      expect(dangerfile.verbose).to be(true)
+    end
+
+    it "turns off verbose if arguments wasn't passed" do
       github = double(:host => "", :support_tokenless_auth= => nil, :fetch_details => nil)
       env = FakeEnv.new(ci_source, github)
       dangerfile = FakeDangerfile.new(env, false)
@@ -36,7 +47,7 @@ RSpec.describe Danger::LocalSetup do
       subject = described_class.new(dangerfile, ui)
 
       subject.setup(verbose: false) {}
-      expect(ui.string).to include("Turning on --verbose")
+      expect(dangerfile.verbose).to be(false)
     end
 
     it "does not evaluate Dangerfile if local repo wasn't found on github" do
