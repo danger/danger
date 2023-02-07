@@ -11,6 +11,9 @@ LABEL "maintainer"="Orta Therox"
 
 RUN apt-get update -qq && apt-get install -y build-essential p7zip unzip
 
+# See https://github.com/actions/runner/issues/2033
+RUN git config --system --add safe.directory /github/workspace
+
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY . /myapp

@@ -16,6 +16,7 @@
 * Update ruby-git gem [@manicmaniac](https://github.com/manicmaniac) - [#1419](https://github.com/danger/danger/pull/1419)
 * Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 * Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
+* Add /github/workspace to git safe.directory [@hiro-flank](https://github.com/hiro-flank) [#1427](https://github.com/danger/danger/pull/1427)
 
 <!-- Your comment above here -->
 
