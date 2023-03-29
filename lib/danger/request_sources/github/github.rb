@@ -219,7 +219,7 @@ module Danger
         begin
           client.create_status(ci_source.repo_slug, latest_pr_commit_ref, status, {
             description: message,
-            context: "danger/#{danger_id}",
+            context: danger_id,
             target_url: details_url
           })
         rescue StandardError
