@@ -19,6 +19,7 @@
 * Add /github/workspace to git safe.directory [@hiro-flank](https://github.com/hiro-flank) [#1427](https://github.com/danger/danger/pull/1427)
 * Fixes issue where a comment is posted to Bitbucket Cloud even when everything is green. [@SalvatoreT](https://github.com/SalvatoreT) [#1299](https://github.com/danger/danger/issues/1299)
 * Add Ruby 3.2 to test matrix [@mataku](https://github.com/mataku) [#1434](https://github.com/danger/danger/pull/1434)
+* Add CI Source of CustomCiWithGithub - [@jmeridth](https://github.com/jmeridth] [#1435](https://github.com/danger/danger/pull/1435)
 
 <!-- Your comment above here -->
 

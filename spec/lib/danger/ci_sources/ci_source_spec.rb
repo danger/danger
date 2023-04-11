@@ -21,6 +21,7 @@ RSpec.describe Danger::CI do
           "Danger::Codemagic",
           "Danger::Codeship",
           "Danger::Concourse",
+          "Danger::CustomCIWithGithub",
           "Danger::DotCi",
           "Danger::Drone",
           "Danger::GitHubActions",
