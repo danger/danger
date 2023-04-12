@@ -78,15 +78,20 @@ module Danger
         messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
         markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
 
-        comment += generate_comment(warnings: warnings,
-                                    errors: errors,
-                                    messages: messages,
-                                    markdowns: markdowns,
-                                    previous_violations: {},
-                                    danger_id: danger_id,
-                                    template: "bitbucket_server")
-
-        @api.post_comment(comment)
+        has_comments = (warnings.count > 0 || errors.count > 0 || messages.count > 0 || markdowns.count > 0)
+        if has_comments
+          comment = generate_description(warnings: warnings,
+                                         errors: errors)
+          comment += "\n\n"
+          comment += generate_comment(warnings: warnings,
+                                      errors: errors,
+                                      messages: messages,
+                                      markdowns: markdowns,
+                                      previous_violations: {},
+                                      danger_id: danger_id,
+                                      template: "bitbucket_server")
+          @api.post_comment(comment)
+        end
       end
 
       def update_pr_by_line!(message_groups:,
