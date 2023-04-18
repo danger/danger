@@ -19,7 +19,7 @@ gem "rspec", "~> 3.9"
 gem "rspec_junit_formatter", "~> 0.4"
 gem "rubocop"
 gem "simplecov", "~> 0.18"
-gem "webmock", "~> 2.1"
+gem "webmock", "~> 3.16.2"
 gem "yard", "~> 0.9.11"
 
 if Gem::Version.create(RUBY_VERSION) < Gem::Version.create("2.5.0")
