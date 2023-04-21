@@ -10,6 +10,15 @@
 
 ## master
 
+<!-- Your comment above here -->
+
+## 9.3.0
+
+* Add CI Source of CustomCiWithGithub - [@jmeridth](https://github.com/jmeridth] [#1435](https://github.com/danger/danger/pull/1435)
+* Fixes issue where a comment is posted to Bitbucket Cloud even when everything is green. [@SalvatoreT](https://github.com/SalvatoreT) [#1299](https://github.com/danger/danger/issues/1299)
+
+Internals:
+
 * Make specs independent from default branch setting in git config - [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 * Add missing error types to raise_error matcher - [@manicmaniac](https://github.com/manicmaniac) [#1421](https://github.com/danger/danger/pull/1421)
 * Cannot specify danger_id testing locally - [@manicmaniac](https://github.com/manicmaniac) [#1362](https://github.com/danger/danger/issues/1362)
@@ -17,11 +26,7 @@
 * Make specs independent from default branch setting in git config [@manicmaniac](https://github.com/manicmaniac) [#1420](https://github.com/danger/danger/pull/1420)
 * Add missing error types to raise_error matcher [@manicmaniac][https://github.com/manicmaniac] [#1421](https://github.com/danger/danger/pull/1421)
 * Add /github/workspace to git safe.directory [@hiro-flank](https://github.com/hiro-flank) [#1427](https://github.com/danger/danger/pull/1427)
-* Fixes issue where a comment is posted to Bitbucket Cloud even when everything is green. [@SalvatoreT](https://github.com/SalvatoreT) [#1299](https://github.com/danger/danger/issues/1299)
 * Add Ruby 3.2 to test matrix [@mataku](https://github.com/mataku) [#1434](https://github.com/danger/danger/pull/1434)
-* Add CI Source of CustomCiWithGithub - [@jmeridth](https://github.com/jmeridth] [#1435](https://github.com/danger/danger/pull/1435)
-
-<!-- Your comment above here -->
 
 ## 9.2.0
 
