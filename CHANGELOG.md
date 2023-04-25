@@ -10,11 +10,11 @@
 
 ## master
 
-<!-- Your comment above here -->
+* Update Octokit dependency to version 6.0 - [@spencertransier](https://github.com/spencertransier) [#1437](https://github.com/danger/danger/pull/1437)
 
 ## 9.3.0
 
-* Add CI Source of CustomCiWithGithub - [@jmeridth](https://github.com/jmeridth] [#1435](https://github.com/danger/danger/pull/1435)
+* Add CI Source of CustomCiWithGithub - [@jmeridth](https://github.com/jmeridth) [#1435](https://github.com/danger/danger/pull/1435)
 * Fixes issue where a comment is posted to Bitbucket Cloud even when everything is green. [@SalvatoreT](https://github.com/SalvatoreT) [#1299](https://github.com/danger/danger/issues/1299)
 
 Internals:
