@@ -8,13 +8,9 @@ module Danger
 
     def diff_for_folder(folder, from: "master", to: "HEAD", lookup_top_level: false)
       self.folder = folder
-      git_top_level = folder
-      if lookup_top_level
-        Dir.chdir(folder) do
-          git_top_level = exec("rev-parse --show-toplevel")
-        end
-      end
-      repo = Git.open git_top_level
+      git_top_level = find_git_top_level_if_needed!(folder, lookup_top_level)
+
+      repo = Git.open(git_top_level)
 
       ensure_commitish_exists!(from)
       ensure_commitish_exists!(to)
@@ -167,6 +163,26 @@ module Danger
 
     def commit_is_ref?(commit)
       /[a-f0-9]{5,40}/ !~ commit
+    end
+
+    def find_git_top_level_if_needed!(folder, lookup_top_level)
+      git_top_level = Dir.chdir(folder) { exec("rev-parse --show-toplevel") }
+      return git_top_level if lookup_top_level
+
+      # To keep backward compatibility, `GitRepo#diff_for_folder` expects folder
+      # to be top level git directory or requires `true` to `lookup_top_level`.
+      # https://github.com/danger/danger/pull/1178
+      return folder if compare_path(git_top_level, folder)
+
+      message = "#{folder} is not the top level git directory. Pass correct path or `true` to `lookup_top_level` option for `diff_for_folder`"
+      raise ArgumentError, message
+    end
+
+    # Compare given paths as realpath. Return true if both are same.
+    # In rspec, given path can be a temporary directory's path and in macOS `/var` directory is
+    # a symbolic link to `/private/var`.
+    def compare_path(path1, path2)
+      Pathname.new(path1).realdirpath == Pathname.new(path2).realdirpath
     end
   end
 end
