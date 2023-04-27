@@ -179,8 +179,8 @@ module Danger
     end
 
     # Compare given paths as realpath. Return true if both are same.
-    # In rspec, given path can be a temporary directory's path and in macOS `/var` directory is
-    # a symbolic link to `/private/var`.
+    # `git rev-parse --show-toplevel` returns a path resolving symlink. In rspec, given path can
+    # be a temporary directory's path created under a symlinked directory `/var`.
     def compare_path(path1, path2)
       Pathname.new(path1).realdirpath == Pathname.new(path2).realdirpath
     end
