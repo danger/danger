@@ -43,14 +43,16 @@ RSpec.describe Danger::GitRepo, host: :github do
         @dm = testing_dangerfile
         expect do
           @dm.env.scm.diff_for_folder(dir + "/subdir")
-        end.to raise_error(ArgumentError, /path does not exist/)
+        end.to raise_error(ArgumentError, /is not the top level git directory/)
       end
     end
 
     it "looks up the top level git folder when requested" do
       with_git_repo do |dir|
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir + "/subdir", lookup_top_level: true)
+        expect do
+          @dm.env.scm.diff_for_folder(dir + "/subdir", lookup_top_level: true)
+        end.not_to raise_error
       end
     end
   end
