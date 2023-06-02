@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/custom_ci_with_github"
 
 RSpec.describe Danger::CustomCIWithGithub do

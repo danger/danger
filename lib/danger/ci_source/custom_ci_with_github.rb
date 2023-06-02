@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/github/github"
 
 module Danger
@@ -31,6 +33,8 @@ module Danger
     end
 
     def initialize(env)
+      super
+
       self.repo_slug = env["GITHUB_REPOSITORY"]
       pull_request_event = JSON.parse(File.read(env["GITHUB_EVENT_PATH"]))
       self.pull_request_id = pull_request_event["number"]
