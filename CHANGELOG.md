@@ -10,8 +10,13 @@
 
 ## master
 
-* Update Octokit dependency to version 6.0 - [@spencertransier](https://github.com/spencertransier) [#1437](https://github.com/danger/danger/pull/1437)
+<!-- Your comment below here -->
+
 <!-- Your comment above here -->
+
+## 9.3.1
+
+* Update Octokit dependency to version 6.0 - [@spencertransier](https://github.com/spencertransier) [#1437](https://github.com/danger/danger/pull/1437)
 * Fixes dependency constraint issue on `ruby-git` - [@ainame](https://github.com/ainame) [#1436](https://github.com/danger/danger/pull/1436)
 
 ## 9.3.0
