@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Update README badges - [@manicmaniac](https://github.com/manicmaniac) [#1442](https://github.com/danger/danger/pull/1442)
 
 <!-- Your comment above here -->
 
