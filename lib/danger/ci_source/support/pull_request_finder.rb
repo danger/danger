@@ -146,7 +146,7 @@ module Danger
         require "danger/request_sources/bitbucket_server_api"
         project, slug = repo_slug.split("/")
         RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
-      
+
       when :vsts
         require "danger/request_sources/vsts_api"
         RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
@@ -181,7 +181,7 @@ module Danger
       elsif remote_url =~ %r{/pull-requests/}
         :bitbucket_server
       elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
-        :vsts 
+        :vsts
       else
         :github
       end

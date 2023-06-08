@@ -70,18 +70,14 @@ module Danger
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
         delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
 
-        comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
-        comment += "\n\n"
-
         warnings = update_inline_comments_for_kind!(:warnings, warnings, danger_id: danger_id)
         errors = update_inline_comments_for_kind!(:errors, errors, danger_id: danger_id)
         messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
         markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
 
-        has_comments = (warnings.count > 0 || errors.count > 0 || messages.count > 0 || markdowns.count > 0)
+        has_comments = (warnings.count.positive? || errors.count.positive? || messages.count.positive? || markdowns.count.positive?)
         if has_comments
-          comment = generate_description(warnings: warnings,
-                                         errors: errors)
+          comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
           comment += "\n\n"
           comment += generate_comment(warnings: warnings,
                                       errors: errors,

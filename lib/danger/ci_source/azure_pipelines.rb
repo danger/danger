@@ -29,8 +29,6 @@ module Danger
   # which will automatically get your vsts domain and your project name needed for the vsts api.
   #
   class AzurePipelines < CI
-
-
     def self.validates_as_ci?(env)
       has_all_variables = ["AGENT_ID", "BUILD_SOURCEBRANCH", "BUILD_REPOSITORY_URI", "BUILD_REASON", "BUILD_REPOSITORY_NAME"].all? { |x| env[x] && !env[x].empty? }
 

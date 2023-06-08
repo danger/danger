@@ -31,7 +31,7 @@ module Danger
     end
 
     def initialize(_env)
-      raise "Subclass and overwrite initialize"
+      raise "Subclass and overwrite initialize" if method(__method__).owner == Danger::CI
     end
   end
 end
