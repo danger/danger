@@ -12,7 +12,12 @@ task default: %w(rubocop spec)
 
 desc "Danger's tests"
 task :spec do
-  Rake::Task["specs"].invoke
+  if Process.respond_to?(:fork)
+    sh("rspec-queue")
+  else
+    sh("rspec")
+  end
+
   Rake::Task["spec_docs"].invoke
 end
 
