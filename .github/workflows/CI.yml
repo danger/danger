@@ -38,6 +38,9 @@ jobs:
           git config --global user.email "orta+dangersystems@artsy.net"
           git config --global user.name "Danger.Systems"
 
+      - name: Linting
+        run: bundle exec rubocop
+
       - name: Running Tests
         run: bundle exec rake spec
 
