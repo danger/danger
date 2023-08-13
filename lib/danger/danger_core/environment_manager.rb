@@ -7,6 +7,8 @@ module Danger
 
     # Finds a Danger::CI class based on the ENV
     def self.local_ci_source(env)
+      return Danger::LocalOnlyGitRepo if LocalOnlyGitRepo.validates_as_ci? env
+
       CI.available_ci_sources.find { |ci| ci.validates_as_ci? env }
     end
 

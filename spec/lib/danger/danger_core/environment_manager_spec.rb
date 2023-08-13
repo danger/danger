@@ -115,6 +115,23 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
         expect(Danger::EnvironmentManager.local_ci_source(system_env)).to eq nil
       end
     end
+
+    context "when Local Only Git Repo is valid" do
+      it "loads Local Only Git Repo" do
+        with_localonlygitrepo_setup do |system_env|
+          expect(described_class.local_ci_source(system_env)).to eq Danger::LocalOnlyGitRepo
+        end
+      end
+
+      it "loads Local Only Git Repo ignoring other valid sources" do
+        with_bitrise_setup_and_is_a_pull_request do |system_env_bitrise|
+          with_localonlygitrepo_setup do |system_env_local_only|
+            system_env = system_env_bitrise.merge(system_env_local_only)
+            expect(described_class.local_ci_source(system_env)).to eq Danger::LocalOnlyGitRepo
+          end
+        end
+      end
+    end
   end
 
   describe ".pr?" do
