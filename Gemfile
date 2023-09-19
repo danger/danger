@@ -22,7 +22,3 @@ gem "simplecov", "~> 0.18"
 gem "test-queue"
 gem "webmock", "~> 3.16.2"
 gem "yard", "~> 0.9.11"
-
-if Gem::Version.create(RUBY_VERSION) < Gem::Version.create("2.5.0")
-  gem "gitlab", "< 4.14.1"
-end
