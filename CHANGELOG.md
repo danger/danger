@@ -11,10 +11,13 @@
 ## master
 
 <!-- Your comment below here -->
-* Release to GitHub Container Registry - [@unlobito](https://github.com/unlobito) [#1445](https://github.com/danger/danger/pull/1445)
-* Update README badges - [@manicmaniac](https://github.com/manicmaniac) [#1442](https://github.com/danger/danger/pull/1442)
 
 <!-- Your comment above here -->
+
+## 9.3.2
+
+* Release to GitHub Container Registry - [@unlobito](https://github.com/unlobito) [#1445](https://github.com/danger/danger/pull/1445)
+* Update README badges - [@manicmaniac](https://github.com/manicmaniac) [#1442](https://github.com/danger/danger/pull/1442)
 
 ## 9.3.1
 
