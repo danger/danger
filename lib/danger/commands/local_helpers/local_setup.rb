@@ -22,6 +22,8 @@ module Danger
 
       if gh.instance_of? Danger::RequestSources::BitbucketServer
         cork.puts "Running your Dangerfile against this PR - #{gh.host}/projects/#{source.repo_slug.split('/').first}/repos/#{source.repo_slug.split('/').last}/pull-requests/#{source.pull_request_id}"
+      elsif gh.instance_of? Danger::RequestSources::VSTS
+        cork.puts "Running your Dangerfile against this PR - #{gh.client.pr_api_endpoint}"
       else
         cork.puts "Running your Dangerfile against this PR - https://#{gh.host}/#{source.repo_slug}/pull/#{source.pull_request_id}"
       end

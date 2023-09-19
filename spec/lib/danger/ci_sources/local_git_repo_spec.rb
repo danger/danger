@@ -6,7 +6,7 @@ RSpec.describe Danger::LocalGitRepo do
   def run_in_repo(merge_pr: true, squash_and_merge_pr: false)
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
-        `git init`
+        `git init -b master`
         `git remote add origin https://github.com/danger/danger.git`
         File.open(dir + "/file1", "w") {}
         `git add .`
@@ -239,7 +239,7 @@ RSpec.describe Danger::LocalGitRepo do
     end
 
     context "forked PR" do
-      before { ENV['DANGER_GITHUB_API_TOKEN'] = 'hi' }
+      before { ENV["DANGER_GITHUB_API_TOKEN"] = "hi" }
       it "works" do
         spec_root = Dir.pwd
         client = double("Octokit::Client")
@@ -263,7 +263,7 @@ RSpec.describe Danger::LocalGitRepo do
           )
         end
       end
-      after { ENV['DANGER_GITHUB_API_TOKEN'] = nil }
+      after { ENV["DANGER_GITHUB_API_TOKEN"] = nil }
     end
   end
 end

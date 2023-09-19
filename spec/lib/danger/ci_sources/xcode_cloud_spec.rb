@@ -21,7 +21,7 @@ RSpec.describe Danger::XcodeCloud do
   describe ".validates_as_pr?" do
     it "validates when the required env variables are set" do
       expect(described_class.validates_as_pr?(valid_env)).to be true
-    end    
+    end
 
     it "does not validate when the required env variables are not set" do
       expect(described_class.validates_as_pr?(invalid_env)).to be false

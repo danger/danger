@@ -1,9 +1,11 @@
-require "danger/ci_source/github_actions"
+# frozen_string_literal: true
 
-RSpec.describe Danger::GitHubActions do
+require "danger/ci_source/custom_ci_with_github"
+
+RSpec.describe Danger::CustomCIWithGithub do
   let(:valid_env) do
     {
-      "GITHUB_ACTION" => "name_of_action",
+      "CUSTOM_CI_WITH_GITHUB" => "true",
       "GITHUB_EVENT_NAME" => "pull_request",
       "GITHUB_REPOSITORY" => "danger/danger",
       "GITHUB_EVENT_PATH" => File.expand_path("../../../fixtures/ci_source/pull_request_event.json", __dir__)
@@ -19,16 +21,6 @@ RSpec.describe Danger::GitHubActions do
   context "with GitHub" do
     describe ".validates_as_ci?" do
       it "validates when required env variables are set" do
-        expect(described_class.validates_as_ci?(valid_env)).to be true
-      end
-
-      it "validates even when `GITHUB_ACTION` is missing" do
-        valid_env["GITHUB_ACTION"] = nil
-        expect(described_class.validates_as_ci?(valid_env)).to be true
-      end
-
-      it "validates even when `GITHUB_ACTION` is empty" do
-        valid_env["GITHUB_ACTION"] = ""
         expect(described_class.validates_as_ci?(valid_env)).to be true
       end
 

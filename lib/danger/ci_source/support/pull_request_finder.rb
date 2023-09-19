@@ -28,7 +28,7 @@ module Danger
       ["true", "1", "yes", "y", true].include?(maybe_string)
     end
 
-    def raise_pull_request_not_found!(pull_request)
+    def raise_pull_request_not_found!(_pull_request)
       if specific_pull_request_id.empty?
         raise "No recent Pull Requests found for this repo, danger requires at least one Pull Request for the local mode."
       else
@@ -81,6 +81,12 @@ module Danger
           remote_pull_request.head.sha,
           remote_pull_request.base.sha
         )
+      when :vsts
+        RemotePullRequest.new(
+          remote_pull_request[:pullRequestId].to_s,
+          remote_pull_request[:lastMergeSourceCommit][:commitId],
+          remote_pull_request[:lastMergeTargetCommit][:commitId]
+        )
       else
         raise "SCM provider not supported: #{scm_provider}"
       end
@@ -96,16 +102,12 @@ module Danger
 
     # @return [String] Log line of format: "Merge pull request #42"
     def most_recent_merged_pull_request
-      @most_recent_merged_pull_request ||= begin
-        git_logs.lines.grep(/Merge pull request #{pull_request_ref} from/)[0]
-      end
+      @most_recent_merged_pull_request ||= git_logs.lines.grep(/Merge pull request #{pull_request_ref} from/)[0]
     end
 
     # @return [String] Log line of format: "description (#42)"
     def most_recent_squash_and_merged_pull_request
-      @most_recent_squash_and_merged_pull_request ||= begin
-        git_logs.lines.grep(/\(#{pull_request_ref}\)/)[0]
-      end
+      @most_recent_squash_and_merged_pull_request ||= git_logs.lines.grep(/\(#{pull_request_ref}\)/)[0]
     end
 
     def pick_the_most_recent_one_from_two_matches
@@ -145,6 +147,10 @@ module Danger
         project, slug = repo_slug.split("/")
         RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
 
+      when :vsts
+        require "danger/request_sources/vsts_api"
+        RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
+
       when :github
         require "octokit"
         access_token = ENV["DANGER_GITHUB_API_TOKEN"]
@@ -174,6 +180,8 @@ module Danger
         :bitbucket_cloud
       elsif remote_url =~ %r{/pull-requests/}
         :bitbucket_server
+      elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
+        :vsts
       else
         :github
       end

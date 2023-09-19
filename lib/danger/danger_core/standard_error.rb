@@ -37,9 +37,7 @@ module Danger
     #         be raised.
     #
     def contents
-      @contents ||= begin
-        dsl_path && File.exist?(dsl_path) && File.read(dsl_path)
-      end
+      @contents ||= dsl_path && File.exist?(dsl_path) && File.read(dsl_path)
     end
 
     # The message of the exception reports the content of podspec for the
@@ -104,6 +102,7 @@ module Danger
 
       trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
       return result unless trace_line
+
       line_numer = trace_line.split(":")[1].to_i - 1
       return result unless line_numer
 

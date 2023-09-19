@@ -1,6 +1,4 @@
-# coding: utf-8
-
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "danger/version"
 Gem::Specification.new do |spec|
@@ -22,15 +20,14 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "claide", "~> 1.0"
   spec.add_runtime_dependency "claide-plugins", ">= 0.9.2"
-  spec.add_runtime_dependency "git", "~> 1.7"
   spec.add_runtime_dependency "colored2", "~> 3.1"
-  spec.add_runtime_dependency "faraday", ">= 0.9.0", "< 2.0"
+  spec.add_runtime_dependency "cork", "~> 0.1"
+  spec.add_runtime_dependency "faraday", ">= 0.9.0", "< 3.0"
   spec.add_runtime_dependency "faraday-http-cache", "~> 2.0"
+  spec.add_runtime_dependency "git", "~> 1.13"
   spec.add_runtime_dependency "kramdown", "~> 2.3"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
-  spec.add_runtime_dependency "octokit", "~> 5.0"
-  spec.add_runtime_dependency "terminal-table", ">= 1", "< 4"
-  spec.add_runtime_dependency "cork", "~> 0.1"
   spec.add_runtime_dependency "no_proxy_fix"
+  spec.add_runtime_dependency "octokit", "~> 6.0"
+  spec.add_runtime_dependency "terminal-table", ">= 1", "< 4"
 end
-# rubocop:enable Metrics/BlockLength

@@ -49,7 +49,6 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
   end
 
   describe "#pull_request_id" do
-
     it "gets set from pull_request_id" do
       expect(api.pull_request_id).to eq(1)
     end
@@ -102,17 +101,17 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
   describe "#credentials_given" do
     it "#fetch_json raise error when missing credentials" do
       empty_env = {}
-      expect { api.pull_request }.to raise_error
+      expect { api.pull_request }.to raise_error WebMock::NetConnectNotAllowedError
     end
 
     it "#post raise error when missing credentials" do
       empty_env = {}
-      expect { api.post("http://post-url.org", {}) }.to raise_error
+      expect { api.post("http://post-url.org", {}) }.to raise_error NoMethodError
     end
 
     it "#delete raise error when missing credentials" do
       empty_env = {}
-      expect { api.delete("http://delete-url.org") }.to raise_error
+      expect { api.delete("http://delete-url.org") }.to raise_error NoMethodError
     end
   end
 

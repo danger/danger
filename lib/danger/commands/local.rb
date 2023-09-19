@@ -49,7 +49,7 @@ module Danger
 
       configure_octokit(ENV["DANGER_TMPDIR"] || Dir.tmpdir)
 
-      env = EnvironmentManager.new(ENV, cork)
+      env = EnvironmentManager.new(ENV, cork, @danger_id)
       dm = Dangerfile.new(env, cork)
 
       LocalSetup.new(dm, cork).setup(verbose: verbose) do
@@ -57,7 +57,7 @@ module Danger
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,
           @dangerfile_path,
-          nil,
+          @danger_id,
           nil,
           nil
         )
@@ -66,7 +66,7 @@ module Danger
 
     private
 
-    # this method is a duplicate of Commands::PR#configure_octokit
+    #  this method is a duplicate of Commands::PR#configure_octokit
     # - worth a refactor sometime?
     def configure_octokit(cache_dir)
       # setup caching for Github calls to hitting the API rate limit too quickly

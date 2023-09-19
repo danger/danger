@@ -87,7 +87,7 @@ RSpec.describe Danger::FindRepoInfoFromURL do
           slug: "some-org/awesomerepo",
           id: "1324"
         )
-      end  
+      end
     end
 
     context "bitbucket.com" do
@@ -116,6 +116,41 @@ RSpec.describe Danger::FindRepoInfoFromURL do
 
       expect(result).to have_attributes(
         slug: "Test/test",
+        id: "1946"
+      )
+    end
+  end
+
+  context "Azure Pipelines" do
+    it "legacy URL format works" do
+      result = described_class.new("https://example.visualstudio.com/Test/_git/test/pullrequest/1946").call
+
+      expect(result).to have_attributes(
+        slug: "test",
+        id: "1946"
+      )
+    end
+    it "new URL format works" do
+      result = described_class.new("https://dev.azure.com/example/Test/_git/test/pullrequest/1946").call
+
+      expect(result).to have_attributes(
+        slug: "test",
+        id: "1946"
+      )
+    end
+    it "legacy URL format works with http + trailing slash" do
+      result = described_class.new("http://example.visualstudio.com/Test/_git/test/pullrequest/1946/").call
+
+      expect(result).to have_attributes(
+        slug: "test",
+        id: "1946"
+      )
+    end
+    it "new URL format works with http + trailing slash" do
+      result = described_class.new("http://dev.azure.com/example/Test/_git/test/pullrequest/1946/").call
+
+      expect(result).to have_attributes(
+        slug: "test",
         id: "1946"
       )
     end

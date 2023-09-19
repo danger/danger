@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -58,6 +56,7 @@ module Danger
     # So that this init can fail.
     def self.new(dangerfile)
       return nil if dangerfile.env.request_source.class != Danger::RequestSources::VSTS
+
       super
     end
 
@@ -174,6 +173,7 @@ module Danger
       end
 
       return paths.first if paths.count < 2
+
       paths.first(paths.count - 1).join(", ") + " & " + paths.last
     end
 
@@ -184,7 +184,7 @@ module Danger
     end
 
     def branch_name(key)
-      repo_matches = @source.pr_json[key].to_s.match(%r{refs\/heads\/(.*)})
+      repo_matches = @source.pr_json[key].to_s.match(%r{refs/heads/(.*)})
       repo_matches[1] unless repo_matches.nil?
     end
   end

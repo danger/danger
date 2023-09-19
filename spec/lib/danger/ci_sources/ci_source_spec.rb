@@ -21,6 +21,7 @@ RSpec.describe Danger::CI do
           "Danger::Codemagic",
           "Danger::Codeship",
           "Danger::Concourse",
+          "Danger::CustomCIWithGithub",
           "Danger::DotCi",
           "Danger::Drone",
           "Danger::GitHubActions",
@@ -33,7 +34,6 @@ RSpec.describe Danger::CI do
           "Danger::Surf",
           "Danger::TeamCity",
           "Danger::Travis",
-          "Danger::VSTS",
           "Danger::XcodeCloud",
           "Danger::XcodeServer"
         ]

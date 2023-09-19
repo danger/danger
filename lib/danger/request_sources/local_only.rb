@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 

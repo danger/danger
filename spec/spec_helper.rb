@@ -1,5 +1,5 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-$LOAD_PATH.unshift File.expand_path("../..", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+$LOAD_PATH.unshift File.expand_path("..", __dir__)
 
 # Needs to be required and started before danger
 require "simplecov"
@@ -111,7 +111,7 @@ end
 def with_git_repo(origin: "git@github.com:artsy/eigen")
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
-      `git init`
+      `git init -b master`
       File.open(dir + "/file1", "w") {}
       `git add .`
       `git commit -m "ok"`

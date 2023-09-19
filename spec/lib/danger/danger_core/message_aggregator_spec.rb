@@ -151,13 +151,13 @@ RSpec.describe Danger::MessageAggregator do
         expect(b3.messages.map(&:type)).to eq [:error]
       end
 
-      #it "sorts the messages by type" do
+      # it "sorts the messages by type" do
       #  group = subject.first
       #  expect(group.messages[0].type).to eq :error
       #  expect(group.messages[1].type).to eq :warning
       #  expect(group.messages[2].type).to eq :message
       #  expect(group.messages[3].type).to eq :markdown
-      #end
+      # end
     end
   end
 end

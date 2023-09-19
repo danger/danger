@@ -22,7 +22,7 @@ module Danger
   #
   # @example Warn when there are merge commits in the diff
   #
-  #          if git.commits.any? { |c| c.message =~ /^Merge branch 'master'/ }
+  #          if git.commits.any? { |c| c.parents.count > 1 }
   #            warn 'Please rebase to get rid of the merge commits in this PR'
   #          end
   #
@@ -46,7 +46,7 @@ module Danger
 
     def initialize(dangerfile)
       super(dangerfile)
-      raise unless dangerfile.env.scm.class == Danger::GitRepo
+      raise unless dangerfile.env.scm.class == Danger::GitRepo # rubocop:disable Style/ClassEqualityComparison
 
       @git = dangerfile.env.scm
     end
@@ -137,6 +137,7 @@ module Danger
     #
     def info_for_file(file)
       return nil unless modified_files.include?(file) || added_files.include?(file) || deleted_files.include?(file)
+
       stats = @git.diff.stats[:files][file]
       diff = @git.diff[file]
       {

@@ -21,17 +21,15 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= begin
-        [
-          Danger::RequestSources::GitHub
-        ]
-      end
+      @supported_request_sources ||= [
+        Danger::RequestSources::GitHub
+      ]
     end
 
     def initialize(env)
       self.repo_url = self.class.repo_url(env)
       self.pull_request_id = self.class.pull_request_id(env)
-      repo_matches = self.repo_url.match(%r{([\/:])([^\/]+\/[^\/]+)$})
+      repo_matches = self.repo_url.match(%r{([/:])([^/]+/[^/]+)$})
       self.repo_slug = repo_matches[2].gsub(/\.git$/, "") unless repo_matches.nil?
     end
 

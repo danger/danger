@@ -1,9 +1,7 @@
-# coding: utf-8
-
 require "danger/request_sources/bitbucket_server"
 
 RSpec.describe Danger::RequestSources::CodeInsightsAPI, host: :bitbucket_server do
-  let(:code_insights) {
+  let(:code_insights) do
     code_insights_fields = {
       "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY" => "ReportKey",
       "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE" => "Code Insights Report Title",
@@ -11,7 +9,8 @@ RSpec.describe Danger::RequestSources::CodeInsightsAPI, host: :bitbucket_server 
       "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_LOGO_URL" => "https://stash.example.com/logo_url.png"
     }
     stub_env_with_code_insights_fields = stub_env.merge(code_insights_fields)
-    Danger::RequestSources::CodeInsightsAPI.new("danger", "danger", stub_env_with_code_insights_fields)}
+    Danger::RequestSources::CodeInsightsAPI.new("danger", "danger", stub_env_with_code_insights_fields)
+  end
 
   describe "initialization" do
     it "should properly parse corresponding environment variables" do
@@ -63,5 +62,4 @@ RSpec.describe Danger::RequestSources::CodeInsightsAPI, host: :bitbucket_server 
       expect(inspected).to include(%(@password="********"))
     end
   end
-
 end

@@ -37,6 +37,7 @@ module Danger
         request_source = klass.new(self.ci_source, env)
         next unless request_source.validates_as_ci?
         next unless request_source.validates_as_api_source?
+
         self.request_source = request_source
       end
 
@@ -90,7 +91,7 @@ module Danger
         RequestSources::GitLab
       elsif repo_url =~ /bitbucket\.(org|com)/i
         RequestSources::BitbucketCloud
-      elsif repo_url =~ /dev\.azure\.com/i
+      elsif repo_url =~ /\.visualstudio\.com/i || repo_url =~ /dev\.azure\.com/i
         RequestSources::VSTS
       end
     end

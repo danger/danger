@@ -9,7 +9,7 @@ module Danger
 
     def self.options
       [
-          ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
+        ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."]
       ]
     end
 
@@ -41,12 +41,12 @@ module Danger
       dm = Dangerfile.new(env, cork)
 
       dm.run(
-          Danger::EnvironmentManager.danger_base_branch,
-          Danger::EnvironmentManager.danger_head_branch,
-          @dangerfile_path,
-          nil,
-          nil,
-          nil
+        Danger::EnvironmentManager.danger_base_branch,
+        Danger::EnvironmentManager.danger_head_branch,
+        @dangerfile_path,
+        nil,
+        nil,
+        nil
       )
     end
   end

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "danger/helpers/comments_helper"
 require "danger/request_sources/vsts_api"
 
@@ -25,14 +23,13 @@ module Danger
       def initialize(ci_source, environment)
         self.ci_source = ci_source
 
-        @is_vsts_git = environment["BUILD_REPOSITORY_PROVIDER"] == "TfsGit"
+        @is_vsts_ci = environment.key? "DANGER_VSTS_HOST"
 
-        project, slug = ci_source.repo_slug.split("/")
-        @api = VSTSAPI.new(project, slug, ci_source.pull_request_id, environment)
+        @api = VSTSAPI.new(ci_source.repo_slug, ci_source.pull_request_id, environment)
       end
 
       def validates_as_ci?
-        @is_vsts_git
+        @is_vsts_ci
       end
 
       def validates_as_api_source?
@@ -132,6 +129,7 @@ module Danger
           next unless comment_content.include?("generated_by_#{danger_id}")
           # Skip the comment if it's an inline comment
           next unless c[:threadContext].nil?
+
           # Updated the danger posted comment
           @api.update_comment(thread_id, comment_id, new_comment)
           comment_updated = true
@@ -205,9 +203,9 @@ module Danger
 
           matching_threads = danger_threads.select do |comment_data|
             if comment_data.key?(:threadContext) && !comment_data[:threadContext].nil? &&
-              comment_data[:threadContext][:filePath] == m.file &&
-              comment_data[:threadContext].key?(:rightFileStart) &&
-              comment_data[:threadContext][:rightFileStart][:line] == m.line
+               comment_data[:threadContext][:filePath] == m.file &&
+               comment_data[:threadContext].key?(:rightFileStart) &&
+               comment_data[:threadContext][:rightFileStart][:line] == m.line
               # Parse it to avoid problems with strikethrough
               violation = violations_from_table(comment_data[:comments].first[:content]).first
               if violation
@@ -257,6 +255,7 @@ module Danger
           next 1 unless b.file && b.line
 
           next a.line <=> b.line if a.file == b.file
+
           next a.file <=> b.file
         end
 
@@ -274,7 +273,6 @@ module Danger
           accumulator.merge(group) { |_, old, fresh| old + fresh }
         end
       end
-
     end
   end
 end

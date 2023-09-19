@@ -42,15 +42,17 @@ RSpec.describe Danger::GitRepo, host: :github do
       with_git_repo do |dir|
         @dm = testing_dangerfile
         expect do
-          @dm.env.scm.diff_for_folder(dir + '/subdir')
-        end.to raise_error(ArgumentError, /path does not exist/)
+          @dm.env.scm.diff_for_folder(dir + "/subdir")
+        end.to raise_error(ArgumentError, /is not the top level git directory/)
       end
     end
 
     it "looks up the top level git folder when requested" do
       with_git_repo do |dir|
         @dm = testing_dangerfile
-        @dm.env.scm.diff_for_folder(dir + '/subdir', lookup_top_level: true)
+        expect do
+          @dm.env.scm.diff_for_folder(dir + "/subdir", lookup_top_level: true)
+        end.not_to raise_error
       end
     end
   end
@@ -98,7 +100,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "handles file deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
-          `git init`
+          `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
@@ -118,7 +120,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "handles modified as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
-          `git init`
+          `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
@@ -142,7 +144,7 @@ RSpec.describe Danger::GitRepo, host: :github do
         Dir.chdir dir do
           subfolder = "subfolder"
 
-          `git init`
+          `git init -b master`
           `git config diff.renames true`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
@@ -168,7 +170,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "handles code insertions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
-          `git init`
+          `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
@@ -190,7 +192,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "handles code deletions as expected" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
-          `git init`
+          `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
           File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
           `git add .`
@@ -226,7 +228,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     it "returns array of hashes with names before and after" do
       Dir.mktmpdir do |dir|
         Dir.chdir dir do
-          `git init`
+          `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
 
           Dir.mkdir(File.join(dir, "first"))

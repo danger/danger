@@ -51,6 +51,9 @@ junit-results.xml
 # RSpec
 /spec/examples.txt
 
+# test-queue
+.test_queue_stats
+
 # Byebug
 /.byebug_history
 

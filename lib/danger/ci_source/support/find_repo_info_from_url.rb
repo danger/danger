@@ -4,19 +4,20 @@ module Danger
   class FindRepoInfoFromURL
     REGEXP = %r{
       ://[^/]+/
-      (?<slug>[^/]+(/[^/]+){1,2})
-      (/(pull|merge_requests|pull-requests)/)
+      (([^/]+/){1,2}_git/)?
+      (?<slug>[^/]+(/[^/]+){0,2})
+      (/(pull|pullrequest|merge_requests|pull-requests)/)
       (?<id>\d+)
-    }x
-    
+    }x.freeze
+
     # Regex used to extract info from Bitbucket server URLs, as they use a quite different format
     REGEXPBB = %r{
-      (?:[\/:])projects
-      \/([^\/.]+)
-      \/repos\/([^\/.]+)
-      \/pull-requests
-      \/(\d+)
-    }x
+      (?:[/:])projects
+      /([^/.]+)
+      /repos/([^/.]+)
+      /pull-requests
+      /(\d+)
+    }x.freeze
 
     def initialize(url)
       @url = url

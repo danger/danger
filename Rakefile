@@ -12,7 +12,12 @@ task default: %w(rubocop spec)
 
 desc "Danger's tests"
 task :spec do
-  Rake::Task["specs"].invoke
+  if Process.respond_to?(:fork)
+    sh("rspec-queue")
+  else
+    sh("rspec")
+  end
+
   Rake::Task["spec_docs"].invoke
 end
 
@@ -30,7 +35,7 @@ end
 
 desc "Runs chandler for current version"
 task :chandler do
-  lib = File.expand_path("../lib", __FILE__)
+  lib = File.expand_path("lib", __dir__)
   $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
   require "danger/version"
   if ENV["CHANDLER_GITHUB_API_TOKEN"]

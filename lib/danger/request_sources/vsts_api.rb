@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# coding: utf-8
 
 require "base64"
 require "danger/helpers/comments_helper"
@@ -9,7 +8,7 @@ module Danger
     class VSTSAPI
       attr_accessor :host, :pr_api_endpoint, :min_api_version_for_comments
 
-      def initialize(_project, slug, pull_request_id, environment)
+      def initialize(slug, pull_request_id, environment)
         self.min_api_version_for_comments = "3.0"
 
         user_name = ""
@@ -43,6 +42,10 @@ module Danger
 
       def credentials_given?
         @token && !@token.empty?
+      end
+
+      def pull_request(*)
+        fetch_pr_json
       end
 
       def fetch_pr_json

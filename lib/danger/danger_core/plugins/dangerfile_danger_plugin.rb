@@ -74,6 +74,8 @@ module Danger
     # @option opts [String] :github GitHub repo
     # @option opts [String] :gitlab GitLab repo
     # @option opts [String] :gem Gem name
+    # @option opts [String] :ref The name of branch, tag or commit
+    # @option opts [String] :branch Alias of :ref
     # @option opts [String] :path Path to Dangerfile
     # @return   [void]
     def import_dangerfile(opts)
@@ -82,9 +84,9 @@ module Danger
         import_dangerfile_from_github(opts)
       elsif opts.kind_of?(Hash)
         if opts.key?(:github)
-          import_dangerfile_from_github(opts[:github], opts[:branch], opts[:path])
+          import_dangerfile_from_github(opts[:github], opts[:ref] || opts[:branch], opts[:path])
         elsif opts.key?(:gitlab)
-          import_dangerfile_from_gitlab(opts[:gitlab], opts[:branch], opts[:path])
+          import_dangerfile_from_gitlab(opts[:gitlab], opts[:ref] || opts[:branch], opts[:path])
         elsif opts.key?(:path)
           import_dangerfile_from_path(opts[:path])
         elsif opts.key?(:gem)
@@ -132,6 +134,7 @@ module Danger
     #
     def import_dangerfile_from_path(path)
       raise "`import_dangerfile_from_path` requires a string" unless path.kind_of?(String)
+
       local_path = File.file?(path) ? path : File.join(path, "Dangerfile")
       @dangerfile.parse(Pathname.new(local_path))
     end
@@ -145,6 +148,7 @@ module Danger
     #
     def import_dangerfile_from_gem(name)
       raise "`import_dangerfile_from_gem` requires a string" unless name.kind_of?(String)
+
       spec = Gem::Specification.find_by_name(name)
       import_dangerfile_from_path(spec.gem_dir)
     rescue Gem::MissingSpecError
@@ -164,6 +168,7 @@ module Danger
     #
     def import_dangerfile_from_github(slug, branch = nil, path = nil)
       raise "`import_dangerfile_from_github` requires a string" unless slug.kind_of?(String)
+
       org, repo = slug.split("/")
       download_url = env.request_source.file_url(organisation: org, repository: repo, branch: branch, path: path || "Dangerfile")
       local_path = download(download_url)
@@ -196,6 +201,7 @@ module Danger
     #
     def import_dangerfile_from_url(url)
       raise "`import_dangerfile_from_url` requires a string" unless url.kind_of?(String)
+
       local_path = download(url)
       @dangerfile.parse(Pathname.new(local_path))
     end

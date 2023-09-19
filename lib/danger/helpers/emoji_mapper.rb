@@ -18,7 +18,7 @@ module Danger
     TYPE_TO_EMOJI = {
       error: "no_entry_sign",
       warning: "warning",
-      message: "book",
+      message: "book"
     }.freeze
 
     def initialize(template)

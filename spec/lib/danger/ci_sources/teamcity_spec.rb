@@ -8,8 +8,7 @@ RSpec.describe Danger::TeamCity do
   end
 
   let(:invalid_env) do
-    {
-    }
+    {}
   end
 
   let(:source) { described_class.new(valid_env) }

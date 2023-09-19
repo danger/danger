@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # For more info see: https://github.com/schacon/ruby-git
 
 require "git"
@@ -34,7 +35,12 @@ module Danger
     end
 
     def supported_request_sources
-      @supported_request_sources ||= [Danger::RequestSources::GitHub, Danger::RequestSources::BitbucketServer, Danger::RequestSources::BitbucketCloud]
+      @supported_request_sources ||= [
+        Danger::RequestSources::GitHub,
+        Danger::RequestSources::BitbucketServer,
+        Danger::RequestSources::BitbucketCloud,
+        Danger::RequestSources::VSTS
+      ]
     end
 
     def initialize(env = {})

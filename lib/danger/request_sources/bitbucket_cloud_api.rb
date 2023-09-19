@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# coding: utf-8
 
 require "danger/helpers/comments_helper"
 
@@ -57,7 +56,7 @@ module Danger
       def fetch_comments
         values = []
         # TODO: use a url parts encoder to encode the query
-        corrected_uuid = @my_uuid[1...-1] if !@my_uuid.nil? # Endpoint doesnt support curly brackets for this, so remove them for this
+        corrected_uuid = @my_uuid[1...-1] unless @my_uuid.nil? # Endpoint doesnt support curly brackets for this, so remove them for this
         uri = "#{pr_api_endpoint}/comments?pagelen=100&q=deleted+%7E+false+AND+user.uuid+%7E+%22#{corrected_uuid}%22"
 
         while uri
@@ -114,7 +113,7 @@ module Danger
         uri = URI.parse("https://bitbucket.org/site/oauth2/access_token")
         req = Net::HTTP::Post.new(uri.request_uri, { "Content-Type" => "application/json" })
         req.basic_auth oauth_key, oauth_secret
-        req.set_form_data({'grant_type' => 'client_credentials'})
+        req.set_form_data({ "grant_type" => "client_credentials" })
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           http.request(req)
         end
@@ -177,7 +176,6 @@ module Danger
       def error_fetching_json(url, status_code)
         "Error fetching json for: #{url}, status code: #{status_code}"
       end
-
     end
   end
 end

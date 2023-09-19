@@ -25,6 +25,7 @@ module Danger
     if Gem::Specification.find_all_by_name(GEM_NAME).empty?
       raise "Couldn't find gem directory for 'danger'"
     end
+
     return Gem::Specification.find_by_name(GEM_NAME).gem_dir
   end
 

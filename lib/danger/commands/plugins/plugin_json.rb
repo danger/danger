@@ -3,7 +3,7 @@ require "danger/plugin_support/plugin_file_resolver"
 
 module Danger
   class PluginJSON < CLAide::Command::Plugins
-    self.summary = "Prints the JSON documentation representing a plugin"
+    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
     self.command = "json"
 
     attr_accessor :cork
@@ -14,8 +14,6 @@ module Danger
                               verbose: argv.option("verbose", false))
       super
     end
-
-    self.summary = "Lint plugins from files, gems or the current folder. Outputs JSON array representation of Plugins on success."
 
     self.description = <<-DESC
       Converts a collection of file paths of Danger plugins into a JSON format.

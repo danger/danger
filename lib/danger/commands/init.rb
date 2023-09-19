@@ -145,7 +145,7 @@ module Danger
     def current_repo_slug
       git = GitRepo.new
 
-      author_repo_regexp = %r{(?:[\/:])([^\/]+\/[^\/]+)(?:.git)?$}
+      author_repo_regexp = %r{(?:[/:])([^/]+/[^/]+)(?:.git)?$}
       last_git_regexp = /.git$/
 
       matches = git.origins.match(author_repo_regexp)

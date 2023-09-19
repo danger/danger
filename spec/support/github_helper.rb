@@ -2,8 +2,7 @@ module Danger
   module Support
     module GitHubHelper
       def expected_headers
-        {
-        }
+        {}
       end
 
       def stub_env
