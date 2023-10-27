@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Add keyword arguments to MessageAggregator.aggregate for Ruby 3.X compatibility - [@dirtyhabits97](https://github.com/dirtyhabits97) [#1466](https://github.com/danger/danger/pull/1466)
 <!-- Your comment above here -->
 
 ## 9.4.1
