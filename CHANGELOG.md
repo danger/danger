@@ -16,6 +16,10 @@
 
 ## 9.3.2
 
+* Update Octokit - [@ngan](https://github.com/ngan) [#1460](https://github.com/danger/danger/pull/1460)
+
+## 9.3.2
+
 * Release to GitHub Container Registry - [@unlobito](https://github.com/unlobito) [#1445](https://github.com/danger/danger/pull/1445)
 * Update README badges - [@manicmaniac](https://github.com/manicmaniac) [#1442](https://github.com/danger/danger/pull/1442)
 
