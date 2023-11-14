@@ -14,7 +14,7 @@
 
 <!-- Your comment above here -->
 
-## 9.3.2
+## 9.4.0
 
 * Update Octokit - [@ngan](https://github.com/ngan) [#1460](https://github.com/danger/danger/pull/1460)
 
