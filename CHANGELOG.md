@@ -14,6 +14,10 @@
 
 <!-- Your comment above here -->
 
+## 9.4.1
+
+* Update Octokit to have no upper bounds - [@ngan](https://github.com/ngan) [#1461](https://github.com/danger/danger/pull/1461)
+
 ## 9.4.0
 
 * Update Octokit - [@ngan](https://github.com/ngan) [#1460](https://github.com/danger/danger/pull/1460)
