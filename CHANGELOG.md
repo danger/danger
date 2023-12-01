@@ -16,7 +16,7 @@
 
 ## 9.4.1
 
-* Update Octokit to have no upper bounds - [@ngan](https://github.com/ngan) [#1461](https://github.com/danger/danger/pull/1461)
+* Update Octokit to have no upper bounds - [@ngan](https://github.com/ngan) [#1470](https://github.com/danger/danger/pull/1470)
 
 ## 9.4.0
 
