@@ -11,8 +11,11 @@
 ## master
 
 <!-- Your comment below here -->
-* Reduce the minimum required Octokit version
 <!-- Your comment above here -->
+
+## 9.4.1
+
+* Reduce the minimum required Octokit version
 
 ## 9.4.1
 
