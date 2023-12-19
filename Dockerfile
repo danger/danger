@@ -1,4 +1,4 @@
-FROM ruby:2.7
+FROM ruby:3.2
 
 LABEL "com.github.actions.name"="Danger"
 LABEL "com.github.actions.description"="Runs danger in a docker container such as GitHub Actions"
