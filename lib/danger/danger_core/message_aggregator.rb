@@ -5,8 +5,8 @@ require "danger/helpers/message_groups_array_helper"
 
 module Danger
   class MessageAggregator
-    def self.aggregate(*args)
-      new(*args).aggregate
+    def self.aggregate(*args, **kwargs)
+      new(*args, **kwargs).aggregate
     end
 
     def initialize(warnings: [],
