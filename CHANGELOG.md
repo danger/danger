@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Use PROJECT_ID instead of PROJECT_PATH in Gitlab urls. This fixes a bug where Danger would not work with Gitlab self-hosted instances. - [@simonfelding](https://github.com/simonfelding) [#x](https://github.com/danger/danger/pull/x)
 <!-- Your comment above here -->
 
 ## 9.4.1
