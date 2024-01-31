@@ -31,7 +31,7 @@ module Danger
 
     def self.validates_as_pr?(env)
       exists = [
-        "GITLAB_CI", "CI_PROJECT_PATH"
+        "GITLAB_CI", "CI_PROJECT_ID"
       ].all? { |x| env[x] }
 
       exists && determine_pull_or_merge_request_id(env).to_i > 0
@@ -42,7 +42,7 @@ module Danger
       return env["CI_EXTERNAL_PULL_REQUEST_IID"] if env["CI_EXTERNAL_PULL_REQUEST_IID"]
       return 0 unless env["CI_COMMIT_SHA"]
 
-      project_path = env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
+      project_path = env["CI_MERGE_REQUEST_PROJECT_ID"] || env["CI_PROJECT_ID"]
       base_commit = env["CI_COMMIT_SHA"]
       client = RequestSources::GitLab.new(nil, env).client
 
@@ -70,7 +70,7 @@ module Danger
       if env["DANGER_PROJECT_REPO_URL"]
         env["DANGER_PROJECT_REPO_URL"].split("/").last(2).join("/")
       else
-        env["CI_MERGE_REQUEST_PROJECT_PATH"] || env["CI_PROJECT_PATH"]
+        env["CI_MERGE_REQUEST_PROJECT_ID"] || env["CI_PROJECT_ID"]
       end
     end
 
