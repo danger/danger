@@ -413,6 +413,42 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         allow(@g).to receive(:submit_pull_request_status!)
       end
 
+      context "with Octokit v7" do
+        it "passes relative line number in the diff hunk to client.create_pull_request_comment" do
+          stub_const("Octokit::MAJOR", 7)
+
+          allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+          allow(@g.client).to receive(:create_pull_request_comment)
+
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+          v = Danger::Violation.new("Sure thing", true, "Rakefile", 34)
+          @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+          expect(@g.client).to have_received(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "Rakefile", 7)
+        end
+      end
+
+      context "with Octokit v8" do
+        it "passes absolute line number in the file to client.create_pull_request_comment" do
+          stub_const("Octokit::MAJOR", 8)
+
+          allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+          allow(@g.client).to receive(:create_pull_request_comment)
+
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+          v = Danger::Violation.new("Sure thing", true, "Rakefile", 34)
+          @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+          expect(@g.client).to have_received(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "Rakefile", 34)
+        end
+      end
+
       it "deletes all inline comments if there are no violations at all" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 
