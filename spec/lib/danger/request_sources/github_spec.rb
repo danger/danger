@@ -298,6 +298,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "creates a comment if no danger comments exist" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = []
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
@@ -308,6 +310,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
@@ -318,6 +322,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "creates a new comment instead of updating the issue if --new-comment is provided" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
@@ -328,6 +334,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = [{ "body" => '"generated_by_another_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
@@ -338,6 +346,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = [{ "body" => '"generated_by_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
@@ -348,6 +358,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         comments = [{ "body" => '"generated_by_another_danger"', "id" => "12" }]
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
@@ -402,6 +414,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       end
 
       it "deletes all inline comments if there are no violations at all" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
         allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)

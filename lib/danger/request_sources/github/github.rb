@@ -252,14 +252,16 @@ module Danger
       end
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        # Avoid doing any fetchs if there's no inline comments
-        return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
-
-        diff_lines = self.pr_diff.lines
         pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
         danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }
         non_danger_comments = pr_comments - danger_comments
 
+        if (warnings + errors + messages + markdowns).select(&:inline?).empty?
+          delete_old_inline_violations(danger_comments: danger_comments, non_danger_comments: non_danger_comments)
+          return {}
+        end
+
+        diff_lines = self.pr_diff.lines
         warnings = submit_inline_comments_for_kind!(:warning, warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
         errors = submit_inline_comments_for_kind!(:error, errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
         messages = submit_inline_comments_for_kind!(:message, messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
@@ -267,6 +269,17 @@ module Danger
 
         # submit removes from the array all comments that are still in force
         # so we strike out all remaining ones
+        delete_old_inline_violations(danger_comments: danger_comments, non_danger_comments: non_danger_comments)
+
+        {
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns
+        }
+      end
+
+      def delete_old_inline_violations(danger_comments: [], non_danger_comments: [])
         danger_comments.each do |comment|
           violation = violations_from_table(comment["body"]).first
           if !violation.nil? && violation.sticky
@@ -285,13 +298,6 @@ module Danger
             client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
           end
         end
-
-        {
-          warnings: warnings,
-          errors: errors,
-          messages: messages,
-          markdowns: markdowns
-        }
       end
 
       def messages_are_equivalent(m1, m2)
