@@ -349,8 +349,10 @@ module Danger
 
           if matching_comments.empty?
             begin
+              # Since Octokit v8, the signature of create_pull_request_comment has been changed.
+              # See https://github.com/danger/danger/issues/1475 for detailed information.
               client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                                 body, head_ref, m.file, position)
+                                                 body, head_ref, m.file, (Octokit::MAJOR >= 8 ? m.line : position))
             rescue Octokit::UnprocessableEntity => e
               # Show more detail for UnprocessableEntity error
               message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
