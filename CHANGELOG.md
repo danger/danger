@@ -11,10 +11,13 @@
 ## master
 
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 9.4.3
+
 * Add keyword arguments to MessageAggregator.aggregate for Ruby 3.X compatibility - [@dirtyhabits97](https://github.com/dirtyhabits97) [#1466](https://github.com/danger/danger/pull/1466)
 * Fix: remove stale violations when there are no new violations to report - [@iangmaia](https://github.com/iangmaia) [#1477](https://github.com/danger/danger/pull/1477)
 * Fix compatibility issue with Octokit >= 8 - [@manicmaniac](https://github.com/manicmaniac) [#1479](https://github.com/danger/danger/pull/1479)
-<!-- Your comment above here -->
 
 ## 9.4.2
 
