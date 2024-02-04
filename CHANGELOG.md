@@ -18,7 +18,7 @@
 
 ## 9.4.2
 
-* Reduce the minimum required Octokit version - [mattr-](https://github.com/mattr-) [#1471](https://github.com/danger/danger/pull/1471)
+* Reduce the minimum required Octokit version - [@mattr-](https://github.com/mattr-) [#1471](https://github.com/danger/danger/pull/1471)
 
 ## 9.4.1
 
