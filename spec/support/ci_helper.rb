@@ -145,6 +145,14 @@ module Danger
         yield(system_env)
       end
 
+      def with_localonlygitrepo_setup
+        system_env = {
+          "DANGER_USE_LOCAL_ONLY_GIT" => "true"
+        }
+
+        yield(system_env)
+      end
+
       def with_screwdriver_setup_and_is_a_pull_request
         system_env = {
           "SCREWDRIVER" => "true",
