@@ -16,9 +16,9 @@
 * Fix compatibility issue with Octokit >= 8 - [@manicmaniac](https://github.com/manicmaniac) [#1479](https://github.com/danger/danger/pull/1479)
 <!-- Your comment above here -->
 
-## 9.4.1
+## 9.4.2
 
-* Reduce the minimum required Octokit version
+* Reduce the minimum required Octokit version - [mattr-](https://github.com/mattr-) [#1471](https://github.com/danger/danger/pull/1471)
 
 ## 9.4.1
 
