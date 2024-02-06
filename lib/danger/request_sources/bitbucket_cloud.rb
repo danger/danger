@@ -9,15 +9,17 @@ module Danger
       attr_accessor :pr_json
 
       def self.env_vars
-        [
-          "DANGER_BITBUCKETCLOUD_USERNAME",
-          "DANGER_BITBUCKETCLOUD_UUID",
-          "DANGER_BITBUCKETCLOUD_PASSWORD"
-        ]
+        ["DANGER_BITBUCKETCLOUD_UUID"]
       end
 
       def self.optional_env_vars
-        ["DANGER_BITBUCKETCLOUD_OAUTH_KEY", "DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
+        [
+          "DANGER_BITBUCKETCLOUD_OAUTH_KEY",
+          "DANGER_BITBUCKETCLOUD_OAUTH_SECRET",
+          "DANGER_BITBUCKETCLOUD_REPO_ACCESSTOKEN",
+          "DANGER_BITBUCKETCLOUD_USERNAME",
+          "DANGER_BITBUCKETCLOUD_PASSWORD"
+        ]
       end
 
       def initialize(ci_source, environment)

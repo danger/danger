@@ -98,7 +98,37 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
     end
   end
 
-  describe "#credentials_given" do
+  describe "#credentials_given?" do
+    subject { api.credentials_given? }
+
+    context "when UUID is not given" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_UUID" } }
+
+      it { is_expected.to be_falsy }
+    end
+
+    context "when username is not given" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_USERNAME" } }
+
+      it { is_expected.to be_falsy }
+    end
+
+    context "when password is not given" do
+      let(:env) { stub_env.reject { |k, _| k == "DANGER_BITBUCKETCLOUD_PASSWORD" } }
+
+      it { is_expected.to be_falsy }
+    end
+
+    context "when repository access token is given" do
+      let(:env) do
+        stub_env
+          .reject { |k, _| %w[DANGER_BITBUCKETCLOUD_USERNAME DANGER_BITBUCKETCLOUD_PASSWORD].include?(k) }
+          .merge("DANGER_BITBUCKETCLOUD_REPO_ACCESSTOKEN" => "xxx")
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
     it "#fetch_json raise error when missing credentials" do
       empty_env = {}
       expect { api.pull_request }.to raise_error WebMock::NetConnectNotAllowedError
