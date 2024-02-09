@@ -12,6 +12,11 @@ module Danger
         ["DANGER_BITBUCKETCLOUD_UUID"]
       end
 
+      # While it says "optional", one of these is required to run Danger on Bitbucket Cloud.
+      #
+      # - Both +DANGER_BITBUCKETCLOUD_OAUTH_KEY+ and +DANGER_BITBUCKETCLOUD_OAUTH_SECRET+
+      # - Both +DANGER_BITBUCKETCLOUD_USERNAME+ and +DANGER_BITBUCKETCLOUD_PASSWORD+
+      # - +DANGER_BITBUCKETCLOUD_REPO_ACCESSTOKEN+
       def self.optional_env_vars
         [
           "DANGER_BITBUCKETCLOUD_OAUTH_KEY",
