@@ -10,10 +10,31 @@ module Danger
   #
   # ### Token Setup
   #
-  # Add `DANGER_BITBUCKETCLOUD_USERNAME` and `DANGER_BITBUCKETCLOUD_PASSWORD` to your pipeline repository variable
-  # or instead using `DANGER_BITBUCKETCLOUD_OAUTH_KEY` and `DANGER_BITBUCKETCLOUD_OAUTH_SECRET`.
+  # For username and password, you need to set.
   #
-  # You can find them in Settings > Pipelines > Repository Variables
+  # - `DANGER_BITBUCKETCLOUD_USERNAME` = The username for the account used to comment, as shown on
+  #   https://bitbucket.org/account/
+  # - `DANGER_BITBUCKETCLOUD_PASSWORD` = The password for the account used to comment, you could use
+  #   [App passwords](https://confluence.atlassian.com/bitbucket/app-passwords-828781300.html#Apppasswords-Aboutapppasswords)
+  #   with Read Pull Requests and Read Account Permissions.
+  #
+  # For OAuth key and OAuth secret, you can get them from.
+  #
+  # - Open [BitBucket Cloud Website](https://bitbucket.org)
+  # - Navigate to Settings > OAuth > Add consumer
+  # - Put `https://bitbucket.org/site/oauth2/authorize` for `Callback URL`, and enable Read Pull requests, and Read Account
+  #   Permission.
+  #
+  # - `DANGER_BITBUCKETCLOUD_OAUTH_KEY` = The consumer key for the account used to comment, as show as `Key` on the website.
+  # - `DANGER_BITBUCKETCLOUD_OAUTH_SECRET` = The consumer secret for the account used to comment, as show as `Secret` on the
+  #   website.
+  #
+  # For [repository access token](https://support.atlassian.com/bitbucket-cloud/docs/repository-access-tokens/), what you
+  # need to create one is:
+  #
+  # - Open your repository URL
+  # - Navigate to Settings > Security > Access Tokens > Create Repository Access Token
+  # - Give it a name and set Pull requests write scope
 
   class BitbucketPipelines < CI
     def self.validates_as_ci?(env)
