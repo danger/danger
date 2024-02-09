@@ -12,6 +12,7 @@
 
 <!-- Your comment below here -->
 * Always use `LocalOnlyGitRepo` source with `dry_run` command - [@imaginaris](https://github.com/imaginaris) [#1452](https://github.com/danger/danger/pull/1452)
+* Support repository access token on Bitbucket Cloud - [@manicmaniac](https://github.com/manicmaniac) [#1481](https://github.com/danger/danger/pull/1481)
 <!-- Your comment above here -->
 
 ## 9.4.3
