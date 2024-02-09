@@ -122,7 +122,7 @@ RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud
     context "when repository access token is given" do
       let(:env) do
         stub_env
-          .reject { |k, _| %w[DANGER_BITBUCKETCLOUD_USERNAME DANGER_BITBUCKETCLOUD_PASSWORD].include?(k) }
+          .reject { |k, _| %w(DANGER_BITBUCKETCLOUD_USERNAME DANGER_BITBUCKETCLOUD_PASSWORD).include?(k) }
           .merge("DANGER_BITBUCKETCLOUD_REPO_ACCESSTOKEN" => "xxx")
       end
 
