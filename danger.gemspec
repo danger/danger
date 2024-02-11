@@ -27,7 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "git", "~> 1.13"
   spec.add_runtime_dependency "kramdown", "~> 2.3"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
-  spec.add_runtime_dependency "no_proxy_fix"
   spec.add_runtime_dependency "octokit", ">= 4.0"
   spec.add_runtime_dependency "terminal-table", ">= 1", "< 4"
 end
