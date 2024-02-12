@@ -19,7 +19,7 @@ module Danger
   # #### GitHub
   #
   # You need to add the `DANGER_GITHUB_API_TOKEN` environment variable, to do this, go to your build definition's variables tab.
-  #  #
+  #
   # #### Azure Git
   #
   # You need to add the `DANGER_VSTS_API_TOKEN` and `DANGER_VSTS_HOST` environment variable, to do this,
