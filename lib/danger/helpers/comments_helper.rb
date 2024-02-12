@@ -14,7 +14,7 @@ module Danger
         Kramdown::Document.new(text, input: "GFM", smart_quotes: %w(apos apos quot quot))
       end
 
-      # !@group Extension points
+      # @!group Extension points
       # Produces a markdown link to the file the message points to
       #
       # request_source implementations are invited to override this method with their
@@ -30,7 +30,7 @@ module Danger
         "#{message.file}#L#{message.line}"
       end
 
-      # !@group Extension points
+      # @!group Extension points
       # Determine whether two messages are equivalent
       #
       # request_source implementations are invited to override this method.
@@ -45,6 +45,8 @@ module Danger
       def messages_are_equivalent(m1, m2)
         m1 == m2
       end
+
+      # @endgroup
 
       def process_markdown(violation, hide_link = false)
         message = violation.message
