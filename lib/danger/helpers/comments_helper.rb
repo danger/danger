@@ -21,7 +21,7 @@ module Danger
       # vendor specific link.
       #
       # @param [Violation or Markdown] message
-      # @param [Bool] Should hide any generated link created
+      # @param [Bool] hide_link Should hide any generated link created
       #
       # @return [String] The Markdown compatible link
       def markdown_link_to_message(message, hide_link)
