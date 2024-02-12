@@ -4,7 +4,6 @@ require "faraday/http_cache"
 require "fileutils"
 require "octokit"
 require "tmpdir"
-require "no_proxy_fix"
 
 module Danger
   class PR < Runner
