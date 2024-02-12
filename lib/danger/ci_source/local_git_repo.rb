@@ -14,7 +14,6 @@ require "danger/ci_source/support/pull_request_finder"
 require "danger/ci_source/support/commits"
 
 module Danger
-  # ignore
   class LocalGitRepo < CI
     attr_accessor :base_commit, :head_commit
 
