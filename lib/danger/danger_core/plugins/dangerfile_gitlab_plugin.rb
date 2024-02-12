@@ -248,7 +248,7 @@ module Danger
     # @!group Gitlab Misc
     # Use to ignore inline messages which lay outside a diff's range, thereby not posting the comment.
     # You can set hash to change behavior per each kinds. (ex. `{warning: true, error: false}`)
-    # @param    [Bool] or [Hash<Symbol, Bool>] dismiss
+    # @param    [Bool or Hash<Symbol, Bool>] dismiss
     #           Ignore out of range inline messages, defaults to `true`
     #
     # @return   [void]
