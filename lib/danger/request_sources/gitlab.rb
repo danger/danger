@@ -26,6 +26,7 @@ module Danger
         @endpoint = environment["DANGER_GITLAB_API_BASE_URL"] || environment.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
         @host = environment.fetch("DANGER_GITLAB_HOST", URI.parse(endpoint).host) || "gitlab.com"
         @token = environment["DANGER_GITLAB_API_TOKEN"]
+        @use_threads = environment.fetch("DANGER_GITLAB_USE_THREADS", "").match?(/true|1/i)
       end
 
       def client
@@ -218,7 +219,11 @@ module Danger
 
           comment_result =
             if should_create_new_comment
-              client.create_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, body)
+              if @use_threads
+                client.create_merge_request_discussion(ci_source.repo_slug, ci_source.pull_request_id, { body: body })
+              else
+                client.create_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, body)
+              end
             else
               client.edit_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, last_comment.id, body)
             end
