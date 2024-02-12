@@ -87,11 +87,12 @@ module Danger
     # @!group Core
     # Print markdown to below the table
     #
-    # @param    [String, Array<String>] message
+    # @param    [Hash] options
+    # @option   [String, Array<String>] markdowns
     #           The markdown based message to be printed below the table
-    # @param    [String] file
+    # @option   [String] file
     #           Optional. Path to the file that the message is for.
-    # @param    [String] line
+    # @option   [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
@@ -107,14 +108,15 @@ module Danger
     # @!group Core
     # Print out a generate message on the PR
     #
-    # @param    [String, Array<String>] message
+    # @param    [String, Array<String>] messages
     #           The message to present to the user
-    # @param    [Boolean] sticky
+    # @param    [Hash] options
+    # @option   [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `false`.
-    # @param    [String] file
+    # @option   [String] file
     #           Optional. Path to the file that the message is for.
-    # @param    [String] line
+    # @option   [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
@@ -131,14 +133,15 @@ module Danger
     # @!group Core
     # Specifies a problem, but not critical
     #
-    # @param    [String, Array<String>] message
+    # @param    [String, Array<String>] warnings
     #           The message to present to the user
-    # @param    [Boolean] sticky
+    # @param    options
+    # @option   [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `false`.
-    # @param    [String] file
+    # @option   [String] file
     #           Optional. Path to the file that the message is for.
-    # @param    [String] line
+    # @option   [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
@@ -157,14 +160,15 @@ module Danger
     # @!group Core
     # Declares a CI blocking error
     #
-    # @param    [String, Array<String>] message
+    # @param    [String, Array<String>] failures
     #           The message to present to the user
-    # @param    [Boolean] sticky
+    # @param    options
+    # @option   [Boolean] sticky
     #           Whether the message should be kept after it was fixed,
     #           defaults to `false`.
-    # @param    [String] file
+    # @option   [String] file
     #           Optional. Path to the file that the message is for.
-    # @param    [String] line
+    # @option   [String] line
     #           Optional. The line in the file to present the message in.
     # @return   [void]
     #
