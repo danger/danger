@@ -13,7 +13,7 @@ module Danger
   # If it's not called again on subsequent runs.
   #
   # Each of `message`, `warn`, `fail` and `markdown` support multiple passed arguments
-  # @example
+  # @example Multiple passed arguments
   #
   # message 'Hello', 'World', file: "Dangerfile", line: 1
   # warn ['This', 'is', 'warning'], file: "Dangerfile", line: 1
