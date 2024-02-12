@@ -1,7 +1,7 @@
 module Danger
   module Helpers
     module CommentsParsingHelper
-      # !@group Extension points
+      # @!group Extension points
       # Produces a message-like from a row in a comment table
       #
       # @param [String] row
@@ -11,6 +11,8 @@ module Danger
       def parse_message_from_row(row)
         Violation.new(row, true)
       end
+
+      # @endgroup
 
       def parse_tables_from_comment(comment)
         comment.split("</table>")

@@ -1,0 +1,4 @@
+--markup=markdown
+--load docs/yard_support.rb
+--tag tags:tags
+--tag availability:availability
