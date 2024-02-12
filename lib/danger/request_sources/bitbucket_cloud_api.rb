@@ -39,6 +39,8 @@ module Danger
       end
 
       def credentials_given?
+        return true if @access_token
+
         @my_uuid && !@my_uuid.empty? &&
           @username && !@username.empty? &&
           @password && !@password.empty?
@@ -105,6 +107,12 @@ module Danger
       end
 
       def fetch_access_token(environment)
+        access_token = environment["DANGER_BITBUCKETCLOUD_REPO_ACCESSTOKEN"]
+        if access_token
+          @access_token = access_token
+          return access_token
+        end
+
         oauth_key = environment["DANGER_BITBUCKETCLOUD_OAUTH_KEY"]
         oauth_secret = environment["DANGER_BITBUCKETCLOUD_OAUTH_SECRET"]
         return nil if oauth_key.nil?
