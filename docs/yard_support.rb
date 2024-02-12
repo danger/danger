@@ -13,4 +13,4 @@ class KramdownGfmDocument < Kramdown::Document
 end
 
 # Register the new provider as the highest priority option for Markdown.
-YARD::Templates::Helpers::MarkupHelper::MARKUP_PROVIDERS[:markdown].insert(0, {const: KramdownGfmDocument.name})
+YARD::Templates::Helpers::MarkupHelper::MARKUP_PROVIDERS[:markdown].insert(0, { const: KramdownGfmDocument.name })
