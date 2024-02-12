@@ -4,8 +4,8 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
-  # In CodeBuild, make sure to correctly forward CODEBUILD_BUILD_ID, CODEBUILD_SOURCE_VERSION, CODEBUILD_SOURCE_REPO_URL and DANGER_GITHUB_API_TOKEN.
-  # In CodeBuild with batch builds, make sure to correctly forward CODEBUILD_BUILD_ID, CODEBUILD_WEBHOOK_TRIGGER, CODEBUILD_SOURCE_REPO_URL, CODEBUILD_BATCH_BUILD_IDENTIFIER and DANGER_GITHUB_API_TOKEN.
+  # In CodeBuild, make sure to correctly forward `CODEBUILD_BUILD_ID`, `CODEBUILD_SOURCE_VERSION`, `CODEBUILD_SOURCE_REPO_URL` and `DANGER_GITHUB_API_TOKEN`.
+  # In CodeBuild with batch builds, make sure to correctly forward `CODEBUILD_BUILD_ID`, `CODEBUILD_WEBHOOK_TRIGGER`, `CODEBUILD_SOURCE_REPO_URL`, `CODEBUILD_BATCH_BUILD_IDENTIFIER` and `DANGER_GITHUB_API_TOKEN`.
   #
   # ### Token Setup
   #
