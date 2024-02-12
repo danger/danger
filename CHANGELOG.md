@@ -12,6 +12,7 @@
 
 <!-- Your comment below here -->
 * Always use `LocalOnlyGitRepo` source with `dry_run` command - [@imaginaris](https://github.com/imaginaris) [#1452](https://github.com/danger/danger/pull/1452)
+* Update "What is Danger?" in README - [@manicmaniac](https://github.com/manicmaniac) [#1482](https://github.com/danger/danger/pull/1482)
 <!-- Your comment above here -->
 
 ## 9.4.3
