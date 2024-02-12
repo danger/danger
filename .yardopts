@@ -1,1 +1,2 @@
 --markup=markdown
+--load docs/yard_support.rb
