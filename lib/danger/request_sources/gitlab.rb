@@ -304,7 +304,7 @@ module Danger
 
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, ref: nil, branch: nil, path: nil)
-        ref ||= (branch || "master")
+        ref ||= branch || "master"
         # According to GitLab Repositories API docs path and id(slug) should be encoded.
         path = URI.encode_www_form_component(path)
         repository = URI.encode_www_form_component(repository)

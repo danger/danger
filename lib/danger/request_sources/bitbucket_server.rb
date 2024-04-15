@@ -115,7 +115,7 @@ module Danger
           markdowns = main_violations[:markdowns] || []
         end
 
-        has_comments = (warnings.count > 0 || errors.count > 0 || messages.count > 0 || markdowns.count > 0)
+        has_comments = warnings.count > 0 || errors.count > 0 || messages.count > 0 || markdowns.count > 0
         if has_comments
           comment = generate_description(warnings: warnings,
                                          errors: errors)

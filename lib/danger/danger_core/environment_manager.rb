@@ -108,7 +108,7 @@ module Danger
         title = "For Danger to run on this project, you need to expose a set of following the ENV vars:\n#{RequestSources::RequestSource.available_source_names_and_envs.join("\n")}"
       end
 
-      [title, (subtitle || "")]
+      [title, subtitle || ""]
     end
 
     def ui_display_no_request_source_error_message(ui, env, title, subtitle)
