@@ -89,7 +89,7 @@ RSpec.describe Danger::CircleCI do
       expect(described_class.validates_as_pr?(invalid_env)).to be false
     end
 
-    it "doest not validate when required env variables are not set" do
+    it "does not validate when required env variables are not set" do
       expect(described_class.validates_as_pr?(invalid_env)).to be false
     end
   end
