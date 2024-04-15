@@ -139,7 +139,7 @@ module Danger
       end
 
       def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        # Avoid doing any fetchs if there's no inline comments
+        # Avoid doing any fetches if there's no inline comments
         return {} if (warnings + errors + messages + markdowns).select(&:inline?).empty?
 
         pr_threads = @api.fetch_last_comments
