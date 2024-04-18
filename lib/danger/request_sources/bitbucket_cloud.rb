@@ -82,7 +82,7 @@ module Danger
         messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
         markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
 
-        has_comments = (warnings.count.positive? || errors.count.positive? || messages.count.positive? || markdowns.count.positive?)
+        has_comments = warnings.count.positive? || errors.count.positive? || messages.count.positive? || markdowns.count.positive?
         if has_comments
           comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
           comment += "\n\n"
