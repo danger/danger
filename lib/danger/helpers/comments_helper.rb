@@ -35,7 +35,7 @@ module Danger
       #
       # request_source implementations are invited to override this method.
       # This is mostly here to enable sources to detect when inlines change only in their
-      # commit hash and not in content per-se. since the link is implementation dependant
+      # commit hash and not in content per-se. since the link is implementation dependent
       # so should be the comparison.
       #
       # @param [Violation or Markdown] m1

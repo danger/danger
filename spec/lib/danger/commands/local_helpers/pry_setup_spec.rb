@@ -19,7 +19,7 @@ RSpec.describe Danger::PrySetup do
       end
     end
 
-    it "doesn't copy a nonexistant Dangerfile" do
+    it "doesn't copy a nonexistent Dangerfile" do
       described_class.new(testing_ui).setup_pry("", "pr")
 
       expect(File).not_to exist("_Dangerfile.tmp")

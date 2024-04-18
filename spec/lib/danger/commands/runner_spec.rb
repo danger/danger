@@ -16,7 +16,7 @@ RSpec.describe Danger::Runner do
   end
 
   context "default options" do
-    it "sets instance variables accrodingly" do
+    it "sets instance variables accordingly" do
       argv = CLAide::ARGV.new([])
 
       runner = described_class.new(argv)
