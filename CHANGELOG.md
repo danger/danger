@@ -15,6 +15,9 @@
 * Support repository access token on Bitbucket Cloud - [@manicmaniac](https://github.com/manicmaniac) [#1481](https://github.com/danger/danger/pull/1481)
 * Update "What is Danger?" in README - [@manicmaniac](https://github.com/manicmaniac) [#1482](https://github.com/danger/danger/pull/1482)
 * Fix broken YARD documents - [@manicmaniac](https://github.com/manicmaniac) [#1484](https://github.com/danger/danger/pull/1484)
+* Fix some typos #trivial - [@ydah](https://github.com/ydah) [#1485](https://github.com/danger/danger/pull/1485)
+* Add Ruby 3.3 to test matrix - [@ydah](https://github.com/ydah) [#1486](https://github.com/danger/danger/pull/1486)
+* Bump rubocop version and fix new offenses - [@ydah](https://github.com/ydah) [#1487](https://github.com/danger/danger/pull/1487)
 <!-- Your comment above here -->
 
 ## 9.4.3
