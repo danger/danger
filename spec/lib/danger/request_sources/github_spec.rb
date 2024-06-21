@@ -406,8 +406,8 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         issues = JSON.parse(fixture("github_api/inline_comments"))
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
-        diff = diff_fixture("github_api/inline_comments_pr_diff")
-        allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff)
+        diff_files = JSON.parse(fixture("github_api/inline_comments_pr_diff_files"))
+        allow(@g.client).to receive(:pull_request_files).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff_files)
 
         @g.fetch_details
         allow(@g).to receive(:submit_pull_request_status!)

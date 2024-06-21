@@ -77,7 +77,24 @@ module Danger
       end
 
       def pr_diff
-        @pr_diff ||= client.pull_request(ci_source.repo_slug, ci_source.pull_request_id, accept: "application/vnd.github.v3.diff")
+        # This is a hack to get the file patch into a format that parse-diff accepts
+        # as the GitHub API for listing pull request files is missing file names in the patch.
+        prefixed_patch = lambda do |file:|
+          <<~PATCH
+          diff --git a/#{file['filename']} b/#{file['filename']}
+          --- a/#{file['filename']}
+          +++ b/#{file['filename']}
+          #{file['patch']}
+          PATCH
+        end
+
+        files = client.pull_request_files(
+          ci_source.repo_slug,
+          ci_source.pull_request_id,
+          accept: "application/vnd.github.v3.diff"
+        )
+
+        @pr_diff ||= files.map { |file| prefixed_patch.call(file: file) }.join("\n")
       end
 
       def review

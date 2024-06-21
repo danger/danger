@@ -1,0 +1,38 @@
+[
+  {
+    "sha": "561827e46167077b5e53515b4b7349b8ae04610b",
+    "filename": "CHANGELOG.md",
+    "status": "modified",
+    "additions": 1,
+    "deletions": 0,
+    "changes": 1,
+    "blob_url": "https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/CHANGELOG.md",
+    "raw_url": "https://github.com/artsy/eigen/raw/561827e46167077b5e53515b4b7349b8ae04610b/CHANGELOG.md",
+    "contents_url": "https://api.github.com/repos/artsy/eigen/contents/CHANGELOG.md?ref=561827e46167077b5e53515b4b7349b8ae04610b",
+    "patch": "@@ -1,5 +1,6 @@\n## Master\n\n* add `file` and `line` optional parameters to methods on the messaging plugin\n* Show appropriate error message when GitHub repo was moved - KrauseFx\n* `danger plugins json [gem]` will now give gem metadata too - orta\n"
+  },
+  {
+    "sha": "561827e46167077b5e53515b4b7349b8ae04610b",
+    "filename": "ios/Example/App Delegates/README.md",
+    "status": "modified",
+    "additions": 1,
+    "deletions": 0,
+    "changes": 1,
+    "blob_url": "https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/ios/Example/App%20Delegates/README.md",
+    "raw_url": "https://github.com/artsy/eigen/raw/561827e46167077b5e53515b4b7349b8ae04610b/ios/Example/App%20Delegates/README.md",
+    "contents_url": "https://api.github.com/repos/artsy/eigen/contents/ios/Example/App%20Delegates/README.md?ref=561827e46167077b5e53515b4b7349b8ae04610b",
+    "patch": "@@ -1,5 +1,6 @@\n## Master\n\n* add `file` and `line` optional parameters to methods on the messaging plugin\n* Show appropriate error message when GitHub repo was moved - KrauseFx\n* `danger plugins json [gem]` will now give gem metadata too - orta\n"
+  },
+  {
+    "sha": "561827e46167077b5e53515b4b7349b8ae04610b",
+    "filename": "Rakefile",
+    "status": "modified",
+    "additions": 5,
+    "deletions": 0,
+    "changes": 5,
+    "blob_url": "https://github.com/artsy/eigen/blob/561827e46167077b5e53515b4b7349b8ae04610b/Rakefile",
+    "raw_url": "https://github.com/artsy/eigen/raw/561827e46167077b5e53515b4b7349b8ae04610b/Rakefile",
+    "contents_url": "https://api.github.com/repos/artsy/eigen/contents/Rakefile?ref=561827e46167077b5e53515b4b7349b8ae04610b",
+    "patch": "@@ -28,3 +28,8 @@ task :spec_docs do\n\tsh \"danger plugins lint #{core_plugins.join ' '}\"\n\tsh \"danger systems ci_docs\"\nend\n+\n+desc \"I do this so often now, better to just handle it here\"\n+task :guard do |task|\n\tsh \"bundle exec guard\"\nend"
+  }
+]
