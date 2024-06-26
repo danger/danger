@@ -53,7 +53,7 @@ module Danger
       Dir.chdir(self.folder || ".") do
         git_command = string.split(" ").dup.unshift("git")
         Open3.popen2(default_env, *git_command) do |_stdin, stdout, _wait_thr|
-          stdout.read.rstrip
+          stdout.read.scrub.rstrip
         end
       end
     end

@@ -17,6 +17,7 @@
 * Fix broken YARD documents - [@manicmaniac](https://github.com/manicmaniac) [#1484](https://github.com/danger/danger/pull/1484)
 * Add Ruby 3.3 to test matrix - [@ydah](https://github.com/ydah) [#1486](https://github.com/danger/danger/pull/1486)
 * Bump rubocop version and fix new offenses - [@ydah](https://github.com/ydah) [#1487](https://github.com/danger/danger/pull/1487)
+* Handle invalid UTF-8 characters in "git log" output by removing them before running strip - [@fuzzyrichie](https://github.com/fuzzyrichie) [#1492](https://github.com/danger/danger/pull/1492)
 <!-- Your comment above here -->
 
 ## 9.4.3
