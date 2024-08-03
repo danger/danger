@@ -11,6 +11,10 @@
 ## master
 
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 9.5.0
+
 * Always use `LocalOnlyGitRepo` source with `dry_run` command - [@imaginaris](https://github.com/imaginaris) [#1452](https://github.com/danger/danger/pull/1452)
 * Support repository access token on Bitbucket Cloud - [@manicmaniac](https://github.com/manicmaniac) [#1481](https://github.com/danger/danger/pull/1481)
 * Update "What is Danger?" in README - [@manicmaniac](https://github.com/manicmaniac) [#1482](https://github.com/danger/danger/pull/1482)
@@ -18,7 +22,6 @@
 * Add Ruby 3.3 to test matrix - [@ydah](https://github.com/ydah) [#1486](https://github.com/danger/danger/pull/1486)
 * Bump rubocop version and fix new offenses - [@ydah](https://github.com/ydah) [#1487](https://github.com/danger/danger/pull/1487)
 * Use GitHub files API with pagination for PR diff - [@timbaev](https://github.com/timbaev) [#1491](https://github.com/danger/danger/pull/1491)
-<!-- Your comment above here -->
 
 ## 9.4.3
 
