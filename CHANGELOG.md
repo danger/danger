@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Update ruby version in Dockerfile to 3.2 - [@okatatuki](https://github.com/okatatuki) [#1472](https://github.com/danger/danger/pull/1472) [#1473](https://github.com/danger/danger/pull/1473)
 <!-- Your comment above here -->
 
 ## 9.5.0
