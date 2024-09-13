@@ -12,7 +12,7 @@
 
 <!-- Your comment below here -->
 * Update ruby version in Dockerfile to 3.2 - [@okatatuki](https://github.com/okatatuki) [#1472](https://github.com/danger/danger/pull/1472) [#1473](https://github.com/danger/danger/pull/1473)
-* Fix: git diff called by methods like `git.modified_files` may fail with error ``[!] Invalid `Dangerfile` file: git ... 'diff' '-p' 'true' '{head}'  2>&1`` - [@nagataaaas](https://github.com/nagataaaas) [#1472](https://github.com/danger/danger/pull/1472)
+* Fix: git diff called by methods like `git.modified_files` may fail with error ``[!] Invalid `Dangerfile` file: git ... 'diff' '-p' 'true' '{head}'  2>&1`` - [@nagataaaas](https://github.com/nagataaaas) [#1498](https://github.com/danger/danger/pull/1498)
 <!-- Your comment above here -->
 
 ## 9.5.0
