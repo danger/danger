@@ -152,6 +152,8 @@ module Danger
         merge_base = possible_merge_base(repo, from, to)
         return merge_base if merge_base
       end
+
+      nil
     end
 
     def possible_merge_base(repo, from, to)
