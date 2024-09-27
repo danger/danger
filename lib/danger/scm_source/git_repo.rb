@@ -144,13 +144,16 @@ module Danger
       return unless from_is_ref || to_is_ref
 
       depth = 0
-      (3..6).any? do |factor|
+      (3..6).each do |factor|
         depth += Math.exp(factor).to_i
 
         git_fetch_branch_to_depth(from, depth) if from_is_ref
         git_fetch_branch_to_depth(to, depth) if to_is_ref
-        possible_merge_base(repo, from, to)
+        merge_base = possible_merge_base(repo, from, to)
+        return merge_base if merge_base
       end
+
+      nil
     end
 
     def possible_merge_base(repo, from, to)
