@@ -44,10 +44,27 @@ jobs:
 
       - name: Running Tests
         run: bundle exec rake spec
-
+  danger:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
       - name: Running the Dangerfile for this repo
         if: runner.os != 'Windows'
         run: |
-          TOKEN='7469b4e94ce21b43e3ab7a'
-          TOKEN+='79960c12a1e067f2ec'
-          DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true echo 'bundle exec danger --verbose'
+          bundle exec danger --verbose
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OCTOKIT_SILENT: true
+          RUNNING_IN_ACTIONS: true
