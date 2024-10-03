@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.7.0"
 
+  spec.add_runtime_dependency "base64", "~> 0.2"
   spec.add_runtime_dependency "claide", "~> 1.0"
   spec.add_runtime_dependency "claide-plugins", ">= 0.9.2"
   spec.add_runtime_dependency "colored2", "~> 3.1"
@@ -28,5 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "kramdown", "~> 2.3"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
   spec.add_runtime_dependency "octokit", ">= 4.0"
+  spec.add_runtime_dependency "pstore", "~> 0.1"
   spec.add_runtime_dependency "terminal-table", ">= 1", "< 4"
 end
