@@ -70,15 +70,15 @@ module Danger
       exec("remote show origin -n").lines.grep(/Fetch URL/)[0].split(": ", 2)[1].chomp
     end
 
-    def ensure_commitish_exists!(commitish)
-      return ensure_commitish_exists_on_branch!(commitish, commitish) if commit_is_ref?(commitish)
+    def ensure_commitish_exists!(commitish, options = {})
+      return ensure_commitish_exists_on_branch!(commitish, commitish, options) if commit_is_ref?(commitish)
       return if commit_exists?(commitish)
 
       git_in_depth_fetch
       raise_if_we_cannot_find_the_commit(commitish) if commit_not_exists?(commitish)
     end
 
-    def ensure_commitish_exists_on_branch!(branch, commitish)
+    def ensure_commitish_exists_on_branch!(branch, commitish, options = {})
       return if commit_exists?(commitish)
 
       depth = 0
@@ -86,7 +86,7 @@ module Danger
         (3..6).any? do |factor|
           depth += Math.exp(factor).to_i
 
-          git_fetch_branch_to_depth(branch, depth)
+          git_fetch_branch_to_depth(branch, depth, options)
           commit_exists?(commitish)
         end
 
@@ -102,8 +102,9 @@ module Danger
       exec("fetch --depth 1000000")
     end
 
-    def git_fetch_branch_to_depth(branch, depth)
-      exec("fetch --depth=#{depth} --prune origin +refs/heads/#{branch}:refs/remotes/origin/#{branch}")
+    def git_fetch_branch_to_depth(branch, depth, options = {})
+      remote = options.fetch(:remote, "origin")
+      exec("fetch --depth=#{depth} --prune #{remote} +refs/heads/#{branch}:refs/remotes/origin/#{branch}")
     end
 
     def default_env

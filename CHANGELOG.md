@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Make danger work with pull_request_target in GH Actions - [@tomhughes](https://github.com/tomhughes) [#1501](https://github.com/danger/danger/pull/1501)
 <!-- Your comment above here -->
 
 ## 9.5.1
