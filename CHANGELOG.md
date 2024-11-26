@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Expose `DangerfileGitLabPlugin#mr_commits`. - [@rymai](https://github.com/rymai) [#1333](https://github.com/danger/danger/pull/1333)
 <!-- Your comment above here -->
 
 ## 9.5.1

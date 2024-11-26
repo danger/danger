@@ -114,6 +114,12 @@ module Danger
         @mr_changes ||= client.merge_request_changes(ci_source.repo_slug, ci_source.pull_request_id)
       end
 
+      def mr_commits
+        @mr_commits ||= begin
+          client.merge_request_commits(ci_source.repo_slug, ci_source.pull_request_id)
+        end
+      end
+
       def mr_closes_issues
         @mr_closes_issues ||= client.merge_request_closes_issues(ci_source.repo_slug, ci_source.pull_request_id)
       end
