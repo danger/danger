@@ -3,7 +3,7 @@ RSpec.describe Danger::DangerfileGitHubPlugin, host: :github do
     before do
       dm = testing_dangerfile
       @dsl = described_class.new(dm)
-      pr_response = JSON.parse(fixture("github_api/pr_response"))
+      pr_response = fixture_json("github_api/pr_response")
       allow(@dsl).to receive(:pr_json).and_return(pr_response)
     end
 

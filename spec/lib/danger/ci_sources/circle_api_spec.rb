@@ -59,7 +59,7 @@ RSpec.describe Danger::CircleAPI do
       "CIRCLE_COMPARE_URL" => "https://github.com/artsy/eigen/compare/759adcbd0d8f...13c4dc8bb61d"
     }
 
-    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    build_response = fixture_json("circle_build_response", symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
 
     result = Danger::CircleCI.new(env)
@@ -77,7 +77,7 @@ RSpec.describe Danger::CircleAPI do
       "CIRCLE_PROJECT_USERNAME" => "artsy",
       "CIRCLE_PROJECT_REPONAME" => "eigen"
     }
-    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    build_response = fixture_json("circle_build_response", symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token2").and_return(build_response)
 
     result = Danger::CircleAPI.new.pull_request_url(env)
@@ -92,7 +92,7 @@ RSpec.describe Danger::CircleAPI do
       "CIRCLE_PROJECT_USERNAME" => "artsy",
       "CIRCLE_PROJECT_REPONAME" => "eigen"
     }
-    build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+    build_response = fixture_json("circle_build_response", symbolize_names: true)
     allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
     result = Danger::CircleAPI.new.pull_request_url(env)
@@ -109,7 +109,7 @@ RSpec.describe Danger::CircleAPI do
           "CIRCLE_PROJECT_USERNAME" => "artsy",
           "CIRCLE_PROJECT_REPONAME" => "eigen"
         }
-        build_response = JSON.parse(fixture("circle_build_no_pr_response"), symbolize_names: true)
+        build_response = fixture_json("circle_build_no_pr_response", symbolize_names: true)
         allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
         result = Danger::CircleAPI.new.pull_request?(env)
@@ -125,7 +125,7 @@ RSpec.describe Danger::CircleAPI do
           "CIRCLE_PROJECT_USERNAME" => "artsy",
           "CIRCLE_PROJECT_REPONAME" => "eigen"
         }
-        build_response = JSON.parse(fixture("circle_build_no_pr_field_response"), symbolize_names: true)
+        build_response = fixture_json("circle_build_no_pr_field_response", symbolize_names: true)
         allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "token").and_return(build_response)
 
         result = Danger::CircleAPI.new.pull_request?(env)

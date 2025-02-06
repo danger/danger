@@ -80,8 +80,8 @@ def fixture_txt(file)
   File.read("spec/fixtures/#{file}.txt")
 end
 
-def fixture(file)
-  File.read("spec/fixtures/#{file}.json")
+def fixture_json(file, **opts)
+  JSON.load_file("spec/fixtures/#{file}.json", encoding: Encoding::UTF_8, **opts)
 end
 
 def comment_fixture(file)

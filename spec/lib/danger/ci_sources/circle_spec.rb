@@ -63,7 +63,7 @@ RSpec.describe Danger::CircleCI do
         before do
           valid_env["CI_PULL_REQUEST"] = nil
           valid_env["DANGER_CIRCLE_CI_API_TOKEN"] = "testtoken"
-          build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+          build_response = fixture_json("circle_build_response", symbolize_names: true)
           allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", "testtoken").and_return(build_response)
         end
 
@@ -114,7 +114,7 @@ RSpec.describe Danger::CircleCI do
 
     context "with missing `CI_PULL_REQUEST`" do
       before do
-        build_response = JSON.parse(fixture("circle_build_response"), symbolize_names: true)
+        build_response = fixture_json("circle_build_response", symbolize_names: true)
         allow_any_instance_of(Danger::CircleAPI).to receive(:fetch_build).with("artsy/eigen", "1500", nil).and_return(build_response)
       end
 
