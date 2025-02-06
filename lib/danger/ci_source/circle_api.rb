@@ -45,7 +45,7 @@ module Danger
       url = "project/#{repo_slug}/#{build_number}"
       params = { "circle-token" => token }
       response = client.get url, params, accept: "application/json"
-      JSON.parse(response.body, symbolize_names: true)
+      JSON.parse(response.body, symbolize_names: true, encoding: Encoding::UTF_8)
     end
   end
 end

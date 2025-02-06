@@ -33,7 +33,7 @@ module Danger
       parser = PluginParser.new(data[:paths])
       parser.parse
 
-      self.json = JSON.parse(parser.to_json_string)
+      self.json = JSON.parse(parser.to_json_string, encoding: Encoding::UTF_8)
 
       template = File.join(Danger.gem_path, "lib/danger/plugin_support/templates/readme_table.html.erb")
       cork.puts ERB.new(File.read(template), trim_mode: "-").result(binding)
