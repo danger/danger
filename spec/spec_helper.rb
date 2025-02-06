@@ -1,6 +1,9 @@
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 $LOAD_PATH.unshift File.expand_path("..", __dir__)
 
+# Enforce non-unicode locale for strings to catch potential errors
+Encoding.default_external = Encoding::ASCII
+
 # Needs to be required and started before danger
 require "simplecov"
 SimpleCov.start do

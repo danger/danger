@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Properly handle non-unicode host locale [@ojab](https://github.com/ojab) [#1505](https://github.com/danger/danger/pull/1505)
 <!-- Your comment above here -->
 
 ## 9.5.1
