@@ -12,7 +12,7 @@
 
 <!-- Your comment below here -->
 
-* Allow teriminal-table versions through 4.x - [@murilooon](https://github.com/murilooon)
+* Allow terminal-table versions through 4.x - [@murilooon](https://github.com/murilooon)
 
 <!-- Your comment above here -->
 
