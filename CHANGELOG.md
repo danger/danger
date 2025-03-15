@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Support ruby-git 2.x - [@manicmaniac](https://github.com/manicmaniac) [#1511](https://github.com/danger/danger/pull/1511)
 <!-- Your comment above here -->
 
 ## 9.5.1
