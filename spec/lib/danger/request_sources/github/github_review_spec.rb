@@ -135,7 +135,7 @@ RSpec.describe Danger::RequestSources::GitHubSource::Review, host: :github do
   end
 
   context "when initialized with review json" do
-    let(:review_json) { JSON.parse(fixture("github_api/pr_review_response")) }
+    let(:review_json) { fixture_json("github_api/pr_review_response") }
 
     subject do
       Danger::RequestSources::GitHubSource::Review.new(client, stub_ci, review_json)

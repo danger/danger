@@ -5,7 +5,7 @@ module Danger
 
     def self.latest_danger_version
       require "json"
-      json = JSON.parse(Faraday.get(API_URL).body)
+      json = JSON.parse(Faraday.get(API_URL).body, encoding: Encoding::UTF_8)
       json.fetch("version") { DUMMY_VERSION }
     rescue StandardError => _e
       DUMMY_VERSION

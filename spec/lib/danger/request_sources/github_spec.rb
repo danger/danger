@@ -100,10 +100,10 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("github_api/pr_response"))
+      pr_response = fixture_json("github_api/pr_response")
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("github_api/issue_response"))
+      issue_response = fixture_json("github_api/issue_response")
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
@@ -150,7 +150,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
     describe "#file_url" do
       before do
-        contents_response = JSON.parse(fixture("github_api/contents_response"))
+        contents_response = fixture_json("github_api/contents_response")
         allow(@g.client).to receive(:contents).with("artsy/danger", path: "Dangerfile", ref: nil).and_return(contents_response)
         allow(@g.client).to receive(:contents).with("artsy/danger", path: "path/Dangerfile", ref: "master").and_return(contents_response)
         allow(@g.client).to receive(:contents).with("teapot/danger", path: "Dangerfile", ref: nil).and_raise(Octokit::NotFound)
@@ -203,7 +203,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
         context "when there are danger review for PR" do
           before do
-            pr_reviews_response = JSON.parse(fixture("github_api/pr_reviews_response"))
+            pr_reviews_response = fixture_json("github_api/pr_reviews_response")
             allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return(pr_reviews_response)
           end
 
@@ -403,10 +403,10 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
 
     describe "inline issues" do
       before do
-        issues = JSON.parse(fixture("github_api/inline_comments"))
+        issues = fixture_json("github_api/inline_comments")
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
 
-        diff_files = JSON.parse(fixture("github_api/inline_comments_pr_diff_files"))
+        diff_files = fixture_json("github_api/inline_comments_pr_diff_files")
         allow(@g.client).to receive(:pull_request_files).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff_files)
 
         @g.fetch_details

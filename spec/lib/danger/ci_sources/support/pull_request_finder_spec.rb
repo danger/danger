@@ -25,10 +25,7 @@ RSpec.describe Danger::PullRequestFinder do
 
   def open_pull_requests_info
     require "ostruct"
-    JSON.parse(
-      IO.read("spec/fixtures/ci_source/support/danger_danger_pr_518.json"),
-      object_class: OpenStruct
-    )
+    fixture_json("ci_source/support/danger_danger_pr_518", object_class: OpenStruct)
   end
 
   describe "#new" do

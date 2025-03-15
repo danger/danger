@@ -176,11 +176,11 @@ RSpec.describe Danger::Dangerfile, host: :github do
         @dm.env.request_source.support_tokenless_auth = true
 
         # Stub out the GitHub stuff
-        pr_reviews_response = JSON.parse(fixture("github_api/pr_reviews_response"))
+        pr_reviews_response = fixture_json("github_api/pr_reviews_response")
         allow(@dm.env.request_source.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return(pr_reviews_response)
-        pr_response = JSON.parse(fixture("github_api/pr_response"))
+        pr_response = fixture_json("github_api/pr_response")
         allow(@dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
-        issue_response = JSON.parse(fixture("github_api/issue_response"))
+        issue_response = fixture_json("github_api/issue_response")
         allow(@dm.env.request_source.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
         diff_response = diff_fixture("pr_diff_response")
         allow(@dm.env.request_source.client).to receive(:pull_request).with("artsy/eigen", "800", accept: "application/vnd.github.v3.diff").and_return(diff_response)
