@@ -55,7 +55,7 @@ RSpec.describe Danger::PluginParser do
     if Gem.win_platform?
       expect(1).to eq(1)
     else
-      expect(sanitized_json).to eq File.read(fixture)
+      expect(JSON.parse(sanitized_json)).to eq JSON.load_file(fixture)
     end
   end
 
@@ -75,7 +75,7 @@ RSpec.describe Danger::PluginParser do
     if Gem.win_platform?
       expect(1).to eq(1)
     else
-      expect(sanitized_json).to eq File.read(fixture)
+      expect(JSON.parse(sanitized_json)).to eq JSON.load_file(fixture)
     end
   end
 
