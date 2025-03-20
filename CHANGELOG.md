@@ -12,6 +12,7 @@
 
 <!-- Your comment below here -->
 * Support ruby-git 2.x - [@manicmaniac](https://github.com/manicmaniac) [#1511](https://github.com/danger/danger/pull/1511)
+* Allow terminal-table versions through 4.x - [@murilooon](https://github.com/murilooon)
 <!-- Your comment above here -->
 
 ## 9.5.1
