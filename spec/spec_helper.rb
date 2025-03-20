@@ -49,7 +49,6 @@ def make_temp_file(contents)
   file
 end
 
-# rubocop:disable Lint/NestedMethodDefinition
 def testing_ui
   @output = StringIO.new
   @err = StringIO.new
@@ -69,7 +68,6 @@ def testing_ui
 
   cork
 end
-# rubocop:enable Lint/NestedMethodDefinition
 
 def testing_dangerfile(env = stub_env)
   env_manager = Danger::EnvironmentManager.new(env, testing_ui)
