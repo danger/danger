@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Bump colored2 to v4 to make danger work with --enable-frozen-string-literal RUBYOPT - [@eiskrenkov](https://github.com/eiskrenkov) [#1513](https://github.com/danger/danger/pull/1513)
 * Support ruby-git 2.x - [@manicmaniac](https://github.com/manicmaniac) [#1511](https://github.com/danger/danger/pull/1511)
 * Allow terminal-table versions through 4.x - [@murilooon](https://github.com/murilooon)
 <!-- Your comment above here -->
