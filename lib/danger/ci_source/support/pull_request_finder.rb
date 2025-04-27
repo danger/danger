@@ -81,6 +81,12 @@ module Danger
           remote_pull_request.head.sha,
           remote_pull_request.base.sha
         )
+      when :gitlab
+        RemotePullRequest.new(
+          remote_pull_request.iid.to_s,
+          remote_pull_request.diff_refs.head_sha,
+          remote_pull_request.diff_refs.base_sha
+        )
       when :vsts
         RemotePullRequest.new(
           remote_pull_request[:pullRequestId].to_s,
@@ -93,7 +99,13 @@ module Danger
     end
 
     def find_remote_pull_request(env)
-      client(env).pull_request(repo_slug, specific_pull_request_id)
+      scm_provider = find_scm_provider(remote_url)
+
+      if scm_provider == :gitlab
+        client(env).merge_request(repo_slug, specific_pull_request_id)
+      else
+        client(env).pull_request(repo_slug, specific_pull_request_id)
+      end
     end
 
     def both_present?
@@ -151,10 +163,20 @@ module Danger
         require "danger/request_sources/vsts_api"
         RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
 
+      when :gitlab
+        require "gitlab"
+        token = env&.fetch("DANGER_GITLAB_API_TOKEN", nil) || ENV["DANGER_GITLAB_API_TOKEN"]
+        if token && !token.empty?
+          endpoint = env&.fetch("DANGER_GITLAB_API_BASE_URL", nil) || env&.fetch("CI_API_V4_URL", nil) || ENV["DANGER_GITLAB_API_BASE_URL"] || ENV.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
+          Gitlab.client(endpoint: endpoint, private_token: token)
+        else
+          raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`"
+        end
+
       when :github
         require "octokit"
-        access_token = ENV["DANGER_GITHUB_API_TOKEN"]
-        bearer_token = ENV["DANGER_GITHUB_BEARER_TOKEN"]
+        access_token = env&.fetch("DANGER_GITHUB_API_TOKEN", nil) || ENV["DANGER_GITHUB_API_TOKEN"]
+        bearer_token = env&.fetch("DANGER_GITHUB_BEARER_TOKEN", nil) || ENV["DANGER_GITHUB_BEARER_TOKEN"]
         if bearer_token && !bearer_token.empty?
           Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
         elsif access_token && !access_token.empty?
@@ -182,6 +204,8 @@ module Danger
         :bitbucket_server
       elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
         :vsts
+      elsif remote_url =~ /gitlab\.com/ || remote_url =~ %r{-/merge_requests/}
+        :gitlab
       else
         :github
       end
