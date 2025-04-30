@@ -150,42 +150,58 @@ module Danger
 
       case scm_provider
       when :bitbucket_cloud
-        require "danger/request_sources/bitbucket_cloud_api"
-        branch_name = ENV["DANGER_BITBUCKET_TARGET_BRANCH"] # Optional env variable (specifying the target branch) to help find the PR.
-        RequestSources::BitbucketCloudAPI.new(repo_slug, specific_pull_request_id, branch_name, env)
-
+        bitbucket_cloud_client(env)
       when :bitbucket_server
-        require "danger/request_sources/bitbucket_server_api"
-        project, slug = repo_slug.split("/")
-        RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
-
+        bitbucket_server_client(env)
       when :vsts
-        require "danger/request_sources/vsts_api"
-        RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
-
+        vsts_client(env)
       when :gitlab
-        require "gitlab"
-        token = env&.fetch("DANGER_GITLAB_API_TOKEN", nil) || ENV["DANGER_GITLAB_API_TOKEN"]
-        if token && !token.empty?
-          endpoint = env&.fetch("DANGER_GITLAB_API_BASE_URL", nil) || env&.fetch("CI_API_V4_URL", nil) || ENV["DANGER_GITLAB_API_BASE_URL"] || ENV.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
-          Gitlab.client(endpoint: endpoint, private_token: token)
-        else
-          raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`"
-        end
-
+        gitlab_client(env)
       when :github
-        require "octokit"
-        access_token = env&.fetch("DANGER_GITHUB_API_TOKEN", nil) || ENV["DANGER_GITHUB_API_TOKEN"]
-        bearer_token = env&.fetch("DANGER_GITHUB_BEARER_TOKEN", nil) || ENV["DANGER_GITHUB_BEARER_TOKEN"]
-        if bearer_token && !bearer_token.empty?
-          Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
-        elsif access_token && !access_token.empty?
-          Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
-        else
-          raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
-        end
+        github_client(env)
       else
         raise "SCM provider not supported: #{scm_provider}"
+      end
+    end
+
+    def bitbucket_cloud_client(env)
+      require "danger/request_sources/bitbucket_cloud_api"
+      branch_name = ENV["DANGER_BITBUCKET_TARGET_BRANCH"] # Optional env variable (specifying the target branch) to help find the PR.
+      RequestSources::BitbucketCloudAPI.new(repo_slug, specific_pull_request_id, branch_name, env)
+    end
+
+    def bitbucket_server_client(env)
+      require "danger/request_sources/bitbucket_server_api"
+      project, slug = repo_slug.split("/")
+      RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
+    end
+
+    def vsts_client(env)
+      require "danger/request_sources/vsts_api"
+      RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
+    end
+
+    def gitlab_client(env)
+      require "gitlab"
+      token = env&.fetch("DANGER_GITLAB_API_TOKEN", nil) || ENV["DANGER_GITLAB_API_TOKEN"]
+      if token && !token.empty?
+        endpoint = env&.fetch("DANGER_GITLAB_API_BASE_URL", nil) || env&.fetch("CI_API_V4_URL", nil) || ENV["DANGER_GITLAB_API_BASE_URL"] || ENV.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
+        Gitlab.client(endpoint: endpoint, private_token: token)
+      else
+        raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`"
+      end
+    end
+
+    def github_client(env)
+      require "octokit"
+      access_token = env&.fetch("DANGER_GITHUB_API_TOKEN", nil) || ENV["DANGER_GITHUB_API_TOKEN"]
+      bearer_token = env&.fetch("DANGER_GITHUB_BEARER_TOKEN", nil) || ENV["DANGER_GITHUB_BEARER_TOKEN"]
+      if bearer_token && !bearer_token.empty?
+        Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
+      elsif access_token && !access_token.empty?
+        Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
+      else
+        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
       end
     end
 
