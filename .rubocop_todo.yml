@@ -474,16 +474,6 @@ Style/OptionalBooleanParameter:
     - 'lib/danger/request_sources/github/github_review.rb'
     - 'lib/danger/request_sources/github/github_review_unsupported.rb'
 
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/danger/ci_source/circle_api.rb'
-    - 'lib/danger/plugin_support/plugin_file_resolver.rb'
-    - 'lib/danger/plugin_support/plugin_linter.rb'
-
 # Offense count: 69
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: Mode.
