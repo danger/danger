@@ -42,7 +42,7 @@ RSpec.describe Danger::GitRepo, host: :github do
       with_git_repo do |dir|
         @dm = testing_dangerfile
         expect do
-          @dm.env.scm.diff_for_folder(dir + "/subdir")
+          @dm.env.scm.diff_for_folder("#{dir}/subdir")
         end.to raise_error(ArgumentError, /is not the top level git directory/)
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe Danger::GitRepo, host: :github do
       with_git_repo do |dir|
         @dm = testing_dangerfile
         expect do
-          @dm.env.scm.diff_for_folder(dir + "/subdir", lookup_top_level: true)
+          @dm.env.scm.diff_for_folder("#{dir}/subdir", lookup_top_level: true)
         end.not_to raise_error
       end
     end
@@ -102,11 +102,11 @@ RSpec.describe Danger::GitRepo, host: :github do
         Dir.chdir dir do
           `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
-          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
+          File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
           `git checkout -b new --quiet`
-          File.delete(dir + "/file")
+          File.delete("#{dir}/file")
           `git add . --all`
           `git commit -m "another"`
 
@@ -122,11 +122,11 @@ RSpec.describe Danger::GitRepo, host: :github do
         Dir.chdir dir do
           `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
-          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
+          File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
           `git checkout -b new --quiet`
-          File.open(dir + "/file", "a") { |file| file.write("ok\nmorestuff") }
+          File.open("#{dir}/file", "a") { |file| file.write("ok\nmorestuff") }
           `git add .`
           `git commit -m "another"`
 
@@ -147,7 +147,7 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git init -b master`
           `git config diff.renames true`
           `git remote add origin git@github.com:danger/danger.git`
-          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
+          File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
           `git checkout -b new --quiet`
@@ -172,12 +172,12 @@ RSpec.describe Danger::GitRepo, host: :github do
         Dir.chdir dir do
           `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
-          File.open(dir + "/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
+          File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new --quiet`
-          File.open(dir + "/file", "a") { |file| file.write("hi\n\najsdha") }
+          File.open("#{dir}/file", "a") { |file| file.write("hi\n\najsdha") }
           `git add .`
           `git commit -m "another"`
 
@@ -194,12 +194,12 @@ RSpec.describe Danger::GitRepo, host: :github do
         Dir.chdir dir do
           `git init -b master`
           `git remote add origin git@github.com:danger/danger.git`
-          File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
+          File.open("#{dir}/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
           `git add .`
           `git commit -m "ok"`
 
           `git checkout -b new --quiet`
-          File.open(dir + "/file", "w") { |file| file.write("1\n2\n3\n5\n") }
+          File.open("#{dir}/file", "w") { |file| file.write("1\n2\n3\n5\n") }
           `git add .`
           `git commit -m "another"`
 

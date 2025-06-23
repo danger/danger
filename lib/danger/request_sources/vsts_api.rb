@@ -19,7 +19,7 @@ module Danger
 
         self.host = environment["DANGER_VSTS_HOST"]
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
-          self.host = "https://" + self.host
+          self.host = "https://#{self.host}"
         end
 
         self.pr_api_endpoint = "#{host}/_apis/git/repositories/#{slug}/pullRequests/#{pull_request_id}"

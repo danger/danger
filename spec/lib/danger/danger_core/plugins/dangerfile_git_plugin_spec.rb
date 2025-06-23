@@ -4,15 +4,15 @@ def run_in_repo_with_diff
   Dir.mktmpdir do |dir|
     Dir.chdir dir do
       `git init -b master`
-      File.open(dir + "/file1", "w") { |f| f.write "More buritto please." }
-      File.open(dir + "/file2", "w") { |f| f.write "Shorts.\nShoes." }
+      File.open("#{dir}/file1", "w") { |f| f.write "More buritto please." }
+      File.open("#{dir}/file2", "w") { |f| f.write "Shorts.\nShoes." }
       `git add .`
       `git commit -m "adding file1 & file2"`
       `git tag 1.0.0`
       `git checkout -b new-branch --quiet`
-      File.open(dir + "/file2", "w") { |f| f.write "Pants!" }
-      File.open(dir + "/file3", "w") { |f| f.write "Jawns.\nYou know, jawns." }
-      File.delete(dir + "/file1")
+      File.open("#{dir}/file2", "w") { |f| f.write "Pants!" }
+      File.open("#{dir}/file3", "w") { |f| f.write "Jawns.\nYou know, jawns." }
+      File.delete("#{dir}/file1")
       `git add .`
       `git commit -m "update file2, add file 3, remove file1"`
       g = Git.open(".")

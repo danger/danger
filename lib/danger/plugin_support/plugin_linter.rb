@@ -13,7 +13,7 @@ module Danger
       end
 
       def object_applied_to
-        metadata[:name].to_s.bold + " (" + type + ")"
+        "#{metadata[:name].to_s.bold} (#{type})"
       end
     end
 
@@ -131,11 +131,11 @@ module Danger
     #
     def link(ref)
       if ref.kind_of?(Range)
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
+        "@see - #{"https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue}"
       elsif ref.kind_of?(Integer)
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue
+        "@see - #{"https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue}"
       else
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb".blue
+        "@see - #{'https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb'.blue}"
       end
     end
 

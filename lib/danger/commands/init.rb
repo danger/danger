@@ -18,7 +18,7 @@ module Danger
     end
 
     def initialize(argv)
-      @bot_name = File.basename(Dir.getwd).split(".").first.capitalize + "Bot"
+      @bot_name = "#{File.basename(Dir.getwd).split('.').first.capitalize}Bot"
       super
       @ui = Interviewer.new(cork)
       ui.no_delay = argv.flag?("impatient", false)
@@ -63,7 +63,7 @@ module Danger
 
       ui.say "cat #{Dir.pwd}/Dangerfile\n".blue
       content.lines.each do |l|
-        ui.say "  " + l.chomp.green
+        ui.say "  #{l.chomp.green}"
       end
       ui.say ""
       ui.pause 2
@@ -118,7 +118,7 @@ module Danger
 
       if considered_an_oss_repo?
         ui.say "For Open Source projects, I'd recommend giving the token the smallest scope possible."
-        ui.say "This means only providing access to " + "public_repo".yellow + " in the token.\n\n"
+        ui.say "This means only providing access to #{'public_repo'.yellow} in the token.\n\n"
         ui.pause 1
         ui.say "This token limits Danger's abilities to just writing comments on OSS projects. I recommend"
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
@@ -126,10 +126,10 @@ module Danger
         ui.say "\nIt is important that you do not store this token in your repository, as GitHub will automatically revoke it when pushed.\n"
       elsif @is_open_source == "closed"
         ui.say "For Closed Source projects, I'd recommend giving the token access to the whole repo scope."
-        ui.say "This means only providing access to " + "repo".yellow + ", and its children in the token.\n\n"
+        ui.say "This means only providing access to #{'repo'.yellow}, and its children in the token.\n\n"
         ui.pause 1
-        ui.say "It's worth noting that you " + "should not".bold.white + " re-use this token for OSS repos."
-        ui.say "Make a new one for those repos with just " + "public_repo".yellow + "."
+        ui.say "It's worth noting that you #{'should not'.bold.white} re-use this token for OSS repos."
+        ui.say "Make a new one for those repos with just #{'public_repo'.yellow}."
         ui.pause 1
         ui.say "Additionally, don't forget to add your new GitHub account as a collaborator to your Closed Source project."
       end
@@ -184,13 +184,13 @@ module Danger
       danger = "bundle exec danger".yellow
       config = YAML.load(File.read(".travis.yml"))
       if config.kind_of?(Hash) && config["script"]
-        ui.say "Add " + "- ".yellow + danger + " as a new step in the " + "script".yellow + " section of your .travis.yml file."
+        ui.say "Add #{'- '.yellow}#{danger} as a new step in the #{'script'.yellow} section of your .travis.yml file."
       else
-        ui.say "I'd recommend adding " + "before_script: ".yellow + danger + " to the script section of your .travis.yml file."
+        ui.say "I'd recommend adding #{'before_script: '.yellow}#{danger} to the script section of your .travis.yml file."
       end
 
       ui.pause 1
-      ui.say "You shouldn't use " + "after_success, after_failure, after_script".red + " as they cannot fail your builds."
+      ui.say "You shouldn't use #{'after_success, after_failure, after_script'.red} as they cannot fail your builds."
     end
 
     def uses_circle
@@ -199,9 +199,9 @@ module Danger
 
       if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]
-          ui.say "Add " + danger + " as a new step in the " + "test:post:".yellow + " section of your circle.yml file."
+          ui.say "Add #{danger} as a new step in the #{'test:post:'.yellow} section of your circle.yml file."
         else
-          ui.say "Add " + danger + " as a new step in the " + "test:override:".yellow + " section of your circle.yml file."
+          ui.say "Add #{danger} as a new step in the #{'test:override:'.yellow} section of your circle.yml file."
         end
       else
         ui.say "Add this to the bottom of your circle.yml file:"
@@ -214,7 +214,7 @@ module Danger
     def unsure_ci
       danger = "bundle exec danger".yellow
       ui.say "As I'm not sure what CI you want to run Danger on based on the files in your repo, I'll just offer some generic"
-      ui.say "advice. You want to run " + danger + " after your tests have finished running, it should still be during the testing"
+      ui.say "advice. You want to run #{danger} after your tests have finished running, it should still be during the testing"
       ui.say "process so the build can fail."
     end
 
@@ -222,7 +222,7 @@ module Danger
       # https://travis-ci.org/artsy/eigen/settings
       ui.say "In order to add an environment variable, go to:"
       ui.link "https://travis-ci.org/#{current_repo_slug}/settings"
-      ui.say "\nThe name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
+      ui.say "\nThe name is #{'DANGER_GITHUB_API_TOKEN'.yellow} and the value is the GitHub Personal Access Token."
       if @is_open_source
         ui.say 'Make sure to have "Display value in build log" enabled.'
       end
@@ -239,7 +239,7 @@ module Danger
         ui.say "I'll give you a minute to read it..."
         ui.wait_for_return
 
-        ui.say "On danger/danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
+        ui.say "On danger/danger we turn on #{'Permissive building of fork pull requests'.yellow} this exposes the token to Danger"
         ui.say "You can find this setting at:"
         ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
@@ -248,12 +248,12 @@ module Danger
 
       ui.say "In order to expose an environment variable, go to:"
       ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#env-vars"
-      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
+      ui.say "The name is #{'DANGER_GITHUB_API_TOKEN'.yellow} and the value is the GitHub Personal Access Token."
     end
 
     def unsure_token
-      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
-      ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
+      ui.say "You need to expose a token called #{'DANGER_GITHUB_API_TOKEN'.yellow} and the value is the GitHub Personal Access Token."
+      ui.say "Depending on the CI system, this may need to be done on the machine (in the #{'~/.bashprofile'.yellow}) or in a web UI somewhere."
       ui.say "We have a guide for all supported CI systems on danger.systems:"
       ui.link "https://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
     end
@@ -270,9 +270,9 @@ module Danger
 
     def info
       ui.header "Useful info"
-      ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger pr".yellow + "."
+      ui.say "- One of the best ways to test out new rules locally is via #{'bundle exec danger pr'.yellow}."
       ui.pause 0.6
-      ui.say "- You can have Danger output all of her variables to the console via the " + "--verbose".yellow + " option."
+      ui.say "- You can have Danger output all of her variables to the console via the #{'--verbose'.yellow} option."
       ui.pause 0.6
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
@@ -286,7 +286,7 @@ module Danger
       ui.pause 0.6
 
       ui.say "And you're good to go. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
-      ui.say "If you like Danger, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
+      ui.say "If you like Danger, let others know. If you want to know more, follow #{'@orta'.yellow} and #{'@KrauseFx'.yellow} on Twitter."
       ui.say "If you don't like Danger, help us improve the project! xxx"
     end
 

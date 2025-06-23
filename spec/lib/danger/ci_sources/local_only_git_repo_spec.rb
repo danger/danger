@@ -7,12 +7,12 @@ RSpec.describe Danger::LocalOnlyGitRepo do
       Dir.chdir dir do
         `git init -b master`
         `git remote add origin .`
-        File.open(dir + "/file1", "w") {}
+        File.open("#{dir}/file1", "w") {}
         `git add .`
         `git commit -m "adding file1"`
         `git fetch`
         `git checkout -b feature_branch`
-        File.open(dir + "/file2", "w") {}
+        File.open("#{dir}/file2", "w") {}
         `git add .`
         `git commit -m "adding file2"`
 
