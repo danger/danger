@@ -149,7 +149,6 @@ module Danger
 
           next comment_content.include?("generated_by_#{danger_id}")
         end
-        non_danger_threads = pr_threads - danger_threads
 
         warnings = submit_inline_comments_for_kind!(:warning, warnings, danger_threads, previous_violations["warning"], danger_id: danger_id)
         errors = submit_inline_comments_for_kind!(:error, errors, danger_threads, previous_violations["error"], danger_id: danger_id)

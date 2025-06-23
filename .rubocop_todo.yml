@@ -120,15 +120,6 @@ Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/danger/request_sources/gitlab.rb'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AutoCorrect.
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/vsts.rb'
-
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:

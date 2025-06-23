@@ -216,12 +216,11 @@ module Danger
             previous_violations: previous_violations
           }.merge(main_violations))
 
-          comment_result =
-            if should_create_new_comment
-              client.create_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, body)
-            else
-              client.edit_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, last_comment.id, body)
-            end
+          if should_create_new_comment
+            client.create_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, body)
+          else
+            client.edit_merge_request_note(ci_source.repo_slug, ci_source.pull_request_id, last_comment.id, body)
+          end
         end
       end
 
