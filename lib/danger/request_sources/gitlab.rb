@@ -71,18 +71,16 @@ module Danger
       def mr_comments
         # @raw_comments contains what we got back from the server.
         # @comments contains Comment objects (that have less information)
-        @comments ||= if supports_inline_comments
-                        @raw_comments = mr_discussions
-                          .auto_paginate
-                          .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({ "discussion_id" => discussion.id }) } }
-                        @raw_comments
-                          .map { |comment| Comment.from_gitlab(comment) }
-                      else
-                        @raw_comments = client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
-                          .auto_paginate
-                        @raw_comments
-                          .map { |comment| Comment.from_gitlab(comment) }
-                      end
+        if supports_inline_comments
+          @raw_comments = mr_discussions
+            .auto_paginate
+            .flat_map { |discussion| discussion.notes.map { |note| note.to_h.merge({ "discussion_id" => discussion.id }) } }
+        else
+          @raw_comments = client.merge_request_comments(ci_source.repo_slug, ci_source.pull_request_id, per_page: 100)
+            .auto_paginate
+        end
+        @comments ||= @raw_comments
+          .map { |comment| Comment.from_gitlab(comment) }
       end
 
       def mr_discussions

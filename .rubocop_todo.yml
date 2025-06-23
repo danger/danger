@@ -434,12 +434,6 @@ Style/GlobalStdStream:
     - 'spec/lib/danger/commands/plugins/plugin_readme_spec.rb'
 
 # Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/IdenticalConditionalBranches:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:
     - 'lib/danger/danger_core/dangerfile.rb'
