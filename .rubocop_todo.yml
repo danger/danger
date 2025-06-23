@@ -474,14 +474,6 @@ Style/OptionalBooleanParameter:
     - 'lib/danger/request_sources/github/github_review.rb'
     - 'lib/danger/request_sources/github/github_review_unsupported.rb'
 
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: SafeForConstants.
-Style/RedundantFetchBlock:
-  Exclude:
-    - 'lib/danger/ci_source/local_git_repo.rb'
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.

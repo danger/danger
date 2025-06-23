@@ -207,9 +207,7 @@ module Danger
 
     def api_url
       ENV.fetch("DANGER_GITHUB_API_HOST") do
-        ENV.fetch("DANGER_GITHUB_API_BASE_URL") do
-          "https://api.github.com/"
-        end
+        ENV.fetch("DANGER_GITHUB_API_BASE_URL", "https://api.github.com/")
       end
     end
 
