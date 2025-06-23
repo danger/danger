@@ -12,7 +12,7 @@ require "webmock"
 require "webmock/rspec"
 require "json"
 
-Dir["spec/support/**/*.rb"].each { |file| require(file) }
+Dir["spec/support/**/*.rb"].sort.each { |file| require(file) }
 
 RSpec.configure do |config|
   config.filter_gems_from_backtrace "bundler"
