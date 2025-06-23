@@ -214,15 +214,6 @@ Naming/VariableNumber:
     - 'spec/lib/danger/request_sources/github_spec.rb'
     - 'spec/support/gitlab_helper.rb'
 
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: MinBranchesCount.
-Style/CaseLikeIf:
-  Exclude:
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
-    - 'lib/danger/danger_core/environment_manager.rb'
-    - 'lib/danger/helpers/comments_parsing_helper.rb'
-
 # Offense count: 204
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
