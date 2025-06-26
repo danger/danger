@@ -329,7 +329,7 @@ module Danger
         is_markdown_content = kind == :markdown
         emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
 
-        messages.reject do |m|
+        messages.reject do |m| # rubocop:todo Metrics/BlockLength
           next false unless m.file && m.line
 
           position = find_position_in_diff diff_lines, m, kind

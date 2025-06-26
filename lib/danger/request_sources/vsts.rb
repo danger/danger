@@ -185,7 +185,7 @@ module Danger
         is_markdown_content = kind == :markdown
         emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
 
-        messages.reject do |m|
+        messages.reject do |m| # rubocop:todo Metrics/BlockLength
           next false unless m.file && m.line
 
           # Once we know we're gonna submit it, we format it
