@@ -38,7 +38,7 @@ module Danger
       begin
         gh.fetch_details
       rescue Octokit::NotFound
-        cork.puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through " + "DANGER_GITHUB_API_TOKEN".yellow + " environment variable."
+        cork.puts "Local repository was not found on GitHub. If you're trying to test a private repository please provide a valid API token through #{'DANGER_GITHUB_API_TOKEN'.yellow} environment variable."
         return
       end
 

@@ -14,7 +14,7 @@ module Danger
         self.host = environment["DANGER_BITBUCKETSERVER_HOST"]
         self.verify_ssl = environment["DANGER_BITBUCKETSERVER_VERIFY_SSL"] != "false"
         if self.host && !(self.host.include? "http://") && !(self.host.include? "https://")
-          self.host = "https://" + self.host
+          self.host = "https://#{self.host}"
         end
         self.key = slug
         self.project = project

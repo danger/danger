@@ -396,12 +396,12 @@ module Danger
         range_header_regexp = /@@ -([0-9]+)(,([0-9]+))? \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
         file_header_regexp = %r{^diff --git a/.*}
 
-        pattern = "+++ b/" + message.file + "\n"
+        pattern = "+++ b/#{message.file}\n"
         file_start = diff_lines.index(pattern)
 
         # Files containing spaces sometimes have a trailing tab
         if file_start.nil?
-          pattern = "+++ b/" + message.file + "\t\n"
+          pattern = "+++ b/#{message.file}\t\n"
           file_start = diff_lines.index(pattern)
         end
 

@@ -33,7 +33,7 @@ module Danger
     end
 
     def link(url)
-      say " -> " + url.underlined + "\n"
+      say " -> #{url.underlined}\n"
     end
 
     def pause(time)
@@ -48,7 +48,7 @@ module Danger
 
     def run_command(command, output_command = nil)
       output_command ||= command
-      ui.puts "  " + output_command.magenta
+      ui.puts "  #{output_command.magenta}"
       system command
     end
 
@@ -58,7 +58,7 @@ module Danger
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
           the_answer = i.zero? ? answer.underlined : answer
-          ui.print " " + the_answer
+          ui.print " #{the_answer}"
           ui.print(" /") if i != possible_answers.length - 1
         end
         ui.print " ]\n"
@@ -77,7 +77,7 @@ module Danger
         # default to first answer
         if answer == ""
           answer = possible_answers[0].downcase
-          ui.puts "Using: " + answer.yellow
+          ui.puts "Using: #{answer.yellow}"
         end
 
         break if possible_answers.map(&:downcase).include? answer

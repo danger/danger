@@ -96,7 +96,7 @@ module Danger
         ).call(env: env)
       else
         PullRequestFinder.new(
-          env.fetch("LOCAL_GIT_PR_ID") { env.fetch("LOCAL_GIT_MR_ID") { "" } },
+          env.fetch("LOCAL_GIT_PR_ID") { env.fetch("LOCAL_GIT_MR_ID", "") },
           remote_info.slug,
           remote: false,
           git_logs: run_git("log --oneline -1000000")

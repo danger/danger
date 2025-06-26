@@ -14,7 +14,7 @@ module Danger
     def resolve
       if !refs.nil? and refs.select { |ref| File.file? ref }.any?
         paths = refs.select { |ref| File.file? ref }.map { |path| File.expand_path(path) }
-      elsif refs and refs.kind_of? Array
+      elsif refs.kind_of? Array
         paths, gems = GemsResolver.new(refs).call
       else
         paths = Dir.glob(File.join(".", "lib/**/*.rb")).map { |path| File.expand_path(path) }

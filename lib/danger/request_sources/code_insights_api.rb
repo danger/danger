@@ -131,7 +131,7 @@ module Danger
       end
 
       def annotation_endpoint_at_commit(commit)
-        report_endpoint_at_commit(commit) + "/annotations"
+        "#{report_endpoint_at_commit(commit)}/annotations"
       end
 
       def use_ssl

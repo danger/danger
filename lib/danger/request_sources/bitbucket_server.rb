@@ -179,7 +179,7 @@ module Danger
         changeset = self.pr_json[:fromRef][:latestCommit]
         # Support for older versions of Bitbucket Server
         changeset = self.pr_json[:fromRef][:latestChangeset] if self.pr_json[:fromRef].key? :latestChangeset
-        puts "Changeset: " + changeset
+        puts "Changeset: #{changeset}"
         puts self.pr_json.to_json
         @api.update_pr_build_status(status, changeset, build_job_link, description)
       end

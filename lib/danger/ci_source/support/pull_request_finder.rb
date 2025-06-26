@@ -207,20 +207,19 @@ module Danger
 
     def api_url
       ENV.fetch("DANGER_GITHUB_API_HOST") do
-        ENV.fetch("DANGER_GITHUB_API_BASE_URL") do
-          "https://api.github.com/"
-        end
+        ENV.fetch("DANGER_GITHUB_API_BASE_URL", "https://api.github.com/")
       end
     end
 
     def find_scm_provider(remote_url)
-      if remote_url =~ %r{/bitbucket.org/}
+      case remote_url
+      when %r{/bitbucket.org/}
         :bitbucket_cloud
-      elsif remote_url =~ %r{/pull-requests/}
+      when %r{/pull-requests/}
         :bitbucket_server
-      elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
+      when /\.visualstudio\.com/i, /dev\.azure\.com/i
         :vsts
-      elsif remote_url =~ /gitlab\.com/ || remote_url =~ %r{-/merge_requests/}
+      when /gitlab\.com/, %r{-/merge_requests/}
         :gitlab
       else
         :github

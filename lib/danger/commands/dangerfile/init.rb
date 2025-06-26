@@ -24,7 +24,7 @@ module Danger
     def run
       content = DangerfileGenerator.create_dangerfile(".", cork)
       File.write("Dangerfile", content)
-      cork.puts "Created" + "./Dangerfile".green
+      cork.puts "Created#{'./Dangerfile'.green}"
     end
   end
 end

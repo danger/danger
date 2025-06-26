@@ -11,7 +11,7 @@ module Danger
 
     def run
       here = File.dirname(__FILE__)
-      ci_source_paths = Dir.glob(here + "/../ci_source/*.rb")
+      ci_source_paths = Dir.glob("#{here}/../ci_source/*.rb")
 
       require "yard"
       # Pull out all the Danger::CI subclasses docs

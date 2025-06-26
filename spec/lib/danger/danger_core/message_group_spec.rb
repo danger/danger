@@ -107,21 +107,21 @@ RSpec.describe Danger::MessageGroup do
         let(:other_file) { file }
         let(:other_line) { 200 }
 
-        it { expect { subject }.not_to change { message_group.messages.count } }
+        it { expect { subject }.not_to(change { message_group.messages.count }) }
       end
 
       context "in a different file" do
         let(:other_file) { "jeff.txt" }
         let(:other_line) { line }
 
-        it { expect { subject }.not_to change { message_group.messages.count } }
+        it { expect { subject }.not_to(change { message_group.messages.count }) }
       end
 
       context "in a different file on a different line" do
         let(:other_file) { "jeff.txt" }
         let(:other_line) { 200 }
 
-        it { expect { subject }.not_to change { message_group.messages.count } }
+        it { expect { subject }.not_to(change { message_group.messages.count }) }
       end
     end
 

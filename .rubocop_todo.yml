@@ -14,13 +14,6 @@ Layout/LineLength:
   Exclude:
     - 'spec/lib/danger/request_sources/gitlab_spec.rb'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowedMethods, AllowedPatterns.
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - 'spec/lib/danger/danger_core/message_group_spec.rb'
-
 # Offense count: 16
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: enums
@@ -97,13 +90,6 @@ Lint/MixedRegexpCaptureTypes:
     - 'lib/danger/request_sources/github/github.rb'
     - 'lib/danger/request_sources/gitlab.rb'
 
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Lint/NonDeterministicRequireOrder:
-  Exclude:
-    - 'lib/danger.rb'
-    - 'spec/spec_helper.rb'
-
 # Offense count: 1
 Lint/SelfAssignment:
   Exclude:
@@ -133,15 +119,6 @@ Lint/UnderscorePrefixedVariableName:
 Lint/UnusedMethodArgument:
   Exclude:
     - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AutoCorrect.
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/danger/ci_source/bitrise.rb'
-    - 'lib/danger/request_sources/gitlab.rb'
-    - 'lib/danger/request_sources/vsts.rb'
 
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
@@ -236,15 +213,6 @@ Naming/VariableNumber:
     - 'spec/lib/danger/helpers/comments_helper_spec.rb'
     - 'spec/lib/danger/request_sources/github_spec.rb'
     - 'spec/support/gitlab_helper.rb'
-
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: MinBranchesCount.
-Style/CaseLikeIf:
-  Exclude:
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
-    - 'lib/danger/danger_core/environment_manager.rb'
-    - 'lib/danger/helpers/comments_parsing_helper.rb'
 
 # Offense count: 204
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -466,12 +434,6 @@ Style/GlobalStdStream:
     - 'spec/lib/danger/commands/plugins/plugin_readme_spec.rb'
 
 # Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/IdenticalConditionalBranches:
-  Exclude:
-    - 'lib/danger/request_sources/gitlab.rb'
-
-# Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:
     - 'lib/danger/danger_core/dangerfile.rb'
@@ -511,59 +473,3 @@ Style/OptionalBooleanParameter:
     - 'lib/danger/helpers/comments_helper.rb'
     - 'lib/danger/request_sources/github/github_review.rb'
     - 'lib/danger/request_sources/github/github_review_unsupported.rb'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: short, verbose
-Style/PreferredHashMethods:
-  Exclude:
-    - 'lib/danger/helpers/emoji_mapper.rb'
-
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: SafeForConstants.
-Style/RedundantFetchBlock:
-  Exclude:
-    - 'lib/danger/ci_source/local_git_repo.rb'
-    - 'lib/danger/ci_source/support/pull_request_finder.rb'
-
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/danger/ci_source/circle_api.rb'
-    - 'lib/danger/plugin_support/plugin_file_resolver.rb'
-    - 'lib/danger/plugin_support/plugin_linter.rb'
-
-# Offense count: 69
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: Mode.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/danger/ci_source/circle.rb'
-    - 'lib/danger/ci_source/circle_api.rb'
-    - 'lib/danger/commands/dangerfile/gem.rb'
-    - 'lib/danger/commands/dangerfile/init.rb'
-    - 'lib/danger/commands/init.rb'
-    - 'lib/danger/commands/init_helpers/interviewer.rb'
-    - 'lib/danger/commands/local_helpers/local_setup.rb'
-    - 'lib/danger/commands/systems.rb'
-    - 'lib/danger/danger_core/dangerfile.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_bitbucket_server_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_github_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_gitlab_plugin.rb'
-    - 'lib/danger/danger_core/plugins/dangerfile_vsts_plugin.rb'
-    - 'lib/danger/plugin_support/plugin_linter.rb'
-    - 'lib/danger/request_sources/bitbucket_server.rb'
-    - 'lib/danger/request_sources/bitbucket_server_api.rb'
-    - 'lib/danger/request_sources/code_insights_api.rb'
-    - 'lib/danger/request_sources/github/github.rb'
-    - 'lib/danger/request_sources/vsts_api.rb'
-    - 'spec/lib/danger/ci_sources/local_git_repo_spec.rb'
-    - 'spec/lib/danger/ci_sources/local_only_git_repo_spec.rb'
-    - 'spec/lib/danger/danger_core/plugins/dangerfile_git_plugin_spec.rb'
-    - 'spec/lib/danger/scm_source/git_repo_spec.rb'
-    - 'spec/spec_helper.rb'

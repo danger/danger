@@ -231,7 +231,7 @@ module Danger
 
       return paths.first if paths.count < 2
 
-      paths.first(paths.count - 1).join(", ") + " & " + paths.last
+      "#{paths.first(paths.count - 1).join(', ')} & #{paths.last}"
     end
 
     # @!group GitHub Misc

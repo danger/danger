@@ -217,7 +217,7 @@ module Danger
 
       ui.section("Results:") do
         %i(errors warnings messages).each do |key|
-          formatted = key.to_s.capitalize + ":"
+          formatted = "#{key.to_s.capitalize}:"
           title = case key
                   when :errors
                     formatted.red
