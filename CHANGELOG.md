@@ -15,6 +15,7 @@
 * Support v4 of colored2 gem to make danger work with --enable-frozen-string-literal RUBYOPT of newer Ruby versions - [@eiskrenkov](https://github.com/eiskrenkov) [#1513](https://github.com/danger/danger/pull/1513)
 * Support ruby-git 2.x - [@manicmaniac](https://github.com/manicmaniac) [#1511](https://github.com/danger/danger/pull/1511)
 * Allow terminal-table versions through 4.x - [@murilooon](https://github.com/murilooon)
+* Bump kramdown to 2.5.1 - [@manicmaniac](https://github.com/manicmaniac) [#1514](https://github.com/danger/danger/pull/1514)
 <!-- Your comment above here -->
 
 ## 9.5.1
