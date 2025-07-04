@@ -31,7 +31,9 @@ module Danger
       else
         matched = url.match(REGEXP)
         if matched
-          RepoInfo.new(matched[:slug], matched[:id])
+          # Clean up the slug to remove any trailing dashes or slashes that might be part of the GitLab URL format
+          clean_slug = matched[:slug].gsub(%r{[-/]+$}, "")
+          RepoInfo.new(clean_slug, matched[:id])
         end
       end
     end
