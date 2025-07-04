@@ -4,7 +4,6 @@ require "danger/commands/local_helpers/http_cache"
 require "danger/commands/local_helpers/pry_setup"
 require "faraday/http_cache"
 require "fileutils"
-require "gitlab"
 require "tmpdir"
 
 module Danger
@@ -75,6 +74,9 @@ module Danger
     private
 
     def configure_gitlab(cache_dir)
+      # The require happens inline so that it won't cause exceptions when just using the `danger` gem.
+      require "gitlab"
+
       # setup caching for GitLab calls to avoid hitting the API rate limit too quickly
       cache_file = File.join(cache_dir, "danger_local_gitlab_cache")
       HTTPCache.new(cache_file, clear_cache: @clear_http_cache)
