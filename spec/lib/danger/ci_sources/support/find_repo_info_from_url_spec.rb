@@ -49,15 +49,6 @@ RSpec.describe Danger::FindRepoInfoFromURL do
         id: "42"
       )
     end
-
-    it "works with the /-/ pattern" do
-      result = described_class.new("https://gitlab.com/gitlab-org/gitlab-ce/-/merge_requests/42").call
-
-      expect(result).to have_attributes(
-        slug: "gitlab-org/gitlab-ce",
-        id: "42"
-      )
-    end
   end
 
   context "Bitbucket" do

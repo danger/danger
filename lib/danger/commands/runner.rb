@@ -6,7 +6,6 @@ module Danger
     require "danger/commands/staging"
     require "danger/commands/systems"
     require "danger/commands/pr"
-    require "danger/commands/mr"
 
     # manually set claide plugins as a subcommand
     require "claide_plugin"
