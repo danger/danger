@@ -59,4 +59,27 @@ RSpec.describe Danger do
       expect(result).to be false
     end
   end
+
+  context "when danger-gitlab is not installed" do
+    it "gracefully handles missing gitlab gem without raising LoadError" do
+      # danger is already required in spec_helper.rb so we have to launch a new process.
+      script = <<~RUBY
+        # Emulate the environment that does not have gitlab gem.
+        module Kernel
+          alias original_require require
+
+          def require(name)
+            raise LoadError, "cannot load such file -- gitlab" if name == "gitlab"
+
+            original_require(name)
+          end
+        end
+
+        require "danger"
+
+        Danger::Runner.run([])
+      RUBY
+      expect { system(RbConfig.ruby, "-e", script) }.not_to output(/LoadError/).to_stderr_from_any_process
+    end
+  end
 end
