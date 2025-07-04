@@ -13,6 +13,10 @@
 <!-- Your comment below here -->
 <!-- Your comment above here -->
 
+## 9.5.3
+
+* Revert "Add GitLab Merge Request support with a new `mr` command" - [@manicmaniac](https://github.com/manicmaniac) [#1521](https://github.com/danger/danger/pull/1521)
+
 ## 9.5.2
 
 * Add GitLab Merge Request support with a new `mr` command - [@jtslear](https://github.com/jtslear) [#1516](https://github.com/danger/danger/pull/1516)
