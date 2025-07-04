@@ -38,8 +38,7 @@ module Danger
         Danger::RequestSources::GitHub,
         Danger::RequestSources::BitbucketServer,
         Danger::RequestSources::BitbucketCloud,
-        Danger::RequestSources::VSTS,
-        Danger::RequestSources::GitLab
+        Danger::RequestSources::VSTS
       ]
     end
 
@@ -75,8 +74,7 @@ module Danger
 
     def find_remote_info(env)
       if given_pull_request_url?(env)
-        pr_url = env["LOCAL_GIT_PR_URL"] || env["LOCAL_GIT_MR_URL"]
-        FindRepoInfoFromURL.new(pr_url).call
+        FindRepoInfoFromURL.new(env["LOCAL_GIT_PR_URL"]).call
       else
         FindRepoInfoFromLogs.new(
           env["DANGER_GITHUB_HOST"] || "github.com",
@@ -87,16 +85,15 @@ module Danger
 
     def find_pull_request(env)
       if given_pull_request_url?(env)
-        remote_url = env["LOCAL_GIT_PR_URL"] || env["LOCAL_GIT_MR_URL"]
         PullRequestFinder.new(
           remote_info.id,
           remote_info.slug,
           remote: true,
-          remote_url: remote_url
+          remote_url: env["LOCAL_GIT_PR_URL"]
         ).call(env: env)
       else
         PullRequestFinder.new(
-          env.fetch("LOCAL_GIT_PR_ID") { env.fetch("LOCAL_GIT_MR_ID") { "" } },
+          env.fetch("LOCAL_GIT_PR_ID") { "" },
           remote_info.slug,
           remote: false,
           git_logs: run_git("log --oneline -1000000")
@@ -105,8 +102,7 @@ module Danger
     end
 
     def given_pull_request_url?(env)
-      (env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?) ||
-        (env["LOCAL_GIT_MR_URL"] && !env["LOCAL_GIT_MR_URL"].empty?)
+      env["LOCAL_GIT_PR_URL"] && !env["LOCAL_GIT_PR_URL"].empty?
     end
 
     def sha

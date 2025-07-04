@@ -81,12 +81,6 @@ module Danger
           remote_pull_request.head.sha,
           remote_pull_request.base.sha
         )
-      when :gitlab
-        RemotePullRequest.new(
-          remote_pull_request.iid.to_s,
-          remote_pull_request.diff_refs.head_sha,
-          remote_pull_request.diff_refs.base_sha
-        )
       when :vsts
         RemotePullRequest.new(
           remote_pull_request[:pullRequestId].to_s,
@@ -99,13 +93,7 @@ module Danger
     end
 
     def find_remote_pull_request(env)
-      scm_provider = find_scm_provider(remote_url)
-
-      if scm_provider == :gitlab
-        client(env).merge_request(repo_slug, specific_pull_request_id)
-      else
-        client(env).pull_request(repo_slug, specific_pull_request_id)
-      end
+      client(env).pull_request(repo_slug, specific_pull_request_id)
     end
 
     def both_present?
@@ -150,58 +138,32 @@ module Danger
 
       case scm_provider
       when :bitbucket_cloud
-        bitbucket_cloud_client(env)
+        require "danger/request_sources/bitbucket_cloud_api"
+        branch_name = ENV["DANGER_BITBUCKET_TARGET_BRANCH"] # Optional env variable (specifying the target branch) to help find the PR.
+        RequestSources::BitbucketCloudAPI.new(repo_slug, specific_pull_request_id, branch_name, env)
+
       when :bitbucket_server
-        bitbucket_server_client(env)
+        require "danger/request_sources/bitbucket_server_api"
+        project, slug = repo_slug.split("/")
+        RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
+
       when :vsts
-        vsts_client(env)
-      when :gitlab
-        gitlab_client(env)
+        require "danger/request_sources/vsts_api"
+        RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
+
       when :github
-        github_client(env)
+        require "octokit"
+        access_token = ENV["DANGER_GITHUB_API_TOKEN"]
+        bearer_token = ENV["DANGER_GITHUB_BEARER_TOKEN"]
+        if bearer_token && !bearer_token.empty?
+          Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
+        elsif access_token && !access_token.empty?
+          Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
+        else
+          raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
+        end
       else
         raise "SCM provider not supported: #{scm_provider}"
-      end
-    end
-
-    def bitbucket_cloud_client(env)
-      require "danger/request_sources/bitbucket_cloud_api"
-      branch_name = ENV["DANGER_BITBUCKET_TARGET_BRANCH"] # Optional env variable (specifying the target branch) to help find the PR.
-      RequestSources::BitbucketCloudAPI.new(repo_slug, specific_pull_request_id, branch_name, env)
-    end
-
-    def bitbucket_server_client(env)
-      require "danger/request_sources/bitbucket_server_api"
-      project, slug = repo_slug.split("/")
-      RequestSources::BitbucketServerAPI.new(project, slug, specific_pull_request_id, env)
-    end
-
-    def vsts_client(env)
-      require "danger/request_sources/vsts_api"
-      RequestSources::VSTSAPI.new(repo_slug, specific_pull_request_id, env)
-    end
-
-    def gitlab_client(env)
-      require "gitlab"
-      token = env&.fetch("DANGER_GITLAB_API_TOKEN", nil) || ENV["DANGER_GITLAB_API_TOKEN"]
-      if token && !token.empty?
-        endpoint = env&.fetch("DANGER_GITLAB_API_BASE_URL", nil) || env&.fetch("CI_API_V4_URL", nil) || ENV["DANGER_GITLAB_API_BASE_URL"] || ENV.fetch("CI_API_V4_URL", "https://gitlab.com/api/v4")
-        Gitlab.client(endpoint: endpoint, private_token: token)
-      else
-        raise "No API token given, please provide one using `DANGER_GITLAB_API_TOKEN`"
-      end
-    end
-
-    def github_client(env)
-      require "octokit"
-      access_token = env&.fetch("DANGER_GITHUB_API_TOKEN", nil) || ENV["DANGER_GITHUB_API_TOKEN"]
-      bearer_token = env&.fetch("DANGER_GITHUB_BEARER_TOKEN", nil) || ENV["DANGER_GITHUB_BEARER_TOKEN"]
-      if bearer_token && !bearer_token.empty?
-        Octokit::Client.new(bearer_token: bearer_token, api_endpoint: api_url)
-      elsif access_token && !access_token.empty?
-        Octokit::Client.new(access_token: access_token, api_endpoint: api_url)
-      else
-        raise "No API token given, please provide one using `DANGER_GITHUB_API_TOKEN` or `DANGER_GITHUB_BEARER_TOKEN`"
       end
     end
 
@@ -220,8 +182,6 @@ module Danger
         :bitbucket_server
       elsif remote_url =~ /\.visualstudio\.com/i || remote_url =~ /dev\.azure\.com/i
         :vsts
-      elsif remote_url =~ /gitlab\.com/ || remote_url =~ %r{-/merge_requests/}
-        :gitlab
       else
         :github
       end
