@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Add "Add GitLab Merge Request support" again with fix - [@manicmaniac](https://github.com/manicmaniac) [#1522](https://github.com/danger/danger/pull/1522)
 <!-- Your comment above here -->
 
 ## 9.5.3
