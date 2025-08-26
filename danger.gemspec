@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "cork", "~> 0.1"
   spec.add_runtime_dependency "faraday", ">= 0.9.0", "< 3.0"
   spec.add_runtime_dependency "faraday-http-cache", "~> 2.0"
-  spec.add_runtime_dependency "git", ">= 1.13", "< 3.0"
+  spec.add_runtime_dependency "git", ">= 1.13"
   spec.add_runtime_dependency "kramdown", ">= 2.5.1", "< 3.0"
   spec.add_runtime_dependency "kramdown-parser-gfm", "~> 1.0"
   spec.add_runtime_dependency "octokit", ">= 4.0"
