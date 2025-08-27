@@ -49,7 +49,6 @@ module Danger
       self.pull_request_id = env["BITRISE_PULL_REQUEST"]
       self.repo_url = env["GIT_REPOSITORY_URL"]
 
-      self.repo_url
       self.repo_slug = repo_slug_from(self.repo_url)
     end
 
