@@ -22,7 +22,7 @@ module Danger
     }.freeze
 
     def initialize(template)
-      @template = DATA.has_key?(template) ? template : "github"
+      @template = DATA.key?(template) ? template : "github"
     end
 
     def map(emoji)

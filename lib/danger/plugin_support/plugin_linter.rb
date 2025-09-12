@@ -13,7 +13,7 @@ module Danger
       end
 
       def object_applied_to
-        metadata[:name].to_s.bold + " (" + type + ")"
+        "#{metadata[:name].to_s.bold} (#{type})"
       end
     end
 
@@ -115,10 +115,10 @@ module Danger
           json[:body_md] && json[:body_md].empty?
         end),
         Rule.new(:warning, 43..45, "Params", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
-          json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
+          json[:param_couplets]&.flat_map(&:values)&.include?(nil)
         end),
         Rule.new(:warning, 43..45, "Unknown Param", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
-          json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?("Unknown")
+          json[:param_couplets]&.flat_map(&:values)&.include?("Unknown")
         end),
         Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
           return_hash = json[:tags].find { |tag| tag[:name] == "return" }
@@ -131,11 +131,11 @@ module Danger
     #
     def link(ref)
       if ref.kind_of?(Range)
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
+        "@see - #{"https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue}"
       elsif ref.kind_of?(Integer)
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue
+        "@see - #{"https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue}"
       else
-        "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb".blue
+        "@see - #{'https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb'.blue}"
       end
     end
 

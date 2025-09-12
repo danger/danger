@@ -78,7 +78,7 @@ module Danger
       pr_path = URI.parse(pr_url).path.split("/")
       if pr_path.count == 5
         # The first one is an extra slash, ignore it
-        self.repo_slug = pr_path[1] + "/" + pr_path[2]
+        self.repo_slug = "#{pr_path[1]}/#{pr_path[2]}"
         self.pull_request_id = pr_path[4]
 
       else

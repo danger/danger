@@ -43,11 +43,12 @@ module Danger
       end
 
       def table_kind_from_title(title)
-        if title =~ /error/i
+        case title
+        when /error/i
           :error
-        elsif title =~ /warning/i
+        when /warning/i
           :warning
-        elsif title =~ /message/i
+        when /message/i
           :message
         end
       end

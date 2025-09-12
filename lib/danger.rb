@@ -13,7 +13,7 @@ require "terminal-table"
 require "cork"
 
 # Import all the Sources (CI, Request and SCM)
-Dir[File.expand_path("danger/*source/*.rb", File.dirname(__FILE__))].each do |file|
+Dir[File.expand_path("danger/*source/*.rb", File.dirname(__FILE__))].sort.each do |file|
   require file
 end
 

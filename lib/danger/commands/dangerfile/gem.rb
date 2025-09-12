@@ -17,7 +17,7 @@ module Danger
 
     def initialize(argv)
       @name = argv.shift_argument
-      prefix = "dangerfile" + "-"
+      prefix = "dangerfile-"
       unless @name.nil? || @name.empty? || @name.start_with?(prefix)
         @name = prefix + @name.dup
       end

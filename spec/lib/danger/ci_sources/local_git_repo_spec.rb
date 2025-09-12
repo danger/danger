@@ -8,11 +8,11 @@ RSpec.describe Danger::LocalGitRepo do
       Dir.chdir dir do
         `git init -b master`
         `git remote add origin https://github.com/danger/danger.git`
-        File.open(dir + "/file1", "w") {}
+        File.open("#{dir}/file1", "w") {}
         `git add .`
         `git commit -m "adding file1"`
         `git checkout -b new-branch --quiet`
-        File.open(dir + "/file2", "w") {}
+        File.open("#{dir}/file2", "w") {}
         `git add .`
         `git commit -m "adding file2"`
         `git checkout master --quiet`
