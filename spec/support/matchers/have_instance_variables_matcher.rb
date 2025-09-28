@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define(:have_instance_variables) do |expected|
   match do |actual|
     expected.each do |instance_variable, expected_value|

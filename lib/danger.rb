@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/version"
 require "danger/danger_core/dangerfile"
 require "danger/danger_core/environment_manager"
@@ -18,7 +20,7 @@ Dir[File.expand_path("danger/*source/*.rb", File.dirname(__FILE__))].sort.each d
 end
 
 module Danger
-  GEM_NAME = "danger".freeze
+  GEM_NAME = "danger"
 
   # @return [String] The path to the local gem directory
   def self.gem_path

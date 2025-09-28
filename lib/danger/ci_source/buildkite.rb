@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://buildkite.com/docs/agent/osx
 # https://buildkite.com/docs/guides/environment-variables
 require "danger/request_sources/github/github"

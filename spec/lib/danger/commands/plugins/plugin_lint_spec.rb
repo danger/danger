@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/plugins/plugin_lint"
 
 RSpec.describe Danger::PluginLint do

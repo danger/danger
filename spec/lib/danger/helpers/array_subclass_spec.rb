@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::Helpers::ArraySubclass do
   class List; include Danger::Helpers::ArraySubclass; end
   class OtherList; include Danger::Helpers::ArraySubclass; end

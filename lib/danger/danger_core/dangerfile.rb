@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # So much was ripped direct from CocoaPods-Core - thanks!
 
 require "danger/danger_core/dangerfile_dsl"
@@ -271,7 +273,7 @@ module Danger
 
     def setup_for_running(base_branch, head_branch)
       env.ensure_danger_branches_are_setup
-      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch, lookup_top_level: true)
+      env.scm.diff_for_folder(".", from: base_branch, to: head_branch, lookup_top_level: true)
     end
 
     def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments, report_results = true)

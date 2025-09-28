@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/bitbucket_pipelines"
 
 RSpec.describe Danger::BitbucketPipelines do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "claide"
 require "claide/informative_error"
 

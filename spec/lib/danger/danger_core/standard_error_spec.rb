@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::DSLError do
   let(:file_path) do
     Pathname.new(File.join("spec", "fixtures", "dangerfile_with_error"))

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://docs.appcircle.io/environment-variables/managing-variables
 # https://docs.appcircle.io/build/build-profile-configuration#environment-variables-configuration
 require "danger/request_sources/github/github"

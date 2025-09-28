@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://www.appveyor.com/docs/build-configuration/
 module Danger
   # ### CI Setup

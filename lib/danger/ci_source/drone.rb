@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # http://readme.drone.io/usage/variables/
 require "danger/request_sources/github/github"
 require "danger/request_sources/gitlab"

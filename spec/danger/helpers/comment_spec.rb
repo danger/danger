@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/helpers/comment"
 
 RSpec.describe Danger::Comment do

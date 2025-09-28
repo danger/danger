@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Executor
     def initialize(system_env)

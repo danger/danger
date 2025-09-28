@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/ClassLength
 
 require "octokit"
@@ -32,9 +34,7 @@ module Danger
         # backwards compatibility. `DANGER_GITHUB_API_BASE_URL` is the new
         # correctly named variable.
         self.api_url = environment.fetch("DANGER_GITHUB_API_HOST") do
-          environment.fetch("DANGER_GITHUB_API_BASE_URL") do
-            "https://api.github.com/".freeze
-          end
+          environment.fetch("DANGER_GITHUB_API_BASE_URL", "https://api.github.com/")
         end
         self.verify_ssl = environment["DANGER_OCTOKIT_VERIFY_SSL"] != "false"
 

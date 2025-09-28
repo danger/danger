@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/scm_source/git_repo"
 
 RSpec.describe Danger::GitRepo, host: :github do
