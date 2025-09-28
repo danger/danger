@@ -187,8 +187,9 @@ module Danger
         contents.encode!("UTF-8")
       end
 
-      if contents.tr!("“”‘’‛", %(""'''))
-        # Changes have been made
+      sanitised_contents = contents.tr("“”‘’‛", %(""'''))
+      if sanitised_contents != contents
+        contents = sanitised_contents
         ui.puts "Your #{path.basename} has had smart quotes sanitised. " \
           "To avoid issues in the future, you should not use " \
           "TextEdit for editing it. If you are not using TextEdit, " \

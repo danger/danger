@@ -32,8 +32,8 @@ module Danger
       def inspect
         inspected = super
 
-        inspected.gsub!(@password, "********") if @password
-        inspected.gsub!(@access_token, "********") if @access_token
+        inspected = inspected.gsub(@password, "********") if @password
+        inspected = inspected.gsub(@access_token, "********") if @access_token
 
         inspected
       end

@@ -28,8 +28,8 @@ module Danger
     end
 
     def map(emoji)
-      emoji&.delete! ":"
-      DATA[template][emoji]
+      cleaned_emoji = emoji&.delete(":") || emoji
+      DATA[template][cleaned_emoji]
     end
 
     def from_type(type)
