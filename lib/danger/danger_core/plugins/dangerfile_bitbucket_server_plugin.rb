@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -194,7 +196,7 @@ module Danger
         path, line = path.split("#")
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        url_path.gsub!(" ", "%20")
+        url_path = url_path.gsub(" ", "%20")
         line_ref = line ? "##{line}" : ""
         yield("#{repo}#{url_path}?at=#{commit}#{line_ref}", text)
       end

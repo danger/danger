@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "octokit"
 
 RSpec.describe Danger::LocalSetup do

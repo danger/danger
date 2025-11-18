@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require "danger/ci_source/local_only_git_repo"
 

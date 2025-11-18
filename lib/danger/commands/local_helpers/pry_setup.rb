@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class PrySetup
     def initialize(cork)
@@ -19,7 +21,7 @@ module Danger
 
     attr_reader :cork
 
-    DANGERFILE_COPY = "_Dangerfile.tmp".freeze
+    DANGERFILE_COPY = "_Dangerfile.tmp"
 
     def validate_pry_available(command)
       Kernel.require "pry"

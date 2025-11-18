@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Danger
   class Commits
     def initialize(base_head)
-      @base_head = base_head.strip.split(" ".freeze)
+      @base_head = base_head.strip.split(" ")
     end
 
     def base

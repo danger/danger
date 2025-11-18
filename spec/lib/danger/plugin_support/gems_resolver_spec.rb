@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "lib/danger/plugin_support/gems_resolver"
 
 RSpec.describe Danger::GemsResolver do

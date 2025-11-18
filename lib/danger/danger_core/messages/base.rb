@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class BaseMessage
     attr_accessor :message, :file, :line, :type

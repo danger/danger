@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/plugin_support/plugin"
 
 module Danger
@@ -167,7 +169,7 @@ module Danger
         path, line = path.split("#L")
         url_path = path.start_with?("/") ? path : "/#{path}"
         text = full_path ? path : File.basename(path)
-        url_path.gsub!(" ", "%20")
+        url_path = url_path.gsub(" ", "%20")
         line_ref = line ? "&line=#{line}" : ""
         create_markdown_link("#{repo}/commit/#{commit}?path=#{url_path}&_a=contents#{line_ref}", text)
       end

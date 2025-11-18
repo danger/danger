@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/danger_core/executor"
 
 # If you cannot find a method, please check spec/support/ci_helper.rb.

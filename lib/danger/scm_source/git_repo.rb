@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # For more info see: https://github.com/schacon/ruby-git
 
 require "git"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe String do
   describe "#danger_pluralize" do
     examples = [

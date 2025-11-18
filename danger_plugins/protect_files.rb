@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Files < Plugin
     def protect_files(path: nil, message: nil, fail_build: true)

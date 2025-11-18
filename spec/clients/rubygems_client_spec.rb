@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/clients/rubygems_client"
 
 RSpec.describe Danger::RubyGemsClient do

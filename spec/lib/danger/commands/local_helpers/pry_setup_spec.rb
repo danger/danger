@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/local_helpers/pry_setup"
 
 RSpec.describe Danger::PrySetup do

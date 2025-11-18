@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "lib/danger/plugin_support/plugin_file_resolver"
 
 RSpec.describe Danger::PluginFileResolver do

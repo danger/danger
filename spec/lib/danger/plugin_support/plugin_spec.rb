@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::Plugin do
   it "creates an instance name based on the class name" do
     class DangerTestClassNamePlugin < Danger::Plugin; end
