@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://circleci.com/docs/environment-variables
 require "uri"
 require "danger/ci_source/circle_api"

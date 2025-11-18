@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/github/github_review"
 
 module Danger

@@ -35,7 +35,7 @@ module Danger
       def inspect
         inspected = super
 
-        inspected.gsub!(@token, "********") if @token
+        inspected = inspected.gsub(@token, "********") if @token
 
         inspected
       end

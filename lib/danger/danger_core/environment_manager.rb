@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/ci_source"
 require "danger/request_sources/request_source"
 
@@ -19,12 +21,12 @@ module Danger
 
     # @return [String] danger's default head branch
     def self.danger_head_branch
-      "danger_head".freeze
+      "danger_head"
     end
 
     # @return [String] danger's default base branch
     def self.danger_base_branch
-      "danger_base".freeze
+      "danger_base"
     end
 
     def initialize(env, ui = nil, danger_id = "danger")
@@ -113,12 +115,12 @@ module Danger
     end
 
     def ui_display_no_request_source_error_message(ui, env, title, subtitle)
-      ui.title "Could not set up API to Code Review site for Danger\n".freeze
+      ui.title "Could not set up API to Code Review site for Danger\n"
       ui.puts title
       ui.puts subtitle
-      ui.puts "\nFound these keys in your ENV: #{env.keys.join(', '.freeze)}."
-      ui.puts "\nFailing the build, Danger cannot run without API access.".freeze
-      ui.puts "You can see more information at https://danger.systems/guides/getting_started.html".freeze
+      ui.puts "\nFound these keys in your ENV: #{env.keys.join(', ')}."
+      ui.puts "\nFailing the build, Danger cannot run without API access."
+      ui.puts "You can see more information at https://danger.systems/guides/getting_started.html"
     end
 
     def travis_note

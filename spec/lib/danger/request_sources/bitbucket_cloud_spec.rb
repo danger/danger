@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/bitbucket_cloud"
 require "danger/helpers/message_groups_array_helper"
 require "danger/danger_core/message_group"

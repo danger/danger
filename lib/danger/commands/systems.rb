@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Systems < Runner
     self.abstract_command = true

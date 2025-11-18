@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "ostruct"
 
 def run_in_repo_with_diff

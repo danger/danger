@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "claide"
 require "claide/informative_error"
 
@@ -79,7 +81,7 @@ module Danger
         # Escape markdown brackets
         description = description.gsub(/<|>/) { |bracket| "\\#{bracket}" }
 
-        md = "## Danger has errored"
+        md = +"## Danger has errored"
         md << "#{description}\n"
         md << "```#{stacktrace}```" if stacktrace
 
@@ -95,7 +97,7 @@ module Danger
       trace_line, description = parse_line_number_from_description
       latest_version = Danger.danger_outdated?
 
-      result[:description] = "\n[!] #{description}"
+      result[:description] = +"\n[!] #{description}"
       result[:description] << upgrade_message(latest_version) if latest_version
 
       return result unless backtrace && dsl_path && contents
@@ -112,7 +114,7 @@ module Danger
       first_line = line_numer.zero?
       last_line  = (line_numer == (lines.count - 1))
 
-      result[:stacktrace] = "\n"
+      result[:stacktrace] = +"\n"
       result[:stacktrace] << "#{indent}from #{trace_line.gsub(/:in.*$/, '')}\n"
       result[:stacktrace] << "#{indent}-------------------------------------------\n"
       result[:stacktrace] << "#{indent}#{lines[line_numer - 1]}" unless first_line

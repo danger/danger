@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/runner"
 require "danger/danger_core/executor"
 

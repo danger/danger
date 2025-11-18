@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Danger
   class RubyGemsClient
-    API_URL = "https://rubygems.org/api/v1/versions/danger/latest.json".freeze
-    DUMMY_VERSION = "0.0.0".freeze
+    API_URL = "https://rubygems.org/api/v1/versions/danger/latest.json"
+    DUMMY_VERSION = "0.0.0"
 
     def self.latest_danger_version
       require "json"

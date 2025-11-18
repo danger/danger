@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/support/repo_info"
 
 module Danger
@@ -20,7 +22,7 @@ module Danger
     attr_reader :remote_logs, :github_host
 
     def remote
-      remote_logs.lines.grep(/Fetch URL/)[0].split(": ".freeze, 2)[1]
+      remote_logs.lines.grep(/Fetch URL/)[0].split(": ", 2)[1]
     end
 
     def regexp

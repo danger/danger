@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://docs.microsoft.com/en-us/appcenter/build/custom/variables/
 require "uri"
 require "danger/request_sources/github/github"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Find max_num_violations in lib/danger/comment_generators/github.md.erb.
 class FindMaxNumViolations
   # Save ~ 5000 for contents other than violations to avoid exceeded 65536 max comment length limit.

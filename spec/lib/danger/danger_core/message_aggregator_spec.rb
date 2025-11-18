@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/danger_core/message_aggregator"
 require "danger/danger_core/messages/violation"
 

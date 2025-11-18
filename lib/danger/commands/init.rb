@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/init_helpers/interviewer"
 require "danger/danger_core/dangerfile_generator"
 require "danger/ci_source/local_git_repo"

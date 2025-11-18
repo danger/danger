@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/init"
 
 RSpec.describe Danger::Init do

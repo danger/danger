@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Dangerfile
     # Anything inside this module is considered public API, and in the future

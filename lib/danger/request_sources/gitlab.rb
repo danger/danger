@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "uri"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"

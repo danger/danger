@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/codefresh"
 
 RSpec.describe Danger::Codefresh do

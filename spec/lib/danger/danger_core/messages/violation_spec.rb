@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "./shared_examples"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"

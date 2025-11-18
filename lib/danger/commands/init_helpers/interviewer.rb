@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Interviewer
     attr_accessor :no_delay, :no_waiting, :ui

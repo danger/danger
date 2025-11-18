@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/circle"
 
 RSpec.describe Danger::CircleCI do

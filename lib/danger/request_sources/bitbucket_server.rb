@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_server_api"
 require "danger/request_sources/code_insights_api"

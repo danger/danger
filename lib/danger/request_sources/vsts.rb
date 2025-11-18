@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/helpers/comments_helper"
 require "danger/request_sources/vsts_api"
 

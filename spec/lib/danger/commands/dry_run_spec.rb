@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/dry_run"
 require "open3"
 

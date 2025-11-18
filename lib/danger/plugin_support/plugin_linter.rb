@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class PluginLinter
     # An internal class that is used to represent a rule for the linter.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/core_ext/file_list"
 
 RSpec.describe Danger::FileList do

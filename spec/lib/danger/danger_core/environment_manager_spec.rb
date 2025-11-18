@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/danger_core/environment_manager"
 
 RSpec.describe Danger::EnvironmentManager, use: :ci_helper do

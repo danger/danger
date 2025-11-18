@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/plugins/plugin_readme"
 
 RSpec.describe Danger::PluginReadme do

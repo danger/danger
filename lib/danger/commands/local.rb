@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/local_helpers/http_cache"
 require "danger/commands/local_helpers/local_setup"
 require "danger/commands/local_helpers/pry_setup"

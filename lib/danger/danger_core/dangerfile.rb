@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # So much was ripped direct from CocoaPods-Core - thanks!
 
 require "danger/danger_core/dangerfile_dsl"
@@ -185,8 +187,9 @@ module Danger
         contents.encode!("UTF-8")
       end
 
-      if contents.tr!("“”‘’‛", %(""'''))
-        # Changes have been made
+      sanitised_contents = contents.tr("“”‘’‛", %(""'''))
+      if sanitised_contents != contents
+        contents = sanitised_contents
         ui.puts "Your #{path.basename} has had smart quotes sanitised. " \
           "To avoid issues in the future, you should not use " \
           "TextEdit for editing it. If you are not using TextEdit, " \
@@ -271,7 +274,7 @@ module Danger
 
     def setup_for_running(base_branch, head_branch)
       env.ensure_danger_branches_are_setup
-      env.scm.diff_for_folder(".".freeze, from: base_branch, to: head_branch, lookup_top_level: true)
+      env.scm.diff_for_folder(".", from: base_branch, to: head_branch, lookup_top_level: true)
     end
 
     def run(base_branch, head_branch, dangerfile_path, danger_id, new_comment, remove_previous_comments, report_results = true)
