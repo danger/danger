@@ -13,6 +13,7 @@
 <!-- Your comment below here -->
 * Remove upper bound constraint on the git gem - [@andrewmarkle](https://github.com/andrewmarkle) [#1526](https://github.com/danger/danger/pull/1526)
 * Add "Add GitLab Merge Request support" again with fix - [@manicmaniac](https://github.com/manicmaniac) [#1522](https://github.com/danger/danger/pull/1522)
+* **Breaking** - Prevent danger pr and danger local from enforcing verbose flags - [@manicmaniac](https://github.com/manicmaniac) [#1424](https://github.com/danger/danger/pull/1424)
 <!-- Your comment above here -->
 
 ## 9.5.3
