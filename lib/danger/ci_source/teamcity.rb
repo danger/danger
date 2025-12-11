@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://www.jetbrains.com/teamcity/
 require "danger/request_sources/github/github"
 require "danger/request_sources/gitlab"

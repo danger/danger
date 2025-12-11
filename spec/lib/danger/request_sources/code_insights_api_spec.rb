@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/bitbucket_server"
 
 RSpec.describe Danger::RequestSources::CodeInsightsAPI, host: :bitbucket_server do

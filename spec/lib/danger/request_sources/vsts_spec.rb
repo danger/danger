@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/vsts"
 
 RSpec.describe Danger::RequestSources::VSTS, host: :vsts do

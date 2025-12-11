@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/concourse"
 
 RSpec.describe Danger::Concourse do

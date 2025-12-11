@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::DangerfileGitLabPlugin, host: :gitlab do
   let(:env) { stub_env.merge("CI_MERGE_REQUEST_IID" => 1) }
   let(:dangerfile) { testing_dangerfile(env) }

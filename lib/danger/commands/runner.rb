@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Runner < CLAide::Command
     require "danger/commands/init"

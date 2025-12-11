@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GetIgnoredViolation do
   describe "#call" do
     context "Without specific ignore sentence" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://semaphoreci.com/docs/available-environment-variables.html
 require "danger/request_sources/github/github"
 

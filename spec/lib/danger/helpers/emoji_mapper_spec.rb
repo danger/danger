@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::EmojiMapper do
   subject(:emoji_mapper) { described_class.new(template) }
 

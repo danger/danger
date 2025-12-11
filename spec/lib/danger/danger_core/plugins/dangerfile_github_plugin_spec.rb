@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::DangerfileGitHubPlugin, host: :github do
   describe "dsl" do
     before do

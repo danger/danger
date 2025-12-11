@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "danger/helpers/comments_helper"
 require "danger/danger_core/messages/violation"
 require "danger/danger_core/messages/markdown"
 require "danger/danger_core/message_group"
 
-SINGLE_TABLE_COMMENT = <<-EOS.freeze
+SINGLE_TABLE_COMMENT = <<-EOS
   Other comment content
   <table>
     <thead><tr><th width="50"></th><th width="100%">1 Error</th></tr></thead>
@@ -20,7 +22,7 @@ SINGLE_TABLE_COMMENT = <<-EOS.freeze
   </p>
 EOS
 
-MULTI_TABLE_COMMENT = <<-EOS.freeze
+MULTI_TABLE_COMMENT = <<-EOS
   Other comment content
   <table>
     <thead><tr><th width="50"></th><th width="100%">1 Error</th></tr></thead>
@@ -48,7 +50,7 @@ EOS
 
 GITHUB_MAX_COMMENT_LENGTH = 65_536
 
-SINGLE_TABLE_COMMENT_NEW_TABLE_IDENTIFIER = <<-EOS.freeze
+SINGLE_TABLE_COMMENT_NEW_TABLE_IDENTIFIER = <<-EOS
   Other comment content
   <table>
     <thead><tr><th width="50"></th><th data-danger-table="true" width="95%">1 Error</th></tr></thead>

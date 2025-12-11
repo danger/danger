@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::DangerfileBitbucketCloudPlugin, host: :bitbucket_cloud do
   let(:dangerfile) { testing_dangerfile }
   let(:plugin) { described_class.new(dangerfile) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class String
   # @return [String] the plural form of self determined by count
   def danger_pluralize(count)
@@ -6,10 +8,10 @@ class String
 
   # @return [String] converts to underscored, lowercase form
   def danger_underscore
-    self.gsub(/::/, "/".freeze).
-      gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2'.freeze).
-      gsub(/([a-z\d])([A-Z])/, '\1_\2'.freeze).
-      tr("-".freeze, "_".freeze).
+    self.gsub(/::/, "/").
+      gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
+      gsub(/([a-z\d])([A-Z])/, '\1_\2').
+      tr("-", "_").
       downcase
   end
 

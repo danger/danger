@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://semaphoreci.com/docs/available-environment-variables.html
 require "danger/request_sources/github/github"
 
@@ -35,7 +37,7 @@ module Danger
       return "" if env["CF_REPO_OWNER"].to_s.empty?
       return "" if env["CF_REPO_NAME"].to_s.empty?
 
-      "#{env['CF_REPO_OWNER']}/#{env['CF_REPO_NAME']}".downcase!
+      "#{env['CF_REPO_OWNER']}/#{env['CF_REPO_NAME']}".downcase
     end
 
     def initialize(env)

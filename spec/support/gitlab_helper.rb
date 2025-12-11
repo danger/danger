@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   module Support
     module GitLabHelper

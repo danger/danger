@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require "danger/ci_source/local_git_repo"
 require "ostruct"
@@ -71,7 +73,7 @@ RSpec.describe Danger::LocalGitRepo do
       it "returns the git logs correctly" do
         run_in_repo do
           result = source(valid_env)
-          expect(result.run_git("log --oneline -1000000".freeze).split("\n")).to match_array [
+          expect(result.run_git("log --oneline -1000000").split("\n")).to match_array [
             /#{git_sha_regex} Merge pull request #1234 from new-branch/,
             /#{git_sha_regex} adding file2/,
             /#{git_sha_regex} adding file1/
@@ -92,7 +94,7 @@ RSpec.describe Danger::LocalGitRepo do
 
             result = source(valid_env)
             logs = nil
-            expect { logs = result.run_git("log --oneline -1000000".freeze) }.to_not raise_error
+            expect { logs = result.run_git("log --oneline -1000000") }.to_not raise_error
             expect(logs.split("\n")).to match_array [
               /#{git_sha_regex} testing a non UTF-8 string/,
               /#{git_sha_regex} Merge pull request #1234 from new-branch/,

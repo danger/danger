@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/danger_core/environment_manager"
 require "danger/danger_core/plugins/dangerfile_danger_plugin"
 

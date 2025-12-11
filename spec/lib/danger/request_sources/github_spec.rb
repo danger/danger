@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/github/github"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"

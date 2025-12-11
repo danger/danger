@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
   subject(:dangerfile) { testing_dangerfile }
 

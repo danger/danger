@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/local_helpers/http_cache"
 require "danger/commands/local_helpers/pry_setup"
 require "faraday/http_cache"
@@ -7,8 +9,8 @@ require "tmpdir"
 
 module Danger
   class PR < Runner
-    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR. Usage: danger pr <URL>".freeze
-    self.command = "pr".freeze
+    self.summary = "Run the Dangerfile locally against Pull Requests (works with forks, too). Does not post to the PR. Usage: danger pr <URL>"
+    self.command = "pr"
 
     def self.options
       [

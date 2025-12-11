@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class DangerfileGenerator
     # returns the string for a Dangerfile based on a folder's contents'

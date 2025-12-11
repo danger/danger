@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://wiki.jenkins-ci.org/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-JenkinsSetEnvironmentVariables
 # https://wiki.jenkins-ci.org/display/JENKINS/GitHub+pull+request+builder+plugin
 require "danger/request_sources/github/github"

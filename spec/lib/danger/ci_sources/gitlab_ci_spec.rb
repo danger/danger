@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/gitlab_ci"
 
 RSpec.describe Danger::GitLabCI, host: :gitlab do

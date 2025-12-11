@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/support/find_repo_info_from_url"
 
 RSpec.describe Danger::FindRepoInfoFromURL do

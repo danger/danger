@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "kramdown"
 require "danger/helpers/comments_parsing_helper"
 require "danger/helpers/emoji_mapper"

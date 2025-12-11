@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/init_helpers/interviewer"
 
 RSpec.describe Danger::Interviewer do

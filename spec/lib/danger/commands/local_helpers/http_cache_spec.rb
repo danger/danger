@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/local_helpers/http_cache"
 
 TEST_CACHE_FILE = File.join(Dir.tmpdir, "http_cache_spec")

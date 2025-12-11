@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "claide_plugin"
 require "danger/commands/dangerfile/init"
 

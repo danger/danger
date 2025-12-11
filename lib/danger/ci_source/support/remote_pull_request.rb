@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class RemotePullRequest
     attr_reader :pull_request_id, :sha, :head, :base

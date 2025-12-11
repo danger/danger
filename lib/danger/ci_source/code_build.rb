@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
 require "danger/request_sources/github/github"
 

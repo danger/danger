@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://docs.codemagic.io/building/environment-variables/
 
 module Danger
