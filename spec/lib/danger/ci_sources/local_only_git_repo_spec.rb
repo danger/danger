@@ -9,12 +9,12 @@ RSpec.describe Danger::LocalOnlyGitRepo do
         `git remote add origin .`
         File.open("#{dir}/file1", "w") {}
         `git add .`
-        `git commit -m "adding file1"`
+        `git commit --no-gpg-sign -m "adding file1"`
         `git fetch`
         `git checkout -b feature_branch`
         File.open("#{dir}/file2", "w") {}
         `git add .`
-        `git commit -m "adding file2"`
+        `git commit --no-gpg-sign -m "adding file2"`
 
         yield
       end
