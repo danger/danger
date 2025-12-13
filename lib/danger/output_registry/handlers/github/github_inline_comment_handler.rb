@@ -40,11 +40,7 @@ module Danger
           # @return [Hash] Hash with warnings, errors, messages keys
           #
           def filter_inline_violations
-            {
-              warnings: warnings.select { |v| v.file && v.line },
-              errors: errors.select { |v| v.file && v.line },
-              messages: messages.select { |v| v.file && v.line }
-            }
+            filter_violations { |v| v.file && v.line }
           end
 
           # Posts inline comments to the PR.
@@ -73,7 +69,7 @@ module Danger
               )
             rescue StandardError => e
               # Log but continue with other violations
-              warn("Failed to post inline comment: #{e.message}")
+              log_warning("Failed to post inline comment: #{e.message}")
             end
           end
 

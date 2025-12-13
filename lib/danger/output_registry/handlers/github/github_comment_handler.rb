@@ -43,11 +43,7 @@ module Danger
           # @return [Hash] Hash with warnings, errors, messages keys
           #
           def filter_comment_violations
-            {
-              warnings: warnings.select { |v| v.file.nil? },
-              errors: errors.select { |v| v.file.nil? },
-              messages: messages.select { |v| v.file.nil? }
-            }
+            filter_violations { |v| v.file.nil? }
           end
 
           # Generates the comment body.
@@ -118,6 +114,8 @@ module Danger
                 comment_body
               )
             end
+          rescue StandardError => e
+            log_warning("Failed to post comment: #{e.message}")
           end
         end
       end
