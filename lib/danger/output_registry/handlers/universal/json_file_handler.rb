@@ -11,6 +11,11 @@ module Danger
         # Exports violations in JSON format for consumption by other tools and CI systems.
         # File location controlled via DANGER_JSON_OUTPUT_PATH environment variable.
         #
+        # Pretty-printing can be controlled via DANGER_JSON_PRETTY environment variable:
+        # - "1", "true", "yes": Always pretty-print
+        # - "0", "false", "no": Always compact
+        # - not set: Auto-detect based on output size (pretty if > 1KB)
+        #
         class JSONFileHandler < OutputHandler
           # Executes the handler to write JSON output file.
           #
@@ -26,6 +31,9 @@ module Danger
           protected
 
           # Writes violations to a JSON file.
+          #
+          # Uses smart formatting: compact by default, pretty-printed if output > 1KB
+          # or if DANGER_JSON_PRETTY environment variable is set.
           #
           # @param path [String] File path to write to
           # @return [void]
@@ -45,7 +53,8 @@ module Danger
               }
             }
 
-            File.write(path, JSON.pretty_generate(output))
+            json_content = format_json(output)
+            File.write(path, json_content)
             log_warning("Wrote JSON output to #{path}")
           rescue StandardError => e
             log_warning("Failed to write JSON file: #{e.message}")
@@ -62,6 +71,33 @@ module Danger
             return if File.writable?(dir) || dir == "."
 
             raise "Output directory '#{dir}' is not writable"
+          end
+
+          # Formats hash as JSON with smart pretty-printing.
+          #
+          # Uses compact JSON for small outputs (< 1KB), pretty-printed for larger.
+          # Can be controlled via DANGER_JSON_PRETTY environment variable:
+          # - "1"/"true"/"yes": Always pretty-print
+          # - "0"/"false"/"no": Always compact
+          # - unset: Auto-detect based on size
+          #
+          # @param hash [Hash] Data to format as JSON
+          # @return [String] JSON string
+          #
+          def format_json(hash)
+            compact_json = JSON.generate(hash)
+
+            # Check if pretty-printing is explicitly requested
+            pretty_env = ENV["DANGER_JSON_PRETTY"]&.downcase
+            case pretty_env
+            when "1", "true", "yes"
+              return JSON.pretty_generate(hash)
+            when "0", "false", "no"
+              return compact_json
+            end
+
+            # Auto-detect: pretty-print if compact is large (> 1KB)
+            compact_json.size > 1024 ? JSON.pretty_generate(hash) : compact_json
           end
 
           # Converts violations to JSON-serializable format.
