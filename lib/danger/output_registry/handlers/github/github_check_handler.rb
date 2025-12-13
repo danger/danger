@@ -70,7 +70,6 @@ module Danger
           # @return [Array<Hash>] Array of annotation hashes
           #
           def build_annotations
-            all_violations = [errors, warnings, messages].flatten.compact
             annotations = []
 
             all_violations.each do |violation|

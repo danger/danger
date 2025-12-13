@@ -28,7 +28,7 @@ module Danger
           # @return [void]
           #
           def print_violations
-            puts "\n" + ("=" * 60)
+            puts "\n#{'=' * 60}"
             puts "Danger Review Results"
             puts "=" * 60
 
@@ -40,7 +40,7 @@ module Danger
               puts "\n✅ No violations found!"
             end
 
-            puts "=" * 60 + "\n"
+            puts "#{'=' * 60}\n"
           end
 
           # Prints a section of violations.

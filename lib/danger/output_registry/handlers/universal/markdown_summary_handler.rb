@@ -85,10 +85,25 @@ module Danger
           # @return [void]
           #
           def write_markdown_file(path)
+            validate_output_path(path)
+
             File.write(path, generate_markdown)
             log_warning("Wrote markdown summary to #{path}")
           rescue StandardError => e
             log_warning("Failed to write markdown file: #{e.message}")
+          end
+
+          # Validates that the output path is writable.
+          #
+          # @param path [String] File path to validate
+          # @return [void]
+          # @raise [StandardError] if path is not writable
+          #
+          def validate_output_path(path)
+            dir = File.dirname(path)
+            return if File.writable?(dir) || dir == "."
+
+            raise "Output directory '#{dir}' is not writable"
           end
         end
       end

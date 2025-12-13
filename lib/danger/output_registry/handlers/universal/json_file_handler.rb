@@ -31,6 +31,8 @@ module Danger
           # @return [void]
           #
           def write_json_file(path)
+            validate_output_path(path)
+
             output = {
               errors: violations_to_json(errors),
               warnings: violations_to_json(warnings),
@@ -47,6 +49,19 @@ module Danger
             log_warning("Wrote JSON output to #{path}")
           rescue StandardError => e
             log_warning("Failed to write JSON file: #{e.message}")
+          end
+
+          # Validates that the output path is writable.
+          #
+          # @param path [String] File path to validate
+          # @return [void]
+          # @raise [StandardError] if path is not writable
+          #
+          def validate_output_path(path)
+            dir = File.dirname(path)
+            return if File.writable?(dir) || dir == "."
+
+            raise "Output directory '#{dir}' is not writable"
           end
 
           # Converts violations to JSON-serializable format.

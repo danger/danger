@@ -74,9 +74,9 @@ module Danger
               description: description.truncate(140)
             )
           rescue Octokit::Unauthorized => e
-            warn("Unable to post commit status: #{e.message}")
+            log_warning("Unable to post commit status: #{e.message}")
           rescue StandardError => e
-            raise "Failed to post commit status: #{e.message}"
+            log_warning("Failed to post commit status: #{e.message}")
           end
         end
       end

@@ -26,10 +26,12 @@ module Danger
           WARNINGS_SECTION_TITLE = "Warnings"
           MESSAGES_SECTION_TITLE = "Messages"
 
-          # Violation Type Emojis
-          ERROR_EMOJI = "🚫"
-          WARNING_EMOJI = "⚠️"
-          MESSAGE_EMOJI = "💬"
+          # Violation Type Mappings (emoji + level for GitHub API)
+          TYPE_MAPPINGS = {
+            error: { emoji: "🚫", level: "failure" },
+            warning: { emoji: "⚠️", level: "notice" },
+            message: { emoji: "💬", level: "notice" }
+          }.freeze
 
           # Status Configuration
           FAILURE_STATUS = "failure"
