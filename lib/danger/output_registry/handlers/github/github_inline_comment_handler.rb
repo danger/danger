@@ -56,9 +56,9 @@ module Danger
             pr_number = request_source.pr_json["number"]
             repo_slug = request_source.repo_slug
 
-            all_violations = [violations[:errors], violations[:warnings], violations[:messages]].flatten.compact
+            violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
 
-            all_violations.each do |violation|
+            violations_list.each do |violation|
               body = "#{violation.message} (#{violation_type_emoji(violation.type)})"
 
               client.create_pull_request_review_comment(
@@ -81,11 +81,8 @@ module Danger
           # @return [String] Emoji representation
           #
           def violation_type_emoji(type)
-            case type
-            when :error then "🚫"
-            when :warning then "⚠️"
-            else "💬"
-            end
+            mapping = GitHubConfig::TYPE_MAPPINGS[type] || GitHubConfig::TYPE_MAPPINGS[:message]
+            mapping[:emoji]
           end
         end
       end
