@@ -216,6 +216,26 @@ module Danger
       def all_violations
         errors + warnings + messages
       end
+
+      # Extracts GitHub PR metadata from the request source.
+      #
+      # Provides consistent access to commonly used GitHub PR information
+      # across handlers to avoid duplicating extraction logic.
+      #
+      # @return [Hash] Hash with :client, :repo_slug, :commit_sha, :pr_number
+      # @return [nil] if not a GitHub context
+      #
+      def github_pr_metadata
+        request_source = github_request_source
+        return nil unless request_source
+
+        {
+          client: request_source.client,
+          repo_slug: request_source.repo_slug,
+          commit_sha: request_source.pr_json["head"]["sha"],
+          pr_number: request_source.pr_json["number"]
+        }
+      end
     end
   end
 end

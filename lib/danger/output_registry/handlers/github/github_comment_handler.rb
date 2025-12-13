@@ -88,20 +88,20 @@ module Danger
           # @param comment_body [String] The comment body
           # @return [void]
           #
-          def post_or_update_comment(request_source, comment_body)
-            client = request_source.client
-            pr_number = request_source.pr_json["number"]
+          def post_or_update_comment(_request_source, comment_body)
+            metadata = github_pr_metadata
+            return unless metadata
 
-            existing_comments = client.issue_comments(
-              request_source.repo_slug,
-              pr_number
+            existing_comments = metadata[:client].issue_comments(
+              metadata[:repo_slug],
+              metadata[:pr_number]
             )
 
             previous_comment = existing_comments.find do |comment|
               comment.body.include?(GitHubConfig::PR_REVIEW_HEADER)
             end
 
-            update_or_create_comment(client, request_source, pr_number, previous_comment, comment_body)
+            update_or_create_comment(metadata, previous_comment, comment_body)
           rescue StandardError => e
             log_warning("Failed to post comment: #{e.message}")
           end
@@ -112,32 +112,30 @@ module Danger
           # a new comment if update fails (handles race condition where comment
           # was deleted between finding and updating).
           #
-          # @param client [Octokit::Client] The GitHub API client
-          # @param request_source [Danger::RequestSources::GitHub] The GitHub request source
-          # @param pr_number [Integer] The PR number
+          # @param metadata [Hash] GitHub PR metadata with :client, :repo_slug, :pr_number
           # @param previous_comment [Sawyer::Resource, nil] Previous comment if it exists
           # @param comment_body [String] The comment body
           # @return [void]
           #
-          def update_or_create_comment(client, request_source, pr_number, previous_comment, comment_body)
+          def update_or_create_comment(metadata, previous_comment, comment_body)
             if previous_comment
-              client.update_issue_comment(
-                request_source.repo_slug,
+              metadata[:client].update_issue_comment(
+                metadata[:repo_slug],
                 previous_comment.id,
                 comment_body
               )
             else
-              client.add_comment(
-                request_source.repo_slug,
-                pr_number,
+              metadata[:client].add_comment(
+                metadata[:repo_slug],
+                metadata[:pr_number],
                 comment_body
               )
             end
           rescue Octokit::NotFound
             # Comment was deleted between finding and updating, create new one
-            client.add_comment(
-              request_source.repo_slug,
-              pr_number,
+            metadata[:client].add_comment(
+              metadata[:repo_slug],
+              metadata[:pr_number],
               comment_body
             )
           end

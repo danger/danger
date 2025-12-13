@@ -61,17 +61,16 @@ module Danger
           # @param description [String] Status description
           # @return [void]
           #
-          def post_commit_status(request_source, status, description)
-            client = request_source.client
-            commit_sha = request_source.pr_json["head"]["sha"]
-            repo_slug = request_source.repo_slug
+          def post_commit_status(_request_source, status, description)
+            metadata = github_pr_metadata
+            return unless metadata
 
-            client.create_status(
-              repo_slug,
-              commit_sha,
+            metadata[:client].create_status(
+              metadata[:repo_slug],
+              metadata[:commit_sha],
               status,
-              context: "danger/review",
-              description: description.truncate(140)
+              context: GitHubConfig::COMMIT_STATUS_CONTEXT,
+              description: description.truncate(GitHubConfig::COMMIT_STATUS_MAX_LENGTH)
             )
           rescue Octokit::Unauthorized => e
             log_warning("Unable to post commit status: #{e.message}")

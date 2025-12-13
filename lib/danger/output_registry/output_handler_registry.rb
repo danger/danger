@@ -225,6 +225,21 @@ module Danger
 
       private
 
+      # Platform detection mapping: platform symbol to detection logic.
+      # Each detector receives the request_source and returns true if it matches.
+      PLATFORM_DETECTORS = {
+        github: ->(source) { source.class.name.include?("GitHub") },
+        gitlab: ->(source) { source.class.name.include?("GitLab") },
+        bitbucket: ->(source) { source.class.name.include?("Bitbucket") }
+      }.freeze
+
+      # Environment variable mappings for CI/CD detection.
+      # Maps platform to environment variable that indicates that platform.
+      PLATFORM_ENV_VARS = {
+        github: "GITHUB_ACTIONS",
+        gitlab: "GITLAB_CI"
+      }.freeze
+
       # Detects the current platform based on environment and context.
       #
       # Detection priority:
@@ -236,41 +251,15 @@ module Danger
       # @return [Symbol] Detected platform (:github, :gitlab, :bitbucket, or :local)
       #
       def detect_platform
-        return :github if ENV["GITHUB_ACTIONS"] || github_platform?
-        return :gitlab if ENV["GITLAB_CI"] || gitlab_platform?
-        return :bitbucket if bitbucket_platform?
+        # Check environment variables first (faster)
+        PLATFORM_ENV_VARS.each { |platform, env_var| return platform if ENV[env_var] }
 
-        :local
-      end
+        # Fall back to request source detection
+        request_source = @context&.env&.request_source
+        return :local unless request_source
 
-      # Checks if context indicates GitHub platform.
-      #
-      # @return [Boolean]
-      #
-      def github_platform?
-        return false unless @context&.env&.request_source
-
-        @context.env.request_source.class.name.include?("GitHub")
-      end
-
-      # Checks if context indicates GitLab platform.
-      #
-      # @return [Boolean]
-      #
-      def gitlab_platform?
-        return false unless @context&.env&.request_source
-
-        @context.env.request_source.class.name.include?("GitLab")
-      end
-
-      # Checks if context indicates Bitbucket platform.
-      #
-      # @return [Boolean]
-      #
-      def bitbucket_platform?
-        return false unless @context&.env&.request_source
-
-        @context.env.request_source.class.name.include?("Bitbucket")
+        detected = PLATFORM_DETECTORS.find { |_, detector| detector.call(request_source) }
+        detected ? detected.first : :local
       end
 
       # Returns default handler names for GitHub platform.

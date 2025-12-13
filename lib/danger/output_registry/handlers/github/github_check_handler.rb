@@ -35,10 +35,9 @@ module Danger
           # @param request_source [Danger::RequestSources::GitHub] The GitHub request source
           # @return [void]
           #
-          def create_check_run(request_source)
-            client = request_source.client
-            repo_slug = request_source.repo_slug
-            commit_sha = request_source.pr_json["head"]["sha"]
+          def create_check_run(_request_source)
+            metadata = github_pr_metadata
+            return unless metadata
 
             # Build annotations
             annotations = build_annotations
@@ -49,10 +48,10 @@ module Danger
 
             # Create check run (GitHub limits to 50 annotations per request)
             annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST) do |batch|
-              client.create_check_run(
-                repo_slug,
+              metadata[:client].create_check_run(
+                metadata[:repo_slug],
                 name: GitHubConfig::CHECK_RUN_NAME,
-                head_sha: commit_sha,
+                head_sha: metadata[:commit_sha],
                 conclusion: conclusion,
                 output: {
                   title: GitHubConfig::CHECK_RUN_TITLE,
