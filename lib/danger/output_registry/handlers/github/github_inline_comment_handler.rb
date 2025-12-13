@@ -51,21 +51,20 @@ module Danger
           # @param violations [Hash] Violations with file/line info
           # @return [void]
           #
-          def post_inline_comments(request_source, violations)
-            client = request_source.client
-            pr_number = request_source.pr_json["number"]
-            repo_slug = request_source.repo_slug
+          def post_inline_comments(_request_source, violations)
+            metadata = github_pr_metadata
+            return unless metadata
 
             violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
 
             violations_list.each do |violation|
               body = "#{violation.message} (#{violation_type_emoji(violation.type)})"
 
-              client.create_pull_request_review_comment(
-                repo_slug,
-                pr_number,
+              metadata[:client].create_pull_request_review_comment(
+                metadata[:repo_slug],
+                metadata[:pr_number],
                 body,
-                request_source.pr_json["head"]["sha"],
+                metadata[:commit_sha],
                 violation.file,
                 violation.line
               )
