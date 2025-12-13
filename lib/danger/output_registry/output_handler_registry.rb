@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "output_handler"
+
+# Load implemented handlers
+Dir.glob("#{__dir__}/handlers/*/*.rb").each { |file| require file }
+
 module Danger
   module OutputRegistry
     # Registry for discovering and executing output handlers.
