@@ -111,11 +111,8 @@ module Danger
           # @return [String] Annotation level: "failure", "warning", or "notice"
           #
           def annotation_level(type)
-            case type
-            when :error then "failure"
-            when :warning then "warning"
-            else "notice"
-            end
+            mapping = GitHubConfig::TYPE_MAPPINGS[type] || GitHubConfig::TYPE_MAPPINGS[:message]
+            mapping[:annotation_level]
           end
         end
       end
