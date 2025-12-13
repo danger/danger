@@ -44,64 +44,69 @@ module Danger
       #
       AVAILABLE_HANDLERS = {
         # GitHub Handlers
-        github_status: {
-          class_name: "Danger::OutputRegistry::Handlers::GitHubStatusHandler",
-          platforms: [:github],
-          description: "Updates GitHub commit status based on violations"
-        },
         github_check: {
-          class_name: "Danger::OutputRegistry::Handlers::GitHubCheckHandler",
+          class_name: "Danger::OutputRegistry::Handlers::GitHub::GitHubCheckHandler",
           platforms: [:github],
           description: "Creates GitHub Check Run with annotations"
         },
         github_comment: {
-          class_name: "Danger::OutputRegistry::Handlers::GitHubCommentHandler",
+          class_name: "Danger::OutputRegistry::Handlers::GitHub::GitHubCommentHandler",
           platforms: [:github],
           description: "Posts violations as GitHub PR comment"
         },
+        github_inline: {
+          class_name: "Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHandler",
+          platforms: [:github],
+          description: "Posts violations as GitHub inline PR comments"
+        },
+        github_status: {
+          class_name: "Danger::OutputRegistry::Handlers::GitHub::GitHubCommitStatusHandler",
+          platforms: [:github],
+          description: "Updates GitHub commit status based on violations"
+        },
 
-        # GitLab Handlers
+        # GitLab Handlers (Phase 2 - not yet implemented)
         gitlab_inline: {
-          class_name: "Danger::OutputRegistry::Handlers::GitLabInlineHandler",
+          class_name: "Danger::OutputRegistry::Handlers::GitLab::GitLabInlineCommentHandler",
           platforms: [:gitlab],
           description: "Posts violations as GitLab inline MR comments"
         },
         gitlab_comment: {
-          class_name: "Danger::OutputRegistry::Handlers::GitLabCommentHandler",
+          class_name: "Danger::OutputRegistry::Handlers::GitLab::GitLabCommentHandler",
           platforms: [:gitlab],
           description: "Posts violations as GitLab MR discussion"
         },
 
-        # Bitbucket Handlers
+        # Bitbucket Handlers (Phase 2 - not yet implemented)
         bitbucket_inline: {
-          class_name: "Danger::OutputRegistry::Handlers::BitbucketInlineHandler",
+          class_name: "Danger::OutputRegistry::Handlers::BitbucketCloud::BitbucketCloudInlineCommentHandler",
           platforms: [:bitbucket],
-          description: "Posts violations as Bitbucket inline PR comments"
+          description: "Posts violations as Bitbucket Cloud inline PR comments"
         },
         bitbucket_comment: {
-          class_name: "Danger::OutputRegistry::Handlers::BitbucketCommentHandler",
+          class_name: "Danger::OutputRegistry::Handlers::BitbucketCloud::BitbucketCloudCommentHandler",
           platforms: [:bitbucket],
-          description: "Posts violations as Bitbucket PR comment"
+          description: "Posts violations as Bitbucket Cloud PR comment"
         },
 
-        # Local/Universal Handlers
+        # Local/Universal Handlers (Phase 3 - not yet implemented)
         console: {
-          class_name: "Danger::OutputRegistry::Handlers::ConsoleHandler",
+          class_name: "Danger::OutputRegistry::Handlers::Universal::ConsoleHandler",
           platforms: %i(local github gitlab bitbucket),
           description: "Outputs violations to console/stdout"
         },
         json_file: {
-          class_name: "Danger::OutputRegistry::Handlers::JSONFileHandler",
+          class_name: "Danger::OutputRegistry::Handlers::Universal::JSONFileHandler",
           platforms: %i(local github gitlab bitbucket),
           description: "Writes violations to JSON file"
         },
         junit_xml: {
-          class_name: "Danger::OutputRegistry::Handlers::JUnitXMLHandler",
+          class_name: "Danger::OutputRegistry::Handlers::Universal::JUnitXMLHandler",
           platforms: %i(local github gitlab bitbucket),
           description: "Writes violations in JUnit XML format"
         },
         markdown_summary: {
-          class_name: "Danger::OutputRegistry::Handlers::MarkdownSummaryHandler",
+          class_name: "Danger::OutputRegistry::Handlers::Universal::MarkdownSummaryHandler",
           platforms: %i(local github gitlab bitbucket),
           description: "Generates markdown summary of violations"
         }

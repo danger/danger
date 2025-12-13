@@ -138,6 +138,73 @@ module Danger
       def violations?
         warnings.any? || errors.any? || messages.any?
       end
+
+      # Alias for violations? for backwards compatibility.
+      #
+      # @return [Boolean] true if any violations exist
+      #
+      alias has_violations? violations?
+
+      # Logs a warning message.
+      #
+      # Uses the UI mechanism from context if available, falls back to puts.
+      #
+      # @param message [String] The message to log
+      # @return [void]
+      #
+      def log_warning(message)
+        if @context&.ui.respond_to?(:warn)
+          @context.ui.warn(message)
+        else
+          puts("⚠️  #{message}")
+        end
+      end
+
+      # Filters violations by a given condition.
+      #
+      # Returns a hash of violations filtered by the provided condition block.
+      # The condition is applied to each violation to determine inclusion.
+      #
+      # @example Filter violations with file information
+      #   violations = filter_violations { |v| v.file && v.line }
+      #
+      # @example Filter violations without file information
+      #   violations = filter_violations { |v| v.file.nil? }
+      #
+      # @yield [violation] Each violation is passed to the block
+      # @yieldparam violation [Object] A violation object
+      # @yieldreturn [Boolean] true to include the violation, false to exclude
+      #
+      # @return [Hash<Symbol, Array>] Hash with :warnings, :errors, :messages keys
+      #
+      def filter_violations
+        return {} unless block_given?
+
+        {
+          warnings: warnings.select { |v| yield(v) },
+          errors: errors.select { |v| yield(v) },
+          messages: messages.select { |v| yield(v) }
+        }
+      end
+
+      # Gets the GitHub request source if this is a GitHub context.
+      #
+      # @return [Danger::RequestSources::GitHub, nil] The GitHub request source, or nil if not GitHub
+      #
+      def github_request_source
+        request_source = @context&.env&.request_source
+        return nil unless request_source&.kind_of?(::Danger::RequestSources::GitHub)
+
+        request_source
+      end
+
+      # Checks if this is a GitHub context.
+      #
+      # @return [Boolean] true if the context is GitHub
+      #
+      def github?
+        !github_request_source.nil?
+      end
     end
   end
 end

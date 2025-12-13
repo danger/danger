@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "github_config"
+
 module Danger
   module OutputRegistry
     module Handlers
@@ -14,21 +16,16 @@ module Danger
         #   handler.execute if handler.enabled?
         #
         class GitHubCheckHandler < OutputHandler
-          # Maximum annotations per check run request (GitHub API limit)
-          MAX_ANNOTATIONS_PER_REQUEST = 50
-
           # Executes the handler to post GitHub Check Run.
           #
           # @return [void]
           #
           def execute
             return unless has_violations?
-
-            request_source = context.env.request_source
-            return unless request_source.kind_of?(::Danger::RequestSources::GitHub)
+            return unless github?
 
             # Create check run with annotations
-            create_check_run(request_source)
+            create_check_run(github_request_source)
           end
 
           protected
@@ -51,21 +48,21 @@ module Danger
             summary = build_summary
 
             # Create check run (GitHub limits to 50 annotations per request)
-            annotations.each_slice(MAX_ANNOTATIONS_PER_REQUEST) do |batch|
+            annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST) do |batch|
               client.create_check_run(
                 repo_slug,
-                name: "Danger",
+                name: GitHubConfig::CHECK_RUN_NAME,
                 head_sha: commit_sha,
                 conclusion: conclusion,
                 output: {
-                  title: "Danger Review",
+                  title: GitHubConfig::CHECK_RUN_TITLE,
                   summary: summary,
                   annotations: batch
                 }
               )
             end
           rescue StandardError => e
-            warn("Failed to create check run: #{e.message}")
+            log_warning("Failed to create check run: #{e.message}")
           end
 
           # Builds annotations for violations.
@@ -103,7 +100,7 @@ module Danger
             parts << "#{messages.count} message(s)" if messages.any?
 
             if parts.empty?
-              "No violations found"
+              GitHubConfig::CHECK_RUN_NO_VIOLATIONS
             else
               "Found #{parts.join(', ')}"
             end
