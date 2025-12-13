@@ -3,7 +3,7 @@
 require_relative "output_handler"
 
 # Load implemented handlers
-Dir.glob("#{__dir__}/handlers/*/*.rb").each { |file| require file }
+Dir.glob("#{__dir__}/handlers/*/*.rb").sort.each { |file| require file }
 
 module Danger
   module OutputRegistry

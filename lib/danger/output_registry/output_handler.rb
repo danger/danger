@@ -177,13 +177,13 @@ module Danger
       #
       # @return [Hash<Symbol, Array>] Hash with :warnings, :errors, :messages keys
       #
-      def filter_violations
-        return {} unless block_given?
+      def filter_violations(&condition)
+        return {} unless condition
 
         {
-          warnings: warnings.select { |v| yield(v) },
-          errors: errors.select { |v| yield(v) },
-          messages: messages.select { |v| yield(v) }
+          warnings: warnings.select(&condition),
+          errors: errors.select(&condition),
+          messages: messages.select(&condition)
         }
       end
 
@@ -193,7 +193,7 @@ module Danger
       #
       def github_request_source
         request_source = @context&.env&.request_source
-        return nil unless request_source&.kind_of?(::Danger::RequestSources::GitHub)
+        return nil unless request_source.kind_of?(::Danger::RequestSources::GitHub)
 
         request_source
       end
@@ -204,6 +204,17 @@ module Danger
       #
       def github?
         !github_request_source.nil?
+      end
+
+      # Returns all violations as a single flat array.
+      #
+      # Combines errors, warnings, and messages into one array for cases
+      # where violation type doesn't matter and you just need all issues.
+      #
+      # @return [Array] Array of all violations in order: errors, warnings, messages
+      #
+      def all_violations
+        errors + warnings + messages
       end
     end
   end

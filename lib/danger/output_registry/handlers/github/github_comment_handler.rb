@@ -56,32 +56,30 @@ module Danger
           def generate_comment_body(violations)
             return nil if violations.values.all?(&:empty?)
 
-            body = "Danger has reviewed this PR:\n\n"
+            parts = [GitHubConfig::PR_REVIEW_HEADER]
 
             if violations[:errors].any?
-              body += "## 🚫 Errors\n\n"
-              violations[:errors].each do |error|
-                body += "- #{error.message}\n"
-              end
-              body += "\n"
+              parts << ""
+              parts << "## 🚫 #{GitHubConfig::ERRORS_SECTION_TITLE}"
+              parts << ""
+              violations[:errors].each { |error| parts << "- #{error.message}" }
             end
 
             if violations[:warnings].any?
-              body += "## ⚠️ Warnings\n\n"
-              violations[:warnings].each do |warning|
-                body += "- #{warning.message}\n"
-              end
-              body += "\n"
+              parts << ""
+              parts << "## ⚠️ #{GitHubConfig::WARNINGS_SECTION_TITLE}"
+              parts << ""
+              violations[:warnings].each { |warning| parts << "- #{warning.message}" }
             end
 
             if violations[:messages].any?
-              body += "## 💬 Messages\n\n"
-              violations[:messages].each do |message|
-                body += "- #{message.message}\n"
-              end
+              parts << ""
+              parts << "## 💬 #{GitHubConfig::MESSAGES_SECTION_TITLE}"
+              parts << ""
+              violations[:messages].each { |message| parts << "- #{message.message}" }
             end
 
-            body
+            parts.join("\n")
           end
 
           # Posts or updates the comment on the PR.
@@ -100,9 +98,28 @@ module Danger
             )
 
             previous_comment = existing_comments.find do |comment|
-              comment.body.include?("Danger has reviewed this PR")
+              comment.body.include?(GitHubConfig::PR_REVIEW_HEADER)
             end
 
+            update_or_create_comment(client, request_source, pr_number, previous_comment, comment_body)
+          rescue StandardError => e
+            log_warning("Failed to post comment: #{e.message}")
+          end
+
+          # Updates existing comment or creates new one with fallback.
+          #
+          # Attempts to update if previous comment exists, falls back to creating
+          # a new comment if update fails (handles race condition where comment
+          # was deleted between finding and updating).
+          #
+          # @param client [Octokit::Client] The GitHub API client
+          # @param request_source [Danger::RequestSources::GitHub] The GitHub request source
+          # @param pr_number [Integer] The PR number
+          # @param previous_comment [Sawyer::Resource, nil] Previous comment if it exists
+          # @param comment_body [String] The comment body
+          # @return [void]
+          #
+          def update_or_create_comment(client, request_source, pr_number, previous_comment, comment_body)
             if previous_comment
               client.update_issue_comment(
                 request_source.repo_slug,
@@ -116,8 +133,13 @@ module Danger
                 comment_body
               )
             end
-          rescue StandardError => e
-            log_warning("Failed to post comment: #{e.message}")
+          rescue Octokit::NotFound
+            # Comment was deleted between finding and updating, create new one
+            client.add_comment(
+              request_source.repo_slug,
+              pr_number,
+              comment_body
+            )
           end
         end
       end

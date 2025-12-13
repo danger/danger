@@ -29,6 +29,8 @@ module Danger
           # @return [void]
           #
           def write_junit_file(path)
+            validate_output_path(path)
+
             total_tests = errors.count + warnings.count + messages.count
             total_failures = errors.count
             total_skipped = warnings.count
@@ -39,6 +41,19 @@ module Danger
             log_warning("Wrote JUnit XML output to #{path}")
           rescue StandardError => e
             log_warning("Failed to write JUnit XML file: #{e.message}")
+          end
+
+          # Validates that the output path is writable.
+          #
+          # @param path [String] File path to validate
+          # @return [void]
+          # @raise [StandardError] if path is not writable
+          #
+          def validate_output_path(path)
+            dir = File.dirname(path)
+            return if File.writable?(dir) || dir == "."
+
+            raise "Output directory '#{dir}' is not writable"
           end
 
           # Builds JUnit XML document.
@@ -73,13 +88,22 @@ module Danger
             parts.join("\n")
           end
 
+          # Extracts location string from a violation.
+          #
+          # @param violation [Object] Violation to extract location from
+          # @return [String] Location string " (file:line)" or empty string
+          #
+          def violation_location(violation)
+            violation.file && violation.line ? " (#{violation.file}:#{violation.line})" : ""
+          end
+
           # Builds a failed test case.
           #
           # @param violation [Object] Violation to build case for
           # @return [String] XML test case
           #
           def build_failure_case(violation)
-            location = violation.file && violation.line ? " (#{violation.file}:#{violation.line})" : ""
+            location = violation_location(violation)
             %(<testcase name="error: #{escape_xml(violation.message)}"><failure>#{escape_xml(violation.message)}#{escape_xml(location)}</failure></testcase>)
           end
 
@@ -89,7 +113,7 @@ module Danger
           # @return [String] XML test case
           #
           def build_skipped_case(violation)
-            location = violation.file && violation.line ? " (#{violation.file}:#{violation.line})" : ""
+            location = violation_location(violation)
             %(<testcase name="warning: #{escape_xml(violation.message)}"><skipped>#{escape_xml(violation.message)}#{escape_xml(location)}</skipped></testcase>)
           end
 
@@ -99,7 +123,7 @@ module Danger
           # @return [String] XML test case
           #
           def build_passed_case(violation)
-            location = violation.file && violation.line ? " (#{violation.file}:#{violation.line})" : ""
+            location = violation_location(violation)
             %(<testcase name="message: #{escape_xml(violation.message)}">#{escape_xml(location)}</testcase>)
           end
 
