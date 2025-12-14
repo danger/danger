@@ -26,12 +26,9 @@ module Danger
             request_source = context.env.request_source
             return unless request_source.kind_of?(::Danger::RequestSources::GitHub)
 
-            # Filter to inline violations (those with file and line)
             inline_violations = filter_inline_violations
-
             return if inline_violations.values.all?(&:empty?)
 
-            # Post inline comments
             post_inline_comments(request_source, inline_violations)
           end
 
@@ -56,8 +53,6 @@ module Danger
             return unless metadata
 
             violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
-
-            # Fetch PR diff to map line numbers to diff positions
             diff_map = fetch_diff_position_map(metadata)
             return unless diff_map
 
@@ -95,7 +90,6 @@ module Danger
             diff_map = {}
 
             begin
-              # Fetch the PR diff
               diff_response = metadata[:client].pull_request_files(
                 metadata[:repo_slug],
                 metadata[:pr_number]
@@ -104,8 +98,6 @@ module Danger
               diff_response.each do |file_info|
                 file_path = file_info.filename
                 diff_map[file_path] = {}
-
-                # Parse the patch to map line numbers to diff positions
                 next unless file_info.patch
 
                 position = 0
@@ -114,7 +106,6 @@ module Danger
                 file_info.patch.each_line do |line|
                   position += 1
 
-                  # Track actual line numbers from the patch
                   if line.start_with?("+") && !line.start_with?("+++")
                     line_number += 1
                     diff_map[file_path][line_number] = position

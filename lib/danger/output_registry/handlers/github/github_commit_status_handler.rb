@@ -26,10 +26,8 @@ module Danger
             request_source = context.env.request_source
             return unless request_source.kind_of?(::Danger::RequestSources::GitHub)
 
-            # Determine status based on violations
             status = errors.any? ? "failure" : "success"
             description = generate_status_description
-
             post_commit_status(request_source, status, description)
           end
 
