@@ -236,6 +236,30 @@ module Danger
           pr_number: request_source.pr_json["number"]
         }
       end
+
+      # Maps violation type to a specific attribute from TYPE_MAPPINGS.
+      #
+      # Provides unified, consistent access to violation type metadata like
+      # emojis and annotation levels, avoiding duplicate lookup logic across handlers.
+      #
+      # @param type [Symbol] Violation type (:error, :warning, :message)
+      # @param key [Symbol] The attribute to extract (:emoji, :annotation_level, etc.)
+      # @return [String] The mapped value (emoji or annotation level)
+      #
+      # @example Get emoji for error
+      #   violation_type_mapping(:error, :emoji) => "🚫"
+      #
+      # @example Get annotation level for warning
+      #   violation_type_mapping(:warning, :annotation_level) => "warning"
+      #
+      def violation_type_mapping(type, key)
+        # Import GitHubConfig to access TYPE_MAPPINGS
+        require_relative "handlers/github/github_config"
+
+        mapping = Handlers::GitHub::GitHubConfig::TYPE_MAPPINGS[type] ||
+                  Handlers::GitHub::GitHubConfig::TYPE_MAPPINGS[:message]
+        mapping[key]
+      end
     end
   end
 end

@@ -80,7 +80,7 @@ module Danger
                 path: violation.file,
                 start_line: violation.line,
                 end_line: violation.line,
-                annotation_level: annotation_level(violation.type),
+                annotation_level: violation_type_mapping(violation.type, :annotation_level),
                 message: violation.message,
                 title: "Danger"
               }
@@ -104,16 +104,6 @@ module Danger
             else
               "Found #{parts.join(', ')}"
             end
-          end
-
-          # Determines annotation level for violation type.
-          #
-          # @param type [Symbol] Violation type
-          # @return [String] Annotation level: "failure", "warning", or "notice"
-          #
-          def annotation_level(type)
-            mapping = GitHubConfig::TYPE_MAPPINGS[type] || GitHubConfig::TYPE_MAPPINGS[:message]
-            mapping[:annotation_level]
           end
         end
       end
