@@ -52,7 +52,9 @@ module Danger
                 metadata[:repo_slug],
                 name: GitHubConfig::CHECK_RUN_NAME,
                 head_sha: metadata[:commit_sha],
+                status: "completed",
                 conclusion: conclusion,
+                completed_at: Time.now.utc.iso8601,
                 output: {
                   title: GitHubConfig::CHECK_RUN_TITLE,
                   summary: summary,
