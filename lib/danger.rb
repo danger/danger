@@ -5,6 +5,7 @@ require "danger/commands/runner"
 require "danger/plugin_support/plugin"
 require "danger/core_ext/string"
 require "danger/danger_core/executor"
+require "danger/output_registry/output_handler_registry"
 
 require "claide"
 require "colored2"
