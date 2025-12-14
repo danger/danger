@@ -62,7 +62,7 @@ module Danger
             return unless diff_map
 
             violations_list.each do |violation|
-              body = "#{violation.message} (#{violation_type_emoji(violation.type)})"
+              body = "#{violation.message} (#{violation_type_mapping(violation.type, :emoji)})"
               position = diff_map[violation.file]&.[](violation.line)
 
               next unless position
@@ -130,16 +130,6 @@ module Danger
               log_warning("Failed to fetch PR diff for position mapping: #{e.message}")
               nil
             end
-          end
-
-          # Determines the emoji for a violation type.
-          #
-          # @param type [Symbol] Violation type (:error, :warning, :message)
-          # @return [String] Emoji representation
-          #
-          def violation_type_emoji(type)
-            mapping = GitHubConfig::TYPE_MAPPINGS[type] || GitHubConfig::TYPE_MAPPINGS[:message]
-            mapping[:emoji]
           end
         end
       end
