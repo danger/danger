@@ -57,8 +57,15 @@ module Danger
 
             violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
 
+            # Fetch PR diff to map line numbers to diff positions
+            diff_map = fetch_diff_position_map(metadata)
+            return unless diff_map
+
             violations_list.each do |violation|
               body = "#{violation.message} (#{violation_type_emoji(violation.type)})"
+              position = diff_map[violation.file]&.[](violation.line)
+
+              next unless position
 
               metadata[:client].create_pull_request_review_comment(
                 metadata[:repo_slug],
@@ -66,11 +73,62 @@ module Danger
                 body,
                 metadata[:commit_sha],
                 violation.file,
-                violation.line
+                position
               )
             rescue StandardError => e
               # Log but continue with other violations
               log_warning("Failed to post inline comment: #{e.message}")
+            end
+          end
+
+          # Fetches PR diff and builds a map of file/line -> diff position.
+          #
+          # GitHub Reviews API requires diff position (the line position within the diff),
+          # not the raw file line number. This method fetches the PR diff and calculates
+          # the correct position for each changed line.
+          #
+          # @param metadata [Hash] GitHub PR metadata
+          # @return [Hash<String, Hash<Integer, Integer>>] Map of file => { line => position }
+          # @return [nil] if diff cannot be fetched
+          #
+          def fetch_diff_position_map(metadata)
+            diff_map = {}
+
+            begin
+              # Fetch the PR diff
+              diff_response = metadata[:client].pull_request_files(
+                metadata[:repo_slug],
+                metadata[:pr_number]
+              )
+
+              diff_response.each do |file_info|
+                file_path = file_info.filename
+                diff_map[file_path] = {}
+
+                # Parse the patch to map line numbers to diff positions
+                next unless file_info.patch
+
+                position = 0
+                line_number = 0
+
+                file_info.patch.each_line do |line|
+                  position += 1
+
+                  # Track actual line numbers from the patch
+                  if line.start_with?("+") && !line.start_with?("+++")
+                    line_number += 1
+                    diff_map[file_path][line_number] = position
+                  elsif !line.start_with?("-") && !line.start_with?("\\")
+                    line_number += 1
+                    diff_map[file_path][line_number] = position
+                  end
+                end
+              end
+
+              diff_map
+            rescue StandardError => e
+              log_warning("Failed to fetch PR diff for position mapping: #{e.message}")
+              nil
             end
           end
 
