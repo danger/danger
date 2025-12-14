@@ -253,7 +253,6 @@ module Danger
       #   violation_type_mapping(:warning, :annotation_level) => "warning"
       #
       def violation_type_mapping(type, key)
-        # Import GitHubConfig to access TYPE_MAPPINGS
         require_relative "handlers/github/github_config"
 
         mapping = Handlers::GitHub::GitHubConfig::TYPE_MAPPINGS[type] ||

@@ -24,7 +24,6 @@ module Danger
             return unless has_violations?
             return unless github?
 
-            # Create check run with annotations
             create_check_run(github_request_source)
           end
 
@@ -39,14 +38,10 @@ module Danger
             metadata = github_pr_metadata
             return unless metadata
 
-            # Build annotations
             annotations = build_annotations
-
-            # Determine overall conclusion
             conclusion = errors.any? ? "failure" : "neutral"
             summary = build_summary
 
-            # Create check run (GitHub limits to 50 annotations per request)
             annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST) do |batch|
               metadata[:client].create_check_run(
                 metadata[:repo_slug],

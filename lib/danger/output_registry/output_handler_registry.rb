@@ -44,9 +44,6 @@ module Danger
       #
       # Handler classes will be lazily loaded when first accessed.
       #
-      # @note Handler classes referenced here will be implemented in Phase 2.
-      #   The registry gracefully handles missing classes during Phase 1.
-      #
       AVAILABLE_HANDLERS = {
         # GitHub Handlers
         github_check: {
@@ -70,7 +67,7 @@ module Danger
           description: "Updates GitHub commit status based on violations"
         },
 
-        # GitLab Handlers (Phase 2 - not yet implemented)
+        # GitLab Handlers
         gitlab_inline: {
           class_name: "Danger::OutputRegistry::Handlers::GitLab::GitLabInlineCommentHandler",
           platforms: [:gitlab],
@@ -82,7 +79,7 @@ module Danger
           description: "Posts violations as GitLab MR discussion"
         },
 
-        # Bitbucket Handlers (Phase 2 - not yet implemented)
+        # Bitbucket Handlers
         bitbucket_inline: {
           class_name: "Danger::OutputRegistry::Handlers::BitbucketCloud::BitbucketCloudInlineCommentHandler",
           platforms: [:bitbucket],
@@ -94,7 +91,7 @@ module Danger
           description: "Posts violations as Bitbucket Cloud PR comment"
         },
 
-        # Local/Universal Handlers (Phase 3 - not yet implemented)
+        # Universal Handlers
         console: {
           class_name: "Danger::OutputRegistry::Handlers::Universal::ConsoleHandler",
           platforms: %i(local github gitlab bitbucket),
@@ -159,8 +156,7 @@ module Danger
           handler_class = constantize(handler_metadata[:class_name])
           handler_class.new(@context, @violations)
         rescue NameError
-          # Handler class doesn't exist yet (Phase 1)
-          # In production this would log: warn "Handler class not found: #{handler_metadata[:class_name]}"
+          # Handler class not found - may not be implemented for this platform
           nil
         end
       end

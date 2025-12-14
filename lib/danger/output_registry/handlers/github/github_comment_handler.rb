@@ -27,14 +27,10 @@ module Danger
             request_source = context.env.request_source
             return unless request_source.kind_of?(::Danger::RequestSources::GitHub)
 
-            # Get violations for comment (non-inline only)
             comment_violations = filter_comment_violations
-
-            # Generate comment body
             comment_body = generate_comment_body(comment_violations)
             return if comment_body.nil? || comment_body.empty?
 
-            # Post or update the comment
             post_or_update_comment(request_source, comment_body)
           end
 
