@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Add `--no-gpg-sign` flag to test specs to prevent GPG signing prompts - [@numbata](https://github.com/numbata) [#1535](https://github.com/danger/danger/pull/1535)
 * Remove upper bound constraint on the git gem - [@andrewmarkle](https://github.com/andrewmarkle) [#1526](https://github.com/danger/danger/pull/1526)
 * Add "Add GitLab Merge Request support" again with fix - [@manicmaniac](https://github.com/manicmaniac) [#1522](https://github.com/danger/danger/pull/1522)
 <!-- Your comment above here -->
