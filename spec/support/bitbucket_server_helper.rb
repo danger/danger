@@ -17,7 +17,7 @@ module Danger
       end
 
       def stub_request_source
-        Danger::RequestSources::GitLab.new(stub_ci, stub_env)
+        Danger::RequestSources::BitbucketServer.new(stub_ci, stub_env)
       end
 
       def stub_pull_request
