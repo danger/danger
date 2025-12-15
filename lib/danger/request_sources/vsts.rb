@@ -2,6 +2,7 @@
 
 require "danger/helpers/comments_helper"
 require "danger/request_sources/vsts_api"
+require "danger/output_registry/output_handler_registry"
 
 module Danger
   module RequestSources
@@ -74,46 +75,22 @@ module Danger
         nil
       end
 
+      # Sending data to VSTS (Azure DevOps)
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for VSTS (comment with inline support).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        unless @api.supports_comments?
-          return
-        end
-
-        regular_violations = regular_violations_group(
+        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
           warnings: warnings,
           errors: errors,
           messages: messages,
-          markdowns: markdowns
-        )
-
-        inline_violations = inline_violations_group(
-          warnings: warnings,
-          errors: errors,
-          messages: messages,
-          markdowns: markdowns
-        )
-
-        rest_inline_violations = submit_inline_comments!(**{
+          markdowns: markdowns,
           danger_id: danger_id,
-          previous_violations: {}
-        }.merge(inline_violations))
-
-        main_violations = merge_violations(
-          regular_violations, rest_inline_violations
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
         )
-
-        comment = generate_description(warnings: main_violations[:warnings], errors: main_violations[:errors])
-        comment += "\n\n"
-        comment += generate_comment(**{
-          previous_violations: {},
-          danger_id: danger_id,
-          template: "vsts"
-        }.merge(main_violations))
-        if new_comment || remove_previous_comments
-          post_new_comment(comment)
-        else
-          update_old_comment(comment, danger_id: danger_id)
-        end
       end
 
       def post_new_comment(comment)
