@@ -22,14 +22,12 @@ module Danger
           #
           def execute
             return unless has_violations?
-
-            request_source = context.env.request_source
-            return unless request_source.kind_of?(::Danger::RequestSources::BitbucketCloud)
+            return unless context.kind_of?(::Danger::RequestSources::BitbucketCloud)
 
             inline_violations = filter_inline_violations
             return if inline_violations.values.all?(&:empty?)
 
-            post_inline_comments(request_source, inline_violations)
+            post_inline_comments(inline_violations)
           end
 
           protected
@@ -44,12 +42,11 @@ module Danger
 
           # Posts inline comments to the PR.
           #
-          # @param request_source [Danger::RequestSources::BitbucketCloud] The request source
           # @param violations [Hash] Violations with file/line info
           # @return [void]
           #
-          def post_inline_comments(request_source, violations)
-            api = request_source.instance_variable_get(:@api)
+          def post_inline_comments(violations)
+            api = context.instance_variable_get(:@api)
             violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
 
             violations_list.each do |violation|

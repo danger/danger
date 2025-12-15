@@ -34,6 +34,14 @@ module Danger
     #   MyCustomHandler.execute(danger_context, violations)
     #
     class OutputHandler
+      # Default options for handler execution.
+      DEFAULT_OPTIONS = {
+        danger_id: "danger",
+        new_comment: false,
+        remove_previous_comments: false,
+        markdowns: []
+      }.freeze
+
       # Executes the handler if it is enabled.
       #
       # This is the main entry point for running a handler. It instantiates
@@ -46,14 +54,22 @@ module Danger
       #   - :warnings [Array<String>] Warning messages
       #   - :errors [Array<String>] Error messages
       #   - :messages [Array<String>] Info messages
+      # @param options [Hash] Optional execution options:
+      #   - :danger_id [String] Identifier for Danger comments (default: "danger")
+      #   - :new_comment [Boolean] Create new comment vs update existing (default: false)
+      #   - :remove_previous_comments [Boolean] Delete old Danger comments (default: false)
+      #   - :markdowns [Array] Markdown content to include
       #
       # @return [void]
       #
       # @example Execute a handler
       #   MyHandler.execute(danger, { warnings: ["issue"], errors: [], messages: [] })
       #
-      def self.execute(context, violations)
-        handler = new(context, violations)
+      # @example Execute with options
+      #   MyHandler.execute(danger, violations, danger_id: "my-danger", new_comment: true)
+      #
+      def self.execute(context, violations, **options)
+        handler = new(context, violations, **options)
         handler.execute if handler.enabled?
       end
 
@@ -61,10 +77,12 @@ module Danger
       #
       # @param context [Danger::DangerfileContext] The Danger context
       # @param violations [Hash] Hash containing violation arrays
+      # @param options [Hash] Optional execution options (see {.execute})
       #
-      def initialize(context, violations)
+      def initialize(context, violations, **options)
         @context = context
         @violations = violations
+        @options = DEFAULT_OPTIONS.merge(options)
       end
 
       # Determines whether this handler should execute.
@@ -106,6 +124,42 @@ module Danger
       # @!attribute [r] violations
       #   @return [Hash] The violations hash
       attr_reader :violations
+
+      # @!attribute [r] options
+      #   @return [Hash] The execution options
+      attr_reader :options
+
+      # Returns the danger_id for identifying Danger-generated content.
+      #
+      # @return [String] The danger identifier (default: "danger")
+      #
+      def danger_id
+        @options[:danger_id]
+      end
+
+      # Whether to create a new comment instead of updating existing.
+      #
+      # @return [Boolean] true to create new, false to update existing
+      #
+      def new_comment?
+        @options[:new_comment]
+      end
+
+      # Whether to remove previous Danger comments.
+      #
+      # @return [Boolean] true to remove previous comments
+      #
+      def remove_previous_comments?
+        @options[:remove_previous_comments]
+      end
+
+      # Returns the markdown content to include in output.
+      #
+      # @return [Array] Markdown objects
+      #
+      def markdowns
+        @options[:markdowns] || []
+      end
 
       # Returns the array of warning messages.
       #

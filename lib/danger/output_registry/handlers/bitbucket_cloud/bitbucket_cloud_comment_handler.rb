@@ -22,15 +22,13 @@ module Danger
           #
           def execute
             return unless has_violations?
-
-            request_source = context.env.request_source
-            return unless request_source.kind_of?(::Danger::RequestSources::BitbucketCloud)
+            return unless context.kind_of?(::Danger::RequestSources::BitbucketCloud)
 
             comment_violations = filter_comment_violations
             comment_body = generate_comment_body(comment_violations)
             return if comment_body.nil? || comment_body.empty?
 
-            post_comment(request_source, comment_body)
+            post_comment(comment_body)
           end
 
           protected
@@ -81,12 +79,11 @@ module Danger
 
           # Posts the comment to the PR.
           #
-          # @param request_source [Danger::RequestSources::BitbucketCloud] The request source
           # @param comment_body [String] The comment body
           # @return [void]
           #
-          def post_comment(request_source, comment_body)
-            api = request_source.instance_variable_get(:@api)
+          def post_comment(comment_body)
+            api = context.instance_variable_get(:@api)
             api.post_comment(comment_body)
           rescue StandardError => e
             log_warning("Failed to post comment: #{e.message}")

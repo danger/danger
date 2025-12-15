@@ -22,26 +22,23 @@ module Danger
           #
           def execute
             return unless has_violations?
-
-            request_source = context.env.request_source
-            return unless request_source.kind_of?(::Danger::RequestSources::GitLab)
-            return unless supports_inline_comments?(request_source)
+            return unless context.kind_of?(::Danger::RequestSources::GitLab)
+            return unless supports_inline_comments?
 
             inline_violations = filter_inline_violations
             return if inline_violations.values.all?(&:empty?)
 
-            post_inline_comments(request_source, inline_violations)
+            post_inline_comments(inline_violations)
           end
 
           protected
 
           # Checks if the GitLab instance supports inline comments.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The GitLab request source
           # @return [Boolean]
           #
-          def supports_inline_comments?(request_source)
-            request_source.supports_inline_comments
+          def supports_inline_comments?
+            context.supports_inline_comments
           end
 
           # Filters violations that have file and line information.
@@ -54,15 +51,14 @@ module Danger
 
           # Posts inline comments to the MR.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The GitLab request source
           # @param violations [Hash] Violations with file/line info
           # @return [void]
           #
-          def post_inline_comments(request_source, violations)
+          def post_inline_comments(violations)
             violations_list = violations[:errors] + violations[:warnings] + violations[:messages]
 
             violations_list.each do |violation|
-              post_inline_comment(request_source, violation)
+              post_inline_comment(violation)
             rescue StandardError => e
               log_warning("Failed to post inline comment: #{e.message}")
             end
@@ -70,21 +66,20 @@ module Danger
 
           # Posts a single inline comment.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The GitLab request source
           # @param violation [Violation] The violation to post
           # @return [void]
           #
-          def post_inline_comment(request_source, violation)
+          def post_inline_comment(violation)
             emoji = GitLabConfig::TYPE_MAPPINGS[violation.type][:emoji]
             body = generate_inline_body(emoji, violation)
 
-            old_position = find_old_position(request_source, violation)
+            old_position = find_old_position(violation)
             return if old_position.nil?
 
-            params = build_discussion_params(request_source, violation, old_position, body)
-            request_source.client.create_merge_request_discussion(
-              request_source.ci_source.repo_slug,
-              request_source.ci_source.pull_request_id,
+            params = build_discussion_params(violation, old_position, body)
+            context.client.create_merge_request_discussion(
+              context.ci_source.repo_slug,
+              context.ci_source.pull_request_id,
               params
             )
           end
@@ -101,14 +96,13 @@ module Danger
 
           # Builds params for creating a discussion.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The request source
           # @param violation [Violation] The violation
           # @param old_position [Hash] Old position info
           # @param body [String] Comment body
           # @return [Hash] Discussion parameters
           #
-          def build_discussion_params(request_source, violation, old_position, body)
-            mr_json = request_source.mr_json
+          def build_discussion_params(violation, old_position, body)
+            mr_json = context.mr_json
             {
               body: body,
               position: {
@@ -126,12 +120,11 @@ module Danger
 
           # Finds the old position in the diff for a violation.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The request source
           # @param violation [Violation] The violation
           # @return [Hash, nil] Hash with :path and :line, or nil if not found
           #
-          def find_old_position(request_source, violation)
-            changes = request_source.mr_changes.changes
+          def find_old_position(violation)
+            changes = context.mr_changes.changes
             change = changes.find { |c| c["new_path"] == violation.file }
 
             return nil if change.nil? || change["diff"].empty? || change["deleted_file"]
