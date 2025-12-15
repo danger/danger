@@ -446,7 +446,9 @@ module Danger
       # @return [Array<Symbol>]
       #
       def default_github_handlers
-        %i(github_comment github_inline github_status)
+        # NOTE: github_status is not included by default since commit status
+        # is handled separately in Danger's runner (submit_pull_request_status)
+        %i(github_comment github_inline)
       end
 
       # Returns default handler names for GitLab platform.

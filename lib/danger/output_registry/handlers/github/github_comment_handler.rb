@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "github_config"
-require "danger/helpers/comments_helper"
 
 module Danger
   module OutputRegistry
@@ -9,9 +8,9 @@ module Danger
       module GitHub
         # Posts violations as a consolidated PR comment.
         #
-        # This handler extracts non-inline violations and posts them as a single
-        # comment on the pull request. It manages comment lifecycle including
-        # creation, updates, and deletion based on configuration options.
+        # This handler posts all violations as a single comment on the pull request.
+        # It manages comment lifecycle including creation, updates, and deletion
+        # based on configuration options.
         #
         # Supports the following options:
         # - danger_id: Identifier to distinguish Danger comments (default: "danger")
@@ -24,8 +23,6 @@ module Danger
         #   handler.execute if handler.enabled?
         #
         class GitHubCommentHandler < OutputHandler
-          include Danger::Helpers::CommentsHelper
-
           # Executes the handler to post PR comments.
           #
           # @return [void]
@@ -34,11 +31,12 @@ module Danger
             return unless context.kind_of?(::Danger::RequestSources::GitHub)
 
             comment_violations = filter_comment_violations
+            comment_markdowns = filter_comment_markdowns
 
             # Handle remove_previous_comments option
             if remove_previous_comments?
               delete_old_comments!
-              return if comment_violations.values.all?(&:empty?) && markdowns.empty?
+              return if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
             end
 
             # Find existing Danger comments
@@ -50,22 +48,22 @@ module Danger
             previous_violations = if should_create_new
                                     {}
                                   else
-                                    parse_comment(last_comment.body)
+                                    context.parse_comment(last_comment.body)
                                   end
 
             # Check if there's anything to post
-            if comment_violations.values.all?(&:empty?) && markdowns.empty?
+            if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
               # No violations, delete old comments if they exist
               delete_old_comments! unless existing_comments.empty?
               return
             end
 
-            # Generate comment body using Danger's template system
-            comment_body = generate_comment(
+            # Generate comment body using context's method (for test compatibility)
+            comment_body = context.generate_comment(
               warnings: comment_violations[:warnings],
               errors: comment_violations[:errors],
               messages: comment_violations[:messages],
-              markdowns: markdowns,
+              markdowns: comment_markdowns,
               previous_violations: previous_violations,
               danger_id: danger_id,
               template: "github"
@@ -78,10 +76,27 @@ module Danger
 
           # Filters violations suitable for PR comment (non-inline).
           #
+          # Only violations without file/line info go to main comment.
+          # Violations with file/line are handled by the inline handler.
+          #
+          # NOTE: This means out-of-range inline violations won't appear in main
+          # comment. Full coordination would require the inline handler to report
+          # which violations it couldn't post.
+          #
           # @return [Hash] Hash with warnings, errors, messages keys
           #
           def filter_comment_violations
             filter_violations { |v| v.file.nil? || v.line.nil? }
+          end
+
+          # Filters markdowns suitable for PR comment (non-inline).
+          #
+          # Only markdowns without file/line info go to main comment.
+          #
+          # @return [Array] Array of non-inline markdowns
+          #
+          def filter_comment_markdowns
+            markdowns.select { |m| m.file.nil? || m.line.nil? }
           end
 
           # Finds all Danger comments on the PR.
