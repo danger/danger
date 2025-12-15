@@ -183,25 +183,32 @@ module Danger
           description: "Sends violations to Bitbucket Server Code Insights API"
         },
 
+        # VSTS (Azure DevOps) Handlers
+        vsts_comment: {
+          class: Handlers::VSTS::VSTSCommentHandler,
+          platforms: [:vsts],
+          description: "Posts violations as VSTS PR comment with inline support"
+        },
+
         # Universal Handlers
         console: {
           class: Handlers::Universal::ConsoleHandler,
-          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server vsts),
           description: "Outputs violations to console/stdout"
         },
         json_file: {
           class: Handlers::Universal::JSONFileHandler,
-          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server vsts),
           description: "Writes violations to JSON file"
         },
         junit_xml: {
           class: Handlers::Universal::JUnitXMLHandler,
-          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server vsts),
           description: "Writes violations in JUnit XML format"
         },
         markdown_summary: {
           class: Handlers::Universal::MarkdownSummaryHandler,
-          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server vsts),
           description: "Generates markdown summary of violations"
         }
       }.freeze
@@ -255,7 +262,7 @@ module Danger
       # Detects the platform symbol for a given request source.
       #
       # @param request_source [Danger::RequestSources::RequestSource] The request source
-      # @return [Symbol] Platform symbol (:github, :gitlab, :bitbucket_cloud, :bitbucket_server, :local)
+      # @return [Symbol] Platform symbol (:github, :gitlab, :bitbucket_cloud, :bitbucket_server, :vsts, :local)
       #
       def self.detect_platform_for(request_source)
         case request_source
@@ -267,6 +274,8 @@ module Danger
           :bitbucket_cloud
         when Danger::RequestSources::BitbucketServer
           :bitbucket_server
+        when Danger::RequestSources::VSTS
+          :vsts
         else
           :local
         end
@@ -396,6 +405,8 @@ module Danger
                           default_bitbucket_cloud_handlers
                         when :bitbucket_server
                           default_bitbucket_server_handlers
+                        when :vsts
+                          default_vsts_handlers
                         when :local
                           default_local_handlers
                         else
@@ -501,6 +512,17 @@ module Danger
       #
       def default_bitbucket_server_handlers
         %i(bitbucket_server_code_insights bitbucket_server_comment)
+      end
+
+      # Returns default handler names for VSTS (Azure DevOps) platform.
+      #
+      # Matches the existing update_pull_request! behavior:
+      # - Comment handler handles both inline and main comments
+      #
+      # @return [Array<Symbol>]
+      #
+      def default_vsts_handlers
+        %i(vsts_comment)
       end
 
       # Returns default handler names for local platform.
