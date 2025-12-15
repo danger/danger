@@ -9,7 +9,8 @@ module Danger
         # Posts violations as a consolidated PR comment.
         #
         # This handler extracts violations and posts them as a single comment
-        # on the pull request.
+        # on the pull request. It handles deletion of old comments and
+        # posts new comments as needed.
         #
         # @example
         #   handler = BitbucketCloudCommentHandler.new(context, violations)
@@ -21,61 +22,44 @@ module Danger
           # @return [void]
           #
           def execute
-            return unless has_violations?
             return unless context.kind_of?(::Danger::RequestSources::BitbucketCloud)
 
-            comment_violations = filter_comment_violations
-            comment_body = generate_comment_body(comment_violations)
-            return if comment_body.nil? || comment_body.empty?
+            # Handle delete_old_comments (similar to original behavior)
+            if !new_comment? || remove_previous_comments?
+              context.delete_old_comments(danger_id: danger_id)
+            end
 
-            post_comment(comment_body)
+            # Update inline comments and get remaining violations
+            # This modifies violations in-place and returns non-inline ones
+            remaining_warnings = context.update_inline_comments_for_kind!(:warnings, warnings, danger_id: danger_id)
+            remaining_errors = context.update_inline_comments_for_kind!(:errors, errors, danger_id: danger_id)
+            remaining_messages = context.update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
+            remaining_markdowns = context.update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
+
+            has_comments = remaining_warnings.count.positive? ||
+                           remaining_errors.count.positive? ||
+                           remaining_messages.count.positive? ||
+                           remaining_markdowns.count.positive?
+
+            return unless has_comments
+
+            # Generate comment body using context's method
+            comment = context.generate_description(warnings: remaining_warnings, errors: remaining_errors, template: "bitbucket_server")
+            comment += "\n\n"
+            comment += context.generate_comment(
+              warnings: remaining_warnings,
+              errors: remaining_errors,
+              messages: remaining_messages,
+              markdowns: remaining_markdowns,
+              previous_violations: {},
+              danger_id: danger_id,
+              template: "bitbucket_server"
+            )
+
+            post_comment(comment)
           end
 
           protected
-
-          # Filters violations suitable for PR comment (non-inline).
-          #
-          # @return [Hash] Hash with warnings, errors, messages keys
-          #
-          def filter_comment_violations
-            filter_violations { |v| v.file.nil? }
-          end
-
-          # Generates the comment body.
-          #
-          # @param violations [Hash] Violations to include in comment
-          # @return [String, nil] Comment body, or nil if no violations
-          #
-          def generate_comment_body(violations)
-            return nil if violations.values.all?(&:empty?)
-
-            parts = []
-
-            if violations[:errors].any?
-              parts << "## :no_entry_sign: #{BitbucketCloudConfig::ERRORS_SECTION_TITLE}"
-              parts << ""
-              violations[:errors].each { |error| parts << "- #{error.message}" }
-              parts << ""
-            end
-
-            if violations[:warnings].any?
-              parts << "## :warning: #{BitbucketCloudConfig::WARNINGS_SECTION_TITLE}"
-              parts << ""
-              violations[:warnings].each { |warning| parts << "- #{warning.message}" }
-              parts << ""
-            end
-
-            if violations[:messages].any?
-              parts << "## :book: #{BitbucketCloudConfig::MESSAGES_SECTION_TITLE}"
-              parts << ""
-              violations[:messages].each { |message| parts << "- #{message.message}" }
-              parts << ""
-            end
-
-            parts << BitbucketCloudConfig::PR_REVIEW_HEADER
-
-            parts.join("\n")
-          end
 
           # Posts the comment to the PR.
           #

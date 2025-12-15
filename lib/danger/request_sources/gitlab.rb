@@ -2,6 +2,7 @@ require "uri"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 require "danger/request_sources/support/get_ignored_violation"
+require "danger/output_registry/output_handler_registry"
 
 module Danger
   module RequestSources
@@ -153,12 +154,22 @@ module Danger
                                       end
       end
 
+      # Sending data to GitLab
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for GitLab (comment, inline comments).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        if supports_inline_comments
-          update_pull_request_with_inline_comments!(warnings: warnings, errors: errors, messages: messages, markdowns: markdowns, danger_id: danger_id, new_comment: new_comment, remove_previous_comments: remove_previous_comments)
-        else
-          update_pull_request_without_inline_comments!(warnings: warnings, errors: errors, messages: messages, markdowns: markdowns, danger_id: danger_id, new_comment: new_comment, remove_previous_comments: remove_previous_comments)
-        end
+        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns,
+          danger_id: danger_id,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
+        )
       end
 
       def update_pull_request_with_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)

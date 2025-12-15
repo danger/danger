@@ -22,14 +22,46 @@ module Danger
           # @return [void]
           #
           def execute
-            return unless has_violations?
             return unless context.kind_of?(::Danger::RequestSources::GitLab)
 
             comment_violations = filter_comment_violations
-            comment_body = generate_comment_body(comment_violations)
-            return if comment_body.nil? || comment_body.empty?
+            comment_markdowns = filter_comment_markdowns
 
-            post_or_update_comment(comment_body)
+            # Find existing Danger comments (non-inline)
+            existing_comments = find_danger_comments
+            last_comment = existing_comments.last
+            should_create_new = new_comment? || last_comment.nil? || remove_previous_comments?
+
+            # Parse previous violations for comparison
+            previous_violations = if should_create_new
+                                    {}
+                                  else
+                                    context.parse_comment(last_comment.body)
+                                  end
+
+            # Handle remove_previous_comments
+            if remove_previous_comments?
+              delete_old_comments!
+            end
+
+            # Check if there's anything to post
+            if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
+              delete_old_comments! unless existing_comments.empty?
+              return
+            end
+
+            # Generate comment body using context's method
+            comment_body = context.generate_comment(
+              warnings: comment_violations[:warnings],
+              errors: comment_violations[:errors],
+              messages: comment_violations[:messages],
+              markdowns: comment_markdowns,
+              previous_violations: previous_violations,
+              danger_id: danger_id,
+              template: "gitlab"
+            )
+
+            post_or_update_comment(comment_body, last_comment, should_create_new)
           end
 
           protected
@@ -39,81 +71,55 @@ module Danger
           # @return [Hash] Hash with warnings, errors, messages keys
           #
           def filter_comment_violations
-            filter_violations { |v| v.file.nil? }
+            filter_violations { |v| v.file.nil? || v.line.nil? }
           end
 
-          # Generates the comment body.
+          # Filters markdowns suitable for MR comment (non-inline).
           #
-          # @param violations [Hash] Violations to include in comment
-          # @return [String, nil] Comment body, or nil if no violations
+          # @return [Array] Array of non-inline markdowns
           #
-          def generate_comment_body(violations)
-            return nil if violations.values.all?(&:empty?)
+          def filter_comment_markdowns
+            markdowns.select { |m| m.file.nil? || m.line.nil? }
+          end
 
-            parts = [GitLabConfig::MR_REVIEW_HEADER]
+          # Finds existing non-inline Danger comments.
+          #
+          # @return [Array<Comment>] Array of Danger-generated comments
+          #
+          def find_danger_comments
+            context.mr_comments
+              .select { |comment| comment.generated_by_danger?(danger_id) }
+              .reject(&:inline?)
+          end
 
-            if violations[:errors].any?
-              parts << ""
-              parts << "## :no_entry_sign: #{GitLabConfig::ERRORS_SECTION_TITLE}"
-              parts << ""
-              violations[:errors].each { |error| parts << "- #{error.message}" }
-            end
-
-            if violations[:warnings].any?
-              parts << ""
-              parts << "## :warning: #{GitLabConfig::WARNINGS_SECTION_TITLE}"
-              parts << ""
-              violations[:warnings].each { |warning| parts << "- #{warning.message}" }
-            end
-
-            if violations[:messages].any?
-              parts << ""
-              parts << "## :book: #{GitLabConfig::MESSAGES_SECTION_TITLE}"
-              parts << ""
-              violations[:messages].each { |message| parts << "- #{message.message}" }
-            end
-
-            parts.join("\n")
+          # Deletes old Danger comments.
+          #
+          # @return [void]
+          #
+          def delete_old_comments!
+            context.delete_old_comments!(danger_id: danger_id)
+          rescue StandardError => e
+            log_warning("Failed to delete old comments: #{e.message}")
           end
 
           # Posts or updates the comment on the MR.
           #
           # @param comment_body [String] The comment body
+          # @param last_comment [Comment, nil] Last existing comment
+          # @param should_create_new [Boolean] Whether to create new comment
           # @return [void]
           #
-          def post_or_update_comment(comment_body)
+          def post_or_update_comment(comment_body, last_comment, should_create_new)
             repo_slug = context.ci_source.repo_slug
             mr_id = context.ci_source.pull_request_id
 
-            existing_comments = fetch_danger_comments
-            previous_comment = existing_comments.last
-
-            if previous_comment
-              context.client.edit_merge_request_note(repo_slug, mr_id, previous_comment[:id], comment_body)
-            else
+            if should_create_new
               context.client.create_merge_request_note(repo_slug, mr_id, comment_body)
+            else
+              context.client.edit_merge_request_note(repo_slug, mr_id, last_comment.id, comment_body)
             end
           rescue StandardError => e
             log_warning("Failed to post comment: #{e.message}")
-          end
-
-          # Fetches existing Danger-generated comments.
-          #
-          # @return [Array<Hash>] Array of comment hashes
-          #
-          def fetch_danger_comments
-            repo_slug = context.ci_source.repo_slug
-            mr_id = context.ci_source.pull_request_id
-
-            comments = context.client.merge_request_comments(repo_slug, mr_id, per_page: 100).auto_paginate
-
-            comments.filter_map do |comment|
-              next unless comment.body.include?(GitLabConfig::MR_REVIEW_HEADER)
-
-              { id: comment.id, body: comment.body }
-            end
-          rescue StandardError
-            []
           end
         end
       end
