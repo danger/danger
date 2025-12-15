@@ -2,6 +2,7 @@
 
 require_relative "github_config"
 require "danger/helpers/comments_helper"
+require "danger/helpers/comment"
 
 module Danger
   module OutputRegistry
