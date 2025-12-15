@@ -162,34 +162,46 @@ module Danger
         # Bitbucket Cloud Handlers
         bitbucket_inline: {
           class: Handlers::BitbucketCloud::BitbucketCloudInlineCommentHandler,
-          platforms: [:bitbucket],
+          platforms: [:bitbucket_cloud],
           description: "Posts violations as Bitbucket Cloud inline PR comments"
         },
         bitbucket_comment: {
           class: Handlers::BitbucketCloud::BitbucketCloudCommentHandler,
-          platforms: [:bitbucket],
+          platforms: [:bitbucket_cloud],
           description: "Posts violations as Bitbucket Cloud PR comment"
+        },
+
+        # Bitbucket Server Handlers
+        bitbucket_server_comment: {
+          class: Handlers::BitbucketServer::BitbucketServerCommentHandler,
+          platforms: [:bitbucket_server],
+          description: "Posts violations as Bitbucket Server PR comment"
+        },
+        bitbucket_server_code_insights: {
+          class: Handlers::BitbucketServer::BitbucketServerCodeInsightsHandler,
+          platforms: [:bitbucket_server],
+          description: "Sends violations to Bitbucket Server Code Insights API"
         },
 
         # Universal Handlers
         console: {
           class: Handlers::Universal::ConsoleHandler,
-          platforms: %i(local github gitlab bitbucket),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
           description: "Outputs violations to console/stdout"
         },
         json_file: {
           class: Handlers::Universal::JSONFileHandler,
-          platforms: %i(local github gitlab bitbucket),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
           description: "Writes violations to JSON file"
         },
         junit_xml: {
           class: Handlers::Universal::JUnitXMLHandler,
-          platforms: %i(local github gitlab bitbucket),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
           description: "Writes violations in JUnit XML format"
         },
         markdown_summary: {
           class: Handlers::Universal::MarkdownSummaryHandler,
-          platforms: %i(local github gitlab bitbucket),
+          platforms: %i(local github gitlab bitbucket_cloud bitbucket_server),
           description: "Generates markdown summary of violations"
         }
       }.freeze
@@ -243,7 +255,7 @@ module Danger
       # Detects the platform symbol for a given request source.
       #
       # @param request_source [Danger::RequestSources::RequestSource] The request source
-      # @return [Symbol] Platform symbol (:github, :gitlab, :bitbucket, :local)
+      # @return [Symbol] Platform symbol (:github, :gitlab, :bitbucket_cloud, :bitbucket_server, :local)
       #
       def self.detect_platform_for(request_source)
         case request_source
@@ -251,8 +263,10 @@ module Danger
           :github
         when Danger::RequestSources::GitLab
           :gitlab
-        when Danger::RequestSources::BitbucketCloud, Danger::RequestSources::BitbucketServer
-          :bitbucket
+        when Danger::RequestSources::BitbucketCloud
+          :bitbucket_cloud
+        when Danger::RequestSources::BitbucketServer
+          :bitbucket_server
         else
           :local
         end
@@ -378,8 +392,10 @@ module Danger
                           default_github_handlers
                         when :gitlab
                           default_gitlab_handlers
-                        when :bitbucket
-                          default_bitbucket_handlers
+                        when :bitbucket_cloud
+                          default_bitbucket_cloud_handlers
+                        when :bitbucket_server
+                          default_bitbucket_server_handlers
                         when :local
                           default_local_handlers
                         else
@@ -463,7 +479,7 @@ module Danger
         %i(gitlab_inline gitlab_comment)
       end
 
-      # Returns default handler names for Bitbucket platform.
+      # Returns default handler names for Bitbucket Cloud platform.
       #
       # Matches the existing update_pull_request! behavior.
       # NOTE: Only comment handler needed since it delegates to context's
@@ -471,8 +487,20 @@ module Danger
       #
       # @return [Array<Symbol>]
       #
-      def default_bitbucket_handlers
+      def default_bitbucket_cloud_handlers
         %i(bitbucket_comment)
+      end
+
+      # Returns default handler names for Bitbucket Server platform.
+      #
+      # Matches the existing update_pull_request! behavior:
+      # - Code Insights handler sends inline violations (if configured)
+      # - Comment handler posts main comment with remaining violations
+      #
+      # @return [Array<Symbol>]
+      #
+      def default_bitbucket_server_handlers
+        %i(bitbucket_server_code_insights bitbucket_server_comment)
       end
 
       # Returns default handler names for local platform.
