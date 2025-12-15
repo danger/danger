@@ -22,31 +22,28 @@ module Danger
           #
           def execute
             return unless has_violations?
-            return unless github?
+            return unless context.kind_of?(::Danger::RequestSources::GitHub)
 
-            create_check_run(github_request_source)
+            create_check_run
           end
 
           protected
 
           # Creates a GitHub Check Run with annotations.
           #
-          # @param request_source [Danger::RequestSources::GitHub] The GitHub request source
           # @return [void]
           #
-          def create_check_run(_request_source)
-            metadata = github_pr_metadata
-            return unless metadata
-
+          def create_check_run
             annotations = build_annotations
             conclusion = errors.any? ? "failure" : "neutral"
             summary = build_summary
+            commit_sha = context.pr_json["head"]["sha"]
 
             annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST) do |batch|
-              metadata[:client].create_check_run(
-                metadata[:repo_slug],
-                name: GitHubConfig::CHECK_RUN_NAME,
-                head_sha: metadata[:commit_sha],
+              context.client.create_check_run(
+                context.ci_source.repo_slug,
+                GitHubConfig::CHECK_RUN_NAME,
+                commit_sha,
                 status: "completed",
                 conclusion: conclusion,
                 completed_at: Time.now.utc.iso8601,

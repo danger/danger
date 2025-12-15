@@ -23,15 +23,13 @@ module Danger
           #
           def execute
             return unless has_violations?
-
-            request_source = context.env.request_source
-            return unless request_source.kind_of?(::Danger::RequestSources::GitLab)
+            return unless context.kind_of?(::Danger::RequestSources::GitLab)
 
             comment_violations = filter_comment_violations
             comment_body = generate_comment_body(comment_violations)
             return if comment_body.nil? || comment_body.empty?
 
-            post_or_update_comment(request_source, comment_body)
+            post_or_update_comment(comment_body)
           end
 
           protected
@@ -80,22 +78,20 @@ module Danger
 
           # Posts or updates the comment on the MR.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The GitLab request source
           # @param comment_body [String] The comment body
           # @return [void]
           #
-          def post_or_update_comment(request_source, comment_body)
-            client = request_source.client
-            repo_slug = request_source.ci_source.repo_slug
-            mr_id = request_source.ci_source.pull_request_id
+          def post_or_update_comment(comment_body)
+            repo_slug = context.ci_source.repo_slug
+            mr_id = context.ci_source.pull_request_id
 
-            existing_comments = fetch_danger_comments(request_source)
+            existing_comments = fetch_danger_comments
             previous_comment = existing_comments.last
 
             if previous_comment
-              client.edit_merge_request_note(repo_slug, mr_id, previous_comment[:id], comment_body)
+              context.client.edit_merge_request_note(repo_slug, mr_id, previous_comment[:id], comment_body)
             else
-              client.create_merge_request_note(repo_slug, mr_id, comment_body)
+              context.client.create_merge_request_note(repo_slug, mr_id, comment_body)
             end
           rescue StandardError => e
             log_warning("Failed to post comment: #{e.message}")
@@ -103,15 +99,13 @@ module Danger
 
           # Fetches existing Danger-generated comments.
           #
-          # @param request_source [Danger::RequestSources::GitLab] The request source
           # @return [Array<Hash>] Array of comment hashes
           #
-          def fetch_danger_comments(request_source)
-            client = request_source.client
-            repo_slug = request_source.ci_source.repo_slug
-            mr_id = request_source.ci_source.pull_request_id
+          def fetch_danger_comments
+            repo_slug = context.ci_source.repo_slug
+            mr_id = context.ci_source.pull_request_id
 
-            comments = client.merge_request_comments(repo_slug, mr_id, per_page: 100).auto_paginate
+            comments = context.client.merge_request_comments(repo_slug, mr_id, per_page: 100).auto_paginate
 
             comments.filter_map do |comment|
               next unless comment.body.include?(GitLabConfig::MR_REVIEW_HEADER)

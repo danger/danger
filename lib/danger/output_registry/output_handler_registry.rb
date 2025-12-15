@@ -194,11 +194,76 @@ module Danger
         }
       }.freeze
 
+      # Executes default handlers for a request source.
+      #
+      # This is the main integration point for request sources to use the handler system.
+      # It automatically detects the platform from the request source and executes
+      # the appropriate default handlers.
+      #
+      # @param request_source [Danger::RequestSources::RequestSource] The request source
+      # @param warnings [Array] Warning violations
+      # @param errors [Array] Error violations
+      # @param messages [Array] Message violations
+      # @param markdowns [Array] Markdown content
+      # @param danger_id [String] Identifier for Danger comments (default: "danger")
+      # @param new_comment [Boolean] Create new comment vs update existing (default: false)
+      # @param remove_previous_comments [Boolean] Delete old comments (default: false)
+      #
+      # @return [void]
+      #
+      # @example Called from update_pull_request!
+      #   OutputHandlerRegistry.execute_for_request_source(
+      #     self,
+      #     warnings: warnings,
+      #     errors: errors,
+      #     messages: messages,
+      #     markdowns: markdowns,
+      #     danger_id: danger_id
+      #   )
+      #
+      def self.execute_for_request_source(request_source, warnings:, errors:, messages:, markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
+        registry = new
+        registry.context = request_source
+        registry.violations = { warnings: warnings, errors: errors, messages: messages }
+
+        platform = detect_platform_for(request_source)
+        options = {
+          danger_id: danger_id,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments,
+          markdowns: markdowns
+        }
+
+        handlers = registry.default_handlers_for_platform(platform, **options)
+        handlers.each do |handler|
+          handler.execute if handler.enabled?
+        end
+      end
+
+      # Detects the platform symbol for a given request source.
+      #
+      # @param request_source [Danger::RequestSources::RequestSource] The request source
+      # @return [Symbol] Platform symbol (:github, :gitlab, :bitbucket, :local)
+      #
+      def self.detect_platform_for(request_source)
+        case request_source
+        when Danger::RequestSources::GitHub
+          :github
+        when Danger::RequestSources::GitLab
+          :gitlab
+        when Danger::RequestSources::BitbucketCloud, Danger::RequestSources::BitbucketServer
+          :bitbucket
+        else
+          :local
+        end
+      end
+
       # Initializes a new registry instance.
       #
       def initialize
         @context = nil
         @violations = nil
+        @options = {}
       end
 
       # Sets the Danger context for handler execution.
@@ -225,6 +290,7 @@ module Danger
       # if there's a name conflict.
       #
       # @param name [Symbol] Handler identifier
+      # @param options [Hash] Execution options passed to handler
       # @return [OutputHandler, nil] Handler instance, or nil if handler
       #   doesn't exist or class cannot be loaded
       #
@@ -236,14 +302,14 @@ module Danger
       #   handler = registry.handler(:slack_notifications)
       #   handler.execute if handler
       #
-      def handler(name)
+      def handler(name, **options)
         name = name.to_sym
 
         # Custom handlers take precedence over built-ins
         metadata = self.class.custom_handlers[name] || AVAILABLE_HANDLERS[name]
         return nil unless metadata
 
-        metadata[:class].new(@context, @violations)
+        metadata[:class].new(@context, @violations, **options)
       end
 
       # Returns list of all available handler identifiers.
@@ -292,6 +358,7 @@ module Danger
       # handlers registered with `include_in_defaults: true`.
       #
       # @param platform [Symbol] Platform identifier
+      # @param options [Hash] Execution options passed to each handler
       # @return [Array<OutputHandler>] Array of instantiated default handlers
       #   (empty if handlers don't exist yet)
       #
@@ -299,7 +366,11 @@ module Danger
       #   handlers = registry.default_handlers_for_platform(:github)
       #   handlers.each(&:execute)
       #
-      def default_handlers_for_platform(platform)
+      # @example Get handlers with options
+      #   handlers = registry.default_handlers_for_platform(:github, danger_id: "my-danger")
+      #   handlers.each { |h| h.execute if h.enabled? }
+      #
+      def default_handlers_for_platform(platform, **options)
         platform = platform.to_sym
 
         builtin_names = case platform
@@ -323,7 +394,7 @@ module Danger
         handler_names = builtin_names + custom_default_names
 
         # Instantiate handlers, filtering out any that don't exist yet
-        handler_names.map { |name| handler(name) }.compact
+        handler_names.map { |name| handler(name, **options) }.compact
       end
 
       private
@@ -367,26 +438,39 @@ module Danger
 
       # Returns default handler names for GitHub platform.
       #
+      # Matches the existing update_pull_request! behavior:
+      # - Main PR comment with violations summary
+      # - Inline comments on specific file lines
+      # - Commit status (success/failure)
+      #
       # @return [Array<Symbol>]
       #
       def default_github_handlers
-        %i(github_check console)
+        %i(github_comment github_inline github_status)
       end
 
       # Returns default handler names for GitLab platform.
       #
+      # Matches the existing update_pull_request! behavior:
+      # - Inline MR comments on specific file lines
+      # - Main MR comment with violations summary
+      #
       # @return [Array<Symbol>]
       #
       def default_gitlab_handlers
-        %i(gitlab_inline console)
+        %i(gitlab_inline gitlab_comment)
       end
 
       # Returns default handler names for Bitbucket platform.
       #
+      # Matches the existing update_pull_request! behavior:
+      # - Inline PR comments on specific file lines
+      # - Main PR comment with violations summary
+      #
       # @return [Array<Symbol>]
       #
       def default_bitbucket_handlers
-        %i(bitbucket_inline console)
+        %i(bitbucket_inline bitbucket_comment)
       end
 
       # Returns default handler names for local platform.
