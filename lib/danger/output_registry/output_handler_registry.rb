@@ -465,14 +465,14 @@ module Danger
 
       # Returns default handler names for Bitbucket platform.
       #
-      # Matches the existing update_pull_request! behavior:
-      # - Inline PR comments on specific file lines
-      # - Main PR comment with violations summary
+      # Matches the existing update_pull_request! behavior.
+      # NOTE: Only comment handler needed since it delegates to context's
+      # update_inline_comments_for_kind! which handles inline comments.
       #
       # @return [Array<Symbol>]
       #
       def default_bitbucket_handlers
-        %i(bitbucket_inline bitbucket_comment)
+        %i(bitbucket_comment)
       end
 
       # Returns default handler names for local platform.
