@@ -161,6 +161,55 @@ module Danger
         @options[:markdowns] || []
       end
 
+      # Returns the shared state for handler coordination.
+      #
+      # Handlers can use this to communicate with each other, e.g.,
+      # inline handler reporting out-of-range violations to comment handler.
+      #
+      # @return [Hash] Shared state hash with :out_of_range_violations, :out_of_range_markdowns
+      #
+      def shared_state
+        @options[:shared_state] || { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [] }
+      end
+
+      # Reports a violation that couldn't be posted inline (out of range).
+      #
+      # These violations will be picked up by the comment handler to include
+      # in the main PR comment.
+      #
+      # @param type [Symbol] The violation type (:warnings, :errors, :messages)
+      # @param violation [Violation] The violation that couldn't be posted
+      # @return [void]
+      #
+      def report_out_of_range_violation(type, violation)
+        shared_state[:out_of_range_violations][type] << violation
+      end
+
+      # Reports a markdown that couldn't be posted inline (out of range).
+      #
+      # @param markdown [Markdown] The markdown that couldn't be posted
+      # @return [void]
+      #
+      def report_out_of_range_markdown(markdown)
+        shared_state[:out_of_range_markdowns] << markdown
+      end
+
+      # Returns violations that were reported as out of range by previous handlers.
+      #
+      # @return [Hash] Hash with :warnings, :errors, :messages arrays
+      #
+      def out_of_range_violations
+        shared_state[:out_of_range_violations]
+      end
+
+      # Returns markdowns that were reported as out of range by previous handlers.
+      #
+      # @return [Array] Array of markdown objects
+      #
+      def out_of_range_markdowns
+        shared_state[:out_of_range_markdowns]
+      end
+
       # Returns the array of warning messages.
       #
       # @return [Array<String>] Warning messages, or empty array if none

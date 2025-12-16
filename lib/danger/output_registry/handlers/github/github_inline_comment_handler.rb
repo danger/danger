@@ -57,7 +57,7 @@ module Danger
               context.ci_source.pull_request_id
             )
             danger_comments = pr_comments.select do |comment|
-              Danger::Helpers::Comment.from_github(comment).generated_by_danger?(danger_id)
+              Danger::Comment.from_github(comment).generated_by_danger?(danger_id)
             end
 
             # Get diff lines for position calculation
@@ -66,7 +66,7 @@ module Danger
             %i(error warning message).each do |type|
               emoji = GitHubConfig::TYPE_MAPPINGS[type][:emoji]
               violations[:"#{type}s"].each do |violation|
-                post_single_inline_comment(violation, emoji, diff_lines, danger_comments)
+                post_single_inline_comment(violation, emoji, diff_lines, danger_comments, type)
               end
             end
 
@@ -80,11 +80,20 @@ module Danger
           # @param emoji [String] Emoji to display
           # @param diff_lines [Array<String>] Lines from the PR diff
           # @param danger_comments [Array] Existing danger comments (modified in place)
+          # @param type [Symbol] The violation type (:error, :warning, :message)
           # @return [void]
           #
-          def post_single_inline_comment(violation, emoji, diff_lines, danger_comments)
+          def post_single_inline_comment(violation, emoji, diff_lines, danger_comments, type)
             position = find_position_in_diff(diff_lines, violation)
-            return unless position
+
+            # If violation is out of range...
+            unless position
+              # Check if we should dismiss it or report it to the comment handler
+              unless dismiss_out_of_range_for?(type)
+                report_out_of_range_violation(:"#{type}s", violation)
+              end
+              return
+            end
 
             # Generate comment body using Danger's template
             processed_violation = process_markdown(violation, true)
@@ -249,6 +258,22 @@ module Danger
               end
             rescue StandardError => e
               log_warning("Failed to cleanup inline comment: #{e.message}")
+            end
+          end
+
+          # Checks if out-of-range violations should be dismissed for a given type.
+          #
+          # @param type [Symbol] The violation type (:error, :warning, :message)
+          # @return [Boolean] true if out-of-range violations should be dismissed
+          #
+          def dismiss_out_of_range_for?(type)
+            dismiss_setting = context.dismiss_out_of_range_messages
+            return false unless dismiss_setting
+
+            if dismiss_setting.kind_of?(Hash)
+              dismiss_setting[type]
+            else
+              dismiss_setting == true
             end
           end
         end

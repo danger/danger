@@ -246,11 +246,20 @@ module Danger
         registry.violations = { warnings: warnings, errors: errors, messages: messages }
 
         platform = detect_platform_for(request_source)
+
+        # Shared state allows handlers to coordinate
+        # e.g., inline handler reports out-of-range violations for comment handler
+        shared_state = {
+          out_of_range_violations: { warnings: [], errors: [], messages: [] },
+          out_of_range_markdowns: []
+        }
+
         options = {
           danger_id: danger_id,
           new_comment: new_comment,
           remove_previous_comments: remove_previous_comments,
-          markdowns: markdowns
+          markdowns: markdowns,
+          shared_state: shared_state
         }
 
         handlers = registry.default_handlers_for_platform(platform, **options)
@@ -475,7 +484,9 @@ module Danger
       def default_github_handlers
         # NOTE: github_status is not included by default since commit status
         # is handled separately in Danger's runner (submit_pull_request_status)
-        %i(github_comment github_inline)
+        # NOTE: Inline runs first so it can report out-of-range violations
+        # to be included in the main comment
+        %i(github_inline github_comment)
       end
 
       # Returns default handler names for GitLab platform.
