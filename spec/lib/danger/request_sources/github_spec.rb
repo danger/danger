@@ -487,9 +487,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
-      # TODO: Needs handler coordination - inline handler should report failures
-      # to comment handler for fallback to main comment
-      xit "adds main comment when inline out of range" do
+      it "adds main comment when inline out of range" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
         @g.instance_variable_set(:@comments, nil) # Clear memoization
@@ -553,9 +551,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 
-      # TODO: Inline handler has bug with pull_request_comments parsing
-      # Comment data not being converted to Comment objects properly
-      xit "removes inline comments if they are not included" do
+      it "removes inline comments if they are not included" do
         issues = [{ "body" => "'generated_by_another_danger'", "id" => "12" }]
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
 
