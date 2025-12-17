@@ -68,18 +68,35 @@ module Danger
 
           # Filters violations suitable for MR comment (non-inline).
           #
+          # Includes:
+          # - Violations without file/line info (always go to main comment)
+          # - Out-of-range violations reported by the inline handler
+          #
           # @return [Hash] Hash with warnings, errors, messages keys
           #
           def filter_comment_violations
-            filter_violations { |v| v.file.nil? || v.line.nil? }
+            non_inline = filter_violations { |v| v.file.nil? || v.line.nil? }
+
+            # Include out-of-range violations from inline handler
+            oor = out_of_range_violations
+            {
+              warnings: non_inline[:warnings] + (oor[:warnings] || []),
+              errors: non_inline[:errors] + (oor[:errors] || []),
+              messages: non_inline[:messages] + (oor[:messages] || [])
+            }
           end
 
           # Filters markdowns suitable for MR comment (non-inline).
           #
+          # Includes:
+          # - Markdowns without file/line info (always go to main comment)
+          # - Out-of-range markdowns reported by the inline handler
+          #
           # @return [Array] Array of non-inline markdowns
           #
           def filter_comment_markdowns
-            markdowns.select { |m| m.file.nil? || m.line.nil? }
+            non_inline = markdowns.select { |m| m.file.nil? || m.line.nil? }
+            non_inline + out_of_range_markdowns
           end
 
           # Finds existing non-inline Danger comments.
