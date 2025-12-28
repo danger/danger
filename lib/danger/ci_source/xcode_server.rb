@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Following the advice from @czechboy0 https://github.com/danger/danger/issues/171
 # https://github.com/czechboy0/Buildasaur
 require "danger/request_sources/github/github"

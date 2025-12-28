@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # http://docs.gitlab.com/ce/ci/variables/README.html
 require "uri"
 require "danger/request_sources/github/github"

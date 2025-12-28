@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GetIgnoredViolation
   IGNORE_REGEXP = />*\s*danger\s*:\s*ignore\s*"(?<error>[^"]*)"/i.freeze
 

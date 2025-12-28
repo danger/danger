@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # http://screwdriver.cd
 # https://docs.screwdriver.cd/user-guide/environment-variables
 require "danger/request_sources/github/github"

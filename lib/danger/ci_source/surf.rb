@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # http://github.com/surf-build/surf
 require "danger/request_sources/github/github"
 

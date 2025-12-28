@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/support/pull_request_finder"
 
 RSpec.describe Danger::PullRequestFinder do

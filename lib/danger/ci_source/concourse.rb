@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "git"
 require "danger/request_sources/local_only"
 

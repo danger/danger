@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/commands/local"
 require "open3"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/plugin_support/plugin_parser"
 require "danger/plugin_support/plugin_file_resolver"
 require "danger/plugin_support/plugin_linter"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/danger_core/dangerfile_generator"
 
 # Mainly so we can have a nice structure for commands

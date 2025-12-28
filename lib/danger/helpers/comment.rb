@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Danger
   class Comment
     attr_reader :id, :body

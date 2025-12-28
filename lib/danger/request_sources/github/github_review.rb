@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "octokit"
 require "danger/ci_source/ci_source"
 require "danger/request_sources/github/github_review_resolver"
@@ -13,15 +15,15 @@ module Danger
         include Danger::Helpers::CommentsHelper
 
         # @see https://developer.github.com/v3/pulls/reviews/ for all possible events
-        EVENT_APPROVE = "APPROVE".freeze
-        EVENT_REQUEST_CHANGES = "REQUEST_CHANGES".freeze
-        EVENT_COMMENT = "COMMENT".freeze
+        EVENT_APPROVE = "APPROVE"
+        EVENT_REQUEST_CHANGES = "REQUEST_CHANGES"
+        EVENT_COMMENT = "COMMENT"
 
         # Current review status, if the review has not been submitted yet -> STATUS_PENDING
-        STATUS_APPROVED = "APPROVED".freeze
-        STATUS_REQUESTED_CHANGES = "CHANGES_REQUESTED".freeze
-        STATUS_COMMENTED = "COMMENTED".freeze
-        STATUS_PENDING = "PENDING".freeze
+        STATUS_APPROVED = "APPROVED"
+        STATUS_REQUESTED_CHANGES = "CHANGES_REQUESTED"
+        STATUS_COMMENTED = "COMMENTED"
+        STATUS_PENDING = "PENDING"
 
         attr_reader :id, :body, :status, :review_json
 

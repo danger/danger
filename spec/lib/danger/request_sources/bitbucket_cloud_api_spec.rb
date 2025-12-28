@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/request_sources/bitbucket_cloud_api"
 
 RSpec.describe Danger::RequestSources::BitbucketCloudAPI, host: :bitbucket_cloud do

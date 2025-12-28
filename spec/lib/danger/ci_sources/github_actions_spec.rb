@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "danger/ci_source/github_actions"
 
 RSpec.describe Danger::GitHubActions do
