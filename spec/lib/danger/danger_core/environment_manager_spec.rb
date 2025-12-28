@@ -296,13 +296,13 @@ RSpec.describe Danger::EnvironmentManager, use: :ci_helper do
         `git remote add origin git@github.com:devdanger/devdanger.git`
         `touch README.md`
         `git add .`
-        `git commit -q -m "Initial Commit"`
+        `git commit -q --no-gpg-sign -m "Initial Commit"`
         `git checkout -q -b danger_head`
-        `git commit -q --allow-empty -m "HEAD"`
+        `git commit -q --no-gpg-sign --allow-empty -m "HEAD"`
         head_sha = `git rev-parse HEAD`.chomp![0..6]
         `git checkout -q master`
         `git checkout -q -b danger_base`
-        `git commit -q --allow-empty -m "BASE"`
+        `git commit -q --no-gpg-sign --allow-empty -m "BASE"`
         base_sha = `git rev-parse HEAD`.chomp![0..6]
         `git checkout -q master`
 

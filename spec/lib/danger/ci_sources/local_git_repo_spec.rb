@@ -12,19 +12,19 @@ RSpec.describe Danger::LocalGitRepo do
         `git remote add origin https://github.com/danger/danger.git`
         File.open("#{dir}/file1", "w") {}
         `git add .`
-        `git commit -m "adding file1"`
+        `git commit --no-gpg-sign -m "adding file1"`
         `git checkout -b new-branch --quiet`
         File.open("#{dir}/file2", "w") {}
         `git add .`
-        `git commit -m "adding file2"`
+        `git commit --no-gpg-sign -m "adding file2"`
         `git checkout master --quiet`
 
         if merge_pr
-          `git merge new-branch --no-ff -m "Merge pull request #1234 from new-branch"`
+          `git merge new-branch --no-ff --no-gpg-sign -m "Merge pull request #1234 from new-branch"`
         end
 
         if squash_and_merge_pr
-          `git merge new-branch --no-ff -m "New branch (#1234)"`
+          `git merge new-branch --no-ff --no-gpg-sign -m "New branch (#1234)"`
         end
 
         yield
@@ -90,7 +90,7 @@ RSpec.describe Danger::LocalGitRepo do
           run_in_repo do
             File.open("file3", "w") {}
             `git add .`
-            `git commit -m "#{invalid_encoded_string}"`
+            `git commit --no-gpg-sign -m "#{invalid_encoded_string}"`
 
             result = source(valid_env)
             logs = nil
@@ -188,9 +188,9 @@ RSpec.describe Danger::LocalGitRepo do
         `git checkout -b new-branch2 --quiet`
         File.open("file3", "w") {}
         `git add .`
-        `git commit -m "adding file2"`
+        `git commit --no-gpg-sign -m "adding file2"`
         `git checkout master --quiet`
-        `git merge new-branch2 --no-ff -m "Merge pull request #1235 from new-branch"`
+        `git merge new-branch2 --no-ff --no-gpg-sign -m "Merge pull request #1235 from new-branch"`
       end
 
       it "handles finding the resulting PR" do

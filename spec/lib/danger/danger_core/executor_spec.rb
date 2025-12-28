@@ -189,24 +189,24 @@ RSpec.describe Danger::Executor, use: :ci_helper do
         FileUtils.cp "#{project_root}/spec/fixtures/github/Dangerfile", dir
         `git init -b master`
         `git add .`
-        `git commit -m "first commit"`
+        `git commit --no-gpg-sign -m "first commit"`
         `git remote add origin git@github.com:SwiftWeekly/swiftweekly.github.io.git`
 
         # Create 2016-09-15-issue-38.md
         `git checkout -b jp-issue-38 --quiet`
         IO.write("_drafts/2016-09-15-issue-38.md", "init 2016-09-15-issue-38.md")
         `git add _drafts/2016-09-15-issue-38.md`
-        `git commit -m "flesh out issue 38 based on suggestions from #75, #79"`
+        `git commit --no-gpg-sign -m "flesh out issue 38 based on suggestions from #75, #79"`
 
         # Update 2016-09-15-issue-38.md
         IO.write("_drafts/2016-09-15-issue-38.md", "update 2016-09-15-issue-38.md")
         `git add _drafts/2016-09-15-issue-38.md`
-        `git commit -m "address first round of review feedback"`
+        `git commit --no-gpg-sign -m "address first round of review feedback"`
 
         # Move 2016-09-15-issue-38.md from _drafts/ to _posts/
         `git mv _drafts/2016-09-15-issue-38.md _posts/2016-09-15-issue-38.md`
         `git add .`
-        `git commit -m "move issue 38 to _posts"`
+        `git commit --no-gpg-sign -m "move issue 38 to _posts"`
 
         shas = `git log --oneline`.scan(/\b[0-9a-f]{5,40}\b/)
         head_sha = shas.first

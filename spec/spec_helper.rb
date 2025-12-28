@@ -114,12 +114,12 @@ def with_git_repo(origin: "git@github.com:artsy/eigen")
       `git init -b master`
       File.open("#{dir}/file1", "w") {}
       `git add .`
-      `git commit -m "ok"`
+      `git commit --no-gpg-sign -m "ok"`
 
       `git checkout -b new --quiet`
       File.open("#{dir}/file2", "w") {}
       `git add .`
-      `git commit -m "another"`
+      `git commit --no-gpg-sign -m "another"`
       `git remote add origin #{origin}`
 
       Dir.mkdir("#{dir}/subdir")

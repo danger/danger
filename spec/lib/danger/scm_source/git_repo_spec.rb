@@ -106,11 +106,11 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git remote add origin git@github.com:danger/danger.git`
           File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
-          `git commit -m "ok"`
+          `git commit --no-gpg-sign -m "ok"`
           `git checkout -b new --quiet`
           File.delete("#{dir}/file")
           `git add . --all`
-          `git commit -m "another"`
+          `git commit --no-gpg-sign -m "another"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
@@ -126,11 +126,11 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git remote add origin git@github.com:danger/danger.git`
           File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
-          `git commit -m "ok"`
+          `git commit --no-gpg-sign -m "ok"`
           `git checkout -b new --quiet`
           File.open("#{dir}/file", "a") { |file| file.write("ok\nmorestuff") }
           `git add .`
-          `git commit -m "another"`
+          `git commit --no-gpg-sign -m "another"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
@@ -151,11 +151,11 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git remote add origin git@github.com:danger/danger.git`
           File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
-          `git commit -m "ok"`
+          `git commit --no-gpg-sign -m "ok"`
           `git checkout -b new --quiet`
           `mkdir "#{subfolder}"`
           `git mv file "#{subfolder}"`
-          `git commit -m "another"`
+          `git commit --no-gpg-sign -m "another"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
@@ -176,12 +176,12 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git remote add origin git@github.com:danger/danger.git`
           File.open("#{dir}/file", "w") { |file| file.write("hi\n\nfb\nasdasd") }
           `git add .`
-          `git commit -m "ok"`
+          `git commit --no-gpg-sign -m "ok"`
 
           `git checkout -b new --quiet`
           File.open("#{dir}/file", "a") { |file| file.write("hi\n\najsdha") }
           `git add .`
-          `git commit -m "another"`
+          `git commit --no-gpg-sign -m "another"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
@@ -198,12 +198,12 @@ RSpec.describe Danger::GitRepo, host: :github do
           `git remote add origin git@github.com:danger/danger.git`
           File.open("#{dir}/file", "w") { |file| file.write("1\n2\n3\n4\n5\n") }
           `git add .`
-          `git commit -m "ok"`
+          `git commit --no-gpg-sign -m "ok"`
 
           `git checkout -b new --quiet`
           File.open("#{dir}/file", "w") { |file| file.write("1\n2\n3\n5\n") }
           `git add .`
-          `git commit -m "another"`
+          `git commit --no-gpg-sign -m "another"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "new")
@@ -241,7 +241,7 @@ RSpec.describe Danger::GitRepo, host: :github do
           File.open(File.join(dir, "c"), "w") { |f| f.write("Hello") }
 
           `git add .`
-          `git commit -m "Add files"`
+          `git commit --no-gpg-sign -m "Add files"`
           `git checkout -b rename_files --quiet`
 
           File.delete(File.join(dir, "first", "a"))
@@ -255,7 +255,7 @@ RSpec.describe Danger::GitRepo, host: :github do
           # Use -A here cause for older versions of git
           # add . don't add removed files to index
           `git add -A .`
-          `git commit -m "Rename files"`
+          `git commit --no-gpg-sign -m "Rename files"`
 
           @dm = testing_dangerfile
           @dm.env.scm.diff_for_folder(dir, from: "master", to: "rename_files")
