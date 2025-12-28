@@ -8,6 +8,7 @@ require "danger/helpers/comment"
 require "danger/request_sources/github/github_review"
 require "danger/request_sources/github/github_review_unsupported"
 require "danger/request_sources/support/get_ignored_violation"
+require "danger/output_registry/output_handler_registry"
 
 module Danger
   module RequestSources
@@ -155,72 +156,20 @@ module Danger
       end
 
       # Sending data to GitHub
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for GitHub (comment, inline comments, commit status).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        comment_result = {}
-        editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
-        last_comment = editable_comments.last
-        should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
-
-        previous_violations =
-          if should_create_new_comment
-            {}
-          else
-            parse_comment(last_comment.body)
-          end
-
-        regular_violations = regular_violations_group(
+        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
           warnings: warnings,
           errors: errors,
           messages: messages,
-          markdowns: markdowns
-        )
-
-        inline_violations = inline_violations_group(
-          warnings: warnings,
-          errors: errors,
-          messages: messages,
-          markdowns: markdowns
-        )
-
-        rest_inline_violations = submit_inline_comments!(**{
+          markdowns: markdowns,
           danger_id: danger_id,
-          previous_violations: previous_violations
-        }.merge(inline_violations))
-
-        main_violations = merge_violations(
-          regular_violations, rest_inline_violations
-        )
-
-        main_violations_sum = main_violations.values.inject(:+)
-
-        if (previous_violations.empty? && main_violations_sum.empty?) || remove_previous_comments
-          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
-          delete_old_comments!(danger_id: danger_id)
-        end
-
-        # If there are still violations to show
-        if main_violations_sum.any?
-          body = generate_comment(**{
-            template: "github",
-            danger_id: danger_id,
-            previous_violations: previous_violations
-          }.merge(main_violations))
-
-          comment_result =
-            if should_create_new_comment
-              client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-            else
-              client.update_comment(ci_source.repo_slug, last_comment.id, body)
-            end
-        end
-
-        # Now, set the pull request status.
-        # Note: this can terminate the entire process.
-        submit_pull_request_status!(
-          warnings: warnings,
-          errors: errors,
-          details_url: comment_result["html_url"],
-          danger_id: danger_id
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
         )
       end
 
