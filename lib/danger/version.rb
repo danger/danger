@@ -1,4 +1,4 @@
 module Danger
-  VERSION = "0.9.0".freeze
-  DESCRIPTION = "Automate your PR etiquette.".freeze
+  VERSION = "5.3.5".freeze
+  DESCRIPTION = "Like Unit Tests, but for your Team Culture.".freeze
 end

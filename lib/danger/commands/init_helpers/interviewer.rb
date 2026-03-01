@@ -33,7 +33,7 @@ module Danger
     end
 
     def link(url)
-      say " -> " + url.underline + "\n"
+      say " -> " + url.underlined + "\n"
     end
 
     def pause(time)
@@ -52,27 +52,12 @@ module Danger
       system command
     end
 
-    def ask(question)
-      answer = ""
-      loop do
-        ui.puts "\n#{question}?"
-
-        show_prompt
-        answer = STDIN.gets.chomp
-
-        break if answer.empty?
-
-        ui.print "\nYou need to provide an answer."
-      end
-      answer
-    end
-
     def ask_with_answers(question, possible_answers)
       ui.print "\n#{question}? ["
 
       print_info = proc do
         possible_answers.each_with_index do |answer, i|
-          the_answer = (i == 0) ? answer.underline : answer
+          the_answer = i.zero? ? answer.underlined : answer
           ui.print " " + the_answer
           ui.print(" /") if i != possible_answers.length - 1
         end

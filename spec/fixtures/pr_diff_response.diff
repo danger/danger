@@ -1,0 +1,280 @@
+diff --git a/Artsy.xcodeproj/project.pbxproj b/Artsy.xcodeproj/project.pbxproj
+index 07cd1f0..f04d154 100644
+--- a/Artsy.xcodeproj/project.pbxproj
++++ b/Artsy.xcodeproj/project.pbxproj
+@@ -229,7 +229,6 @@
+ 		540262C618A0FAFB00844AE1 /* ARButtonWithImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 540262C518A0FAFB00844AE1 /* ARButtonWithImage.m */; };
+ 		54289FEE18AA7F4E00681E49 /* UINavigationController_InnermostTopViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 54289FED18AA7F4E00681E49 /* UINavigationController_InnermostTopViewControllerSpec.m */; };
+ 		5435192E18A8E9420060F31E /* UIView+OldSchoolSnapshots.m in Sources */ = {isa = PBXBuildFile; fileRef = 5435192D18A8E9420060F31E /* UIView+OldSchoolSnapshots.m */; };
+-		546778EE18A95642002C4C71 /* ARAppDelegate+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 546778ED18A95642002C4C71 /* ARAppDelegate+Testing.m */; };
+ 		546A858217763349006D489B /* ARHeroUnitsNetworkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 546A858117763349006D489B /* ARHeroUnitsNetworkModel.m */; };
+ 		54B7477518A397170050E6C7 /* ARTopMenuViewController+DeveloperExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B7477418A397170050E6C7 /* ARTopMenuViewController+DeveloperExtras.m */; };
+ 		5E0AEB7819B9EA43009F34DE /* ARShowNetworkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E0AEB7719B9EA43009F34DE /* ARShowNetworkModel.m */; };
+@@ -285,6 +284,7 @@
+ 		60327DEA198933610075B399 /* ARTestTopMenuNavigationDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 60327DE5198933610075B399 /* ARTestTopMenuNavigationDataSource.m */; };
+ 		60327DEB198933610075B399 /* ARTopMenuNavigationDataSourceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 60327DE6198933610075B399 /* ARTopMenuNavigationDataSourceSpec.m */; };
+ 		60327DEC198933610075B399 /* ARTopMenuViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 60327DE7198933610075B399 /* ARTopMenuViewControllerSpec.m */; };
++		6034E0781BA8AE1600DA7DDD /* ARTestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034E0761BA8A6FB00DA7DDD /* ARTestAppDelegate.m */; };
+ 		6034EB1D175F68350070478D /* SiteHeroUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034EB1C175F68350070478D /* SiteHeroUnit.m */; };
+ 		6034EB2F1760A9BE0070478D /* ARTopMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6034EB2B1760A9BD0070478D /* ARTopMenuViewController.m */; };
+ 		6036B5621760DC9100F1DD01 /* ARHeroUnitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6036B5611760DC9100F1DD01 /* ARHeroUnitViewController.m */; };
+@@ -1000,8 +1000,6 @@
+ 		54289FED18AA7F4E00681E49 /* UINavigationController_InnermostTopViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationController_InnermostTopViewControllerSpec.m; sourceTree = "<group>"; };
+ 		5435192C18A8E9420060F31E /* UIView+OldSchoolSnapshots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+OldSchoolSnapshots.h"; sourceTree = "<group>"; };
+ 		5435192D18A8E9420060F31E /* UIView+OldSchoolSnapshots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+OldSchoolSnapshots.m"; sourceTree = "<group>"; };
+-		546778EC18A95642002C4C71 /* ARAppDelegate+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ARAppDelegate+Testing.h"; sourceTree = "<group>"; };
+-		546778ED18A95642002C4C71 /* ARAppDelegate+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ARAppDelegate+Testing.m"; sourceTree = "<group>"; };
+ 		546A858017763349006D489B /* ARHeroUnitsNetworkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARHeroUnitsNetworkModel.h; sourceTree = "<group>"; };
+ 		546A858117763349006D489B /* ARHeroUnitsNetworkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARHeroUnitsNetworkModel.m; sourceTree = "<group>"; };
+ 		54AD031F18A4FCCE0055F2D2 /* ARMenuAwareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARMenuAwareViewController.h; sourceTree = "<group>"; };
+@@ -1108,6 +1106,8 @@
+ 		60327DE5198933610075B399 /* ARTestTopMenuNavigationDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTestTopMenuNavigationDataSource.m; sourceTree = "<group>"; };
+ 		60327DE6198933610075B399 /* ARTopMenuNavigationDataSourceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTopMenuNavigationDataSourceSpec.m; sourceTree = "<group>"; };
+ 		60327DE7198933610075B399 /* ARTopMenuViewControllerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTopMenuViewControllerSpec.m; sourceTree = "<group>"; };
++		6034E0751BA8A6FB00DA7DDD /* ARTestAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTestAppDelegate.h; sourceTree = "<group>"; };
++		6034E0761BA8A6FB00DA7DDD /* ARTestAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTestAppDelegate.m; sourceTree = "<group>"; };
+ 		6034EB1B175F68350070478D /* SiteHeroUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SiteHeroUnit.h; sourceTree = "<group>"; };
+ 		6034EB1C175F68350070478D /* SiteHeroUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SiteHeroUnit.m; sourceTree = "<group>"; };
+ 		6034EB2A1760A9BD0070478D /* ARTopMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTopMenuViewController.h; sourceTree = "<group>"; };
+@@ -2431,6 +2431,8 @@
+ 				60431FB718042A1E000118D7 /* ARAppNotificationsDelegate.m */,
+ 				60431FB918042E63000118D7 /* ARAppBackgroundFetchDelegate.h */,
+ 				60431FBA18042E63000118D7 /* ARAppBackgroundFetchDelegate.m */,
++				6034E0751BA8A6FB00DA7DDD /* ARTestAppDelegate.h */,
++				6034E0761BA8A6FB00DA7DDD /* ARTestAppDelegate.m */,
+ 				514E56471BA0BABA008A0DF6 /* ARAppActivityContinuationDelegate.h */,
+ 				514E56481BA0BABA008A0DF6 /* ARAppActivityContinuationDelegate.m */,
+ 			);
+@@ -3836,8 +3838,6 @@
+ 				6082B2041B46ADDE00953BC8 /* stubbed_image.png */,
+ 				E6718314194A595F001A5566 /* ARTestContext.h */,
+ 				E6718315194A595F001A5566 /* ARTestContext.m */,
+-				546778EC18A95642002C4C71 /* ARAppDelegate+Testing.h */,
+-				546778ED18A95642002C4C71 /* ARAppDelegate+Testing.m */,
+ 				E6B9FA7A18A97C0A00E961F9 /* stub.jpg */,
+ 				B3ECE82D1819D1E6009F5C5B /* Artsy_Tests-Info.plist */,
+ 				B3ECE82E1819D1E6009F5C5B /* InfoPlist.strings */,
+@@ -4800,9 +4800,9 @@
+ 				E612BC3F19D1B9DE00585CD6 /* ARFollowableButtonTests.m in Sources */,
+ 				B3ECE83C1819D1FD009F5C5B /* SaleArtworkTests.m in Sources */,
+ 				3C2E6C5C192262A3009DAB28 /* ARRouterTests.m in Sources */,
++				6034E0781BA8AE1600DA7DDD /* ARTestAppDelegate.m in Sources */,
+ 				5E0AEB7D19B9FAED009F34DE /* ARStubbedShowNetworkModel.m in Sources */,
+ 				3C6BDCC018E0B3E40028EF5D /* MutableNSURLResponse.m in Sources */,
+-				546778EE18A95642002C4C71 /* ARAppDelegate+Testing.m in Sources */,
+ 				3CAA413218D8CC32000EE867 /* ARFairFavoritesNetworkModelTests.m in Sources */,
+ 				60327DEA198933610075B399 /* ARTestTopMenuNavigationDataSource.m in Sources */,
+ 				0CE3C4361B8BB3630092A24F /* EXPMatcher+UINavigationController.m in Sources */,
+diff --git a/Artsy/App/ARAppDelegate.m b/Artsy/App/ARAppDelegate.m
+index 186d631..00ac1b1 100644
+--- a/Artsy/App/ARAppDelegate.m
++++ b/Artsy/App/ARAppDelegate.m
+@@ -60,6 +60,12 @@ @implementation ARAppDelegate
+ 
+ + (void)load
+ {
++    /// The setup in testing is done in ARTestAppDelegate
++    BOOL isRunningTests = NSClassFromString(@"XCTestCase") != nil;
++    if (isRunningTests) {
++        return;
++    }
++
+     id delegate = [[self alloc] init];
+     [JSDecoupledAppDelegate sharedAppDelegate].appStateDelegate = delegate;
+     [JSDecoupledAppDelegate sharedAppDelegate].URLResourceOpeningDelegate = delegate;
+diff --git a/Artsy/App/ARTestAppDelegate.h b/Artsy/App/ARTestAppDelegate.h
+new file mode 100644
+index 0000000..2015f81
+--- /dev/null
++++ b/Artsy/App/ARTestAppDelegate.h
+@@ -0,0 +1,6 @@
++#import <Foundation/Foundation.h>
++
++
++@interface ARTestAppDelegate : NSObject <UIApplicationDelegate>
++
++@end
+diff --git a/Artsy/App/ARTestAppDelegate.m b/Artsy/App/ARTestAppDelegate.m
+new file mode 100644
+index 0000000..aa9498e
+--- /dev/null
++++ b/Artsy/App/ARTestAppDelegate.m
+@@ -0,0 +1,28 @@
++@import iRate;
++
++#import "ARTestAppDelegate.h"
++#import "ARRouter.h"
++#import "ARLogger.h"
++
++/// Acts as an App Delegate, but as it is loaded from
++/// the test bundle - as of Xcode 7 this seems to be loaded
++/// after the UIApplicationDelegate methods get called.
++///
++/// So, we abuse +load to do the usual setup calls.
++
++
++@implementation ARTestAppDelegate
++
+++ (void)load
++{
++    ARPerformWorkAsynchronously = NO;
++    [ARRouter setup];
++
++    /// Never run in tests
++    [[iRate sharedInstance] setRatedThisVersion:YES];
++
++    /// Not really sure what this is for
++    [[ARLogger sharedLogger] startLogging];
++}
++
++@end
+diff --git a/Artsy_Tests/App_Tests/ARAppNotificationsDelegateTests.m b/Artsy_Tests/App_Tests/ARAppNotificationsDelegateTests.m
+index a91b593..7596610 100644
+--- a/Artsy_Tests/App_Tests/ARAppNotificationsDelegateTests.m
++++ b/Artsy_Tests/App_Tests/ARAppNotificationsDelegateTests.m
+@@ -50,7 +50,7 @@
+         });
+ 
+         it(@"updates the badge count", ^{
+-            id classMock = [OCMockObject mockForClass:[ARTopMenuViewController class]];
++            id classMock = [OCMockObject mockForClass:ARTopMenuViewController.class];
+             id controllerMock = [OCMockObject partialMockForObject:[ARTopMenuViewController sharedController]];
+             [[[classMock stub] andReturn:controllerMock] sharedController];
+ 
+diff --git a/Artsy_Tests/Networking_Tests/API_Modules/ArtsyAPI+PrivateTests.m b/Artsy_Tests/Networking_Tests/API_Modules/ArtsyAPI+PrivateTests.m
+index e9a1202..3367664 100644
+--- a/Artsy_Tests/Networking_Tests/API_Modules/ArtsyAPI+PrivateTests.m
++++ b/Artsy_Tests/Networking_Tests/API_Modules/ArtsyAPI+PrivateTests.m
+@@ -1,9 +1,19 @@
+ #import "ArtsyAPI.h"
++#import "ArtsyOHHTTPAPI.h"
+ #import "ArtsyAPI+Private.h"
+ #import "MutableNSURLResponse.h"
+ 
++
++@interface ArtsyAPI (TestsPrivate)
+++ (ArtsyAPI *)sharedAPI;
++@end
++
+ SpecBegin(ArtsyAPIPrivate);
+ 
++it(@"is always ArtsyOHHTTPAPI in tests", ^{
++    expect([ArtsyAPI sharedAPI]).to.beKindOf(ArtsyOHHTTPAPI.class);
++});
++
+ describe(@"handleXappTokenError", ^{
+ 
+     it(@"doesn't reset XAPP token on non-401 errors", ^{
+diff --git a/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.h b/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.h
+deleted file mode 100644
+index 3f37f92..0000000
+--- a/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-#import "ARAppDelegate.h"
+-
+-
+-@interface ARAppDelegate (Testing)
+-
+-- (BOOL)swizzled_application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+-
+-@end
+diff --git a/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.m b/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.m
+deleted file mode 100644
+index f1a7ba8..0000000
+--- a/Artsy_Tests/Supporting_Files/ARAppDelegate+Testing.m
++++ /dev/null
+@@ -1,59 +0,0 @@
+-#import <objc/runtime.h>
+-#import <iRate/iRate.h>
+-#import "ARRouter.h"
+-#import "ARSwitchBoard.h"
+-#import "ARLogger.h"
+-#import "ARAppDelegate+Testing.h"
+-#import "ARDispatchManager.h"
+-
+-
+-@implementation ARAppDelegate (Testing)
+-
+-// Swizzle out -application:willFinishLaunchingWithOptions: and
+-// -application:didFinishLaunchingWithOptions: to not have the normal
+-// app logic interfere with the tests.
+-//
+-// As per mxcl's comment here: http://stackoverflow.com/a/12709123/1254854
+-
+-+ (void)load
+-{
+-    static dispatch_once_t onceToken;
+-    dispatch_once(&onceToken, ^{
+-        [self swapImplementationOf:@selector(application:didFinishLaunchingWithOptions:)
+-                              with:@selector(swizzled_application:didFinishLaunchingWithOptions:)];
+-
+-        [self swapImplementationOf:@selector(application:willFinishLaunchingWithOptions:)
+-                              with:@selector(swizzled_application:willFinishLaunchingWithOptions:)];
+-    });
+-}
+-
+-+ (void)swapImplementationOf:(SEL)oldSel with:(SEL)newSel
+-{
+-    Class class = [self class];
+-    Method oldMethod = class_getInstanceMethod(class, oldSel);
+-    Method newMethod = class_getInstanceMethod(class, newSel);
+-
+-    if (class_addMethod(class, oldSel, method_getImplementation(newMethod), method_getTypeEncoding(newMethod))) {
+-        class_replaceMethod(class, newSel, method_getImplementation(oldMethod), method_getTypeEncoding(oldMethod));
+-    } else {
+-        method_exchangeImplementations(oldMethod, newMethod);
+-    }
+-}
+-
+-- (BOOL)swizzled_application:(id)app willFinishLaunchingWithOptions:(id)opts
+-{
+-    ARPerformWorkAsynchronously = NO;
+-    [ARRouter setup];
+-
+-    /// Never run in tests
+-    [[iRate sharedInstance] setRatedThisVersion:YES];
+-    return YES;
+-}
+-
+-- (BOOL)swizzled_application:(id)app didFinishLaunchingWithOptions:(id)opts
+-{
+-    [[ARLogger sharedLogger] startLogging];
+-    return YES;
+-}
+-
+-@end
+diff --git a/Podfile.lock b/Podfile.lock
+index 30c25cc..78d6c72 100644
+--- a/Podfile.lock
++++ b/Podfile.lock
+@@ -133,7 +133,7 @@ PODS:
+   - SDWebImage (3.7.1):
+     - SDWebImage/Core (= 3.7.1)
+   - SDWebImage/Core (3.7.1)
+-  - Specta (1.0.2)
++  - Specta (1.0.3)
+   - TPDWeakProxy (1.1.0)
+   - TRVSDictionaryWithCaseInsensitivity (0.0.2)
+   - TSMiniWebBrowser@dblock (HEAD based on 1.1)
+@@ -305,7 +305,7 @@ SPEC CHECKSUMS:
+   ReactiveCocoa: fbe689fe218063b7bbed41032912c9ca4fdbe172
+   RSSwizzle: d561958f595028bfcef98c7d55c318b3878a61c6
+   SDWebImage: ed3095af2ff88b436426037444979b917f6c5575
+-  Specta: 9cec98310dca411f7c7ffd6943552b501622abfe
++  Specta: cf3e4188cf35375c3ee2cd03f8db8f1f4ef98234
+   TPDWeakProxy: 2ee6754e401aad6a67cc1d59c9fedddae7815abf
+   TRVSDictionaryWithCaseInsensitivity: 51d2ccf52c6d645d27b63467a98fa02c556e01b0
+   TSMiniWebBrowser@dblock: 6eb565b44cc2e5cd5eee7660ee5c21f8afae415c
+diff --git a/circle.yml b/circle.yml
+index 731c7a9..7083532 100644
+--- a/circle.yml
++++ b/circle.yml
+@@ -1,6 +1,6 @@
+ machine:
+   xcode:
+-    version: "6.4"
++    version: "7.0"
+   environment:
+     # Private repo access
+     GITHUB_API_KEY: secret

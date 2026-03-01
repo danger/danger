@@ -1,0 +1,42 @@
+* remote origin
+  Fetch URL: git@artsyhub.com:enterdanger/enterdanger.git
+  Push  URL: git@artsyhub.com:enterdanger/enterdanger.git
+  HEAD branch: (not queried)
+  Remote branches: (status not queried)
+    add-scm-provider
+    bitbucket_prep
+    dangerfile
+    doc/fix-changelog
+    doc/fix-changelog-item
+    doc/request_source/validates_as_ci
+    enable-triming-whitespaces-for-all-files
+    feature/inline_messaging
+    get_local_started
+    git-english-env
+    gitlab
+    hk-spec-improvements
+    improve_warning_no_local
+    issues
+    js
+    line_comment
+    linter
+    master
+    merge_point
+    patch/bitbucket-server-api-inspect-protection
+    patch/comment
+    patch/danger/gem_path
+    patch/gemspec-homepage
+    patch/remove-unused-danger-class-method
+    patch/string-methods
+    patch/volation-args
+    readme_improvements
+    release
+    release_214
+    release_303
+    spec/orgnizations
+    youre_a_local_command_harry
+    youre_a_local_command_harry_two
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push' (status not queried):
+    (matching) pushes to (matching)

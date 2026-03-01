@@ -1,0 +1,33 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sun, 17 Jul 2016 13:05:46 GMT
+Content-Type: application/json
+Content-Length: 1507
+Cache-Control: max-age=0, private, must-revalidate
+Etag: W/"e810a3b50890dd0a5823597abbbf9fc9"
+Link: <https://gitlab.com/api/v4/projects/k0nserv/danger-test/merge_requests?state=opened&page=1&per_page=20>; rel="first", <https://gitlab.com/api/v4/projects/k0nserv/danger-test/merge_requests?state=opened&page=1&per_page=20>; rel="last"
+Status: 200 OK
+Vary: Origin
+X-Next-Page:
+X-Page: 1
+X-Per-Page: 20
+X-Prev-Page:
+X-Request-Id: dee4a515-c1dd-4fec-8665-e6ce44bc6c41
+X-Runtime: 0.079596
+X-Total: 3
+X-Total-Pages: 1
+
+[
+  {
+    "iid": 1,
+    "sha": "1111111111111111111111111111111111111111"
+  },
+  {
+    "iid": 2,
+    "sha": "2222222222222222222222222222222222222222"
+  },
+  {
+    "iid": 3,
+    "sha": "3333333333333333333333333333333333333333"
+  }
+]

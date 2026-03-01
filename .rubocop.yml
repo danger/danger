@@ -1,7 +1,7 @@
-inherit_from:
-  - .rubocop_todo.yml
+# Defaults can be found here: https://github.com/bbatsov/rubocop/blob/master/config/default.yml
 
 AllCops:
+  TargetRubyVersion: 2.0
   Exclude:
     - 'spec/fixtures/**/*'
     - 'lib/danger/plugin_support/plugin_parser.rb'
@@ -71,7 +71,7 @@ Style/AndOr:
 
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 320
+  Max: 350
 
 Metrics/CyclomaticComplexity:
   Max: 17
@@ -114,4 +114,40 @@ Style/IfInsideElse:
 # danger specific
 
 Style/BlockComments:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# FIXME: 25
+Metrics/BlockLength:
+  Max: 345
+  Exclude:
+    - "**/*_spec.rb"
+
+Style/MixinGrouping:
+  Enabled: false
+
+Style/FileName:
+  Enabled: false
+
+Style/IndentHeredoc:
+  Enabled: false
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+PercentLiteralDelimiters:
+  PreferredDelimiters:
+    "%":  ()
+    "%i": ()
+    "%q": ()
+    "%Q": ()
+    "%r": "{}"
+    "%s": ()
+    "%w": ()
+    "%W": ()
+    "%x": ()
+
+Security/YAMLLoad:
   Enabled: false

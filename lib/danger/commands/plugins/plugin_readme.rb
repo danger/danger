@@ -8,7 +8,7 @@ module Danger
     self.summary = "Generates a README from a set of plugins"
     self.command = "readme"
 
-    attr_accessor :cork
+    attr_accessor :cork, :json
 
     def initialize(argv)
       @refs = argv.arguments! unless argv.arguments.empty?
@@ -31,13 +31,12 @@ module Danger
     attr_accessor :json, :markdown
     def run
       file_resolver = PluginFileResolver.new(@refs)
-      paths = file_resolver.resolve_to_paths
+      data = file_resolver.resolve
 
-      parser = PluginParser.new(paths)
+      parser = PluginParser.new(data[:paths])
       parser.parse
 
-      self.markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, no_intra_emphasis: true)
-      self.json = JSON.parse(parser.to_json)
+      self.json = JSON.parse(parser.to_json_string)
 
       template = File.join(Danger.gem_path, "lib/danger/plugin_support/templates/readme_table.html.erb")
       cork.puts ERB.new(File.read(template), 0, "-").result(binding)

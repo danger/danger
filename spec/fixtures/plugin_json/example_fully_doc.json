@@ -1,0 +1,121 @@
+[
+  {
+    "name": "DangerProselint",
+    "body_md": "Lint markdown files inside your projects.\nThis is done using the [proselint](http://proselint.com) python egg.\nResults are passed out as a table in markdown.",
+    "instance_name": "proselint",
+    "gem": null,
+    "gem_path": "",
+    "files": [
+      [
+        "/spec/fixtures/plugins/example_fully_documented.rb",
+        18
+      ]
+    ],
+    "example_code": [
+      {
+        "title": "Specifying custom CocoaPods installation options",
+        "text": "\n# Runs a linter with comma style disabled\nproselint.disable_linters = [\"misc.scare_quotes\", \"misc.tense_present\"]\nproselint.lint_files \"_posts/*.md\"\n\n# Runs a linter with all styles, on modified and added markpown files in this PR\nproselint.lint_files"
+      }
+    ],
+    "attributes": [
+      {
+        "disable_linters": {
+          "read": null,
+          "write": {
+            "name": "disable_linters=",
+            "body_md": "Allows you to disable a collection of linters from being ran.\nYou can get a list of [them here](https://github.com/amperser/proselint#checks)",
+            "params": [
+              [
+                "value",
+                null
+              ]
+            ],
+            "files": [
+              [
+                "/spec/fixtures/plugins/example_fully_documented.rb",
+                21
+              ]
+            ],
+            "tags": [
+
+            ],
+            "param_couplets": {
+            },
+            "return": "",
+            "one_liner": "disable_linters="
+          }
+        }
+      }
+    ],
+    "methods": [
+      {
+        "name": "lint_files",
+        "body_md": "Lints the globbed files, which can fail your build if",
+        "params": [
+          [
+            "files",
+            "nil"
+          ]
+        ],
+        "files": [
+          [
+            "/spec/fixtures/plugins/example_fully_documented.rb",
+            30
+          ]
+        ],
+        "tags": [
+          {
+            "name": "param",
+            "types": [
+              "String"
+            ]
+          },
+          {
+            "name": "return",
+            "types": [
+              "void"
+            ]
+          }
+        ],
+        "param_couplets": [
+          {
+            "files=nil": "String"
+          }
+        ],
+        "return": "",
+        "one_liner": "lint_files(files=nil: String)"
+      },
+      {
+        "name": "proselint_installed?",
+        "body_md": "Determine if proselint is currently installed in the system paths.",
+        "params": [
+
+        ],
+        "files": [
+          [
+            "/spec/fixtures/plugins/example_fully_documented.rb",
+            77
+          ]
+        ],
+        "tags": [
+          {
+            "name": "return",
+            "types": [
+              "Bool"
+            ]
+          }
+        ],
+        "param_couplets": {
+        },
+        "return": "Bool",
+        "one_liner": "proselint_installed? -> Bool"
+      }
+    ],
+    "tags": [
+      "blogging, blog, writing, jekyll, middleman, hugo, metalsmith, gatsby, express"
+    ],
+    "see": [
+      "artsy/artsy.github.io"
+    ]
+  }
+]

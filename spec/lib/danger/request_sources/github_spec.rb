@@ -1,28 +1,45 @@
 # coding: utf-8
-require "danger/request_source/request_source"
+
+require "danger/request_sources/github/github"
 require "danger/ci_source/circle"
 require "danger/ci_source/travis"
-require "danger/danger_core/violation"
+require "danger/danger_core/messages/violation"
 
-describe Danger::RequestSources::GitHub do
+RSpec.describe Danger::RequestSources::GitHub, host: :github do
   describe "the github host" do
     it "sets a default GitHub host" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
-      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.host).to eql("github.com")
+
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).host
+
+      expect(result).to eq("github.com")
     end
 
     it "allows the GitHub host to be overridden" do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_HOST" => "git.club-mateusa.com" }
-      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(g.host).to eql("git.club-mateusa.com")
+      result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).host
+
+      expect(result).to eq("git.club-mateusa.com")
     end
 
-    it "allows the GitHub API host to be overridden" do
-      api_endpoint = "https://git.club-mateusa.com/api/v3/"
-      gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_HOST" => api_endpoint }
-      g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
-      expect(Octokit.api_endpoint).to eql(api_endpoint)
+    describe "#api_url" do
+      it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_BASE_URL`" do
+        api_endpoint = "https://git.club-mateusa.com/api/v3/"
+        gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_BASE_URL" => api_endpoint }
+
+        result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).api_url
+
+        expect(result).to eq api_endpoint
+      end
+
+      it "allows the GitHub API host to be overridden with `DANGER_GITHUB_API_HOST` for backwards compatibility" do
+        api_endpoint = "https://git.club-mateusa.com/api/v4/"
+        gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi", "DANGER_GITHUB_API_HOST" => api_endpoint }
+
+        result = Danger::RequestSources::GitHub.new(stub_ci, gh_env).api_url
+
+        expect(result).to eq api_endpoint
+      end
     end
   end
 
@@ -31,10 +48,10 @@ describe Danger::RequestSources::GitHub do
       gh_env = { "DANGER_GITHUB_API_TOKEN" => "hi" }
       @g = Danger::RequestSources::GitHub.new(stub_ci, gh_env)
 
-      pr_response = JSON.parse(fixture("pr_response"), symbolize_names: true)
+      pr_response = JSON.parse(fixture("github_api/pr_response"))
       allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return(pr_response)
 
-      issue_response = JSON.parse(fixture("issue_response"), symbolize_names: true)
+      issue_response = JSON.parse(fixture("github_api/issue_response"))
       allow(@g.client).to receive(:get).with("https://api.github.com/repos/artsy/eigen/issues/800").and_return(issue_response)
     end
 
@@ -48,182 +65,131 @@ describe Danger::RequestSources::GitHub do
       expect(@g.issue_json).to be_truthy
     end
 
+    it "raises an exception when the repo was moved from the git remote" do
+      allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800").and_return({ "message" => "Moved Permanently" })
+
+      expect do
+        @g.fetch_details
+      end.to raise_error("Repo moved or renamed, make sure to update the git remote".red)
+    end
+
     it "sets the ignored violations" do
       @g.fetch_details
-      expect(@g.ignored_violations).to eql(["Developer Specific file shouldn't be changed",
-                                            "Some warning"])
+
+      expect(@g.ignored_violations).to eq(
+        [
+          "Developer Specific file shouldn't be changed",
+          "Some warning"
+        ]
+      )
     end
 
-    # TODO: Move to the plugin
-    #
-    xdescribe "DSL Attributes" do
-      it "sets the right commit sha" do
+    describe "#organisation" do
+      it "valid value available" do
         @g.fetch_details
-
-        expect(@g.pr_json[:base][:sha]).to eql(@g.base_commit)
-        expect(@g.pr_json[:head][:sha]).to eql(@g.head_commit)
-        expect(@g.pr_json[:base][:ref]).to eql(@g.branch_for_merge)
+        expect(@g.organisation).to eq("artsy")
       end
 
-      it "sets the right labels" do
-        @g.fetch_details
-        expect(@g.pr_labels).to eql(["D:2", "Maintenance Work"])
+      it "no valid value available doesn't crash" do
+        @g.issue_json = nil
+        expect(@g.organisation).to eq(nil)
       end
     end
 
-    describe "#generate_comment" do
+    describe "#file_url" do
       before do
-        @date = Time.now.strftime("%Y-%m-%d")
-        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
-
-        stub_request(:post, "https://git.club-mateusa.com/api/v3/repos/artsy/eigen/statuses/").
-          with(body: "{\"description\":\"All green. Good on 'ya.\",\"context\":\"danger/danger\",\"target_url\":null,\"state\":\"success\"}",
-                     headers: { "Accept" => "application/vnd.github.v3+json", "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3", "Authorization" => "token hi", "Content-Type" => "application/json", "User-Agent" => "Octokit Ruby Gem 4.3.0" }).
-          to_return(status: 200, body: "", headers: {})
+        contents_response = JSON.parse(fixture("github_api/contents_response"))
+        allow(@g.client).to receive(:contents).with("artsy/danger", path: "Dangerfile", ref: nil).and_return(contents_response)
+        allow(@g.client).to receive(:contents).with("artsy/danger", path: "path/Dangerfile", ref: "master").and_return(contents_response)
+        allow(@g.client).to receive(:contents).with("teapot/danger", path: "Dangerfile", ref: nil).and_raise(Octokit::NotFound)
       end
 
-      it "no warnings, no errors, no messages" do
-        result = @g.generate_comment(warnings: [], errors: [], messages: [])
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
+      it "returns a valid URL with the minimum parameters" do
+        url = @g.file_url(organisation: "artsy", repository: "danger", path: "Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
       end
 
-      it "supports markdown code below the summary table" do
-        result = @g.generate_comment(warnings: violations(["ups"]), markdowns: ["### h3"])
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">ups</td></tr></tbody></table>###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
+      it "returns a valid URL with more parameters" do
+        url = @g.file_url(repository: "danger", organisation: "artsy", branch: "master", path: "path/Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/artsy/danger/master/path/Dangerfile")
       end
 
-      it "supports markdown only without a table" do
-        result = @g.generate_comment(markdowns: ["### h3"])
-        expect(result.gsub(/\s+/, "")).to eq(
-          '###h3<palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
+      it "returns a valid fallback URL" do
+        url = @g.file_url(repository: "danger", organisation: "teapot", path: "Dangerfile")
+        expect(url).to eq("https://raw.githubusercontent.com/teapot/danger/master/Dangerfile")
+      end
+    end
+
+    describe "review" do
+      context "when already asked for review" do
+        before do
+          allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return([])
+          @created_review = @g.review
+        end
+
+        it "returns the same review" do
+          expect(@g.review).to eq(@created_review)
+        end
       end
 
-      it "some warnings, no errors" do
-        result = @g.generate_comment(warnings: violations(["my warning", "second warning"]), errors: [], messages: [])
-        # rubocop:disable Metrics/LineLength
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr><tr><td>:warning:</td><tddata-sticky="false">secondwarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
-        # rubocop:enable Metrics/LineLength
+      context "when ask for review first time" do
+        context "when there are no danger review for PR" do
+          before do
+            allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return([])
+          end
+
+          it "returns a newly created review" do
+            @review = @g.review
+            expect(@review.review_json).to be_nil
+          end
+        end
+
+        context "when there are danger review for PR" do
+          before do
+            pr_reviews_response = JSON.parse(fixture("github_api/pr_reviews_response"))
+            allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_return(pr_reviews_response)
+          end
+
+          it "returns the last review from danger" do
+            @review = @g.review
+            expect(@review.review_json).to_not be_nil
+            expect(@review.id).to eq(16_237_194)
+          end
+        end
       end
 
-      it "some warnings with markdown, no errors" do
-        warnings = violations(["a markdown [link to danger](https://github.com/danger/danger)", "second **warning**"])
-        result = @g.generate_comment(warnings: warnings, errors: [], messages: [])
-        # rubocop:disable Metrics/LineLength
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">2Warnings</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">amarkdown<ahref="https://github.com/danger/danger">linktodanger</a></td></tr><tr><td>:warning:</td><tddata-sticky="false">second<strong>warning</strong></td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
-        # rubocop:enable Metrics/LineLength
-      end
+      context "when running against github enterprise which doesn't support reviews" do
+        it "returns an unsupported review instance" do
+          allow(@g.client).to receive(:pull_request_reviews).with("artsy/eigen", "800").and_raise(Octokit::NotFound)
 
-      it "some warnings, some errors" do
-        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
-        # rubocop:disable Metrics/LineLength
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">someerror</td></tr></tbody></table><table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Warning">1Warning</th></tr></thead><tbody><tr><td>:warning:</td><tddata-sticky="false">mywarning</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
-        # rubocop:enable Metrics/LineLength
-      end
-
-      it "deduplicates previous violations" do
-        previous_violations = { error: ["an error", "an error"] }
-        allow(@g).to receive(:random_compliment).and_return("random compliment")
-        result = @g.generate_comment(warnings: [], errors: violations([]), messages: [], previous_violations: previous_violations)
-        expect(result).to eq(<<-HTML)
-<table>
-  <thead>
-    <tr>
-      <th width="50"></th>
-      <th width="100%" data-kind="Error">
-          :white_check_mark: random compliment
-      </th>
-     </tr>
-  </thead>
-  <tbody>
-      <tr>
-        <td>:white_check_mark:</td>
-        <td data-sticky="true"><del>an error</del></td>
-      </tr>
-  </tbody>
-</table>
-
-<p align="right" data-meta="generated_by_danger">
-  Generated by :no_entry_sign: <a href="http://danger.systems/">danger</a>
-</p>
-        HTML
-      end
-
-      it "crosses resolved violations and changes the title" do
-        previous_violations = { error: ["an error"] }
-        result = @g.generate_comment(warnings: [], errors: [], messages: [], previous_violations: previous_violations)
-        expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">:white_check_mark:')
-        expect(result.gsub(/\s+/, "")).to include('<td>:white_check_mark:</td><tddata-sticky="true"><del>anerror</del></td>')
-      end
-
-      it "uncrosses violations that were on the list and happened again" do
-        previous_violations = { error: ["an error"] }
-        result = @g.generate_comment(warnings: [], errors: violations(["an error"]), messages: [], previous_violations: previous_violations)
-        expect(result.gsub(/\s+/, "")).to eq(
-          '<table><thead><tr><thwidth="50"></th><thwidth="100%"data-kind="Error">1Error</th></tr></thead><tbody><tr><td>:no_entry_sign:</td><tddata-sticky="false">anerror</td></tr></tbody></table><palign="right"data-meta="generated_by_danger">Generatedby:no_entry_sign:<ahref="http://danger.systems/">danger</a></p>'
-        )
-      end
-
-      it "counts only unresolved violations on the title" do
-        previous_violations = { error: ["an error"] }
-        result = @g.generate_comment(warnings: [], errors: violations(["another error"]),
-                                     messages: [], previous_violations: previous_violations)
-        expect(result.gsub(/\s+/, "")).to include('<thwidth="100%"data-kind="Error">1Error</th>')
-      end
-
-      it "needs to include generated_by_danger" do
-        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]), messages: [])
-        expect(result.gsub(/\s+/, "")).to include("generated_by_danger")
-      end
-
-      it "handles a custom danger_id" do
-        result = @g.generate_comment(warnings: violations(["my warning"]), errors: violations(["some error"]),
-                                     messages: [], danger_id: "another_danger")
-        expect(result.gsub(/\s+/, "")).to include("generated_by_another_danger")
-      end
-
-      it "sets data-sticky to true when a violation is sticky" do
-        sticky_warning = Danger::Violation.new("my warning", true)
-        result = @g.generate_comment(warnings: [sticky_warning], errors: [], messages: [])
-        expect(result.gsub(/\s+/, "")).to include('tddata-sticky="true"')
-      end
-
-      it "sets data-sticky to false when a violation is not sticky" do
-        non_sticky_warning = Danger::Violation.new("my warning", false)
-        result = @g.generate_comment(warnings: [non_sticky_warning], errors: [], messages: [])
-        expect(result.gsub(/\s+/, "")).to include('tddata-sticky="false"')
+          review = @g.review
+          expect(review).to respond_to(
+            :id, :body, :status, :review_json, :start, :submit, :message, :warn,
+            :fail, :markdown
+          )
+        end
       end
     end
 
     describe "status message" do
       it "Shows a success message when no errors/warnings" do
-        message = @g.generate_github_description(warnings: [], errors: [])
+        message = @g.generate_description(warnings: [], errors: [])
         expect(message).to start_with("All green.")
       end
 
       it "Shows an error messages when there are errors" do
-        message = @g.generate_github_description(warnings: violations([1, 2, 3]), errors: [])
-        expect(message).to eq("⚠ 3 Warnings. Don't worry, everything is fixable.")
+        message = @g.generate_description(warnings: violations_factory([1, 2, 3]), errors: [])
+        expect(message).to eq("⚠️ 3 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Shows an error message when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1, 2]), errors: violations([1, 2, 3]))
-        expect(message).to eq("⚠ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
+        message = @g.generate_description(warnings: violations_factory([1, 2]), errors: violations_factory([1, 2, 3]))
+        expect(message).to eq("⚠️ 3 Errors. 2 Warnings. Don't worry, everything is fixable.")
       end
 
       it "Deals with singualars in messages when errors and warnings" do
-        message = @g.generate_github_description(warnings: violations([1]), errors: violations([1]))
-        expect(message).to eq("⚠ 1 Error. 1 Warning. Don't worry, everything is fixable.")
+        message = @g.generate_description(warnings: violations_factory([1]), errors: violations_factory([1]))
+        expect(message).to eq("⚠️ 1 Error. 1 Warning. Don't worry, everything is fixable.")
       end
     end
 
@@ -233,113 +199,325 @@ describe Danger::RequestSources::GitHub do
       end
 
       it "fails when no head commit is set" do
-        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        @g.pr_json = { "base" => { "sha" => "" }, "head" => { "sha" => "" } }
         expect do
           @g.submit_pull_request_status!
         end.to raise_error("Couldn't find a commit to update its status".red)
+      end
+
+      it "uses danger_id as context of status" do
+        options = hash_including(context: "danger/special_context")
+        expect(@g.client).to receive(:create_status).with(any_args, options).and_return({})
+
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" } }
+        @g.submit_pull_request_status!(danger_id: "special_context")
+      end
+
+      it "aborts when access to setting the status was denied but there were errors" do
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref").to_return(status: 404)
+
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
+
+        expect do
+          @g.submit_pull_request_status!(errors: violations_factory(["error"]))
+        end.to raise_error.and output(/Danger has failed this build/).to_stderr
+      end
+
+      it "warns when access to setting the status was denied but no errors were reported" do
+        stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref").to_return(status: 404)
+
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" }, "base" => { "repo" => { "private" => true } } }
+
+        expect do
+          @g.submit_pull_request_status!(warnings: violations_factory(["error"]))
+        end.to output(/warning.*not have write access/im).to_stdout
       end
     end
 
     describe "issue creation" do
       before do
-        @g.pr_json = { base: { sha: "" }, head: { sha: "" } }
+        @g.pr_json = { "base" => { "sha" => "" }, "head" => { "sha" => "" } }
         allow(@g).to receive(:submit_pull_request_status!).and_return(true)
       end
 
-      it "creates an issue if no danger comments exist" do
-        issues = []
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      it "creates a comment if no danger comments exist" do
+        comments = []
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
       end
 
       it "updates the issue if no danger comments exist" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [])
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [])
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
+      end
+
+      it "creates a new comment instead of updating the issue if --new-comment is provided" do
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [])
+        expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
+
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [], new_comment: true)
       end
 
       it "updates the issue if no danger comments exist and a custom danger_id is provided" do
-        issues = [{ body: "generated_by_another_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        body = @g.generate_comment(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+        body = @g.generate_comment(warnings: violations_factory(["hi"]), errors: [], messages: [], danger_id: "another_danger")
         expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", body).and_return({})
 
-        @g.update_pull_request!(warnings: violations(["hi"]), errors: [], messages: [], danger_id: "another_danger")
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [], danger_id: "another_danger")
       end
 
-      it "deletes existing issues if danger doesnt need to say anything" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      it "deletes existing comments if danger doesnt need to say anything" do
+        comments = [{ "body" => "generated_by_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
+
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
 
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
         @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
 
-      it "deletes existing issues if danger doesnt need to say anything and a custom danger_id is provided" do
-        issues = [{ body: "generated_by_another_danger", id: "12" }]
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
-
+      it "deletes existing comments if danger doesnt need to say anything and a custom danger_id is provided" do
+        comments = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", "12").and_return({})
+
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
         @g.update_pull_request!(warnings: [], errors: [], messages: [], danger_id: "another_danger")
       end
 
-      it "updates the issue if danger doesnt need to say anything but there are sticky violations" do
-        issues = [{ body: "generated_by_danger", id: "12" }]
-        allow(@g).to receive(:parse_comment).and_return({ errors: ["an error"] })
-        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+      # it "updates the comment if danger doesnt need to say anything but there are sticky violations" do
+      #   comments = [{ body: "generated_by_danger", id: "12" }]
+      #   allow(@g).to receive(:parse_comment).and_return({ errors: ["an error"] })
+      #   allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(comments)
 
-        expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
-        @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      #   expect(@g.client).to receive(:update_comment).with("artsy/eigen", "12", any_args).and_return({})
+      #   @g.update_pull_request!(warnings: [], errors: [], messages: [])
+      # end
+    end
+
+    describe "#parse_message_from_row" do
+      it "handles pulling out links that include the file / line when in the main Danger comment" do
+        body = '<a href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1">CHANGELOG.md#L1</a> - Testing inline docs'
+
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("- Testing inline docs")
+      end
+
+      it "handles pulling out file info from an inline Danger comment" do
+        body = '<span data-href="https://github.com/artsy/eigen/blob/8e5d0bab431839a7046b2f7d5cd5ccb91677fe23/CHANGELOG.md#L1"/>Testing inline docs'
+        v = @g.parse_message_from_row(body)
+        expect(v.file).to eq("CHANGELOG.md")
+        expect(v.line).to eq(1)
+        expect(v.message).to include("Testing inline docs")
       end
     end
 
-    describe "comment parsing" do
-      it "detects the warning kind" do
-        expect(@g.table_kind_from_title("1 Warning")).to eq(:warning)
-        expect(@g.table_kind_from_title("2 Warnings")).to eq(:warning)
+    let(:main_issue_id) { 76_535_362 }
+    let(:inline_issue_id_1) { 76_537_315 }
+    let(:inline_issue_id_2) { 76_537_316 }
+
+    describe "inline issues" do
+      before do
+        issues = JSON.parse(fixture("github_api/inline_comments"))
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return(issues)
+
+        diff = diff_fixture("github_api/inline_comments_pr_diff")
+        allow(@g.client).to receive(:pull_request).with("artsy/eigen", "800", { accept: "application/vnd.github.v3.diff" }).and_return(diff)
+
+        @g.fetch_details
+        allow(@g).to receive(:submit_pull_request_status!)
       end
 
-      it "detects the error kind" do
-        expect(@g.table_kind_from_title("1 Error")).to eq(:error)
-        expect(@g.table_kind_from_title("2 Errors")).to eq(:error)
+      it "deletes all inline comments if there are no violations at all" do
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
+        @g.update_pull_request!(warnings: [], errors: [], messages: [])
       end
 
-      it "detects the warning kind" do
-        expect(@g.table_kind_from_title("1 Message")).to eq(:message)
-        expect(@g.table_kind_from_title("2 Messages")).to eq(:message)
+      it "adds new comments inline" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
-      it "parses a comment with error" do
-        comment = comment_fixture("comment_with_error")
-        violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"] })
+      it "adds main comment when inline out of range" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 10)
+        body = @g.generate_comment(warnings: [], errors: [], messages: [v])
+
+        expect(@g.client).not_to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 10)
+        expect(@g.client).to receive(:add_comment).with("artsy/eigen", "800", body).and_return({})
+
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
-      it "parses a comment with error and warnings" do
-        comment = comment_fixture("comment_with_error_and_warnings")
-        violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+      it "ingores out of range inline comments when in dismiss mode" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).not_to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 10)
+        expect(@g.client).not_to receive(:add_comment).with("artsy/eigen", "800", anything)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 10)
+        @g.dismiss_out_of_range_messages = true
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
-      it "ignores non-sticky violations when parsing a comment" do
-        comment = comment_fixture("comment_with_non_sticky")
-        violations = @g.parse_comment(comment)
-        expect(violations).to eq({ warning: ["First warning"] })
+      it "ingores out of range inline comments when in dismiss mode per kind" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        m = Danger::Markdown.new("Sure thing", "CHANGELOG.md", 4)
+        @g.dismiss_out_of_range_messages = {
+          warning: false,
+          error: false,
+          message: false,
+          markdown: true
+        }
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v], markdowns: [m])
       end
 
-      it "parses a comment with error and warnings removing strike tag" do
-        comment = comment_fixture("comment_with_resolved_violation")
-        violations = @g.parse_comment(comment)
-        expect(violations).to eq({ error: ["Some error"], warning: ["First warning", "Second warning"] })
+      it "crosses out sticky comments" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        m = Danger::Markdown.new("Sure thing", "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+      end
+
+      it "removes inline comments if they are not included" do
+        issues = [{ "body" => "generated_by_another_danger", "id" => "12" }]
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)
+
+        allow(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)
+
+        # Main
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id)
+        # Inline Issues
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1)
+        allow(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2)
+
+        allow(@g).to receive(:submit_pull_request_status!)
+
+        v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [v])
+      end
+
+      it "keeps initial messages order" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:add_comment).and_return({})
+        allow(@g).to receive(:submit_pull_request_status!).and_return(true)
+        allow(@g.client).to receive(:create_pull_request_comment).and_return({})
+        allow(@g.client).to receive(:delete_comment).and_return(true)
+        allow(@g.client).to receive(:delete_comment).and_return(true)
+
+        messages = [
+          Danger::Violation.new("1", false, nil, nil),
+          Danger::Violation.new("2", false, nil, nil),
+          Danger::Violation.new("3", false, nil, nil),
+          Danger::Violation.new("4", false, nil, nil),
+          Danger::Violation.new("5", false, nil, nil),
+          Danger::Violation.new("6", false, nil, nil),
+          Danger::Violation.new("7", false, nil, nil),
+          Danger::Violation.new("8", false, nil, nil),
+          Danger::Violation.new("9", false, nil, nil),
+          Danger::Violation.new("10", false, nil, nil)
+        ]
+
+        expect(@g).to receive(:generate_comment).with(
+          template: "github",
+          danger_id: "danger",
+          previous_violations: {},
+          warnings: [],
+          errors: [],
+          messages: messages,
+          markdowns: []
+        )
+
+        @g.update_pull_request!(messages: messages)
+      end
+    end
+
+    describe "branch setup" do
+      it "setups the danger branches" do
+        @g.fetch_details
+        expect(@g.scm).to receive(:exec)
+          .with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}")
+          .and_return("345e74fabb2fecea93091e8925b1a7a208b48ba6").twice
+
+        expect(@g.scm).to receive(:exec)
+          .with("branch danger_base 704dc55988c6996f69b6873c2424be7d1de67bbe")
+
+        expect(@g.scm).to receive(:exec)
+          .with("rev-parse --quiet --verify 561827e46167077b5e53515b4b7349b8ae04610b^{commit}")
+          .and_return("561827e46167077b5e53515b4b7349b8ae04610b").twice
+
+        expect(@g.scm).to receive(:exec)
+          .with("branch danger_head 561827e46167077b5e53515b4b7349b8ae04610b")
+
+        @g.setup_danger_branches
+      end
+
+      it "fetches when the branches are not in the local store" do
+        # not in history
+        expect(@g.scm).to receive(:exec).
+          with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
+          and_return("")
+        # fetch it
+        expect(@g.scm).to receive(:exec).with("fetch --depth 1000000")
+        # still not in history
+        expect(@g.scm).to receive(:exec).
+          with("rev-parse --quiet --verify 704dc55988c6996f69b6873c2424be7d1de67bbe^{commit}").
+          and_return("")
+
+        expect do
+          @g.fetch_details
+          @g.setup_danger_branches
+        end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
       end
     end
   end

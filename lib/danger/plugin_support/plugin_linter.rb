@@ -51,7 +51,7 @@ module Danger
     # Did the linter pass/fail?
     #
     def failed?
-      errors.empty? == false
+      errors.count > 0
     end
 
     # Prints a summary of the errors and warnings.
@@ -59,19 +59,22 @@ module Danger
     def print_summary(ui)
       # Print whether it passed/failed at the top
       if failed?
-        ui.notice "Passed\n"
-      else
         ui.puts "\n[!] Failed\n".red
+      else
+        ui.notice "Passed"
       end
 
       # A generic proc to handle the similarities between
-      # erros and warnings.
+      # errors and warnings.
       do_rules = proc do |name, rules|
         unless rules.empty?
+          ui.puts ""
           ui.section(name.bold) do
             rules.each do |rule|
               title = rule.title.bold + " - #{rule.object_applied_to}"
-              ui.labeled(title, [rule.description, link(rule.ref)])
+              subtitles = [rule.description, link(rule.ref)]
+              subtitles += [rule.metadata[:files].join(":")] if rule.metadata[:files]
+              ui.labeled(title, subtitles)
               ui.puts ""
             end
           end
@@ -111,11 +114,15 @@ module Danger
         Rule.new(:error, 40..41, "Description", "You should include a description for your method.", proc do |json|
           json[:body_md] && json[:body_md].empty?
         end),
-        Rule.new(:warning, 43..45, "Params", "If the function has no useful return value, use ` @return  [void]`.", proc do |json|
+        Rule.new(:warning, 43..45, "Params", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
           json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?(nil)
         end),
+        Rule.new(:warning, 43..45, "Unknown Param", "You should give a 'type' for the param, yes, ruby is duck-typey but it's useful for newbies to the language, use `@param [Type] name`.", proc do |json|
+          json[:param_couplets] && json[:param_couplets].flat_map(&:values).include?("Unknown")
+        end),
         Rule.new(:warning, 46, "Return Type", "If the function has no useful return value, use ` @return  [void]` - this will be ignored by documentation generators.", proc do |json|
-          json[:return] && json[:return].empty?
+          return_hash = json[:tags].find { |tag| tag[:name] == "return" }
+          !(return_hash && return_hash[:types] && !return_hash[:types].first.empty?)
         end)
       ]
     end
@@ -123,9 +130,9 @@ module Danger
     # Generates a link to see an example of said rule
     #
     def link(ref)
-      if ref.kind_of? Range
+      if ref.kind_of?(Range)
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref.min}#-L#{ref.max}".blue
-      elsif ref.kind_of? Fixnum
+      elsif ref.kind_of?(Integer)
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb#L#{ref}".blue
       else
         "@see - " + "https://github.com/dbgrandi/danger-prose/blob/v2.0.0/lib/danger_plugin.rb".blue

@@ -1,4 +1,5 @@
 require "danger/commands/init_helpers/interviewer"
+require "danger/danger_core/dangerfile_generator"
 require "danger/ci_source/local_git_repo"
 require "yaml"
 
@@ -53,8 +54,7 @@ module Danger
     end
 
     def setup_dangerfile
-      dir = Danger.gem_path
-      content = File.read(File.join(dir, "lib", "assets", "DangerfileTemplate"))
+      content = DangerfileGenerator.create_dangerfile(".", cork)
       File.write("Dangerfile", content)
 
       ui.header "Step 1: Creating a starter Dangerfile"
@@ -90,6 +90,15 @@ module Danger
       ui.say "Here are great resources for creative commons images of robots:"
       ui.link "https://www.flickr.com/search/?text=robot&license=2%2C3%2C4%2C5%2C6%2C9"
       ui.link "https://www.google.com/search?q=robot&tbs=sur:fmc&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjgy8-f95jLAhWI7hoKHV_UD00QsAQIMQ&biw=1265&bih=1359"
+      ui.pause 1
+
+      if considered_an_oss_repo?
+        ui.say "#{@bot_name} does not need privileged access to your repo or org. This is because Danger will only"
+        ui.say "be writing comments, and you do not need special access for that."
+      else
+        ui.say "#{@bot_name} will need access to your repo. Simply because the code is not available for the public"
+        ui.say "to read and comment on."
+      end
 
       ui.say ""
       note_about_clicking_links
@@ -113,7 +122,6 @@ module Danger
         ui.pause 1
         ui.say "This token limits Danger's abilities to just writing comments on OSS projects. I recommend"
         ui.say "this because the token can quite easily be extracted from the environment via pull requests."
-        ui.say "#{@bot_name} does not need admin access to your repo. So its ability to cause chaos is minimalized.\n"
 
         ui.say "\nIt is important that you do not store this token in your repository, as GitHub will automatically revoke it when pushed.\n"
       elsif @is_open_source == "closed"
@@ -135,9 +143,14 @@ module Danger
     end
 
     def current_repo_slug
-      @git = GitRepo.new
-      repo_matches = @git.origins.match(%r{([\/:])([^\/]+\/[^\/.]+)(?:.git)?$})
-      repo_matches[2] || "[Your/Repo]"
+      git = GitRepo.new
+
+      author_repo_regexp = %r{(?:[\/:])([^\/]+\/[^\/]+)(?:.git)?$}
+      last_git_regexp = /.git$/
+
+      matches = git.origins.match(author_repo_regexp)
+
+      matches ? matches[1].gsub(last_git_regexp, "").strip : "[Your/Repo]"
     end
 
     def setup_danger_ci
@@ -170,10 +183,10 @@ module Danger
     def uses_travis
       danger = "bundle exec danger".yellow
       config = YAML.load(File.read(".travis.yml"))
-      if config["script"]
+      if config.kind_of?(Hash) && config["script"]
         ui.say "Add " + "- ".yellow + danger + " as a new step in the " + "script".yellow + " section of your .travis.yml file."
       else
-        ui.say "I'd recommend adding " + "script: ".yellow + danger + " to the script section of your .travis.yml file."
+        ui.say "I'd recommend adding " + "before_script: ".yellow + danger + " to the script section of your .travis.yml file."
       end
 
       ui.pause 1
@@ -184,7 +197,7 @@ module Danger
       danger = "- bundle exec danger".yellow
       config = YAML.load(File.read("circle.yml"))
 
-      if config["test"]
+      if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]
           ui.say "Add " + danger + " as a new step in the " + "test:post:".yellow + " section of your circle.yml file."
         else
@@ -226,7 +239,7 @@ module Danger
         ui.say "I'll give you a minute to read it..."
         ui.wait_for_return
 
-        ui.say "On Danger/Danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
+        ui.say "On danger/danger we turn on " + "Permissive building of fork pull requests".yellow + " this exposes the token to Danger"
         ui.say "You can find this setting at:"
         ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
         ui.say "I'll hold..."
@@ -235,12 +248,14 @@ module Danger
 
       ui.say "In order to expose an environment variable, go to:"
       ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#env-vars"
-      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
+      ui.say "The name is " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
     end
 
     def unsure_token
-      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Acess Token."
-      ui.say "Depending on the CI system, this may need to be done on the machine ( in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
+      ui.say "You need to expose a token called " + "DANGER_GITHUB_API_TOKEN".yellow + " and the value is the GitHub Personal Access Token."
+      ui.say "Depending on the CI system, this may need to be done on the machine (in the " + "~/.bashprofile".yellow + ") or in a web UI somewhere."
+      ui.say "We have a guide for all supported CI systems on danger.systems:"
+      ui.link "http://danger.systems/guides/getting_started.html#setting-up-danger-to-run-on-your-ci"
     end
 
     def note_about_clicking_links
@@ -255,9 +270,9 @@ module Danger
 
     def info
       ui.header "Useful info"
-      ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger local".yellow + "."
+      ui.say "- One of the best ways to test out new rules locally is via " + "bundle exec danger pr".yellow + "."
       ui.pause 0.6
-      ui.say "- You can have Danger output all of its variables to the console via the " + "--verbose".yellow + " option."
+      ui.say "- You can have Danger output all of her variables to the console via the " + "--verbose".yellow + " option."
       ui.pause 0.6
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
@@ -271,8 +286,8 @@ module Danger
       ui.pause 0.6
 
       ui.say "And you're good to go. Danger is a collaboration between Orta Therox, Gem 'Danger' McShane and Felix Krause."
-      ui.say "If you like it, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
-      ui.say "If you don't like it, help us improve it! xxx"
+      ui.say "If you like Danger, let others know. If you want to know more, follow " + "@orta".yellow + " and " + "@KrauseFx".yellow + " on Twitter."
+      ui.say "If you don't like Danger, help us improve the project! xxx"
     end
 
     def darwin?

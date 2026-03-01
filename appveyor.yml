@@ -1,0 +1,11 @@
+install:
+  - set PATH=C:\Ruby22\bin;%PATH%
+  - bundle install
+
+build: off
+
+test_script:
+  # Tests use real git commands
+  - git config --global user.email "danger@example.com"
+  - git config --global user.name "Danger McShane"
+  - bundle exec rake specs

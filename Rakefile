@@ -1,29 +1,45 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
-require "rubocop/rake_task"
-
-# Adds :doc & :spec_docs
-require_relative "rake/dsl_generator"
-
-RSpec::Core::RakeTask.new(:specs)
+begin
+  require "bundler/gem_tasks"
+  require "rspec/core/rake_task"
+  RSpec::Core::RakeTask.new(:specs)
+rescue LoadError
+  puts "Please use `bundle exec` to get all the rake commands"
+end
 
 task default: :spec
 
+desc "Danger's tests"
 task :spec do
   Rake::Task["specs"].invoke
-  Rake::Task["rubocop"].invoke
-  # Rake::Task['spec_docs'].invoke
+  Rake::Task["spec_docs"].invoke
 end
 
-desc "Run RuboCop on the lib/specs directory"
-RuboCop::RakeTask.new(:rubocop) do |task|
-  task.patterns = Dir.glob(["lib/**/*.rb", "spec/**/*.rb"]) - Dir.glob(["spec/fixtures/**/*", "lib/danger/plugin_support/plugin_parser.rb"])
+desc "Tests that the core documentation is up to snuff"
+task :spec_docs do
+  core_plugins = Dir.glob("lib/danger/danger_core/plugins/*.rb")
+  sh "danger plugins lint #{core_plugins.join ' '}"
+  sh "danger systems ci_docs"
 end
 
-task :test do
-  sh "fastlane test"
+desc "I do this so often now, better to just handle it here"
+task :guard do |task|
+  sh "bundle exec guard"
 end
 
-task :push do
-  sh "fastlane release"
+desc "Runs chandler for current version"
+task :chandler do
+  lib = File.expand_path("../lib", __FILE__)
+  $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+  require "danger/version"
+  if ENV["CHANDLER_GITHUB_API_TOKEN"]
+    sh "bundle exec chandler push #{Danger::VERSION}"
+  elsif ENV["DANGER_GITHUB_API_TOKEN"]
+    sh "CHANDLER_GITHUB_API_TOKEN=#{ENV['DANGER_GITHUB_API_TOKEN']} bundle exec chandler push #{Danger::VERSION}"
+  else
+    puts "Skipping chandler due to no `CHANDLER_GITHUB_API_TOKEN` or `DANGER_GITHUB_API_TOKEN` in the ENV."
+  end
+end
+
+Rake::Task["release"].enhance do
+  Rake::Task["chandler"].invoke
 end

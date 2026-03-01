@@ -1,6 +1,6 @@
 require "danger/core_ext/file_list"
 
-describe Danger::FileList do
+RSpec.describe Danger::FileList do
   describe "#include?" do
     before do
       paths = ["path1/file_name.txt", "path1/file_name1.txt", "path2/subfolder/example.json"]

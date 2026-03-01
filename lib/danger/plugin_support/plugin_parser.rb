@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 =begin
 
@@ -34,8 +34,10 @@ module Danger
   class PluginParser
     attr_accessor :registry
 
-    def initialize(paths)
+    def initialize(paths, verbose = false)
       raise "Path cannot be empty" if paths.empty?
+
+      setup_yard(verbose)
 
       if paths.kind_of? String
         @paths = [File.expand_path(paths)]
@@ -44,12 +46,20 @@ module Danger
       end
     end
 
-    def parse
+    def setup_yard(verbose)
       require 'yard'
-      # could this go in a singleton-y place instead?
-      # like class initialize?
+
+      # Unless specifically asked, don't output anything.
+      unless verbose
+        YARD::Logger.instance.level = YARD::Logger::FATAL
+      end
+
+      # Add some of our custom tags
       YARD::Tags::Library.define_tag('tags', :tags)
       YARD::Tags::Library.define_tag('availablity', :availablity)
+    end
+
+    def parse
       files = ["lib/danger/plugin_support/plugin.rb"] + @paths
 
       # This turns on YARD debugging
@@ -93,28 +103,36 @@ module Danger
       ""
     end
 
-    def method_params(params)
-      return {} unless params[:params]
+    def method_params(method)
+      return {} unless method[:params]
 
-      params_names = params[:params].compact.flat_map(&:first)
-      params_values = params[:tags].find { |t| t[:name] == "param" }
+      params_names = method[:params].map { |param| param.compact.join("=").strip }
+      params_values = method[:tags].select { |t| t[:name] == "param" }
 
-      return {} if params_values.nil?
-      return {} if params_values[:types].nil?
+      return {} if params_values.empty?
+      return {} if params_values.select { |p| p[:types] }.empty?
 
       return params_names.map.with_index do |name, index|
-        { name => params_values[:types][index] }
+        name = name.delete ":"
+        if index < params_values.length
+          type = params_values[index][:types]
+          { name => type ? type.first : "Unknown" }
+        else
+          { name => "Unknown" }
+        end
       end
     end
 
-    def method_parser(meth)
+    def method_parser(gem_path, meth)
       return nil if meth.nil?
       method = {
         name: meth.name,
         body_md: meth.docstring,
         params: meth.parameters,
+        files: meth.files.map { |item| [item.first.gsub(gem_path, ""), item.last] },
         tags: meth.tags.map { |t| { name: t.tag_name, types: t.types } }
       }
+
 
       return_v = method_return_string(method)
       params_v = method_params(method)
@@ -138,10 +156,10 @@ module Danger
       method
     end
 
-    def attribute_parser(attribute)
+    def attribute_parser(gem_path, attribute)
       {
-        read: method_parser(attribute[:read]),
-        write: method_parser(attribute[:write])
+        read: method_parser(gem_path, attribute[:read]),
+        write: method_parser(gem_path, attribute[:write])
       }
     end
 
@@ -153,18 +171,26 @@ module Danger
         attribute_meths = klass.attributes[:instance].values.map(&:values).flatten
 
         methods = klass.meths - klass.inherited_meths - attribute_meths
-        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :insance_name }
+        usable_methods = methods.select { |m| m.visibility == :public }.reject { |m| m.name == :initialize || m.name == :instance_name || m.name == :new }
+
+        plugin_gem = klass.file.include?("gems") ? klass.file.split("gems/").last.split("-")[0..-2].join("-") : nil
+        # Pull out the gem's path ( to make relative file paths )
+        # if no gem is found, index  = 0, making gem_path = ""
+        index_of_gem_in_path = plugin_gem ? klass.file.split("/").index { |component| component.include? plugin_gem } : 0
+        gem_path = klass.file.split("/")[0..index_of_gem_in_path].join("/")
 
         {
           name: klass.name.to_s,
           body_md: klass.docstring,
           instance_name: real_klass.instance_name,
+          gem: plugin_gem,
+          gem_path: gem_path,
+          files: klass.files.map { |item| [item.first.gsub(gem_path, ""), item.last] },
           example_code: klass.tags.select { |t| t.tag_name == "example" }.map { |tag| { title: tag.name, text: tag.text } }.compact,
-          attributes: klass.attributes[:instance].map { |pair| { pair.first => attribute_parser(pair.last) } },
-          methods: usable_methods.map { |m| method_parser(m) },
+          attributes: klass.attributes[:instance].map { |pair| { pair.first => attribute_parser(gem_path, pair.last) } },
+          methods: usable_methods.map { |m| method_parser(gem_path, m) },
           tags: klass.tags.select { |t| t.tag_name == "tags" }.map(&:text).compact,
           see: klass.tags.select { |t| t.tag_name == "see" }.map(&:name).map(&:split).flatten.compact,
-          file: klass.file.gsub(File.expand_path("."), "")
         }
       end
     end
