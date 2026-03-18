@@ -550,6 +550,31 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 
+      it "passes multiline range options for inline markdown comments on Octokit v8" do
+        stub_const("Octokit::MAJOR", 8)
+
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with(
+          "artsy/eigen",
+          "800",
+          anything,
+          "561827e46167077b5e53515b4b7349b8ae04610b",
+          "Rakefile",
+          33,
+          start_line: 32,
+          side: "RIGHT",
+          start_side: "RIGHT"
+        )
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        m = Danger::Markdown.new("Sure thing", "Rakefile", 33, start_line: 32, side: "RIGHT", start_side: "RIGHT")
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+      end
+
       it "removes inline comments if they are not included" do
         issues = [{ "body" => "'generated_by_another_danger'", "id" => "12" }]
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(issues)

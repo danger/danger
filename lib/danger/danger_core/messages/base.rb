@@ -2,13 +2,16 @@
 
 module Danger
   class BaseMessage
-    attr_accessor :message, :file, :line, :type
+    attr_accessor :message, :file, :line, :type, :start_line, :side, :start_side
 
-    def initialize(type:, message:, file: nil, line: nil)
+    def initialize(type:, message:, file: nil, line: nil, start_line: nil, side: nil, start_side: nil)
       @type = type
       @message = message
       @file = file
       @line = line
+      @start_line = start_line
+      @side = side
+      @start_side = start_side
     end
 
     def compare_by_file_and_line(other)

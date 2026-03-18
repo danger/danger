@@ -102,9 +102,19 @@ module Danger
     def markdown(*markdowns, **options)
       file = options.fetch(:file, nil)
       line = options.fetch(:line, nil)
+      start_line = options.fetch(:start_line, nil)
+      side = options.fetch(:side, nil)
+      start_side = options.fetch(:start_side, nil)
 
       markdowns.flatten.each do |markdown|
-        @markdowns << Markdown.new(markdown, file, line)
+        @markdowns << Markdown.new(
+          markdown,
+          file,
+          line,
+          start_line: start_line,
+          side: side,
+          start_side: start_side
+        )
       end
     end
 

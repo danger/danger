@@ -333,9 +333,10 @@ module Danger
           next false unless m.file && m.line
 
           position = find_position_in_diff diff_lines, m, kind
+          start_position = start_position_in_diff(diff_lines, m, kind)
 
           # Keep the change if it's line is not in the diff and not in dismiss mode
-          next dismiss_out_of_range_messages_for(kind) if position.nil?
+          next dismiss_out_of_range_messages_for(kind) if position.nil? || start_position == :out_of_range
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
@@ -350,7 +351,7 @@ module Danger
           end
 
           matching_comments = danger_comments.select do |comment_data|
-            if comment_data["path"] == m.file && comment_data["position"] == position
+            if inline_comment_matches?(comment_data, m, position)
               # Parse it to avoid problems with strikethrough
               violation = violations_from_table(comment_data["body"]).first
               if violation
@@ -366,10 +367,7 @@ module Danger
 
           if matching_comments.empty?
             begin
-              # Since Octokit v8, the signature of create_pull_request_comment has been changed.
-              # See https://github.com/danger/danger/issues/1475 for detailed information.
-              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                                 body, head_ref, m.file, (Octokit::MAJOR >= 8 ? m.line : position))
+              create_inline_comment(body, head_ref, m, position)
             rescue Octokit::UnprocessableEntity => e
               # Show more detail for UnprocessableEntity error
               message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
@@ -389,6 +387,54 @@ module Danger
 
           # Remove this element from the array
           next true
+        end
+      end
+
+      def start_position_in_diff(diff_lines, message, kind)
+        return nil unless message.respond_to?(:start_line) && message.start_line
+
+        start_message = message.dup
+        start_message.line = message.start_line
+        find_position_in_diff(diff_lines, start_message, kind) || :out_of_range
+      end
+
+      def inline_comment_matches?(comment_data, message, position)
+        return false unless comment_data["path"] == message.file
+
+        if message.respond_to?(:start_line) && message.start_line
+          comment_data["line"].to_i == message.line &&
+            comment_data["start_line"].to_i == message.start_line
+        else
+          comment_data["position"] == position
+        end
+      end
+
+      def create_inline_comment(body, head_ref, message, position)
+        # Since Octokit v8, the signature of create_pull_request_comment has been changed.
+        # See https://github.com/danger/danger/issues/1475 for detailed information.
+        if message.respond_to?(:start_line) && message.start_line && Octokit::MAJOR >= 8
+          # GitHub ranges are required for multi-line suggestion blocks that
+          # replace an existing added translator comment plus the added string.
+          client.create_pull_request_comment(
+            ci_source.repo_slug,
+            ci_source.pull_request_id,
+            body,
+            head_ref,
+            message.file,
+            message.line,
+            start_line: message.start_line,
+            side: message.side || "RIGHT",
+            start_side: message.start_side || "RIGHT"
+          )
+        else
+          client.create_pull_request_comment(
+            ci_source.repo_slug,
+            ci_source.pull_request_id,
+            body,
+            head_ref,
+            message.file,
+            (Octokit::MAJOR >= 8 ? message.line : position)
+          )
         end
       end
 
