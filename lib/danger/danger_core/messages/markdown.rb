@@ -4,7 +4,12 @@ require "danger/danger_core/messages/base"
 
 module Danger
   class Markdown < BaseMessage
+    VALID_SIDES = %w(LEFT RIGHT).freeze
+
     def initialize(message, file = nil, line = nil, start_line: nil, side: nil, start_side: nil)
+      validate_side!(:side, side)
+      validate_side!(:start_side, start_side)
+
       super(
         type: :markdown,
         message: message,
@@ -53,6 +58,14 @@ module Danger
       return 1 if other.type != :markdown
 
       compare_by_file_and_line(other)
+    end
+
+    private
+
+    def validate_side!(name, value)
+      return if value.nil? || VALID_SIDES.include?(value)
+
+      raise ArgumentError, "#{name} must be LEFT or RIGHT"
     end
   end
 end

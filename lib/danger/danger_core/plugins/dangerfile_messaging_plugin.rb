@@ -97,6 +97,12 @@ module Danger
     #           Optional. Path to the file that the message is for.
     # @option   [String] line
     #           Optional. The line in the file to present the message in.
+    # @option   [Integer] start_line
+    #           Optional. The first line of an inline markdown range.
+    # @option   [String] side
+    #           Optional. The side for `line`. Valid values are "LEFT" and "RIGHT".
+    # @option   [String] start_side
+    #           Optional. The side for `start_line`. Valid values are "LEFT" and "RIGHT".
     # @return   [void]
     #
     def markdown(*markdowns, **options)

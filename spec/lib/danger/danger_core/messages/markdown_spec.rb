@@ -20,6 +20,36 @@ RSpec.describe Danger::Markdown do
     it "defaults line to nil" do
       expect(subject.line).to be nil
     end
+
+    it "raises for an invalid side" do
+      expect do
+        described_class.new("hello world", start_line: 1, side: "BOTH")
+      end.to raise_error(ArgumentError, "side must be LEFT or RIGHT")
+    end
+
+    it "raises for an invalid start_side" do
+      expect do
+        described_class.new("hello world", start_line: 1, start_side: "BOTH")
+      end.to raise_error(ArgumentError, "start_side must be LEFT or RIGHT")
+    end
+  end
+
+  describe "#==" do
+    it "treats range metadata as part of equality" do
+      left = described_class.new("hello world", "Dangerfile", 3, start_line: 2, side: "RIGHT", start_side: "RIGHT")
+      right = described_class.new("hello world", "Dangerfile", 3, start_line: 1, side: "RIGHT", start_side: "RIGHT")
+
+      expect(left).not_to eq(right)
+    end
+  end
+
+  describe "#hash" do
+    it "changes when range metadata changes" do
+      left = described_class.new("hello world", "Dangerfile", 3, start_line: 2, side: "RIGHT", start_side: "RIGHT")
+      right = described_class.new("hello world", "Dangerfile", 3, start_line: 1, side: "RIGHT", start_side: "RIGHT")
+
+      expect(left.hash).not_to eq(right.hash)
+    end
   end
 
   describe "#<=>" do
