@@ -193,6 +193,21 @@ RSpec.describe Danger::TeamCity do
         expect(source.pull_request_id).to eq(42)
       end
 
+      context "when BITBUCKET_PULL_REQUEST_ID is set" do
+        before do
+          valid_env["BITBUCKET_PULL_REQUEST_ID"] = "123"
+        end
+
+        it "uses the pull_request_id from the environment" do
+          expect(source.pull_request_id).to eq(123)
+        end
+
+        it "does not call the Bitbucket API" do
+          source
+          expect(Danger::RequestSources::BitbucketCloudAPI).not_to have_received(:new)
+        end
+      end
+
       context "unable to find pull request id" do
         before do
           allow(api).to receive(:pull_request_id).and_raise("Some error")

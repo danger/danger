@@ -67,6 +67,14 @@ module Danger
   # export BITBUCKET_BRANCH_NAME="%teamcity.build.branch%"
   # ```
   #
+  # Optionally, you can set `BITBUCKET_PULL_REQUEST_ID` to skip the API call that resolves
+  # the pull request ID from the branch name. If you are using the TeamCity
+  # [Pull Requests](https://www.jetbrains.com/help/teamcity/pull-requests.html) build feature:
+  #
+  # ```sh
+  # export BITBUCKET_PULL_REQUEST_ID="%teamcity.pullRequest.number%"
+  # ```
+  #
   # #### BitBucket Server
   #
   # You will need to add the following environment variables as build parameters or by exporting them inside your
@@ -151,8 +159,11 @@ module Danger
       self.repo_url        = env["BITBUCKETSERVER_REPO_URL"]
     end
 
-    # This is a little hacky, because Bitbucket doesn't provide us a PR id
+    # Uses BITBUCKET_PULL_REQUEST_ID from the environment if available,
+    # otherwise falls back to fetching the PR id from the Bitbucket API.
     def bitbucket_pr_from_env(env)
+      return env["BITBUCKET_PULL_REQUEST_ID"].to_i if env["BITBUCKET_PULL_REQUEST_ID"]
+
       branch_name = env["BITBUCKET_BRANCH_NAME"]
       repo_slug   = env["BITBUCKET_REPO_SLUG"]
       begin
