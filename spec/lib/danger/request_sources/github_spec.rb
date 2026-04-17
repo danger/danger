@@ -431,6 +431,30 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           @g.update_pull_request!(warnings: [], errors: [], messages: [v])
           expect(@g.client).to have_received(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "Rakefile", 7)
         end
+
+        it "falls back to diff positions for ranged inline markdown comments" do
+          stub_const("Octokit::MAJOR", 7)
+
+          allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+          allow(@g.client).to receive(:create_pull_request_comment)
+
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+          expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+          m = Danger::Markdown.new("Sure thing", "Rakefile", 34, start_line: 32, side: "RIGHT", start_side: "RIGHT")
+          @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+
+          expect(@g.client).to have_received(:create_pull_request_comment).with(
+            "artsy/eigen",
+            "800",
+            anything,
+            "561827e46167077b5e53515b4b7349b8ae04610b",
+            "Rakefile",
+            7
+          )
+        end
       end
 
       context "with Octokit v8" do
@@ -547,6 +571,73 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
 
         m = Danger::Markdown.new("Sure thing", "CHANGELOG.md", 4)
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+      end
+
+      it "passes multiline range options for inline markdown comments on Octokit v8" do
+        stub_const("Octokit::MAJOR", 8)
+
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with(
+          "artsy/eigen",
+          "800",
+          anything,
+          "561827e46167077b5e53515b4b7349b8ae04610b",
+          "Rakefile",
+          33,
+          start_line: 32,
+          side: "RIGHT",
+          start_side: "RIGHT"
+        )
+
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        m = Danger::Markdown.new("Sure thing", "Rakefile", 33, start_line: 32, side: "RIGHT", start_side: "RIGHT")
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+      end
+
+      it "updates matching ranged inline markdown comments instead of creating duplicates" do
+        stub_const("Octokit::MAJOR", 8)
+
+        m = Danger::Markdown.new("Sure thing", "Rakefile", 33, start_line: 32, side: "RIGHT", start_side: "RIGHT")
+        body = @g.send(:generate_inline_markdown_body, m, danger_id: "danger", template: "github")
+
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return(
+          [
+            { "id" => "12", "body" => body, "path" => "Rakefile", "line" => 33, "start_line" => 32 }
+          ]
+        )
+
+        expect(@g.client).not_to receive(:create_pull_request_comment)
+        expect(@g.client).to receive(:update_pull_request_comment).with("artsy/eigen", "12", body)
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
+      end
+
+      it "ignores ranged inline markdown comments when the start line is outside the diff and dismiss mode is enabled" do
+        stub_const("Octokit::MAJOR", 8)
+
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).not_to receive(:create_pull_request_comment)
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        m = Danger::Markdown.new("Sure thing", "Rakefile", 34, start_line: 27, side: "RIGHT", start_side: "RIGHT")
+        @g.dismiss_out_of_range_messages = {
+          warning: false,
+          error: false,
+          message: false,
+          markdown: true
+        }
+
         @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 

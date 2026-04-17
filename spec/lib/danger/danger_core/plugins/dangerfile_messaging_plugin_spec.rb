@@ -38,6 +38,19 @@ RSpec.describe Danger::DangerfileMessagingPlugin, host: :github do
       expect(markdowns.last.line).to eq(1)
       expect(markdowns.last.type).to eq(:markdown)
     end
+
+    it "preserves markdown range metadata" do
+      dangerfile.parse(nil, "markdown('hello', file: 'foo.rb', line: 3, start_line: 2, side: 'RIGHT', start_side: 'RIGHT')")
+      markdown = added_messages(dangerfile, :markdowns).first
+
+      expect(markdown.message).to eq("hello")
+      expect(markdown.file).to eq("foo.rb")
+      expect(markdown.line).to eq(3)
+      expect(markdown.start_line).to eq(2)
+      expect(markdown.side).to eq("RIGHT")
+      expect(markdown.start_side).to eq("RIGHT")
+      expect(markdown.type).to eq(:markdown)
+    end
   end
 
   describe "#message" do

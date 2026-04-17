@@ -97,14 +97,30 @@ module Danger
     #           Optional. Path to the file that the message is for.
     # @option   [String] line
     #           Optional. The line in the file to present the message in.
+    # @option   [Integer] start_line
+    #           Optional. The first line of an inline markdown range.
+    # @option   [String] side
+    #           Optional. The side for `line`. Valid values are "LEFT" and "RIGHT".
+    # @option   [String] start_side
+    #           Optional. The side for `start_line`. Valid values are "LEFT" and "RIGHT".
     # @return   [void]
     #
     def markdown(*markdowns, **options)
       file = options.fetch(:file, nil)
       line = options.fetch(:line, nil)
+      start_line = options.fetch(:start_line, nil)
+      side = options.fetch(:side, nil)
+      start_side = options.fetch(:start_side, nil)
 
       markdowns.flatten.each do |markdown|
-        @markdowns << Markdown.new(markdown, file, line)
+        @markdowns << Markdown.new(
+          markdown,
+          file,
+          line,
+          start_line: start_line,
+          side: side,
+          start_side: start_side
+        )
       end
     end
 

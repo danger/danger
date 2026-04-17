@@ -14,6 +14,8 @@ module Danger
     class GitHub < RequestSource
       include Danger::Helpers::CommentsHelper
 
+      DiffLineReference = Struct.new(:file, :line)
+
       attr_accessor :pr_json, :issue_json, :use_local_git, :support_tokenless_auth, :dismiss_out_of_range_messages, :host, :api_url, :verify_ssl
 
       def self.env_vars
@@ -333,9 +335,10 @@ module Danger
           next false unless m.file && m.line
 
           position = find_position_in_diff diff_lines, m, kind
+          start_position = start_position_in_diff(diff_lines, m, kind)
 
           # Keep the change if it's line is not in the diff and not in dismiss mode
-          next dismiss_out_of_range_messages_for(kind) if position.nil?
+          next dismiss_out_of_range_messages_for(kind) if position.nil? || start_position == :out_of_range
 
           # Once we know we're gonna submit it, we format it
           if is_markdown_content
@@ -350,7 +353,7 @@ module Danger
           end
 
           matching_comments = danger_comments.select do |comment_data|
-            if comment_data["path"] == m.file && comment_data["position"] == position
+            if inline_comment_matches?(comment_data, m, position)
               # Parse it to avoid problems with strikethrough
               violation = violations_from_table(comment_data["body"]).first
               if violation
@@ -366,10 +369,7 @@ module Danger
 
           if matching_comments.empty?
             begin
-              # Since Octokit v8, the signature of create_pull_request_comment has been changed.
-              # See https://github.com/danger/danger/issues/1475 for detailed information.
-              client.create_pull_request_comment(ci_source.repo_slug, ci_source.pull_request_id,
-                                                 body, head_ref, m.file, (Octokit::MAJOR >= 8 ? m.line : position))
+              create_inline_comment(body, head_ref, m, position)
             rescue Octokit::UnprocessableEntity => e
               # Show more detail for UnprocessableEntity error
               message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
@@ -390,6 +390,66 @@ module Danger
           # Remove this element from the array
           next true
         end
+      end
+
+      def start_position_in_diff(diff_lines, message, kind)
+        return nil unless ranged_inline_comment?(message)
+
+        start_message = DiffLineReference.new(message.file, message.start_line)
+        find_position_in_diff(diff_lines, start_message, kind) || :out_of_range
+      end
+
+      def inline_comment_matches?(comment_data, message, position)
+        return false unless comment_data["path"] == message.file
+
+        if ranged_inline_comment?(message)
+          ranged_inline_comment_lines_match?(comment_data, message)
+        else
+          comment_data["position"] == position
+        end
+      end
+
+      def create_inline_comment(body, head_ref, message, position)
+        # Since Octokit v8, the signature of create_pull_request_comment has been changed.
+        # See https://github.com/danger/danger/issues/1475 for detailed information.
+        if ranged_inline_comment?(message) && Octokit::MAJOR >= 8
+          # GitHub ranges are required for multi-line suggestion blocks that
+          # replace an existing added translator comment plus the added string.
+          client.create_pull_request_comment(
+            ci_source.repo_slug,
+            ci_source.pull_request_id,
+            body,
+            head_ref,
+            message.file,
+            message.line,
+            start_line: message.start_line,
+            side: message.side || "RIGHT",
+            start_side: message.start_side || "RIGHT"
+          )
+        else
+          # Octokit v7 only supports diff positions, so ranged metadata is ignored.
+          client.create_pull_request_comment(
+            ci_source.repo_slug,
+            ci_source.pull_request_id,
+            body,
+            head_ref,
+            message.file,
+            (Octokit::MAJOR >= 8 ? message.line : position)
+          )
+        end
+      end
+
+      def ranged_inline_comment?(message)
+        !message.start_line.nil?
+      end
+
+      def ranged_inline_comment_lines_match?(comment_data, message)
+        comment_line = comment_data["line"]
+        comment_start_line = comment_data["start_line"]
+        return false if comment_line.nil? || comment_start_line.nil?
+
+        comment_line.to_i == message.line &&
+          comment_start_line.to_i == message.start_line
       end
 
       def find_position_in_diff(diff_lines, message, kind)

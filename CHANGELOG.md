@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Support ranged inline markdown comments on GitHub - [@iangmaia](https://github.com/iangmaia) [#1542](https://github.com/danger/danger/pull/1542)
 * Support `BITBUCKET_PULL_REQUEST_ID` env var for TeamCity with Bitbucket Cloud - [@vakhidbetrakhmadov](https://github.com/vakhidbetrakhmadov) [#1545](https://github.com/danger/danger/pull/1545)
 * Add `--no-gpg-sign` flag to test specs to prevent GPG signing prompts - [@numbata](https://github.com/numbata) [#1535](https://github.com/danger/danger/pull/1535)
 * Remove upper bound constraint on the git gem - [@andrewmarkle](https://github.com/andrewmarkle) [#1526](https://github.com/danger/danger/pull/1526)
