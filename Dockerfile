@@ -1,8 +1,6 @@
-FROM ruby:3.2 AS builder
+FROM ruby:3.2-alpine AS builder
 
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends build-essential && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache build-base
 
 WORKDIR /myapp
 COPY . /myapp
@@ -10,7 +8,7 @@ COPY . /myapp
 ENV BUNDLE_WITHOUT="development:test"
 RUN gem install bundler && bundle install
 
-FROM ruby:3.2-slim
+FROM ruby:3.2-alpine
 
 LABEL "com.github.actions.name"="Danger"
 LABEL "com.github.actions.description"="Runs danger in a docker container such as GitHub Actions"
@@ -21,9 +19,7 @@ LABEL "homepage"="https://github.com/danger/danger"
 LABEL "maintainer"="Rishabh Tayal <rtayal11@gmail.com>"
 LABEL "maintainer"="Orta Therox"
 
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends git p7zip-full unzip && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache git p7zip
 
 # See https://github.com/actions/runner/issues/2033
 RUN git config --system --add safe.directory /github/workspace

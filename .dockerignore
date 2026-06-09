@@ -1,0 +1,9 @@
+.git
+spec
+docs
+Guardfile
+appveyor.yml
+build.sh
+CHANGELOG.md
+VISION.md
+.DS_Store
