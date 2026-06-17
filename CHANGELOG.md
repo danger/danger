@@ -11,6 +11,10 @@
 ## master
 
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 9.6.0
+
 * Support ranged inline markdown comments on GitHub - [@iangmaia](https://github.com/iangmaia) [#1542](https://github.com/danger/danger/pull/1542)
 * Support `BITBUCKET_PULL_REQUEST_ID` env var for TeamCity with Bitbucket Cloud - [@vakhidbetrakhmadov](https://github.com/vakhidbetrakhmadov) [#1545](https://github.com/danger/danger/pull/1545)
 * Add `--no-gpg-sign` flag to test specs to prevent GPG signing prompts - [@numbata](https://github.com/numbata) [#1535](https://github.com/danger/danger/pull/1535)
@@ -18,7 +22,6 @@
 * Add "Add GitLab Merge Request support" again with fix - [@manicmaniac](https://github.com/manicmaniac) [#1522](https://github.com/danger/danger/pull/1522)
 * **Breaking** - Prevent danger pr and danger local from enforcing verbose flags - [@manicmaniac](https://github.com/manicmaniac) [#1424](https://github.com/danger/danger/pull/1424)
 * Reduce size of docker image by utilizing alpine image - [@beninabox](https://github.com/beninabox) [#1547](https://github.com/danger/danger/pull/1547)
-<!-- Your comment above here -->
 
 ## 9.5.3
 
