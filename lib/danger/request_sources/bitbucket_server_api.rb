@@ -81,7 +81,7 @@ module Danger
         res = http(uri).start do |http|
           http.request(req)
         end
-        JSON.parse(res.body, symbolize_names: true)
+        JSON.parse(res.body, symbolize_names: true, encoding: Encoding::UTF_8)
       end
 
       def post(uri, body)

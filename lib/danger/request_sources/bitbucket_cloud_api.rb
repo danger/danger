@@ -126,7 +126,7 @@ module Danger
           http.request(req)
         end
 
-        JSON.parse(res.body, symbolize_names: true)[:access_token]
+        JSON.parse(res.body, symbolize_names: true, encoding: Encoding::UTF_8)[:access_token]
       end
 
       def fetch_json(uri)
@@ -143,7 +143,7 @@ module Danger
         end
         raise error_fetching_json(uri.to_s, res.code) unless res.code == "200"
 
-        JSON.parse(res.body, symbolize_names: true)
+        JSON.parse(res.body, symbolize_names: true, encoding: Encoding::UTF_8)
       end
 
       def post(uri, body)
