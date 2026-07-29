@@ -45,7 +45,7 @@ module Danger
 
       # Convert paths to proselint results
       require 'json'
-      result_jsons = Hash[markdown_files.uniq.collect { |v| [v, JSON.parse(`proselint #{v} --json`.strip)] }]
+      result_jsons = markdown_files.uniq.to_h { |v| [v, JSON.parse(`proselint #{v} --json`.strip)] }
       proses = result_jsons.select { |path, prose| prose['data']['errors'].count }
 
       # Get some metadata about the local setup
