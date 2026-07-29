@@ -3,6 +3,7 @@
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_server_api"
 require "danger/request_sources/code_insights_api"
+require "danger/output_registry/output_handler_registry"
 require_relative "request_source"
 
 module Danger
@@ -88,49 +89,22 @@ module Danger
         nil
       end
 
+      # Sending data to Bitbucket Server
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for Bitbucket Server (Code Insights, comment).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
-
-        # If configured, send a Code Insights API to provide the PR with a quality report
-        # which includes inline code violations found by Danger as Annotations.
-        # If no inline violations occurred, an empty, successful (green) report will be sent.
-        if @code_insights.ready?
-          inline_violations = inline_violations_group(warnings: warnings, errors: errors, messages: messages)
-          inline_warnings = inline_violations[:warnings] || []
-          inline_errors = inline_violations[:errors] || []
-          inline_messages = inline_violations[:messages] || []
-
-          head_commit = self.pr_json[:fromRef][:latestCommit]
-          @code_insights.send_report(head_commit,
-                                     inline_warnings,
-                                     inline_errors,
-                                     inline_messages)
-        end
-
-        # If we're sending inline comments separately via Code Insights,
-        # the main body comment should contain only generic, non-file specific messages.
-        if @code_insights.ready?
-          main_violations = main_violations_group(warnings: warnings, errors: errors, messages: messages)
-          warnings = main_violations[:warnings] || []
-          errors = main_violations[:errors] || []
-          messages = main_violations[:messages] || []
-          markdowns = main_violations[:markdowns] || []
-        end
-
-        has_comments = warnings.count > 0 || errors.count > 0 || messages.count > 0 || markdowns.count > 0
-        if has_comments
-          comment = generate_description(warnings: warnings,
-                                         errors: errors)
-          comment += "\n\n"
-          comment += generate_comment(warnings: warnings,
-                                      errors: errors,
-                                      messages: messages,
-                                      markdowns: markdowns,
-                                      previous_violations: {},
-                                      danger_id: danger_id,
-                                      template: "bitbucket_server")
-          @api.post_comment(comment)
-        end
+        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns,
+          danger_id: danger_id,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
+        )
       end
 
       def delete_old_comments(danger_id: "danger")
