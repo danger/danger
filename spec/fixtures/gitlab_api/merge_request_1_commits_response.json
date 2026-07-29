@@ -1,0 +1,50 @@
+HTTP/1.1 200 OK
+date: Tue, 26 Oct 2021 08:59:05 GMT
+content-type: application/json
+cache-control: max-age=0, private, must-revalidate
+etag: W/"912aa922dcf0c1d091c77a25ef8b4920"
+link: <https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/commits?id=k0nserv%2Fdanger-test&merge_request_iid=1&page=1&per_page=20>; rel="first", <https://gitlab.com/api/v4/projects/k0nserv%2Fdanger-test/merge_requests/1/commits?id=k0nserv%2Fdanger-test&merge_request_iid=1&page=1&per_page=20>; rel="last"
+vary: Origin
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-next-page:
+x-page: 1
+x-per-page: 20
+x-prev-page:
+x-request-id: 01FJXX6555S51KDY5H8WV2CHPG
+x-runtime: 0.072371
+x-total: 1
+x-total-pages: 1
+strict-transport-security: max-age=31536000
+referrer-policy: strict-origin-when-cross-origin
+ratelimit-observed: 3
+ratelimit-remaining: 1997
+ratelimit-reset: 1635238805
+ratelimit-resettime: Tue, 26 Oct 2021 09:00:05 GMT
+ratelimit-limit: 2000
+gitlab-lb: fe-02-lb-gprd
+gitlab-sv: localhost
+cf-cache-status: DYNAMIC
+expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+server: cloudflare
+cf-ray: 6a427c8d394c3bb0-CDG
+content-encoding: br
+
+[
+    {
+        "id": "4ec55c9f8b89ca514fcbaf1abe2d76ca928c61e7",
+        "short_id": "4ec55c9f",
+        "created_at": "2021-10-26T08:57:40.000Z",
+        "parent_ids": [],
+        "title": "Update engineering productivity handbook references",
+        "message": "Update engineering productivity handbook references\n",
+        "author_name": "John Doe",
+        "author_email": "john@example.com",
+        "authored_date": "2021-10-25T19:44:54.000Z",
+        "committer_name": "Jane Doe",
+        "committer_email": "jane@example.com",
+        "committed_date": "2021-10-26T08:57:40.000Z",
+        "trailers": {},
+        "web_url": "https://gitlab.com/k0nserv/danger-test/-/commit/4ec55c9f8b89ca514fcbaf1abe2d76ca928c61e7"
+    }
+]
