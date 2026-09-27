@@ -74,6 +74,27 @@ RSpec.describe Danger::Buildkite do
     it "sets the pull request id" do
       expect(source.pull_request_id).to eq("12")
     end
+
+    describe "commit sha" do
+      let(:head_sha) { "34c5c7793cb3b279e22454cb6750c80560547b3a" }
+      let(:merge_sha) { "414cb0069601a32b00bd122a2380cd283626a8e5" }
+
+      it "uses the built commit" do
+        valid_env["BUILDKITE_COMMIT"] = head_sha
+        expect(source.commit_sha).to eq(head_sha)
+      end
+
+      it "prefers the pull request head commit over the merge commit" do
+        valid_env["BUILDKITE_COMMIT"] = merge_sha
+        valid_env["BUILDKITE_PULL_REQUEST_HEAD_COMMIT"] = head_sha
+        expect(source.commit_sha).to eq(head_sha)
+      end
+
+      it "is nil when the commit is not resolved" do
+        valid_env["BUILDKITE_COMMIT"] = "HEAD"
+        expect(source.commit_sha).to be_nil
+      end
+    end
   end
 
   describe "#supported_request_sources" do
