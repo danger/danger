@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Set the GitHub commit status on the commit that CI built, not on the newest pull request commit (GitHub Actions and Buildkite) - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1543](https://github.com/danger/danger/issues/1543)
 <!-- Your comment above here -->
 
 ## 9.6.1
