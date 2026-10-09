@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Allow faraday-http-cache 3.x - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1553](https://github.com/danger/danger/issues/1553)
 <!-- Your comment above here -->
 
 ## 9.6.1
