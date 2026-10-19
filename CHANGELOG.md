@@ -12,6 +12,7 @@
 
 <!-- Your comment below here -->
 * Allow faraday-http-cache 3.x - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1553](https://github.com/danger/danger/issues/1553)
+* Fix Bitbucket Server project and repo detection for HTTP(S) clone URLs such as `/scm/PROJECT/repo.git`, including ones with a context path - [@Lay-quq](https://github.com/Lay-quq) [#1327](https://github.com/danger/danger/issues/1327)
 <!-- Your comment above here -->
 
 ## 9.6.1
