@@ -17,6 +17,7 @@ module Danger
         ["--clear-http-cache", "Clear the local http cache before running Danger locally."],
         ["--pry", "Drop into a Pry shell after evaluating the Dangerfile."],
         ["--dangerfile=<path/to/dangerfile>", "The location of your Dangerfile"],
+        ["--fail-on-errors=<true|false>", "Exit with status 1 if the Dangerfile reports errors."],
         ["--verify-ssl", "Verify SSL in Octokit"]
       ]
     end
@@ -61,7 +62,7 @@ module Danger
       env = EnvironmentManager.new(ENV, cork)
       dm = Dangerfile.new(env, cork)
 
-      LocalSetup.new(dm, cork).setup(verbose: verbose) do
+      failed = LocalSetup.new(dm, cork).setup(verbose: verbose) do
         dm.run(
           Danger::EnvironmentManager.danger_base_branch,
           Danger::EnvironmentManager.danger_head_branch,
@@ -72,6 +73,7 @@ module Danger
           false
         )
       end
+      exit(1) if @fail_on_errors.to_s == "true" && failed
     end
 
     private

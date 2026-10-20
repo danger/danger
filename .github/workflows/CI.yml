@@ -8,6 +8,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+  pull-requests: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -34,6 +38,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -52,9 +57,10 @@ jobs:
       - name: Running Tests
         run: bundle exec rake spec
 
-      - name: Running the Dangerfile for this repo
-        if: runner.os != 'Windows'
-        run: |
-          TOKEN='7469b4e94ce21b43e3ab7a'
-          TOKEN+='79960c12a1e067f2ec'
-          DANGER_GITHUB_API_TOKEN=$TOKEN RUNNING_IN_ACTIONS=true echo 'bundle exec danger --verbose'
+  danger:
+    if: github.event_name == 'pull_request'
+    uses: danger/danger-pr-comment/.github/workflows/danger-run.yml@645e89bcc7be89ee7e8362166110b05cbced8e59 # v0.3.0
+    with:
+      ruby-version: '3.4'
+      bundler-cache: true
+      danger-args: 'pr ${{ github.event.pull_request.html_url }} --fail-on-errors=true'

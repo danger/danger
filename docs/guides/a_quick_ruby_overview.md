@@ -89,7 +89,7 @@ end
 
 Finally, the simplest "closure", that only works if you want to call a function on the object in your collection is this interesting pattern: `lowercase_path = paths.map(&:downcase)` - where `downcase` is a function on the strings in the array.
 
-`Note:` In Danger, for lists of files (e.g.`git.modified_files`) we use a class called a `FileList` which is an array subclass. [This adds one extra method](https://github.com/danger/danger/blob/master/spec/lib/danger/core_ext/file_list_spec.rb): `include?`. This lets you use [path globbing](http://wiki.bash-hackers.org/syntax/expansion/globs) to determine if a string is in the list:
+`Note:` In Danger, for lists of files (e.g.`git.modified_files`) we use a class called a `FileList` which is an array subclass. [This adds one extra method](https://github.com/danger/danger/blob/master/spec/lib/danger/core_ext/file_list_spec.rb): `include?`. This lets you use [path globbing](https://flokoe.github.io/bash-hackers-wiki/syntax/expansion/globs/) to determine if a string is in the list:
 
 ```ruby
 paths = ["path1/file_name.txt", "path1/file_name1.txt", "path2/subfolder/example.json"]

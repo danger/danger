@@ -1,0 +1,17 @@
+name: Danger
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  danger:
+    uses: danger/danger-pr-comment/.github/workflows/danger-run.yml@645e89bcc7be89ee7e8362166110b05cbced8e59 # v0.3.0
+    with:
+      ruby-version: '3.4'
+      bundler-cache: true
+      danger-args: 'pr ${{ github.event.pull_request.html_url }} --fail-on-errors=true'
