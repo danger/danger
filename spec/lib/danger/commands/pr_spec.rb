@@ -86,5 +86,54 @@ RSpec.describe Danger::PR do
       result = described_class.new(argv)
       expect(request_source_double).not_to have_received(:update_pull_request!)
     end
+
+    describe "non-posting CI execution" do
+      let(:arguments) { [] }
+      let(:failed) { true }
+      let(:command) { described_class.new(CLAide::ARGV.new(["https://github.com/danger/danger/pull/1558"] + arguments)) }
+      let(:environment) { instance_double(Danger::EnvironmentManager) }
+      let(:dangerfile) { instance_double(Danger::Dangerfile, run: failed) }
+      let(:setup) { instance_double(Danger::LocalSetup) }
+
+      before do
+        stub_const("ENV", {})
+        allow(command).to receive(:configure_octokit)
+        allow(Danger::EnvironmentManager).to receive(:new).and_return(environment)
+        allow(Danger::Dangerfile).to receive(:new).and_return(dangerfile)
+        allow(Danger::LocalSetup).to receive(:new).and_return(setup)
+        allow(setup).to receive(:setup).and_yield
+      end
+
+      it "runs with PR context without posting results and preserves the default exit behavior" do
+        command.run
+
+        expect(ENV["LOCAL_GIT_PR_URL"]).to eq("https://github.com/danger/danger/pull/1558")
+        expect(dangerfile).to have_received(:run).with(anything, anything, "Dangerfile", nil, nil, nil, false)
+      end
+
+      context "when failing on errors is enabled" do
+        let(:arguments) { ["--fail-on-errors=true"] }
+
+        it "exits unsuccessfully when the Dangerfile reports errors" do
+          expect { command.run }.to raise_error(SystemExit) { |error| expect(error.status).to eq(1) }
+        end
+
+        context "when there are no errors" do
+          let(:failed) { false }
+
+          it "does not fail" do
+            expect { command.run }.not_to raise_error
+          end
+        end
+      end
+
+      context "when failing on errors is explicitly disabled" do
+        let(:arguments) { ["--fail-on-errors=false"] }
+
+        it "preserves the successful exit behavior" do
+          expect { command.run }.not_to raise_error
+        end
+      end
+    end
   end
 end

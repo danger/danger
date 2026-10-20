@@ -1,0 +1,17 @@
+name: CI Danger Comment
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  actions: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  comment:
+    uses: danger/danger-pr-comment/.github/workflows/danger-comment.yml@645e89bcc7be89ee7e8362166110b05cbced8e59 # v0.3.0
+    with:
+      base-branch: master

@@ -12,6 +12,10 @@
 
 <!-- Your comment below here -->
 * Set the GitHub commit status on the commit that CI built, not on the newest pull request commit (GitHub Actions and Buildkite) - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1543](https://github.com/danger/danger/issues/1543)
+* Support `danger pr --fail-on-errors=true` for non-posting CI execution with full pull request context - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
+* Run Danger's own GitHub Actions checks and use danger-pr-comment 0.3.0's centralized PR matching and automatic-token comment posting instead of a personal access token - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
+* Default `danger init` to GitHub Actions without a personal access token when no CI is detected in a GitHub repository, including support for pull requests from forks - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
+* Detect existing CI in `danger init`, preserve existing configuration, and support non-Ruby projects with a tooling Gemfile - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
 <!-- Your comment above here -->
 
 ## 9.6.2
