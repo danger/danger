@@ -4,6 +4,7 @@ require "danger/commands/init_helpers/interviewer"
 require "danger/danger_core/dangerfile_generator"
 require "danger/ci_source/local_git_repo"
 require "yaml"
+require "fileutils"
 
 module Danger
   class Init < Runner
@@ -31,22 +32,62 @@ module Danger
       ui.say "\nOK, thanks #{ENV['LOGNAME']}, have a seat and we'll get you started.\n".yellow
       ui.pause 1
 
+      @selected_ci = select_ci
+      @github_actions = @selected_ci == "github actions"
       show_todo_state
       ui.pause 1.4
 
       setup_dangerfile
-      setup_github_account
-      setup_access_token
-      setup_danger_ci
+      if @github_actions
+        setup_github_actions
+      else
+        setup_github_account
+        setup_access_token
+        setup_danger_ci
+      end
 
       info
       thanks
+    end
+
+    def select_ci
+      configurations = {
+        "GitHub Actions" => [".github/workflows/*.{yml,yaml}"],
+        "Travis CI" => [".travis.yml"],
+        "CircleCI" => [".circleci/config.yml", ".circleci/config.yaml", "circle.yml", ".circle.yml"],
+        "GitLab CI" => [".gitlab-ci.yml", ".gitlab-ci.yaml"],
+        "Bitbucket Pipelines" => ["bitbucket-pipelines.yml"],
+        "Azure Pipelines" => ["azure-pipelines.yml", "azure-pipelines.yaml"],
+        "Buildkite" => [".buildkite/pipeline.yml", ".buildkite/pipeline.yaml"],
+        "Jenkins" => ["Jenkinsfile"],
+        "AppVeyor" => ["appveyor.yml", ".appveyor.yml"]
+      }
+      detected = configurations.select { |_name, patterns| patterns.any? { |pattern| Dir.glob(pattern).any? { |path| File.file?(path) } } }.keys
+      if detected.one?
+        ui.say "Detected #{detected.first} configuration."
+        return detected.first.downcase
+      end
+
+      if detected.empty?
+        ui.say "No supported CI configuration detected."
+        github_repo = GitRepo.new.exec("remote -v").match?(%r{(?:github\.com[:/])})
+        choices = github_repo ? ["GitHub Actions", "Other"] : ["Other", "GitHub Actions"]
+      else
+        ui.say "Detected multiple CI providers: #{detected.join(', ')}."
+        choices = detected + ["Other"]
+      end
+      ui.ask_with_answers("Which CI would you like to use", choices)
     end
 
     def show_todo_state
       ui.say "We need to do the following:\n"
       ui.pause 0.6
       ui.say " - [ ] Create a Dangerfile and add a few simple rules."
+      if @github_actions
+        ui.say " - [ ] Set up a Gemfile for Danger and danger-pr-comment."
+        ui.say " - [ ] Set up GitHub Actions to run Danger and post reports.\n\n"
+        return
+      end
       ui.pause 0.6
       ui.say " - [#{@account_created ? 'x' : ' '}] Create a GitHub account for Danger to use, for messaging."
       ui.pause 0.6
@@ -56,7 +97,13 @@ module Danger
     end
 
     def setup_dangerfile
+      if File.exist?("Dangerfile")
+        ui.say "Keeping your existing Dangerfile."
+        return
+      end
+
       content = DangerfileGenerator.create_dangerfile(".", cork)
+      content = "danger.import_dangerfile(gem: 'danger-pr-comment')\n\n#{content}" if @github_actions
       File.write("Dangerfile", content)
 
       ui.header "Step 1: Creating a starter Dangerfile"
@@ -77,6 +124,45 @@ module Danger
       ui.say "\nIf you'd like to investigate the file, and make some changes - I'll wait here,"
       ui.say "press return when you're ready to move on..."
       ui.wait_for_return
+    end
+
+    def setup_github_actions
+      ui.header "Step 2: Set up GitHub Actions"
+      if File.exist?("Gemfile")
+        ui.say "Keeping your existing Gemfile. Ensure it includes gem 'danger' and gem 'danger-pr-comment', require: false."
+      else
+        File.write("Gemfile", "source 'https://rubygems.org'\n\ngem 'danger'\ngem 'danger-pr-comment', require: false\n")
+        ui.say "Created a tooling Gemfile for Danger. Your project does not need to use Ruby."
+      end
+      ui.say "Run bundle install and commit the Gemfile and resulting Gemfile.lock."
+      ui.say "Ensure your Dangerfile imports the report exporter before its rules:"
+      ui.say "danger.import_dangerfile(gem: 'danger-pr-comment')"
+
+      project_ruby = File.file?(".ruby-version") || (File.file?(".tool-versions") && File.read(".tool-versions").match?(/^\s*ruby\s+/))
+      FileUtils.mkdir_p(".github/workflows")
+      %w(danger.yml danger-comment.yml).each do |name|
+        path = File.join(".github/workflows", name)
+        if File.exist?(path)
+          ui.say "Keeping #{path}. Merge the setup guide's workflow configuration manually."
+        else
+          template = File.join(Danger.gem_path, "lib", "assets", name)
+          content = File.read(template)
+          content = content.sub("      ruby-version: '3.4'\n", "") if project_ruby
+          File.write(path, content)
+          ui.say "Created #{path}."
+        end
+      end
+
+      ui.say "GitHub supplies an automatic token; no personal access token, bot account, or secrets: inherit is needed."
+      ui.say "Danger runs with read-only permissions on pull_request; a separate workflow posts the report."
+      ui.say "Merge both workflows into the default branch to enable comment posting."
+      ui.say "Keep the commenting workflow limited to report data; never execute pull request code with write permissions."
+      if project_ruby
+        ui.say "The generated Danger workflow uses your project's Ruby version configuration."
+      else
+        ui.say "The generated Danger workflow uses Ruby 3.4 for tooling; adjust ruby-version in .github/workflows/danger.yml if needed."
+      end
+      ui.link "https://danger.systems/guides/getting_started.html#github-actions-without-a-personal-access-token"
     end
 
     def setup_github_account
@@ -122,8 +208,8 @@ module Danger
         ui.say "For Open Source projects, I'd recommend giving the token the smallest scope possible."
         ui.say "This means only providing access to #{'public_repo'.yellow} in the token.\n\n"
         ui.pause 1
-        ui.say "This token limits Danger's abilities to just writing comments on OSS projects. I recommend"
-        ui.say "this because the token can quite easily be extracted from the environment via pull requests."
+        ui.say "This token can access public repositories. Keep it in protected CI secrets"
+        ui.say "and do not expose it to untrusted pull requests."
 
         ui.say "\nIt is important that you do not store this token in your repository, as GitHub will automatically revoke it when pushed.\n"
       elsif @is_open_source == "closed"
@@ -158,24 +244,24 @@ module Danger
     def setup_danger_ci
       ui.header "Step 4: Add Danger for your CI"
 
-      uses_travis if File.exist? ".travis.yml"
-      uses_circle if File.exist? "circle.yml"
-      unsure_ci unless File.exist?(".travis.yml") || File.exist?(".circle.yml")
+      case @selected_ci
+      when "travis ci" then uses_travis
+      when "circleci" then uses_circle
+      else unsure_ci
+      end
 
       ui.say "\nOK, I'll give you a moment to do this..."
       ui.wait_for_return
 
       ui.header "Final step: exposing the GitHub token as an environment build variable."
       ui.pause 0.4
-      if considered_an_oss_repo?
-        ui.say "As you have an Open Source repo, this token should be considered public, otherwise you cannot"
-        ui.say "run Danger on pull requests from forks, limiting its use.\n"
-        ui.pause 1
-      end
+      ui.say "Keep tokens secret. Do not expose them to untrusted fork builds."
 
-      travis_token if File.exist? ".travis.yml"
-      circle_token if File.exist? "circle.yml"
-      unsure_token unless File.exist?(".travis.yml") || File.exist?(".circle.yml")
+      case @selected_ci
+      when "travis ci" then travis_token
+      when "circleci" then circle_token
+      else unsure_token
+      end
 
       ui.pause 0.6
       ui.say "This is the last step, I can give you a second..."
@@ -197,16 +283,21 @@ module Danger
 
     def uses_circle
       danger = "- bundle exec danger".yellow
-      config = YAML.load(File.read("circle.yml"))
+      path = [".circleci/config.yml", ".circleci/config.yaml", "circle.yml", ".circle.yml"].find { |file| File.file?(file) }
+      if path.start_with?(".circleci/")
+        ui.say "Add a run step for #{'bundle exec danger'.yellow} to a job in #{path}, and include that job in your workflow."
+        return
+      end
+      config = YAML.load(File.read(path))
 
       if config.kind_of?(Hash) && config["test"]
         if config["test"]["post"]
-          ui.say "Add #{danger} as a new step in the #{'test:post:'.yellow} section of your circle.yml file."
+          ui.say "Add #{danger} as a new step in the #{'test:post:'.yellow} section of your #{path} file."
         else
-          ui.say "Add #{danger} as a new step in the #{'test:override:'.yellow} section of your circle.yml file."
+          ui.say "Add #{danger} as a new step in the #{'test:override:'.yellow} section of your #{path} file."
         end
       else
-        ui.say "Add this to the bottom of your circle.yml file:"
+        ui.say "Add this to the bottom of your #{path} file:"
         ui.say "test:".green
         ui.say "  post:".green
         ui.say "    #{danger}".green
@@ -215,8 +306,8 @@ module Danger
 
     def unsure_ci
       danger = "bundle exec danger".yellow
-      ui.say "As I'm not sure what CI you want to run Danger on based on the files in your repo, I'll just offer some generic"
-      ui.say "advice. You want to run #{danger} after your tests have finished running, it should still be during the testing"
+      ui.say "For this CI provider, I'll offer generic setup advice."
+      ui.say "You want to run #{danger} after your tests have finished running, it should still be during the testing"
       ui.say "process so the build can fail."
     end
 
@@ -225,27 +316,14 @@ module Danger
       ui.say "In order to add an environment variable, go to:"
       ui.link "https://travis-ci.org/#{current_repo_slug}/settings"
       ui.say "\nThe name is #{'DANGER_GITHUB_API_TOKEN'.yellow} and the value is the GitHub Personal Access Token."
-      if @is_open_source
-        ui.say 'Make sure to have "Display value in build log" enabled.'
-      end
+      ui.say 'Keep "Display value in build log" disabled.'
     end
 
     def circle_token
       # https://circleci.com/gh/artsy/eigen/edit#env-vars
       if considered_an_oss_repo?
-        ui.say "Before we start, it's important to be up-front. CircleCI only really has one option to support running Danger"
-        ui.say "for forks on OSS repos. It is quite a drastic option, and I want to let you know the best place to understand"
-        ui.say "the ramifications of turning on a setting I'm about to advise.\n"
-        ui.link "https://circleci.com/docs/fork-pr-builds"
-        ui.say "TLDR: If you have anything other than Danger config settings in CircleCI, then you should not turn on the setting."
-        ui.say "I'll give you a minute to read it..."
-        ui.wait_for_return
-
-        ui.say "On danger/danger we turn on #{'Permissive building of fork pull requests'.yellow} this exposes the token to Danger"
-        ui.say "You can find this setting at:"
-        ui.link "https://circleci.com/gh/#{current_repo_slug}/edit#advanced-settings\n"
-        ui.say "I'll hold..."
-        ui.wait_for_return
+        ui.say "Do not pass secrets to fork builds. Restrict token-based Danger runs to trusted branches,"
+        ui.say "or separate rule execution from privileged report posting."
       end
 
       ui.say "In order to expose an environment variable, go to:"
@@ -279,7 +357,7 @@ module Danger
       ui.say "- You can look at the following Dangerfiles to get some more ideas:"
       ui.pause 0.6
       ui.link "https://github.com/danger/danger/blob/master/Dangerfile"
-      ui.link "https://github.com/artsy/eigen/blob/master/dangerfile.ts"
+      ui.link "https://github.com/dblock/ruby-enum/blob/master/Dangerfile"
       ui.pause 1
     end
 

@@ -1,0 +1,16 @@
+name: Danger Comment
+
+on:
+  workflow_run:
+    workflows: [Danger]
+    types: [completed]
+
+permissions:
+  actions: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  comment:
+    if: github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure'
+    uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@58e325dd25ef3e26cdcd60c97e6ec7848a7d7fdf

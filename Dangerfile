@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+danger.import_dangerfile(gem: "danger-pr-comment") if ENV["DANGER_REPORT_PATH"]
+
 # Sometimes its a README fix, or something like that - which isn't relevant for
 # including in a CHANGELOG for example
 has_app_changes = !git.modified_files.grep(/lib/).empty?
@@ -55,7 +57,7 @@ elsif core_lint_output.include? "warning"
   markdown "```\n#{core_lint_output}```"
 end
 
-unless ENV["RUNNING_IN_ACTIONS"]
+unless ENV["RUNNING_IN_ACTIONS"] || ENV["GITHUB_ACTIONS"]
   junit.parse "junit-results.xml"
   junit.headers = %i(file name)
   junit.report
