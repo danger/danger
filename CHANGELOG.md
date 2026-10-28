@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Support git 6.0.0, which removes `Git::Base` and the enumerable `Git::Log` - [@karljamoralin](https://github.com/karljamoralin) [#1560](https://github.com/danger/danger/issues/1560)
 * Allow faraday-http-cache 3.x - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1553](https://github.com/danger/danger/issues/1553)
 <!-- Your comment above here -->
 

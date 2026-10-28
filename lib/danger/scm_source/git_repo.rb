@@ -206,7 +206,7 @@ end
 
 # Git::Base became a compatibility module included in Git::Repository in git 5.0.
 # Prepend Danger's extension to the concrete repository class in either version.
-if Git::Base.kind_of?(Class)
+if defined?(Git::Base) && Git::Base.kind_of?(Class)
   Git::Base.prepend(Danger::GitRepo::MergeBase)
 else
   Git::Repository.prepend(Danger::GitRepo::MergeBase)

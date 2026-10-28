@@ -122,7 +122,9 @@ module Danger
     # @return [Git::Log] from the gem `git`
     #
     def commits
-      @git.log.to_a
+      log = @git.log
+      # git 6 removed Enumerable from Git::Log; #execute returns the commits.
+      (log.respond_to?(:execute) ? log.execute : log).to_a
     end
 
     # @!group Git Metadata

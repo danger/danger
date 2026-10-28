@@ -41,7 +41,7 @@ RSpec.describe Danger::GitRepo, host: :github do
     end
 
     it "extends the repository class used by the installed git gem" do
-      repository_class = Git::Base.kind_of?(Class) ? Git::Base : Git::Repository
+      repository_class = defined?(Git::Base) && Git::Base.kind_of?(Class) ? Git::Base : Git::Repository
 
       expect(repository_class.ancestors).to include(Danger::GitRepo::MergeBase)
       expect(repository_class.instance_method(:merge_base).owner).to eq(Danger::GitRepo::MergeBase)
