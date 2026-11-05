@@ -86,6 +86,13 @@ RSpec.describe Danger::DangerfileGitPlugin, host: :github do
       expect(@dsl.commits).to eq(log)
     end
 
+    it "gets commits from a log that responds to execute" do
+      log = double("log", execute: ["hi"])
+      allow(@repo).to receive(:log).and_return(log)
+
+      expect(@dsl.commits).to eq(["hi"])
+    end
+
     it "gets tags" do
       tag = "1.0.0\n2.0.0"
       allow(@repo).to receive(:tags).and_return(tag)
