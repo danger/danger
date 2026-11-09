@@ -39,7 +39,7 @@ jobs:
           cache-version: git-${{ matrix.entry.git || 'latest' }}
 
       - name: Report git gem version
-        run: bundle exec ruby -e 'puts Gem.loaded_specs.fetch("git").full_name'
+        run: bundle info git
 
       - name: Configure Git email/username
         run: |
