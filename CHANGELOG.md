@@ -11,9 +11,13 @@
 ## master
 
 <!-- Your comment below here -->
+<!-- Your comment above here -->
+
+## 9.6.2
+
 * Support git gem 6.0.0 - [@karljamoralin](https://github.com/karljamoralin) [#1560](https://github.com/danger/danger/issues/1560)
 * Allow faraday-http-cache 3.x - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1553](https://github.com/danger/danger/issues/1553)
-<!-- Your comment above here -->
+* Support deploys from GitHub - [@orta](https://github.com/orta)
 
 ## 9.6.1
 
@@ -117,6 +121,7 @@ Internals:
 ## 9.0.0
 
 **Breaking** - Drop support for Ruby 2.4, support Ruby 2.7+ - [@mathroule](https://github.com/mathroule) [#1378](https://github.com/danger/danger/pull/1378)
+
 * Update Octokit dependency to version 5.0. - [@mathroule](https://github.com/mathroule) [#1377](https://github.com/danger/danger/pull/1377)
 * Check pull request to Danger repo on macOS, Ubuntu and Windows - [@mathroule](https://github.com/mathroule) [#1365](https://github.com/danger/danger/pull/1381)
 * Support batch builds in AWS CodeBuild - [@ihatov08](https://github.com/ihatov08) [#1369](https://github.com/danger/danger/pull/1369)
@@ -158,7 +163,7 @@ Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
 
 ## 8.4.1
 
-* Add a "`: `" separation between file_name + line_number and message for gitlab inline comments
+* Add a "`:`" separation between file_name + line_number and message for gitlab inline comments
 * Add support to pass in `DANGER_BITBUCKETSERVER_VERIFY_SSL` to toggle SSL Verification for Bitbucket Server
 * Add Bitbucket Server support for Buildkite CI. [@pahnev](https://github.com/pahnev)
 * Fixes issue where a comment is posted to Bitbucket Server even when everything is green. [@pahnev](https://github.com/pahnev)
@@ -169,7 +174,7 @@ Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
 * Test with Ruby 2.7 and 3.0 on CI. - [@mataku](https://github.com/mataku)
 * Added support for custom success message using the env var `DANGER_SUCCESS_MESSAGE` - [@omarzl](https://github.com/omarzl)
 * Fix AppCenter CI source broken due to conflict with AzurePipelines - [@lucasecf](https://github.com/lucasecf)
-* Adds Xcode Cloud CI source support - [@rpassis]((https://github.com/rpassis)
+* Adds Xcode Cloud CI source support - [@rpassis]((<https://github.com/rpassis>)
 
 ## 8.3.1
 
@@ -225,7 +230,7 @@ Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
 
 ## 8.0.4
 
-- Minor docs update, might also update the dockerfile
+* Minor docs update, might also update the dockerfile
 
 ## 8.0.3
 
@@ -242,6 +247,7 @@ Adds support for using GitHub auth via the ENV var `DANGER_GITHUB_BEARER_TOKEN`
 ## 8.0.0
 
 **Breaking** - Drop support for Ruby 2.3, support Ruby 2.4+ [@Kaspik](https://github.com/Kaspik) [#1225](https://github.com/danger/danger/pull/1225)
+
 * Fix github inline-comments always being struck-through. This was caused by a regression in PR [#1182](https://github.com/danger/danger/pull/1182), fixed in PR [#1208](https://github.com/danger/danger/pull/1208/) for 6.3.2 but didn't make it to 7.0.0 [@Kaspik](https://github.com/Kaspik) [#1225](https://github.com/danger/danger/pull/1225)
 
 ## 7.0.1
@@ -350,7 +356,7 @@ the account which Danger should be using for commenting.
 
 ## 6.0.6
 
-* Fixed missing Unified diff headers for `gitlab.mr_diff` due to a Gitlab API bug (See https://gitlab.com/gitlab-org/gitlab-ce/issues/53229).
+* Fixed missing Unified diff headers for `gitlab.mr_diff` due to a Gitlab API bug (See <https://gitlab.com/gitlab-org/gitlab-ce/issues/53229>).
 
 ## 6.0.5
 
@@ -399,7 +405,7 @@ the account which Danger should be using for commenting.
 
 * Fix `--new-comment` for GitLab to actually create the new comment instead of
   updating an old one. [@AlexDenisov](https://github.com/AlexDenisov)
-  Original issue: https://github.com/danger/danger/issues/1084
+  Original issue: <https://github.com/danger/danger/issues/1084>
 * Use `CI_API_V4_URL` on GitLab 11.7+ installations [@glensc], #1089
 
 ## 5.14.0
@@ -608,7 +614,6 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 * Use gitlab api v4, instead of deprecated v3 - [@sleekybadger](https://github.com/sleekybadger)
 * Add support for GitLabCI - [@sleekybadger](https://github.com/sleekybadger)
 
-
 ## 5.3.3
 
 * Add to documentation for TeamCity CI setup - [@atelic](https://github.com/atelic)
@@ -658,7 +663,6 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 * Improved DroneCI support for versions 0.4+ - [@fmartingr](https://github.com/fmartingr)
 * Made DroneCI still work with older version - [@k0nserv](https://github.com/k0nserv)
 
-
 ## 5.0.3
 
 * Automates the add GitHub release notes when we release via [chandler](https://github.com/mattbrictson/chandler) - orta
@@ -669,7 +673,6 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 
 * #787 Fixes issue with `use_ssl` for bitbucket server integration. - RishabhTayal
 * #788 Fix `diff_for_file` for added files - allewun
-
 
 ## 5.0.1
 
@@ -692,7 +695,6 @@ This release adds compatibility for GitLab API v4, you need to update the [dange
 ## 4.3.3
 
 * `danger.import_dangerfile(github:)` now supports private repositories and GitHub Enterprise - hotbott
-
 
 ## 4.3.2
 
@@ -823,7 +825,6 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 ./orta
 
 ---
-
 
 ## 3.6.0
 
@@ -991,7 +992,7 @@ in lock-step with the same major SemVer releases with Danger. That should be you
 
 [Full Changelog](https://github.com/danger/danger/compare/v3.2.1...v3.2.2)
 
-* Link to https://danger.systems/ in Bitbucket Server comments - HeEAaD
+* Link to <https://danger.systems/> in Bitbucket Server comments - HeEAaD
 * Add `markdown_link` for the Bitbucket Server plugin - HeEAaD
 * Updated Bitrise documentation about env vars - kylejm
 * Fix `html_link` for gitlab - hanneskaeufler
@@ -1303,12 +1304,12 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 * Improves wording when failing a OSS build - orta
 * Add support for org-wide Dangerfile -- KrauseFx
-  - To use this, create a repo on your GitHub organization called "danger" (or "Danger")
-  - Add a `Dangerfile` to the root of that repo.
-  - This new `Dangerfile` is ran after current repo's `Dangerfile`.
+  * To use this, create a repo on your GitHub organization called "danger" (or "Danger")
+  * Add a `Dangerfile` to the root of that repo.
+  * This new `Dangerfile` is ran after current repo's `Dangerfile`.
 
   The org `Dangerfile` will have access to all of the same plugins, and metadata.
-  For an example, see: https://github.com/Themoji/danger
+  For an example, see: <https://github.com/Themoji/danger>
 * Breaking: `import_url` does not append `.rb` to your url anymore. - KrauseFx
 * Minor core documentation updates - orta
 * `danger plugin lint` now says it's failed when it's failed, not when it succeeds - orta
@@ -1328,17 +1329,17 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 [Full Changelog](https://github.com/danger/danger/compare/v0.8.5...v0.9.0)
 
 * `danger plugin` is removed in favor of `danger plugins` - dbgrandi/orta
-  - `danger plugin lint` is now `danger plugins lint`
-  - `danger plugin readme` is now `danger plugins readme`
+  * `danger plugin lint` is now `danger plugins lint`
+  * `danger plugin readme` is now `danger plugins readme`
 * use `claide-plugins` gem to provide plugin management - dbgrandi
-  - extends `claide-plugins` gem with list, search, create commands
-  - `list` is the default command for `danger plugins`
-  - `list` shows all plugins
-  - `search` let's you search with a regexp
-  - `create` uses https://github.com/danger/danger-plugin-template to bootstrap a new danger plugin
+  * extends `claide-plugins` gem with list, search, create commands
+  * `list` is the default command for `danger plugins`
+  * `list` shows all plugins
+  * `search` let's you search with a regexp
+  * `create` uses <https://github.com/danger/danger-plugin-template> to bootstrap a new danger plugin
 * Warn users not to store GitHub tokens in the repository -- dantoml
 * Crash on load fix for `danger plugins readme` -- orta
-* Add support for Surf CI (https://github.com/surf-build/surf) -- paulcbetts
+* Add support for Surf CI (<https://github.com/surf-build/surf>) -- paulcbetts
 * `danger plugins lint` contains more information - orta
 * Make link instructions in onboarding OS aware -- K0nserv
 
@@ -1346,7 +1347,7 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 [Full Changelog](https://github.com/danger/danger/compare/v0.8.4...v0.8.5)
 
-* Converts the message link to be http://danger.systems - orta
+* Converts the message link to be <http://danger.systems> - orta
 * Fix `danger lib lint` with no params not finding the plugin paths - orta
 * Converts `""` usage to `''` where possible -- dantoml
 * More documentation params are exposed to the linter - orta
@@ -1360,9 +1361,9 @@ I don't like breaking backwards comparability. Sorry, for as far as I can see at
 
 * Initial work on `danger plugin lint` command - orta
 * `danger plugin lint` can run with either:
-  - a list of file paths
-  - a list of gems
-  - no arguments, which will parse `lib/**/**/*` to lint your local plugins
+  * a list of file paths
+  * a list of gems
+  * no arguments, which will parse `lib/**/**/*` to lint your local plugins
 * Moved new plugin to `danger plugin new` - orta
 * Added `api` to the DSL, which is a shortcut to the active `Octokit::Client` - orta
 * Renamed `branch_for_merge` to `branch_for_base` and also added `branch_for_head` - orta
