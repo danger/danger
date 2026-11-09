@@ -1,0 +1,13 @@
+# Changes to these paths need a review from the releasers team before they can
+# land on master (enforced by the "Protect master" ruleset). They either control
+# CI and these rules themselves, or run inside the job that publishes the gem.
+#
+# Keep this file in .github/: GitHub reads it before a CODEOWNERS file in the
+# repo root or docs/, and /.github/ below means changes to it need a releaser too.
+#
+# To require a releaser's review on every change, add this line above the others:
+# *  @danger/releasers
+
+/.github/               @danger/releasers
+/danger.gemspec         @danger/releasers
+/lib/danger/version.rb  @danger/releasers

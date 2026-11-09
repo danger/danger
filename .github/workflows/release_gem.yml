@@ -1,0 +1,65 @@
+name: Release gem
+
+# Publishes danger to RubyGems.org using trusted publishing, so no API key is
+# stored anywhere.
+#
+# Only members of the `releasers` team can release:
+# - the "Release tags" ruleset only lets that team create, move or delete v* tags
+# - the `release` environment only accepts v* tags, and a releaser has to
+#   approve each run
+# - RubyGems only trusts this filename running in the `release` environment,
+#   so don't rename either without updating the trusted publisher on rubygems.org
+#
+# To release: bump lib/danger/version.rb and CHANGELOG.md on master, then run
+# `gem_push=no bundle exec rake release`, or push a vX.Y.Z tag yourself.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write # exchanged with RubyGems for a short-lived push token
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the check below needs master's history
+          persist-credentials: false
+
+      # No Bundler on purpose. Gemfile.lock isn't committed, so installing the
+      # dev dependencies would pull unpinned gems into the job that can publish.
+      # Building the gem only needs danger.gemspec and lib/danger/version.rb.
+      - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        with:
+          ruby-version: "3.4"
+          bundler: none
+
+      - name: Check the tag matches the version and is on master
+        run: |
+          version=$(ruby -Ilib -rdanger/version -e 'print Danger::VERSION')
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match Danger::VERSION ($version)"
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD origin/master; then
+            echo "::error::$GITHUB_REF_NAME points at a commit that isn't on master"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Build the gem
+        run: gem build danger.gemspec
+
+      # Credentials are only fetched after the build, so nothing above sees them.
+      - uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
+
+      - name: Push to RubyGems.org
+        run: gem push "danger-$VERSION.gem"
