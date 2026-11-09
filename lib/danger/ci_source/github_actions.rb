@@ -5,8 +5,15 @@ require "danger/request_sources/github/github"
 module Danger
   # ### CI Setup
   #
+  # For pull requests from forks, use separate rule-execution and comment workflows.
+  # The community-maintained [danger-pr-comment](https://github.com/numbata/danger-pr-comment)
+  # integration uses GitHub's automatic token without a personal access token or bot account.
+  # See the [setup guide](https://danger.systems/guides/getting_started.html#github-actions-without-a-personal-access-token)
+  # and [dblock/ruby-enum](https://github.com/dblock/ruby-enum) for a working example.
+  #
   # You can use `danger/danger` Action in your `.github/workflows/xxx.yml`.
   # And so, you can use GITHUB_TOKEN secret as `DANGER_GITHUB_API_TOKEN` environment variable.
+  # Direct comment posting needs `pull-requests: write`; fork PR tokens normally lack this permission.
   #
   #  ```yml
   #  ...

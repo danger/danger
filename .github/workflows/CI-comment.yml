@@ -1,0 +1,57 @@
+name: CI Danger Comment
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  actions: read
+  pull-requests: read
+
+jobs:
+  validate:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      (github.event.workflow_run.conclusion == 'success' ||
+       github.event.workflow_run.conclusion == 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Danger report
+        uses: actions/download-artifact@v4
+        with:
+          name: danger-report
+          path: report
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Verify report belongs to the triggering pull request
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const fs = require('node:fs');
+            const report = JSON.parse(fs.readFileSync('report/danger-report.json', 'utf8'));
+            if (!Number.isSafeInteger(report.pr_number) || report.pr_number < 1) {
+              core.setFailed('Danger report must identify a valid pull request');
+              return;
+            }
+            const run = context.payload.workflow_run;
+            const { data: pr } = await github.rest.pulls.get({
+              ...context.repo,
+              pull_number: report.pr_number,
+            });
+            if (pr.head.sha !== run.head_sha ||
+                pr.head.ref !== run.head_branch ||
+                pr.base.ref !== 'master' ||
+                !pr.head.repo || !run.head_repository ||
+                pr.head.repo.id !== run.head_repository.id) {
+              core.setFailed('Danger report does not match the triggering pull request');
+            }
+
+  comment:
+    needs: validate
+    permissions:
+      actions: read
+      issues: write
+      pull-requests: write
+    uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@58e325dd25ef3e26cdcd60c97e6ec7848a7d7fdf

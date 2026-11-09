@@ -13,7 +13,9 @@ ruby:
 section.guide
   article
     markdown:
-      There are 5 steps involved in getting Danger running:
+      On GitHub Actions, you can [run Danger without a personal access token](#github-actions-without-a-personal-access-token), including on pull requests from forks.
+
+      For other CI setups, there are 5 steps involved in getting Danger running:
 
       * [Include Danger](#including-danger).
       * [Creating a Dangerfile](#creating-a-dangerfile) and adding a few simple rules.
@@ -36,7 +38,7 @@ section.guide
 
       ### Easy Mode
 
-      *Easy mode* - run: `bundle exec danger init` - this will guide you through the next four steps, offering useful advice specific to your setup. If you would like to understand how all of the pieces come together, read on:
+      *Easy mode* - run: `bundle exec danger init`. The wizard detects existing CI configuration and asks you to choose when multiple providers are present. When none is detected, it offers GitHub Actions first for repositories with a GitHub remote. The GitHub Actions setup creates a Dangerfile and two workflows, preserves existing files, and explains the required `danger-pr-comment` dependency. Other CI setups retain the bot-account and token walkthrough. If you would like to understand how all of the pieces come together, read on:
 
       ### Creating a Dangerfile
 
@@ -45,6 +47,80 @@ section.guide
       ```
       message("Hello, this worked")
       ```
+
+      ### GitHub Actions without a personal access token
+
+      GitHub Actions provides an automatic, short-lived `GITHUB_TOKEN`; you do not need a bot account, personal access token, or repository secret. For pull requests from forks, that token normally cannot post comments. Use two workflows: run Danger with read-only permissions on `pull_request`, then post its JSON report in a separate `workflow_run` workflow with comment permissions.
+
+      The community-maintained [danger-pr-comment](https://github.com/numbata/danger-pr-comment) gem and reusable workflows implement this setup. Add these gems to your Gemfile and run `bundle install`:
+
+      ```ruby
+      gem 'danger'
+      gem 'danger-pr-comment', require: false
+      ```
+
+      Your project can use any language. If there is no Gemfile, `danger init` creates a tooling Gemfile with the RubyGems source and these dependencies. Existing Gemfiles are preserved; add any missing dependencies yourself. Run `bundle install` and commit the Gemfile and Gemfile.lock.
+
+      Generated workflows use `.ruby-version` or the Ruby entry in `.tool-versions` when available. Otherwise, the wizard sets `ruby-version: '3.4'` for Danger's tooling, including in non-Ruby projects. Adjust it to match your dependencies if needed.
+
+      Import the report exporter before your Dangerfile rules:
+
+      ```ruby
+      danger.import_dangerfile(gem: 'danger-pr-comment')
+
+      message("Hello, this worked")
+      ```
+
+      Create `.github/workflows/danger.yml`:
+
+      ```yaml
+      name: Danger
+      on:
+        pull_request:
+          types: [opened, reopened, edited, synchronize]
+
+      permissions:
+        contents: read
+        pull-requests: read
+
+      jobs:
+        danger:
+          uses: numbata/danger-pr-comment/.github/workflows/danger-run.yml@58e325dd25ef3e26cdcd60c97e6ec7848a7d7fdf
+          with:
+            ruby-version: '3.4'
+            bundler-cache: true
+            danger-args: 'pr ${{ github.event.pull_request.html_url }} --fail-on-errors=true'
+      ```
+
+      Create `.github/workflows/danger-comment.yml`:
+
+      ```yaml
+      name: Danger Comment
+      on:
+        workflow_run:
+          workflows: [Danger]
+          types: [completed]
+
+      permissions:
+        actions: read
+        issues: write
+        pull-requests: write
+
+      jobs:
+        comment:
+          if: github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure'
+          uses: numbata/danger-pr-comment/.github/workflows/danger-comment.yml@58e325dd25ef3e26cdcd60c97e6ec7848a7d7fdf
+      ```
+
+      Choose a Ruby version compatible with your project. Both examples pin the reusable workflows to a commit; review updates before changing that revision. No `secrets: inherit` is required.
+
+      The first workflow runs `danger pr` against the triggering pull request without posting results. This provides the normal `github` plugin and PR metadata, unlike the local-only `danger dry_run` command. `--fail-on-errors=true` fails the job when rules report errors, while the report is still uploaded. The second workflow downloads the report and creates or updates the PR comment using GitHub's automatic token. Both workflow files must be present on the default branch for the `workflow_run` integration to work.
+
+      Keep the commenting workflow limited to processing report data: do not check out or execute pull request code with write permissions. Do not switch to `pull_request_target` to run untrusted Dangerfiles with a privileged token.
+
+      Danger's own [CI workflow](https://github.com/danger/danger/blob/master/.github/workflows/CI.yml) uses this approach alongside its existing test matrix. Its [commenting workflow](https://github.com/danger/danger/blob/master/.github/workflows/CI-comment.yml) verifies that the report identifies a pull request whose head commit, branch, and repository match the triggering run before allowing the comment job to proceed.
+
+      See [dblock/ruby-enum](https://github.com/dblock/ruby-enum), including its [Dangerfile](https://github.com/dblock/ruby-enum/blob/master/Dangerfile) and [workflows](https://github.com/dblock/ruby-enum/tree/master/.github/workflows), for a working example. With this setup, skip the bot-account and access-token steps below.
 
       ### Creating a bot account for Danger to use
 
@@ -83,7 +159,7 @@ section.guide
 
           ##### Tokens for OSS Projects
 
-          We recommend giving the token the smallest scope possible. This means just `public_repo`, this scope is [still ideally too much][token] but this account shouldn't have any access to other repos or organizations - so malicious use of the token is scoped to making new repos on it, or writing comments on other OSS projects. Because the token can be quite easily be extracted from the CI environment, this minimizes the chance for bad actors to cause chaos with it.
+          On GitHub Actions, prefer the [two-workflow setup](#github-actions-without-a-personal-access-token) above. For other CI providers, keep tokens in protected CI secrets and grant only the permissions Danger needs. Do not expose tokens to untrusted fork builds; separate rule execution from privileged comment posting.
 
           ##### Tokens for Closed Source Projects
 
@@ -106,7 +182,6 @@ section.guide
 
           [github_bots]: https://twitter.com/sebastiangrail/status/750844399563608065
           [github_token]: https://github.com/settings/tokens/new
-          [token]: https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/
 
       div.gitlab
         markdown:
