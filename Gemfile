@@ -10,6 +10,7 @@ gem "danger-gitlab"
 gem "danger-junit", "~> 0.5"
 gem "faraday-http-cache", ">= 2.5", "< 4.0"
 gem "fuubar", "~> 2.5"
+gem "git", ENV["GIT_VERSION"] unless ENV["GIT_VERSION"].to_s.empty?
 gem "guard", "~> 2.16"
 gem "guard-rspec", "~> 4.7"
 gem "guard-rubocop", "~> 1.2"

@@ -11,20 +11,22 @@ concurrency:
 
 jobs:
   build:
+    name: ${{ matrix.entry.os || 'ubuntu-latest' }} / Ruby ${{ matrix.entry.ruby || '3.4' }} / git ${{ matrix.entry.git || 'latest' }}
     strategy:
+      fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
-        ruby-version:
-          - "2.7"
-          - "3.0"
-          - "3.1"
-          - "3.2"
-          - "3.3"
-          - "3.4"
-    runs-on: ${{ matrix.os }}
+        entry:
+          - { ruby: "2.7", git: "1.13.0" }
+          - { ruby: "3.0", git: "2.3.3" }
+          - { ruby: "3.1" }
+          - { ruby: "3.2", git: "4.3.0" }
+          - { ruby: "3.3", git: "5.7.1" }
+          - { git: "6.0.0" }
+          - { os: macos-latest }
+          - { os: windows-latest }
+    runs-on: ${{ matrix.entry.os || 'ubuntu-latest' }}
+    env:
+      GIT_VERSION: ${{ matrix.entry.git }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -32,8 +34,12 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby-version }}
+          ruby-version: ${{ matrix.entry.ruby || '3.4' }}
           bundler-cache: true
+          cache-version: git-${{ matrix.entry.git || 'latest' }}
+
+      - name: Report git gem version
+        run: bundle exec ruby -e 'puts Gem.loaded_specs.fetch("git").full_name'
 
       - name: Configure Git email/username
         run: |
