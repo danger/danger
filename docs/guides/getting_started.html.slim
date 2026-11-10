@@ -6,7 +6,7 @@ order: 1
 
 ruby:
   require 'json'
-  ci_sources = JSON.parse(File.read('json_data/ci_docs.json'))
+  ci_sources = JSON.load_file('json_data/ci_docs.json')
 
 
 .clearfix
