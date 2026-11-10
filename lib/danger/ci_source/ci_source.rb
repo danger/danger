@@ -5,7 +5,7 @@ require "set"
 module Danger
   # "abstract" CI class
   class CI
-    attr_accessor :repo_slug, :pull_request_id, :repo_url, :supported_request_sources
+    attr_accessor :repo_slug, :pull_request_id, :repo_url, :supported_request_sources, :commit_sha
 
     def self.inherited(child_class)
       available_ci_sources.add child_class

@@ -81,6 +81,12 @@ RSpec.describe Danger::GitHubActions do
       end
     end
 
+    describe "commit sha" do
+      it "uses the pull request head, not the merge commit" do
+        expect(source.commit_sha).to eq "34c5c7793cb3b279e22454cb6750c80560547b3a"
+      end
+    end
+
     describe "without DANGER_GITHUB_API_TOKEN" do
       it "override by GITHUB_TOKEN if GITHUB_TOKEN is not empty" do
         valid_env["GITHUB_TOKEN"] = "github_token"

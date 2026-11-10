@@ -272,6 +272,21 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.submit_pull_request_status!(danger_id: "special_context")
       end
 
+      it "sets the status on the latest pull request commit when the CI does not report one" do
+        expect(@g.client).to receive(:create_status).with(anything, "pr_commit_ref", any_args).and_return({})
+
+        @g.pr_json = { "head" => { "sha" => "pr_commit_ref" } }
+        @g.submit_pull_request_status!
+      end
+
+      it "sets the status on the commit the CI built, not the latest pull request commit" do
+        @g.ci_source.commit_sha = "built_commit_ref"
+        expect(@g.client).to receive(:create_status).with(anything, "built_commit_ref", any_args).and_return({})
+
+        @g.pr_json = { "head" => { "sha" => "newer_commit_ref" } }
+        @g.submit_pull_request_status!
+      end
+
       it "aborts when access to setting the status was denied but there were errors" do
         stub_request(:post, "https://api.github.com/repos/artsy/eigen/statuses/pr_commit_ref").to_return(status: 404)
 
