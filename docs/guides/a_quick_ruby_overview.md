@@ -66,7 +66,7 @@ name.include? "Thero"         # true
 name[0..3]                    # orta
 ```
 
-There are multiple ways to make a string, I recommend using double quotes `"` like above. If you want to do string interpolation with it, you can use `#{}` and run code inside the brackets. `"5 = ${ 2+3 }"`.
+There are multiple ways to make a string, I recommend using double quotes `"` like above. If you want to do string interpolation with it, you can use `#{}` and run code inside the brackets. `"5 = #{ 2+3 }"`.
 
 That should be enough to play around with your code review data.
 
@@ -102,7 +102,7 @@ filelist.include? "path1/*.json"          # false
 
 ### Files
 
-You can read a file with `File.read("path/to/file")` this returns a string, or nil. Paths within Danger are represented as strings.
+You can read a file with `File.read("path/to/file")`. This returns a string, or raises an exception if the file cannot be read. Paths within Danger are represented as strings.
 
 
 ### Terminal commands
