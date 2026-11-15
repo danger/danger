@@ -10,23 +10,7 @@ module Danger
     require "danger/commands/pr"
     require "danger/commands/mr"
 
-    # manually set claide plugins as a subcommand
-    require "claide_plugin"
-    @subcommands << CLAide::Command::Plugins
-    CLAide::Plugins.config =
-      CLAide::Plugins::Configuration.new(
-        "Danger",
-        "danger",
-        "https://gitlab.com/danger-systems/danger.systems/raw/master/plugins-search-generated.json",
-        "https://github.com/danger/danger-plugin-template"
-      )
-
-    require "danger/commands/plugins/plugin_lint"
-    require "danger/commands/plugins/plugin_json"
-    require "danger/commands/plugins/plugin_readme"
-
     require "danger/commands/dangerfile/init"
-    require "danger/commands/dangerfile/gem"
 
     attr_accessor :cork
 
@@ -57,6 +41,44 @@ module Danger
       if self.instance_of?(Runner) && !@dangerfile_path
         help!("Could not find a Dangerfile.")
       end
+    end
+
+    # Loads the subcommands that are backed by claide-plugins. Deferred out of the class
+    # body so that
+    # `require "danger"` does not pull in claide-plugins: it is only needed to run the
+    # CLI, and loading it emits a "circular require considered harmful" warning from
+    # inside the gem (claide/command/gem_helper.rb and gem_index_cache.rb require each
+    # other), which every library consumer would otherwise print. Idempotent, so
+    # repeated CLI entry is safe.
+    def self.load_plugin_commands!
+      return if @plugin_commands_loaded
+
+      @plugin_commands_loaded = true
+
+      require "claide_plugin"
+      @subcommands << CLAide::Command::Plugins
+      CLAide::Plugins.config =
+        CLAide::Plugins::Configuration.new(
+          "Danger",
+          "danger",
+          "https://gitlab.com/danger-systems/danger.systems/raw/master/plugins-search-generated.json",
+          "https://github.com/danger/danger-plugin-template"
+        )
+
+      require "danger/commands/plugins/plugin_lint"
+      require "danger/commands/plugins/plugin_json"
+      require "danger/commands/plugins/plugin_readme"
+
+      # `danger dangerfile gem` uses CLAide::TemplateRunner, which claide-plugins
+      # provides, so it belongs on this side of the split too.
+      require "danger/commands/dangerfile/gem"
+    end
+
+    # Every CLI entry point goes through here, so the plugins subcommand is registered
+    # before CLAide dispatches regardless of how danger was invoked.
+    def self.run(argv)
+      load_plugin_commands!
+      super
     end
 
     def self.options
