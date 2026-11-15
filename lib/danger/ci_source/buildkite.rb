@@ -44,6 +44,10 @@ module Danger
 
       repo_matches = self.repo_url.match(%r{([/:])([^/]+/[^/]+?)(\.git$|$)})
       self.repo_slug = repo_matches[2] unless repo_matches.nil?
+
+      sha = env["BUILDKITE_PULL_REQUEST_HEAD_COMMIT"].to_s
+      sha = env["BUILDKITE_COMMIT"].to_s if sha.empty?
+      self.commit_sha = sha if sha.match?(/\A\h{40}(\h{24})?\z/)
     end
 
     def supported_request_sources
