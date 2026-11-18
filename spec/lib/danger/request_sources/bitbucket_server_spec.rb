@@ -107,4 +107,19 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
       expect(bs.find_position_in_diff?("Gemfile", 3)).to be_truthy
     end
   end
+
+  describe "#inline_violations_group" do
+    it "keeps mixed string and integer locations inline at the same line" do
+      stub_pull_request_diff
+      warnings = [
+        Danger::Violation.new("First plugin", false, "Gemfile", "3"),
+        Danger::Violation.new("Second plugin", false, "Gemfile", 3)
+      ]
+
+      grouped = bs.inline_violations_group(warnings: warnings).fetch(:warnings)
+
+      expect(grouped).to match_array(warnings)
+      expect(grouped.all? { |warning| bs.find_position_in_diff?(warning.file, warning.line) }).to be true
+    end
+  end
 end

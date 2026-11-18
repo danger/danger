@@ -31,6 +31,12 @@ RSpec.describe Danger::Violation do
       expect(subject.type).to be :warning
     end
 
+    it "does not turn a nonnumeric line into line zero" do
+      violation = described_class.new("hello world", true, "file.rb", "unknown")
+
+      expect(violation.line).to eq("unknown")
+    end
+
     context "when type is an invalid value" do
       let(:type) { :i_am_an_invalid_type! }
 

@@ -35,6 +35,14 @@ RSpec.describe Danger::Markdown do
   end
 
   describe "#==" do
+    it "matches numeric string range locations with integer locations" do
+      left = described_class.new("hello world", "Dangerfile", "3", start_line: "2", side: "RIGHT", start_side: "RIGHT")
+      right = described_class.new("hello world", "Dangerfile", 3, start_line: 2, side: "RIGHT", start_side: "RIGHT")
+
+      expect(left).to eq(right)
+      expect(left.hash).to eq(right.hash)
+    end
+
     it "treats range metadata as part of equality" do
       left = described_class.new("hello world", "Dangerfile", 3, start_line: 2, side: "RIGHT", start_side: "RIGHT")
       right = described_class.new("hello world", "Dangerfile", 3, start_line: 1, side: "RIGHT", start_side: "RIGHT")

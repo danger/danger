@@ -8,8 +8,8 @@ module Danger
       @type = type
       @message = message
       @file = file
-      @line = line
-      @start_line = start_line
+      @line = normalize_line(line)
+      @start_line = normalize_line(start_line)
       @side = side
       @start_side = start_side
     end
@@ -57,6 +57,14 @@ module Danger
     # @return [Boolean] returns true if is a file or line, false otherwise
     def inline?
       file || line
+    end
+
+    private
+
+    def normalize_line(line)
+      return line unless line.kind_of?(String) && line.match?(/\A[0-9]+\z/)
+
+      line.to_i
     end
   end
 end
