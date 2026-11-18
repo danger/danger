@@ -10,6 +10,54 @@ RSpec.describe Danger::RequestSources::BitbucketServer, host: :bitbucket_server 
     it "should not raise uninitialized constant error" do
       expect { described_class.new(stub_ci, env) }.not_to raise_error
     end
+
+    context "with Bitrise clone URLs" do
+      let(:prefix) { "bitbucket/scm" }
+      let(:env) do
+        super().merge(
+          "BITRISE_IO" => "true",
+          "BITRISE_PULL_REQUEST" => "2080",
+          "GIT_REPOSITORY_URL" => "https://stash.example.com/#{prefix}/ios/fancyapp.git",
+          "DANGER_BITBUCKETSERVER_HOST" => "https://stash.example.com/bitbucket"
+        )
+      end
+      let(:bs) { described_class.new(Danger::Bitrise.new(env), env) }
+
+      before do
+        WebMock.stub_request(:get, "https://stash.example.com/bitbucket/rest/api/1.0/projects/ios/repos/fancyapp/pull-requests/2080").
+          to_return(File.new("spec/fixtures/bitbucket_server_api/pr_response.json"))
+      end
+
+      ["scm", "bitbucket/scm", "tools/bitbucket/scm"].each do |path|
+        context "with a #{path} prefix" do
+          let(:prefix) { path }
+
+          it "fetches the intended project's pull request" do
+            bs.fetch_details
+
+            expect(bs.pr_json[:id]).to eq(2080)
+          end
+        end
+      end
+
+      it "uses the intended repository for Code Insights reports" do
+        env.merge!(
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_KEY" => "danger",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_TITLE" => "Danger",
+          "DANGER_BITBUCKETSERVER_CODE_INSIGHTS_REPORT_DESCRIPTION" => "Danger results"
+        )
+        bs.fetch_details
+        commit = bs.pr_json[:fromRef][:latestCommit]
+        report_url = "https://stash.example.com/bitbucket/rest/insights/1.0/projects/ios/repos/fancyapp/commits/#{commit}/reports/danger"
+        deletion = WebMock.stub_request(:delete, report_url).to_return(status: 204)
+        report = WebMock.stub_request(:put, report_url).to_return(status: 200)
+
+        bs.update_pull_request!(new_comment: true)
+
+        expect(deletion).to have_been_requested.once
+        expect(report).to have_been_requested.once
+      end
+    end
   end
 
   describe "#host" do
