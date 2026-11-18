@@ -515,6 +515,22 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v])
       end
 
+      it "posts mixed string and integer locations inline at the same line" do
+        stub_const("Octokit::MAJOR", 8)
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+
+        expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4).twice
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_1).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
+        expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
+
+        errors = [
+          Danger::Violation.new("First plugin", false, "CHANGELOG.md", "4", type: :error),
+          Danger::Violation.new("Second plugin", false, "CHANGELOG.md", 4, type: :error)
+        ]
+        @g.update_pull_request!(warnings: [], errors: errors, messages: [])
+      end
+
       it "correctly handles trailing tabs in diff" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 
@@ -589,7 +605,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 
-      it "passes multiline range options for inline markdown comments on Octokit v8" do
+      it "passes numeric string multiline range options as integers on Octokit v8" do
         stub_const("Octokit::MAJOR", 8)
 
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
@@ -610,7 +626,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", inline_issue_id_2).and_return({})
         expect(@g.client).to receive(:delete_comment).with("artsy/eigen", main_issue_id).and_return({})
 
-        m = Danger::Markdown.new("Sure thing", "Rakefile", 33, start_line: 32, side: "RIGHT", start_side: "RIGHT")
+        m = Danger::Markdown.new("Sure thing", "Rakefile", "33", start_line: "32", side: "RIGHT", start_side: "RIGHT")
         @g.update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [m])
       end
 

@@ -7,6 +7,20 @@ def random_alphas(n)
 end
 
 RSpec.shared_examples_for "compares by line" do
+  context "when a numeric string and integer refer to the same line" do
+    let(:line) { "11" }
+    let(:other_line) { 11 }
+
+    it { is_expected.to eq(0) }
+  end
+
+  context "when numeric strings must sort numerically" do
+    let(:line) { "11" }
+    let(:other_line) { 2 }
+
+    it { is_expected.to eq(1) }
+  end
+
   context "when line is nil" do
     let(:line) { nil }
 
