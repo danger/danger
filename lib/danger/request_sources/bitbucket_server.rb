@@ -34,7 +34,7 @@ module Danger
         self.ci_source = ci_source
         self.dismiss_out_of_range_messages = environment["DANGER_BITBUCKETSERVER_DISMISS_OUT_OF_RANGE_MESSAGES"] == "true"
 
-        project, slug = ci_source.repo_slug.split("/")
+        project, slug = ci_source.repo_slug.split("/").last(2)
         @api = BitbucketServerAPI.new(project, slug, ci_source.pull_request_id, environment)
         @code_insights = CodeInsightsAPI.new(project, slug, environment)
       end
