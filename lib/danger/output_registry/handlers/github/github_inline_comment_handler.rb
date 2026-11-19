@@ -30,8 +30,8 @@ module Danger
 
             inline_violations = filter_inline_violations
             inline_markdowns = filter_inline_markdowns
-            return if inline_violations.values.all?(&:empty?) && inline_markdowns.empty?
 
+            # Runs even when nothing is inline, so stale inline comments get cleaned up
             post_inline_comments(inline_violations, inline_markdowns)
           end
 
@@ -72,11 +72,12 @@ module Danger
             end
             non_danger_comments = pr_comments - danger_comments
 
-            # Get diff lines for position calculation
-            diff_lines = context.pr_diff.lines
+            # Get diff lines for position calculation (skip the diff fetch if nothing is inline)
+            has_inline = violations.values.any?(&:any?) || inline_markdowns.any?
+            diff_lines = has_inline ? context.pr_diff.lines : []
 
             %i(error warning message).each do |type|
-              emoji = GitHubConfig::TYPE_MAPPINGS[type][:emoji]
+              emoji = GitHubConfig::TYPE_MAPPINGS[type][:shortcode]
               violations[:"#{type}s"].each do |violation|
                 post_single_inline_comment(violation, emoji, diff_lines, danger_comments, type)
               end

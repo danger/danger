@@ -27,10 +27,16 @@ module Danger
           #
           def execute
             return unless context.kind_of?(::Danger::RequestSources::GitLab)
-            return unless supports_inline_comments?
 
             inline_violations = filter_inline_violations
             inline_markdowns = filter_inline_markdowns
+
+            unless supports_inline_comments?
+              # Older GitLab instances: hand everything to the main comment
+              inline_violations.each { |type, list| list.each { |v| report_out_of_range_violation(type, v) } }
+              inline_markdowns.each { |m| report_out_of_range_markdown(m) }
+              return
+            end
 
             # Fetch existing danger inline comments
             @danger_comments = fetch_danger_inline_comments

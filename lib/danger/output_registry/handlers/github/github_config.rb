@@ -26,11 +26,12 @@ module Danger
           WARNINGS_SECTION_TITLE = "Warnings"
           MESSAGES_SECTION_TITLE = "Messages"
 
-          # Violation Type Mappings (emoji + annotation level for GitHub Check Run API)
+          # Violation Type Mappings (emoji + annotation level for GitHub Check Run API).
+          # shortcode is the :name: form used in inline comment bodies.
           TYPE_MAPPINGS = {
-            error: { emoji: "🚫", annotation_level: "failure" },
-            warning: { emoji: "⚠️", annotation_level: "warning" },
-            message: { emoji: "💬", annotation_level: "notice" }
+            error: { emoji: "🚫", shortcode: "no_entry_sign", annotation_level: "failure" },
+            warning: { emoji: "⚠️", shortcode: "warning", annotation_level: "warning" },
+            message: { emoji: "💬", shortcode: "book", annotation_level: "notice" }
           }.freeze
 
           # Status Configuration
