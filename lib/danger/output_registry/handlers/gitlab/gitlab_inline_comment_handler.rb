@@ -255,6 +255,7 @@ module Danger
               body: body
             )
             true
+          # Intentionally lenient: the request source also treated a failed update as "not posted" (main comment fallback)
           rescue StandardError => e
             log_warning("Failed to update inline comment: #{e.message}")
             false
@@ -397,8 +398,6 @@ module Danger
               # Delete non-sticky violations if no replies
               delete_comment_if_no_replies(comment)
             end
-          rescue StandardError => e
-            log_warning("Failed to cleanup inline comment: #{e.message}")
           end
 
           # Deletes a comment if it has no replies.

@@ -42,6 +42,13 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubCommentHandler do
     allow(context).to receive(:kind_of?).with(Danger::RequestSources::GitHub).and_return(true)
   end
 
+  it "lets a failing deletion of old comments raise" do
+    allow(handler).to receive(:find_danger_comments).and_return([double("comment", id: 1)])
+    allow(client).to receive(:delete_comment).and_raise(Octokit::Forbidden)
+
+    expect { handler.send(:delete_old_comments!) }.to raise_error(Octokit::Forbidden)
+  end
+
   describe "#execute" do
     context "when context is not GitHub" do
       before do

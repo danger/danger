@@ -126,8 +126,6 @@ module Danger
 
               context.client.delete_comment(context.ci_source.repo_slug, comment.id)
             end
-          rescue StandardError => e
-            log_warning("Failed to delete old comments: #{e.message}")
           end
 
           # Posts a new comment or updates an existing one.

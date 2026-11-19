@@ -24,6 +24,17 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitLab::GitLabInlineCommentHand
     expect(shared_state[:out_of_range_markdowns]).to eq([inline_markdown])
   end
 
+  it "lets a failing deletion of a stale comment raise" do
+    client = double("client")
+    allow(context).to receive_messages(client: client, ci_source: double(repo_slug: "o/r", pull_request_id: 1))
+    allow(client).to receive(:delete_merge_request_comment).and_raise(StandardError, "boom")
+    handler = described_class.new(context, { warnings: [], errors: [], messages: [] }, danger_id: "danger")
+    handler.instance_variable_set(:@non_danger_comments, [])
+
+    expect { handler.send(:cleanup_single_comment, { "id" => 1, "body" => "old", "position" => nil }) }
+      .to raise_error(StandardError, "boom")
+  end
+
   describe "#find_old_position" do
     let(:context) { instance_double(Danger::RequestSources::GitLab, mr_changes: double(changes: changes)) }
     let(:handler) { described_class.new(context, { warnings: [], errors: [], messages: [] }, danger_id: "danger") }

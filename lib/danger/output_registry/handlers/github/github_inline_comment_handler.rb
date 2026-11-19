@@ -142,8 +142,6 @@ module Danger
             end
 
             report_inline_posted(violation) unless type == :markdown
-          rescue StandardError => e
-            log_warning("Failed to post inline comment for #{violation.file}:#{violation.line}: #{e.message}")
           end
 
           # @return [Boolean] true if a ranged message starts on a line outside the diff
@@ -261,8 +259,6 @@ module Danger
               comment["id"],
               body
             )
-          rescue StandardError => e
-            log_warning("Failed to update inline comment: #{e.message}")
           end
 
           # Creates a new inline comment.
@@ -337,8 +333,6 @@ module Danger
                   )
                 end
               end
-            rescue StandardError => e
-              log_warning("Failed to cleanup inline comment: #{e.message}")
             end
           end
 

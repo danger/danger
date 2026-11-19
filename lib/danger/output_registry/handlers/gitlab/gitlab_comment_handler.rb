@@ -119,6 +119,7 @@ module Danger
           #
           def delete_old_comments!
             context.delete_old_comments!(danger_id: danger_id)
+          # Intentionally lenient: the request source swallowed these errors before the registry too
           rescue StandardError => e
             log_warning("Failed to delete old comments: #{e.message}")
           end

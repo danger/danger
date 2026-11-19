@@ -70,6 +70,29 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHand
     end
   end
 
+  describe "API errors on existing inline comments" do
+    let(:handler) { described_class.new(context, { warnings: [], errors: [], messages: [] }, **options) }
+    let(:comment) { { "id" => 7, "path" => "a.rb", "position" => 1, "commit_id" => "c", "body" => "old" } }
+
+    it "raises when updating an existing comment fails" do
+      error = Danger::Violation.new("boom", false, "a.rb", 1)
+      allow(context).to receive_messages(dismiss_out_of_range_messages: false)
+      allow(context).to receive(:process_markdown) { |v, _| v }
+      allow(handler).to receive(:find_matching_comment).and_return(comment)
+      allow(client).to receive(:update_pull_request_comment).and_raise(Octokit::Forbidden)
+      diff_lines = ["+++ b/a.rb\n", "@@ -1,1 +1,1 @@\n", "+x\n"]
+
+      expect { handler.send(:post_single_inline_comment, error, ":x:", diff_lines, [comment], :error) }
+        .to raise_error(Octokit::Forbidden)
+    end
+
+    it "raises when deleting a stale comment fails" do
+      allow(client).to receive(:delete_pull_request_comment).and_raise(Octokit::Forbidden)
+
+      expect { handler.send(:cleanup_old_inline_comments, [comment]) }.to raise_error(Octokit::Forbidden)
+    end
+  end
+
   describe "#find_position_in_diff" do
     let(:handler) { described_class.new(context, { warnings: [], errors: [], messages: [] }, **options) }
 
