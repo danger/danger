@@ -169,7 +169,8 @@ module Danger
       # @return [Hash] Shared state hash with :out_of_range_violations, :out_of_range_markdowns
       #
       def shared_state
-        @options[:shared_state] || { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [] }
+        # Memoized so reports survive when the handler runs without a shared state from the registry
+        @options[:shared_state] ||= { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [] }
       end
 
       # Reports a violation that couldn't be posted inline (out of range).
