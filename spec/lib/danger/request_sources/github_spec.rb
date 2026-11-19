@@ -577,9 +577,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: [], errors: [], messages: [v], markdowns: [m])
       end
 
-      # TODO: Inline handler doesn't post markdowns with file/line
-      # Original implementation posted inline markdowns, handler needs enhancement
-      xit "crosses out sticky comments" do
+      it "crosses out sticky comments" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 
         expect(@g.client).to receive(:create_pull_request_comment).with("artsy/eigen", "800", anything, "561827e46167077b5e53515b4b7349b8ae04610b", "CHANGELOG.md", 4)

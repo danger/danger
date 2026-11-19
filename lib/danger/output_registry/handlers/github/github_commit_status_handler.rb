@@ -43,7 +43,7 @@ module Danger
           # @return [void]
           #
           def post_commit_status(status, description)
-            commit_sha = context.pr_json["head"]["sha"]
+            commit_sha = context.ci_source.commit_sha || context.pr_json["head"]["sha"]
 
             context.client.create_status(
               context.ci_source.repo_slug,
