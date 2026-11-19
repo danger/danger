@@ -48,8 +48,8 @@ module Danger
       # the handler with the provided context and violations, checks if it
       # should run via {#enabled?}, and executes it if so.
       #
-      # @param context [Danger::DangerfileContext] The Danger context providing
-      #   access to the environment, git information, and platform APIs
+      # @param context [Danger::RequestSources::RequestSource] The request source (GitHub,
+      #   GitLab, ...) providing the platform API client and CI information
       # @param violations [Hash] Hash containing arrays of violations:
       #   - :warnings [Array<String>] Warning messages
       #   - :errors [Array<String>] Error messages
@@ -75,7 +75,7 @@ module Danger
 
       # Initializes a new handler instance.
       #
-      # @param context [Danger::DangerfileContext] The Danger context
+      # @param context [Danger::RequestSources::RequestSource] The request source
       # @param violations [Hash] Hash containing violation arrays
       # @param options [Hash] Optional execution options (see {.execute})
       #
@@ -118,7 +118,7 @@ module Danger
       protected
 
       # @!attribute [r] context
-      #   @return [Danger::DangerfileContext] The Danger context
+      #   @return [Danger::RequestSources::RequestSource] The request source
       attr_reader :context
 
       # @!attribute [r] violations
@@ -319,7 +319,7 @@ module Danger
       # @return [Danger::RequestSources::GitHub, nil] The GitHub request source, or nil if not GitHub
       #
       def github_request_source
-        request_source = @context&.env&.request_source
+        request_source = @context.respond_to?(:env) ? @context.env&.request_source : @context
         return nil unless request_source.kind_of?(::Danger::RequestSources::GitHub)
 
         request_source
@@ -358,7 +358,7 @@ module Danger
 
         {
           client: request_source.client,
-          repo_slug: request_source.repo_slug,
+          repo_slug: request_source.ci_source.repo_slug,
           commit_sha: request_source.pr_json["head"]["sha"],
           pr_number: request_source.pr_json["number"]
         }

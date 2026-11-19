@@ -318,4 +318,22 @@ RSpec.describe Danger::OutputRegistry::OutputHandlerRegistry do
       end
     end
   end
+
+  describe "#detect_platform with a request source as context" do
+    it "detects the platform from the request source itself" do
+      stub_const("ENV", ENV.to_hash.except(*described_class::PLATFORM_ENV_VARS.values))
+      registry.context = Danger::RequestSources::GitHub.allocate
+
+      expect(registry.send(:detect_platform)).to eq(:github)
+    end
+  end
+end
+
+RSpec.describe Danger::OutputRegistry::OutputHandler do
+  it "finds the GitHub request source when the context is one" do
+    github = Danger::RequestSources::GitHub.allocate
+    handler = described_class.new(github, { warnings: [], errors: [], messages: [] })
+
+    expect(handler.send(:github?)).to be(true)
+  end
 end

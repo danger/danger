@@ -302,7 +302,7 @@ module Danger
 
       # Sets the Danger context for handler execution.
       #
-      # @param context [Danger::DangerfileContext] The Danger context
+      # @param context [Danger::RequestSources::RequestSource] The request source
       # @return [void]
       #
       attr_writer :context
@@ -467,7 +467,7 @@ module Danger
         PLATFORM_ENV_VARS.each { |platform, env_var| return platform if ENV[env_var] }
 
         # Fall back to request source detection
-        request_source = @context&.env&.request_source
+        request_source = @context.respond_to?(:env) ? @context.env&.request_source : @context
         return :local unless request_source
 
         detected = PLATFORM_DETECTORS.find { |_, detector| detector.call(request_source) }
