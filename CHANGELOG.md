@@ -17,6 +17,7 @@
 * Default `danger init` to GitHub Actions without a personal access token when no CI is detected in a GitHub repository, including support for pull requests from forks - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
 * Detect existing CI in `danger init`, preserve existing configuration, and support non-Ruby projects with a tooling Gemfile - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
 * Move pull request output (comments, inline comments, commit status, Bitbucket Code Insights) into per-platform output handlers that you can extend with `Danger::OutputRegistry::OutputHandlerRegistry.register` - [@numbata](https://github.com/numbata)
+* Remove the internal comment-posting helpers from the GitHub and GitLab request sources (`submit_inline_comments!`, `find_position_in_diff`, `find_old_position_in_diff`, `regular_violations_group`, `inline_violations_group`, `merge_violations` and related); plugins that called them directly need to use the output handlers instead - [@numbata](https://github.com/numbata)
 <!-- Your comment above here -->
 
 ## 9.6.2
