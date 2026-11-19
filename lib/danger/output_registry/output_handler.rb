@@ -256,7 +256,7 @@ module Danger
       # @return [void]
       #
       def log_warning(message)
-        if @context&.ui.respond_to?(:warn)
+        if @context.respond_to?(:ui) && @context.ui.respond_to?(:warn)
           @context.ui.warn(message)
         else
           puts("⚠️  #{message}")

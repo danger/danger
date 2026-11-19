@@ -463,7 +463,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         # TODO: Inline handler needs error handling for failed inline comments
-        xit "doesn't crash if an inline comment fails to publish" do
+        it "doesn't crash if an inline comment fails to publish" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_empty_response",
             "k0nserv%2Fdanger-test",
