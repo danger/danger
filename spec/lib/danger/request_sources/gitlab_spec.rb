@@ -394,10 +394,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           v = Danger::Violation.new("Updated danger comment", true, "a", 1)
           body = subject.generate_inline_comment_body("warning", subject.process_markdown(v, true), danger_id: "danger", template: "gitlab")
 
-          expect(subject.client).to receive(:update_merge_request_discussion_note).with(
-            "k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141_485_123,
-            anything
-          ).once
+          expect(subject.client).to receive(:update_merge_request_discussion_note).with("k0nserv/danger-test", 1, "f5fd1ab23556baa6683b4b3b36ec4455f8b500f4", 141_485_123, body: body)
           allow(subject.client).to receive(:update_merge_request_discussion_note)
           allow(subject.client).to receive(:delete_merge_request_comment)
 
@@ -406,7 +403,6 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           expect { subject.update_pull_request!(warnings: [v], errors: [], messages: []) }.not_to output(/Please convert ObjectifiedHash object/).to_stderr
         end
 
-        # TODO: Handler needs sticky comment handling in comment cleanup
         it "deletes non-sticky comments if no violations are present" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
@@ -423,7 +419,6 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           subject.update_pull_request!(warnings: [], errors: [], messages: [])
         end
 
-        # TODO: Inline handler needs delete support for irrelevant comments
         it "deletes inline comments if those are no longer relevant" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
@@ -462,7 +457,6 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
           subject.update_pull_request!(warnings: [v], errors: [], messages: [])
         end
 
-        # TODO: Inline handler needs error handling for failed inline comments
         it "doesn't crash if an inline comment fails to publish" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_empty_response",

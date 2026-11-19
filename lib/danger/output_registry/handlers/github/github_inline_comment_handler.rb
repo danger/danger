@@ -120,7 +120,7 @@ module Danger
             if type == :markdown
               body = generate_inline_markdown_body(violation, danger_id: danger_id, template: "github")
             else
-              violation = process_markdown(violation, true)
+              violation = context.process_markdown(violation, true)
               body = generate_inline_comment_body(emoji, violation, danger_id: danger_id, template: "github")
             end
 

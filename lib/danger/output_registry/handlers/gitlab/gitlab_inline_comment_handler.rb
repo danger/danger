@@ -136,7 +136,7 @@ module Danger
             end
 
             emoji = GitLabConfig::TYPE_MAPPINGS[type][:emoji]
-            processed = process_markdown(violation, true)
+            processed = context.process_markdown(violation, true)
             body = generate_inline_comment_body(emoji, processed, danger_id: danger_id, template: "gitlab")
 
             # Find matching existing comment

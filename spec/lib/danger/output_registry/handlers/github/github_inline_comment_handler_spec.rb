@@ -25,6 +25,7 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHand
     allow(client).to receive(:pull_request_comments).and_return([])
     allow(context).to receive(:pr_diff).and_return(double(lines: ["+++ b/a.rb\n", "@@ -1,1 +1,1 @@\n", "+x\n"]))
     allow(context).to receive_messages(pr_json: { "head" => { "sha" => "c" } }, dismiss_out_of_range_messages: false)
+    allow(context).to receive(:process_markdown) { |v, _| v }
     error = Danger::Violation.new("boom", false, "a.rb", 1)
 
     expect(client).to receive(:create_pull_request_comment) do |_slug, _id, body, *_rest|
@@ -42,6 +43,7 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHand
       allow(client).to receive(:pull_request_comments).and_return([])
       allow(context).to receive(:pr_diff).and_return(double(lines: ["+++ b/a.rb\n", "@@ -1,1 +1,1 @@\n", "+x\n"]))
       allow(context).to receive_messages(pr_json: { "head" => { "sha" => "c" } }, dismiss_out_of_range_messages: false)
+    allow(context).to receive(:process_markdown) { |v, _| v }
     end
 
     def run
