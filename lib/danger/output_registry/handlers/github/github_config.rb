@@ -18,7 +18,6 @@ module Danger
 
           # Commit Status Configuration
           COMMIT_STATUS_CONTEXT = "danger/review"
-          COMMIT_STATUS_MAX_LENGTH = 140
 
           # Comment Messages
           PR_REVIEW_HEADER = "Danger has reviewed this PR"
