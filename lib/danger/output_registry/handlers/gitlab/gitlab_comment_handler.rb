@@ -45,9 +45,11 @@ module Danger
               delete_old_comments!
             end
 
-            # Check if there's anything to post
-            if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
-              # Keep the comment (with its resolved history) if the previous run had violations
+            nothing_to_post = comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
+            # Without inline support the original behavior still rewrites the comment so fixed violations show as resolved
+            rewrite_as_resolved = !context.supports_inline_comments && !previous_violations.empty?
+            # Otherwise keep the comment (with its resolved history) if the previous run had violations
+            if nothing_to_post && !rewrite_as_resolved
               delete_old_comments! if previous_violations.empty? && !existing_comments.empty?
               return
             end

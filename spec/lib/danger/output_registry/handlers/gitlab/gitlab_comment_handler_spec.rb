@@ -200,5 +200,19 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitLab::GitLabCommentHandler do
 
       handler.execute
     end
+
+    context "when nothing is left to post but the previous comment had violations" do
+      let(:violations) { { warnings: [], errors: [], messages: [] } }
+      let(:options) { super().merge(markdowns: []) }
+
+      before { allow(context).to receive(:parse_comment).and_return({ "warning" => [warning] }) }
+
+      it "edits the comment so the fixed violations show as resolved" do
+        expect(context).not_to receive(:delete_old_comments!)
+        expect(client).to receive(:edit_merge_request_comment).with("owner/repo", 123, 1, { body: "body" })
+
+        handler.execute
+      end
+    end
   end
 end
