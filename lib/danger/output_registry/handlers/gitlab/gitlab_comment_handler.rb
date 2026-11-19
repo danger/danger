@@ -29,7 +29,8 @@ module Danger
 
             # Find existing Danger comments (non-inline)
             existing_comments = find_danger_comments
-            last_comment = existing_comments.last
+            # Without inline support (older GitLab) the original behavior edits the first comment
+            last_comment = context.supports_inline_comments ? existing_comments.last : existing_comments.first
             should_create_new = new_comment? || last_comment.nil? || remove_previous_comments?
 
             # Parse previous violations for comparison
@@ -131,7 +132,14 @@ module Danger
             repo_slug = context.ci_source.repo_slug
             mr_id = context.ci_source.pull_request_id
 
-            if should_create_new
+            if !context.supports_inline_comments
+              # Older GitLab APIs only offer the plain comment endpoints
+              if should_create_new
+                context.client.create_merge_request_comment(repo_slug, mr_id, comment_body)
+              else
+                context.client.edit_merge_request_comment(repo_slug, mr_id, last_comment.id, { body: comment_body })
+              end
+            elsif should_create_new
               context.client.create_merge_request_note(repo_slug, mr_id, comment_body)
             else
               context.client.edit_merge_request_note(repo_slug, mr_id, last_comment.id, comment_body)

@@ -40,6 +40,7 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitLab::GitLabCommentHandler do
 
   before do
     allow(context).to receive(:kind_of?).with(Danger::RequestSources::GitLab).and_return(true)
+    allow(context).to receive(:supports_inline_comments).and_return(true)
   end
 
   describe "#execute" do
@@ -168,6 +169,36 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitLab::GitLabCommentHandler do
 
       expect(result).to eq([markdown])
       expect(result).not_to include(inline_markdown)
+    end
+  end
+
+  context "when inline comments are not supported" do
+    let(:first_comment) { double("comment", id: 1, body: "old") }
+    let(:last_comment) { double("comment", id: 2, body: "newer") }
+
+    before do
+      allow(context).to receive(:supports_inline_comments).and_return(false)
+      allow(context).to receive_messages(
+        mr_comments: [first_comment, last_comment], parse_comment: {}, generate_comment: "body"
+      )
+      allow(first_comment).to receive(:generated_by_danger?).and_return(true)
+      allow(last_comment).to receive(:generated_by_danger?).and_return(true)
+      allow(first_comment).to receive(:inline?).and_return(false)
+      allow(last_comment).to receive(:inline?).and_return(false)
+    end
+
+    it "edits the first comment with the plain comment endpoint" do
+      expect(client).to receive(:edit_merge_request_comment).with("owner/repo", 123, 1, { body: "body" })
+
+      handler.execute
+    end
+
+    it "creates comments with the plain comment endpoint" do
+      handler = described_class.new(context, violations, **options, new_comment: true)
+
+      expect(client).to receive(:create_merge_request_comment).with("owner/repo", 123, "body")
+
+      handler.execute
     end
   end
 end
