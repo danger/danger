@@ -39,23 +39,30 @@ module Danger
             summary = build_summary
             commit_sha = context.pr_json["head"]["sha"]
 
-            annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST) do |batch|
-              context.client.create_check_run(
-                context.ci_source.repo_slug,
-                GitHubConfig::CHECK_RUN_NAME,
-                commit_sha,
-                status: "completed",
-                conclusion: conclusion,
-                completed_at: Time.now.utc.iso8601,
-                output: {
-                  title: GitHubConfig::CHECK_RUN_TITLE,
-                  summary: summary,
-                  annotations: batch
-                }
-              )
+            # GitHub accepts a limited number of annotations per request: the run is
+            # created with the first batch and the rest is added by updating it
+            first_batch, *other_batches = annotations.each_slice(GitHubConfig::MAX_ANNOTATIONS_PER_REQUEST).to_a
+            check_run = context.client.create_check_run(
+              context.ci_source.repo_slug,
+              GitHubConfig::CHECK_RUN_NAME,
+              commit_sha,
+              status: "completed",
+              conclusion: conclusion,
+              completed_at: Time.now.utc.iso8601,
+              output: check_output(summary, first_batch || [])
+            )
+
+            other_batches.each do |batch|
+              context.client.update_check_run(context.ci_source.repo_slug, check_run.id, output: check_output(summary, batch))
             end
           rescue StandardError => e
+            # A check run is informational, so a failure (even between batches) is logged, not raised
             log_warning("Failed to create check run: #{e.message}")
+          end
+
+          # @return [Hash] The check run output carrying one batch of annotations
+          def check_output(summary, annotations)
+            { title: GitHubConfig::CHECK_RUN_TITLE, summary: summary, annotations: annotations }
           end
 
           # Builds annotations for violations.
