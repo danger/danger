@@ -69,4 +69,69 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHand
       expect(shared_state[:out_of_range_violations][:errors]).to be_empty
     end
   end
+
+  describe "#find_position_in_diff" do
+    let(:handler) { described_class.new(context, { warnings: [], errors: [], messages: [] }, **options) }
+
+    before { allow(context).to receive(:dismiss_out_of_range_messages).and_return(false) }
+
+    subject do
+      handler.send(:find_position_in_diff, diff_lines, message, kind)
+    end
+
+    let(:diff_lines) do
+      <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,2 @@
+-foo
++bar
++baz
+      DIFF
+    end
+
+    let(:file_path) do
+      "dummy"
+    end
+
+    let(:kind) do
+      :dummy
+    end
+
+    let(:message) do
+      double(
+        file: file_path,
+        line: 1
+      )
+    end
+
+    context "when the lines count for the original file is omitted" do
+      it "returns correct position" do
+        is_expected.to eq(2)
+      end
+    end
+
+    context "when diff contain `No newline` annotation before added lines" do
+      let(:diff_lines) do
+        <<-DIFF.each_line.to_a
+diff --git a/#{file_path} b/#{file_path}
+index 0000000..0000001 100644
+--- a/#{file_path}
++++ b/#{file_path}
+@@ -1 +1,3 @@
+-foo
+\\ No newline at end of file
++foo
++bar
++baz
+        DIFF
+      end
+
+      it "returns correct position" do
+        is_expected.to eq(3)
+      end
+    end
+  end
 end
