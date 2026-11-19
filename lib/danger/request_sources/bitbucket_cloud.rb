@@ -3,6 +3,7 @@
 require "danger/helpers/comments_helper"
 require "danger/request_sources/bitbucket_cloud_api"
 require "danger/danger_core/message_group"
+require "danger/output_registry/output_handler_registry"
 
 module Danger
   module RequestSources
@@ -76,27 +77,22 @@ module Danger
         nil
       end
 
+      # Sending data to Bitbucket Cloud
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for Bitbucket Cloud (comment, inline comments).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        delete_old_comments(danger_id: danger_id) if !new_comment || remove_previous_comments
-
-        warnings = update_inline_comments_for_kind!(:warnings, warnings, danger_id: danger_id)
-        errors = update_inline_comments_for_kind!(:errors, errors, danger_id: danger_id)
-        messages = update_inline_comments_for_kind!(:messages, messages, danger_id: danger_id)
-        markdowns = update_inline_comments_for_kind!(:markdowns, markdowns, danger_id: danger_id)
-
-        has_comments = warnings.count.positive? || errors.count.positive? || messages.count.positive? || markdowns.count.positive?
-        if has_comments
-          comment = generate_description(warnings: warnings, errors: errors, template: "bitbucket_server")
-          comment += "\n\n"
-          comment += generate_comment(warnings: warnings,
-                                      errors: errors,
-                                      messages: messages,
-                                      markdowns: markdowns,
-                                      previous_violations: {},
-                                      danger_id: danger_id,
-                                      template: "bitbucket_server")
-          @api.post_comment(comment)
-        end
+        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
+          warnings: warnings,
+          errors: errors,
+          messages: messages,
+          markdowns: markdowns,
+          danger_id: danger_id,
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
+        )
       end
 
       def update_pr_by_line!(message_groups:,

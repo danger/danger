@@ -326,6 +326,18 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
       end
 
+      it "posts the commit status pointing at the comment" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:add_comment).and_return({ "html_url" => "https://comment" })
+
+        expect(@g).to receive(:submit_pull_request_status!).with(
+          hash_including(details_url: "https://comment", danger_id: "danger")
+        )
+
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
+      end
+
       it "updates the issue if no danger comments exist" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 
@@ -531,6 +543,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       it "adds main comment when inline out of range" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        @g.instance_variable_set(:@comments, nil) # Clear memoization
 
         v = Danger::Violation.new("Sure thing", true, "CHANGELOG.md", 10)
         body = @g.generate_comment(warnings: [], errors: [], messages: [v])
@@ -677,6 +690,7 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
       it "keeps initial messages order" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
         allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        @g.instance_variable_set(:@comments, nil) # Clear memoization
         allow(@g.client).to receive(:add_comment).and_return({})
         allow(@g).to receive(:submit_pull_request_status!).and_return(true)
         allow(@g.client).to receive(:create_pull_request_comment).and_return({})
@@ -756,71 +770,6 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
           @g.fetch_details
           @g.setup_danger_branches
         end.to raise_error(RuntimeError, /Commit (\w+|\b[0-9a-f]{5,40}\b) doesn't exist/)
-      end
-    end
-  end
-
-  describe "#find_position_in_diff" do
-    subject do
-      github.find_position_in_diff(diff_lines, message, kind)
-    end
-
-    let(:diff_lines) do
-      <<-DIFF.each_line.to_a
-diff --git a/#{file_path} b/#{file_path}
-index 0000000..0000001 100644
---- a/#{file_path}
-+++ b/#{file_path}
-@@ -1 +1,2 @@
--foo
-+bar
-+baz
-      DIFF
-    end
-
-    let(:file_path) do
-      "dummy"
-    end
-
-    let(:github) do
-      described_class.new(stub_ci, "DANGER_GITHUB_API_TOKEN" => "hi")
-    end
-
-    let(:kind) do
-      :dummy
-    end
-
-    let(:message) do
-      double(
-        file: file_path,
-        line: 1
-      )
-    end
-
-    context "when the lines count for the original file is omitted" do
-      it "returns correct position" do
-        is_expected.to eq(2)
-      end
-    end
-
-    context "when diff contain `No newline` annotation before added lines" do
-      let(:diff_lines) do
-        <<-DIFF.each_line.to_a
-diff --git a/#{file_path} b/#{file_path}
-index 0000000..0000001 100644
---- a/#{file_path}
-+++ b/#{file_path}
-@@ -1 +1,3 @@
--foo
-\\ No newline at end of file
-+foo
-+bar
-+baz
-        DIFF
-      end
-
-      it "returns correct position" do
-        is_expected.to eq(3)
       end
     end
   end

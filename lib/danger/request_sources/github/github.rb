@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
-
 require "octokit"
 require "danger/helpers/comments_helper"
 require "danger/helpers/comment"
 require "danger/request_sources/github/github_review"
 require "danger/request_sources/github/github_review_unsupported"
 require "danger/request_sources/support/get_ignored_violation"
+require "danger/output_registry/output_handler_registry"
 
 module Danger
   module RequestSources
@@ -157,71 +156,27 @@ module Danger
       end
 
       # Sending data to GitHub
+      #
+      # Delegates to the OutputHandlerRegistry which executes the appropriate
+      # handlers for GitHub (comment, inline comments, commit status).
+      #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        comment_result = {}
-        editable_comments = issue_comments.select { |comment| comment.generated_by_danger?(danger_id) }
-        last_comment = editable_comments.last
-        should_create_new_comment = new_comment || last_comment.nil? || remove_previous_comments
-
-        previous_violations =
-          if should_create_new_comment
-            {}
-          else
-            parse_comment(last_comment.body)
-          end
-
-        regular_violations = regular_violations_group(
+        shared_state = OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+          self,
           warnings: warnings,
           errors: errors,
           messages: messages,
-          markdowns: markdowns
-        )
-
-        inline_violations = inline_violations_group(
-          warnings: warnings,
-          errors: errors,
-          messages: messages,
-          markdowns: markdowns
-        )
-
-        rest_inline_violations = submit_inline_comments!(**{
+          markdowns: markdowns,
           danger_id: danger_id,
-          previous_violations: previous_violations
-        }.merge(inline_violations))
-
-        main_violations = merge_violations(
-          regular_violations, rest_inline_violations
+          new_comment: new_comment,
+          remove_previous_comments: remove_previous_comments
         )
 
-        main_violations_sum = main_violations.values.inject(:+)
-
-        if (previous_violations.empty? && main_violations_sum.empty?) || remove_previous_comments
-          # Just remove the comment, if there's nothing to say or --remove-previous-comments CLI was set.
-          delete_old_comments!(danger_id: danger_id)
-        end
-
-        # If there are still violations to show
-        if main_violations_sum.any?
-          body = generate_comment(**{
-            template: "github",
-            danger_id: danger_id,
-            previous_violations: previous_violations
-          }.merge(main_violations))
-
-          comment_result =
-            if should_create_new_comment
-              client.add_comment(ci_source.repo_slug, ci_source.pull_request_id, body)
-            else
-              client.update_comment(ci_source.repo_slug, last_comment.id, body)
-            end
-        end
-
-        # Now, set the pull request status.
-        # Note: this can terminate the entire process.
+        # NOTE: this can terminate the entire process.
         submit_pull_request_status!(
           warnings: warnings,
           errors: errors,
-          details_url: comment_result["html_url"],
+          details_url: shared_state[:comment_url],
           danger_id: danger_id
         )
       end
@@ -270,249 +225,10 @@ module Danger
         end
       end
 
-      def submit_inline_comments!(warnings: [], errors: [], messages: [], markdowns: [], previous_violations: [], danger_id: "danger")
-        pr_comments = client.pull_request_comments(ci_source.repo_slug, ci_source.pull_request_id)
-        danger_comments = pr_comments.select { |comment| Comment.from_github(comment).generated_by_danger?(danger_id) }
-        non_danger_comments = pr_comments - danger_comments
-
-        if (warnings + errors + messages + markdowns).select(&:inline?).empty?
-          delete_old_inline_violations(danger_comments: danger_comments, non_danger_comments: non_danger_comments)
-          return {}
-        end
-
-        diff_lines = self.pr_diff.lines
-        warnings = submit_inline_comments_for_kind!(:warning, warnings, diff_lines, danger_comments, previous_violations["warning"], danger_id: danger_id)
-        errors = submit_inline_comments_for_kind!(:error, errors, diff_lines, danger_comments, previous_violations["error"], danger_id: danger_id)
-        messages = submit_inline_comments_for_kind!(:message, messages, diff_lines, danger_comments, previous_violations["message"], danger_id: danger_id)
-        markdowns = submit_inline_comments_for_kind!(:markdown, markdowns, diff_lines, danger_comments, [], danger_id: danger_id)
-
-        # submit removes from the array all comments that are still in force
-        # so we strike out all remaining ones
-        delete_old_inline_violations(danger_comments: danger_comments, non_danger_comments: non_danger_comments)
-
-        {
-          warnings: warnings,
-          errors: errors,
-          messages: messages,
-          markdowns: markdowns
-        }
-      end
-
-      def delete_old_inline_violations(danger_comments: [], non_danger_comments: [])
-        danger_comments.each do |comment|
-          violation = violations_from_table(comment["body"]).first
-          if !violation.nil? && violation.sticky
-            body = generate_inline_comment_body("white_check_mark", violation, danger_id: danger_id, resolved: true, template: "github")
-            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
-          else
-            # We remove non-sticky violations that have no replies
-            # Since there's no direct concept of a reply in GH, we simply consider
-            # the existence of non-danger comments in that line as replies
-            replies = non_danger_comments.select do |potential|
-              potential["path"] == comment["path"] &&
-                potential["position"] == comment["position"] &&
-                potential["commit_id"] == comment["commit_id"]
-            end
-
-            client.delete_pull_request_comment(ci_source.repo_slug, comment["id"]) if replies.empty?
-          end
-        end
-      end
-
       def messages_are_equivalent(m1, m2)
         blob_regexp = %r{blob/[0-9a-z]+/}
         m1.file == m2.file && m1.line == m2.line &&
           m1.message.sub(blob_regexp, "") == m2.message.sub(blob_regexp, "")
-      end
-
-      def submit_inline_comments_for_kind!(kind, messages, diff_lines, danger_comments, previous_violations, danger_id: "danger")
-        head_ref = pr_json["head"]["sha"]
-        previous_violations ||= []
-        is_markdown_content = kind == :markdown
-        emoji = { warning: "warning", error: "no_entry_sign", message: "book" }[kind]
-
-        messages.reject do |m| # rubocop:todo Metrics/BlockLength
-          next false unless m.file && m.line
-
-          position = find_position_in_diff diff_lines, m, kind
-          start_position = start_position_in_diff(diff_lines, m, kind)
-
-          # Keep the change if it's line is not in the diff and not in dismiss mode
-          next dismiss_out_of_range_messages_for(kind) if position.nil? || start_position == :out_of_range
-
-          # Once we know we're gonna submit it, we format it
-          if is_markdown_content
-            body = generate_inline_markdown_body(m, danger_id: danger_id, template: "github")
-          else
-            # Hide the inline link behind a span
-            m = process_markdown(m, true)
-            body = generate_inline_comment_body(emoji, m, danger_id: danger_id, template: "github")
-            # A comment might be in previous_violations because only now it's part of the unified diff
-            # We remove from the array since it won't have a place in the table anymore
-            previous_violations.reject! { |v| messages_are_equivalent(v, m) }
-          end
-
-          matching_comments = danger_comments.select do |comment_data|
-            if inline_comment_matches?(comment_data, m, position)
-              # Parse it to avoid problems with strikethrough
-              violation = violations_from_table(comment_data["body"]).first
-              if violation
-                messages_are_equivalent(violation, m)
-              else
-                blob_regexp = %r{blob/[0-9a-z]+/}
-                comment_data["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
-              end
-            else
-              false
-            end
-          end
-
-          if matching_comments.empty?
-            begin
-              create_inline_comment(body, head_ref, m, position)
-            rescue Octokit::UnprocessableEntity => e
-              # Show more detail for UnprocessableEntity error
-              message = [e, "body: #{body}", "head_ref: #{head_ref}", "filename: #{m.file}", "position: #{position}"].join("\n")
-              puts message
-
-              # Not reject because this comment has not completed
-              next false
-            end
-          else
-            # Remove the surviving comment so we don't strike it out
-            danger_comments.reject! { |c| matching_comments.include? c }
-
-            # Update the comment to remove the strikethrough if present
-            comment = matching_comments.first
-            client.update_pull_request_comment(ci_source.repo_slug, comment["id"], body)
-          end
-
-          # Remove this element from the array
-          next true
-        end
-      end
-
-      def start_position_in_diff(diff_lines, message, kind)
-        return nil unless ranged_inline_comment?(message)
-
-        start_message = DiffLineReference.new(message.file, message.start_line)
-        find_position_in_diff(diff_lines, start_message, kind) || :out_of_range
-      end
-
-      def inline_comment_matches?(comment_data, message, position)
-        return false unless comment_data["path"] == message.file
-
-        if ranged_inline_comment?(message)
-          ranged_inline_comment_lines_match?(comment_data, message)
-        else
-          comment_data["position"] == position
-        end
-      end
-
-      def create_inline_comment(body, head_ref, message, position)
-        # Since Octokit v8, the signature of create_pull_request_comment has been changed.
-        # See https://github.com/danger/danger/issues/1475 for detailed information.
-        if ranged_inline_comment?(message) && Octokit::MAJOR >= 8
-          # GitHub ranges are required for multi-line suggestion blocks that
-          # replace an existing added translator comment plus the added string.
-          client.create_pull_request_comment(
-            ci_source.repo_slug,
-            ci_source.pull_request_id,
-            body,
-            head_ref,
-            message.file,
-            message.line,
-            start_line: message.start_line,
-            side: message.side || "RIGHT",
-            start_side: message.start_side || "RIGHT"
-          )
-        else
-          # Octokit v7 only supports diff positions, so ranged metadata is ignored.
-          client.create_pull_request_comment(
-            ci_source.repo_slug,
-            ci_source.pull_request_id,
-            body,
-            head_ref,
-            message.file,
-            (Octokit::MAJOR >= 8 ? message.line : position)
-          )
-        end
-      end
-
-      def ranged_inline_comment?(message)
-        !message.start_line.nil?
-      end
-
-      def ranged_inline_comment_lines_match?(comment_data, message)
-        comment_line = comment_data["line"]
-        comment_start_line = comment_data["start_line"]
-        return false if comment_line.nil? || comment_start_line.nil?
-
-        comment_line.to_i == message.line &&
-          comment_start_line.to_i == message.start_line
-      end
-
-      def find_position_in_diff(diff_lines, message, kind)
-        range_header_regexp = /@@ -([0-9]+)(,([0-9]+))? \+(?<start>[0-9]+)(,(?<end>[0-9]+))? @@.*/
-        file_header_regexp = %r{^diff --git a/.*}
-
-        pattern = "+++ b/#{message.file}\n"
-        file_start = diff_lines.index(pattern)
-
-        # Files containing spaces sometimes have a trailing tab
-        if file_start.nil?
-          pattern = "+++ b/#{message.file}\t\n"
-          file_start = diff_lines.index(pattern)
-        end
-
-        return nil if file_start.nil?
-
-        position = -1
-        file_line = nil
-
-        diff_lines.drop(file_start).each do |line|
-          # If the line has `No newline` annotation, position need increment
-          if line.eql?("\\ No newline at end of file\n")
-            position += 1
-            next
-          end
-          # If we found the start of another file diff, we went too far
-          break if line.match file_header_regexp
-
-          match = line.match range_header_regexp
-
-          # file_line is set once we find the hunk the line is in
-          # we need to count how many lines in new file we have
-          # so we do it one by one ignoring the deleted lines
-          if !file_line.nil? && !line.start_with?("-")
-            if file_line == message.line
-              file_line = nil if dismiss_out_of_range_messages_for(kind) && !line.start_with?("+")
-              break
-            end
-            file_line += 1
-          end
-
-          # We need to count how many diff lines are between us and
-          # the line we're looking for
-          position += 1
-
-          next unless match
-
-          range_start = match[:start].to_i
-          if match[:end]
-            range_end = match[:end].to_i + range_start
-          else
-            range_end = range_start
-          end
-
-          # We are past the line position, just abort
-          break if message.line.to_i < range_start
-          next unless message.line.to_i >= range_start && message.line.to_i < range_end
-
-          file_line = range_start
-        end
-
-        position unless file_line.nil?
       end
 
       # See the tests for examples of data coming in looks like
@@ -546,16 +262,6 @@ module Danger
         nil
       end
 
-      def dismiss_out_of_range_messages_for(kind)
-        if self.dismiss_out_of_range_messages.kind_of?(Hash) && self.dismiss_out_of_range_messages[kind]
-          self.dismiss_out_of_range_messages[kind]
-        elsif self.dismiss_out_of_range_messages == true
-          self.dismiss_out_of_range_messages
-        else
-          false
-        end
-      end
-
       # @return [String] A URL to the specific file, ready to be downloaded
       def file_url(organisation: nil, repository: nil, ref: nil, branch: nil, path: nil)
         organisation ||= self.organisation
@@ -580,40 +286,6 @@ module Danger
 
       def valid_bearer_token?
         @bearer_token && !@bearer_token.empty?
-      end
-
-      def regular_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
-        {
-          warnings: warnings.reject(&:inline?),
-          errors: errors.reject(&:inline?),
-          messages: messages.reject(&:inline?),
-          markdowns: markdowns.reject(&:inline?)
-        }
-      end
-
-      def inline_violations_group(warnings: [], errors: [], messages: [], markdowns: [])
-        cmp = proc do |a, b|
-          next -1 unless a.file && a.line
-          next 1 unless b.file && b.line
-
-          next a.line <=> b.line if a.file == b.file
-
-          next a.file <=> b.file
-        end
-
-        # Sort to group inline comments by file
-        {
-          warnings: warnings.select(&:inline?).sort(&cmp),
-          errors: errors.select(&:inline?).sort(&cmp),
-          messages: messages.select(&:inline?).sort(&cmp),
-          markdowns: markdowns.select(&:inline?).sort(&cmp)
-        }
-      end
-
-      def merge_violations(*violation_groups)
-        violation_groups.inject({}) do |accumulator, group|
-          accumulator.merge(group) { |_, old, fresh| old + fresh }
-        end
       end
     end
   end
