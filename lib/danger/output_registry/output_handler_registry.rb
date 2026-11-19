@@ -159,12 +159,7 @@ module Danger
           description: "Posts violations as GitLab MR discussion"
         },
 
-        # Bitbucket Cloud Handlers
-        bitbucket_inline: {
-          class: Handlers::BitbucketCloud::BitbucketCloudInlineCommentHandler,
-          platforms: [:bitbucket_cloud],
-          description: "Posts violations as Bitbucket Cloud inline PR comments"
-        },
+        # Bitbucket Cloud Handlers (the comment handler also posts the inline comments)
         bitbucket_comment: {
           class: Handlers::BitbucketCloud::BitbucketCloudCommentHandler,
           platforms: [:bitbucket_cloud],
