@@ -326,6 +326,18 @@ RSpec.describe Danger::RequestSources::GitHub, host: :github do
         @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
       end
 
+      it "posts the commit status pointing at the comment" do
+        allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:issue_comments).with("artsy/eigen", "800").and_return([])
+        allow(@g.client).to receive(:add_comment).and_return({ "html_url" => "https://comment" })
+
+        expect(@g).to receive(:submit_pull_request_status!).with(
+          hash_including(details_url: "https://comment", danger_id: "danger")
+        )
+
+        @g.update_pull_request!(warnings: violations_factory(["hi"]), errors: [], messages: [])
+      end
+
       it "updates the issue if no danger comments exist" do
         allow(@g.client).to receive(:pull_request_comments).with("artsy/eigen", "800").and_return([])
 

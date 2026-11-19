@@ -46,7 +46,8 @@ module Danger
 
             # Check if there's anything to post
             if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
-              delete_old_comments! unless existing_comments.empty?
+              # Keep the comment (with its resolved history) if the previous run had violations
+              delete_old_comments! if previous_violations.empty? && !existing_comments.empty?
               return
             end
 

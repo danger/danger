@@ -163,7 +163,7 @@ module Danger
       # handlers for GitHub (comment, inline comments, commit status).
       #
       def update_pull_request!(warnings: [], errors: [], messages: [], markdowns: [], danger_id: "danger", new_comment: false, remove_previous_comments: false)
-        OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
+        shared_state = OutputRegistry::OutputHandlerRegistry.execute_for_request_source(
           self,
           warnings: warnings,
           errors: errors,
@@ -172,6 +172,14 @@ module Danger
           danger_id: danger_id,
           new_comment: new_comment,
           remove_previous_comments: remove_previous_comments
+        )
+
+        # Note: this can terminate the entire process.
+        submit_pull_request_status!(
+          warnings: warnings,
+          errors: errors,
+          details_url: shared_state[:comment_url],
+          danger_id: danger_id
         )
       end
 

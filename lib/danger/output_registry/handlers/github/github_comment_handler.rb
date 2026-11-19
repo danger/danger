@@ -53,8 +53,8 @@ module Danger
 
             # Check if there's anything to post
             if comment_violations.values.all?(&:empty?) && comment_markdowns.empty?
-              # No violations, delete old comments if they exist
-              delete_old_comments! unless existing_comments.empty?
+              # Keep the comment (with its resolved history) if the previous run had violations
+              delete_old_comments! if previous_violations.empty? && !existing_comments.empty?
               return
             end
 
@@ -138,19 +138,21 @@ module Danger
           # @return [void]
           #
           def post_or_update_comment(comment_body, last_comment, should_create_new)
-            if should_create_new
-              context.client.add_comment(
-                context.ci_source.repo_slug,
-                context.ci_source.pull_request_id,
-                comment_body
-              )
-            else
-              context.client.update_comment(
-                context.ci_source.repo_slug,
-                last_comment.id,
-                comment_body
-              )
-            end
+            result =
+              if should_create_new
+                context.client.add_comment(
+                  context.ci_source.repo_slug,
+                  context.ci_source.pull_request_id,
+                  comment_body
+                )
+              else
+                context.client.update_comment(
+                  context.ci_source.repo_slug,
+                  last_comment.id,
+                  comment_body
+                )
+              end
+            shared_state[:comment_url] = result["html_url"] if result
           rescue StandardError => e
             log_warning("Failed to post comment: #{e.message}")
           end

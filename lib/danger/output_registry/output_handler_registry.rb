@@ -266,6 +266,8 @@ module Danger
         handlers.each do |handler|
           handler.execute if handler.enabled?
         end
+
+        shared_state
       end
 
       # Detects the platform symbol for a given request source.
@@ -483,7 +485,7 @@ module Danger
       #
       def default_github_handlers
         # NOTE: github_status is not included by default since commit status
-        # is handled separately in Danger's runner (submit_pull_request_status)
+        # is posted by GitHub#update_pull_request! (submit_pull_request_status!)
         # NOTE: Inline runs first so it can report out-of-range violations
         # to be included in the main comment
         %i(github_inline github_comment)

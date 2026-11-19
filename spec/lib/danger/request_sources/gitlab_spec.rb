@@ -407,7 +407,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         # TODO: Handler needs sticky comment handling in comment cleanup
-        xit "deletes non-sticky comments if no violations are present" do
+        it "deletes non-sticky comments if no violations are present" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
             "k0nserv%2Fdanger-test",
@@ -424,7 +424,7 @@ RSpec.describe Danger::RequestSources::GitLab, host: :gitlab do
         end
 
         # TODO: Inline handler needs delete support for irrelevant comments
-        xit "deletes inline comments if those are no longer relevant" do
+        it "deletes inline comments if those are no longer relevant" do
           stub_merge_request_discussions(
             "merge_request_1_discussions_response",
             "k0nserv%2Fdanger-test",
