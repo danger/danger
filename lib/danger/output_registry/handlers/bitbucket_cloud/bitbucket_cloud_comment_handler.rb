@@ -69,8 +69,6 @@ module Danger
           def post_comment(comment_body)
             api = context.instance_variable_get(:@api)
             api.post_comment(comment_body)
-          rescue StandardError => e
-            log_warning("Failed to post comment: #{e.message}")
           end
         end
       end

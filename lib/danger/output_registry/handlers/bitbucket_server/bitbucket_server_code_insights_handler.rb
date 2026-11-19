@@ -74,8 +74,6 @@ module Danger
               inline_errors,
               inline_messages
             )
-          rescue StandardError => e
-            log_warning("Failed to send Code Insights report: #{e.message}")
           end
 
           private
