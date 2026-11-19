@@ -174,7 +174,7 @@ module Danger
           remove_previous_comments: remove_previous_comments
         )
 
-        # Note: this can terminate the entire process.
+        # NOTE: this can terminate the entire process.
         submit_pull_request_status!(
           warnings: warnings,
           errors: errors,

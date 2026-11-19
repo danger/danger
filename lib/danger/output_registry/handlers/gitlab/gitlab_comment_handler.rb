@@ -36,7 +36,7 @@ module Danger
             previous_violations = if should_create_new
                                     {}
                                   else
-                                    context.parse_comment(last_comment.body)
+                                    drop_inline_posted(context.parse_comment(last_comment.body))
                                   end
 
             # Handle remove_previous_comments
@@ -136,8 +136,6 @@ module Danger
             else
               context.client.edit_merge_request_note(repo_slug, mr_id, last_comment.id, comment_body)
             end
-          rescue StandardError => e
-            log_warning("Failed to post comment: #{e.message}")
           end
         end
       end

@@ -48,7 +48,7 @@ module Danger
             previous_violations = if should_create_new
                                     {}
                                   else
-                                    context.parse_comment(last_comment.body)
+                                    drop_inline_posted(context.parse_comment(last_comment.body))
                                   end
 
             # Check if there's anything to post
@@ -153,8 +153,6 @@ module Danger
                 )
               end
             shared_state[:comment_url] = result["html_url"] if result
-          rescue StandardError => e
-            log_warning("Failed to post comment: #{e.message}")
           end
         end
       end

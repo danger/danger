@@ -33,4 +33,38 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubInlineCommentHand
 
     described_class.new(context, { warnings: [], errors: [error], messages: [] }, **options).execute
   end
+
+  context "with a shared state" do
+    let(:shared_state) { { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [] } }
+    let(:error) { Danger::Violation.new("boom", false, "a.rb", 1) }
+
+    before do
+      allow(client).to receive(:pull_request_comments).and_return([])
+      allow(context).to receive(:pr_diff).and_return(double(lines: ["+++ b/a.rb\n", "@@ -1,1 +1,1 @@\n", "+x\n"]))
+      allow(context).to receive_messages(pr_json: { "head" => { "sha" => "c" } }, dismiss_out_of_range_messages: false)
+    end
+
+    def run
+      described_class.new(context, { warnings: [], errors: [error], messages: [] },
+                          **options, shared_state: shared_state).execute
+    end
+
+    it "reports the violation for the main comment when posting fails" do
+      allow(client).to receive(:create_pull_request_comment).and_raise(Octokit::UnprocessableEntity)
+
+      run
+
+      expect(shared_state[:out_of_range_violations][:errors]).to eq([error])
+      expect(shared_state[:inline_posted]).to be_nil
+    end
+
+    it "records the violation as posted inline on success" do
+      allow(client).to receive(:create_pull_request_comment)
+
+      run
+
+      expect(shared_state[:inline_posted]).to eq([error])
+      expect(shared_state[:out_of_range_violations][:errors]).to be_empty
+    end
+  end
 end

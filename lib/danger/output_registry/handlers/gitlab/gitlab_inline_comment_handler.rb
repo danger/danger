@@ -145,13 +145,16 @@ module Danger
             if matching_comment
               # Update existing comment and remove from cleanup list
               @danger_comments.delete(matching_comment)
-              update_comment(matching_comment, body)
+              posted = update_comment(matching_comment, body)
             else
-              # Try to create new inline comment
               # If it fails (out of range or API error), report to main comment
-              unless create_inline_comment(violation, body)
-                report_out_of_range_violation(:"#{type}s", violation)
-              end
+              posted = create_inline_comment(violation, body)
+            end
+
+            if posted
+              report_inline_posted(violation)
+            else
+              report_out_of_range_violation(:"#{type}s", violation)
             end
           rescue StandardError => e
             log_warning("Failed to process inline comment for #{violation.file}:#{violation.line}: #{e.message}")
@@ -174,13 +177,12 @@ module Danger
 
               if matching_comment
                 @danger_comments.delete(matching_comment)
-                update_comment(matching_comment, body)
+                posted = update_comment(matching_comment, body)
               else
-                # Try to create inline comment, report to main if fails
-                unless create_inline_comment(markdown, body)
-                  report_out_of_range_markdown(markdown)
-                end
+                posted = create_inline_comment(markdown, body)
               end
+
+              report_out_of_range_markdown(markdown) unless posted
             rescue StandardError => e
               log_warning("Failed to process inline markdown: #{e.message}")
               report_out_of_range_markdown(markdown)
@@ -193,40 +195,7 @@ module Danger
           # @return [Boolean] true if out of range
           #
           def out_of_range?(item)
-            changes = context.mr_changes.changes
-            change = changes.find { |c| c["new_path"] == item.file }
-
-            # Out of range if no change, empty diff, or deleted file
-            return true if change.nil? || change["diff"].empty? || change["deleted_file"]
-
-            # New files are always in range
-            return false if change["new_file"]
-
-            # Check if line is in the diff range
-            !line_in_diff?(change, item.line)
-          end
-
-          # Checks if a line is within the diff range.
-          #
-          # @param change [Hash] The change info
-          # @param line [Integer] The line number
-          # @return [Boolean] true if line is in diff
-          #
-          def line_in_diff?(change, line)
-            range_header_regexp = /@@ -(?<old>[0-9]+)(?:,(?:[0-9]+))? \+(?<new>[0-9]+)(?:,(?<count>[0-9]+))? @@.*/
-
-            change["diff"].each_line do |diff_line|
-              match = diff_line.match(range_header_regexp)
-              next unless match
-
-              range_start = match[:new].to_i
-              range_count = match[:count]&.to_i || 1
-              range_end = range_start + range_count
-
-              return true if line.to_i >= range_start && line.to_i < range_end
-            end
-
-            false
+            context.is_out_of_range(context.mr_changes.changes, item)
           end
 
           # Handles an out-of-range violation.
@@ -275,7 +244,7 @@ module Danger
           #
           # @param comment [Hash] The comment to update
           # @param body [String] The new body
-          # @return [void]
+          # @return [Boolean] true if the comment was updated
           #
           def update_comment(comment, body)
             context.client.update_merge_request_discussion_note(
@@ -285,8 +254,10 @@ module Danger
               comment["id"],
               body: body
             )
+            true
           rescue StandardError => e
             log_warning("Failed to update inline comment: #{e.message}")
+            false
           end
 
           # Creates a new inline comment.

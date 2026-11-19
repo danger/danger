@@ -168,4 +168,40 @@ RSpec.describe Danger::OutputRegistry::Handlers::GitHub::GitHubCommentHandler do
       expect(result).not_to include(inline_markdown)
     end
   end
+
+  context "when the comment API fails" do
+    let(:shared_state) { { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [] } }
+
+    before do
+      allow(context).to receive(:issue_comments).and_return([])
+      allow(context).to receive(:generate_comment).and_return("body")
+    end
+
+    it "lets the error propagate so the run fails" do
+      allow(client).to receive(:add_comment).and_raise(Octokit::ServerError)
+
+      expect { handler.execute }.to raise_error(Octokit::ServerError)
+    end
+  end
+
+  context "when a previous violation was moved inline" do
+    let(:moved) { Danger::Violation.new("Inline warning", false, "file.rb", 10) }
+    let(:shared_state) { { out_of_range_violations: { warnings: [], errors: [], messages: [] }, out_of_range_markdowns: [], inline_posted: [moved] } }
+    let(:options) { super().merge(shared_state: shared_state) }
+    let(:existing_comment) { double("comment", id: 1, body: "old", generated_by_danger?: true) }
+
+    it "does not show it as resolved in the main comment" do
+      allow(context).to receive(:issue_comments).and_return([existing_comment])
+      allow(context).to receive(:messages_are_equivalent) { |a, b| a == b }
+      allow(context).to receive(:parse_comment).and_return({ "warning" => [moved], "error" => [] })
+      allow(client).to receive(:update_comment)
+
+      expect(context).to receive(:generate_comment) do |args|
+        expect(args[:previous_violations]["warning"]).to be_empty
+        "body"
+      end
+
+      handler.execute
+    end
+  end
 end

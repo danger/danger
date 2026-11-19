@@ -131,10 +131,17 @@ module Danger
               # Comment exists, update if needed and remove from cleanup list
               danger_comments.delete(matching_comment)
               update_inline_comment(matching_comment, body)
-            else
-              # Create new inline comment
-              create_inline_comment(violation, body, position)
+            elsif !create_inline_comment(violation, body, position)
+              # Not posted: let the main comment carry it instead of losing it
+              if type == :markdown
+                report_out_of_range_markdown(violation)
+              else
+                report_out_of_range_violation(:"#{type}s", violation)
+              end
+              return
             end
+
+            report_inline_posted(violation) unless type == :markdown
           rescue StandardError => e
             log_warning("Failed to post inline comment for #{violation.file}:#{violation.line}: #{e.message}")
           end
@@ -226,6 +233,10 @@ module Danger
               next false unless comment["path"] == violation.file
               next false unless ranged?(violation) ? ranged_lines_match?(comment, violation) : comment["position"] == position
 
+              # Parse it to avoid problems with strikethrough
+              existing = violations_from_table(comment["body"]).first
+              next messages_are_equivalent(existing, violation) if existing
+
               # Compare body without blob hashes (they change between commits)
               comment["body"].sub(blob_regexp, "") == body.sub(blob_regexp, "")
             end
@@ -259,7 +270,7 @@ module Danger
           # @param violation [Violation] The violation
           # @param body [String] The comment body
           # @param position [Integer] The diff position
-          # @return [void]
+          # @return [Boolean] true if the comment was created
           #
           def create_inline_comment(violation, body, position)
             head_ref = context.pr_json["head"]["sha"]
@@ -286,8 +297,10 @@ module Danger
               line_arg,
               **range_options
             )
+            true
           rescue Octokit::UnprocessableEntity => e
             log_warning("Failed to create inline comment (#{violation.file}:#{violation.line}): #{e.message}")
+            false
           end
 
           # Cleans up old inline comments that are no longer valid.

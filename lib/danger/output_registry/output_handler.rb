@@ -210,6 +210,30 @@ module Danger
         shared_state[:out_of_range_markdowns]
       end
 
+      # Reports a violation that was successfully posted inline, so the main
+      # comment doesn't show its previous table entry as resolved.
+      #
+      # @param violation [Violation] The violation posted inline
+      # @return [void]
+      #
+      def report_inline_posted(violation)
+        (shared_state[:inline_posted] ||= []) << violation
+      end
+
+      # Removes violations posted inline from the parsed previous main-comment
+      # violations (mutates and returns them).
+      #
+      # @param previous_violations [Hash] Result of parse_comment
+      # @return [Hash]
+      #
+      def drop_inline_posted(previous_violations)
+        posted = shared_state[:inline_posted] || []
+        previous_violations.each_value do |list|
+          list.reject! { |v| posted.any? { |p| context.messages_are_equivalent(v, p) } }
+        end
+        previous_violations
+      end
+
       # Returns the array of warning messages.
       #
       # @return [Array<String>] Warning messages, or empty array if none
