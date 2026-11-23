@@ -11,6 +11,7 @@
 ## master
 
 <!-- Your comment below here -->
+* Use `origin/main` as the base of the local diff when `origin/master` does not exist, so `danger dry-run` and `danger staging` work in repositories that use `main` as their default branch - [@lyn1dev](https://github.com/lyn1dev) [#929](https://github.com/danger/danger/issues/929)
 * Set the GitHub commit status on the commit that CI built, not on the newest pull request commit (GitHub Actions and Buildkite) - [@JuanitoFatas](https://github.com/JuanitoFatas) [#1543](https://github.com/danger/danger/issues/1543)
 * Support `danger pr --fail-on-errors=true` for non-posting CI execution with full pull request context - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
 * Run Danger's own GitHub Actions checks and use danger-pr-comment 0.3.0's centralized PR matching and automatic-token comment posting instead of a personal access token - [@dblock](https://github.com/dblock) [#1558](https://github.com/danger/danger/pull/1558)
