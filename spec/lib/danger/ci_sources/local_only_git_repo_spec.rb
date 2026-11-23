@@ -4,10 +4,10 @@ require "spec_helper"
 require "danger/ci_source/local_only_git_repo"
 
 RSpec.describe Danger::LocalOnlyGitRepo do
-  def run_in_repo
+  def run_in_repo(default_branch = "master")
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
-        `git init -b master`
+        `git init -b #{default_branch}`
         `git remote add origin .`
         File.open("#{dir}/file1", "w") {}
         `git add .`
@@ -54,6 +54,22 @@ RSpec.describe Danger::LocalOnlyGitRepo do
   describe "#new" do
     it "sets base_commit" do
       run_in_repo do
+        expect(source(valid_env).base_commit).to eq("origin/master")
+      end
+    end
+
+    it "falls back to origin/main when origin/master does not exist" do
+      run_in_repo("main") do
+        expect(source(valid_env).base_commit).to eq("origin/main")
+      end
+    end
+
+    it "prefers origin/master when both origin/master and origin/main exist" do
+      run_in_repo do
+        `git branch main`
+        `git push origin main`
+        `git fetch`
+
         expect(source(valid_env).base_commit).to eq("origin/master")
       end
     end
